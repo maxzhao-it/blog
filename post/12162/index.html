@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一、前言SpringBoot Actuator 服务监控与管理**其中包含了很多的服务，比如我们常用的amqp、JVM、cache等等，下面是actuator包下的目录amqp,audit,beans,cache,cassandra,context,couchbase,elasticsearch,endpoint,env,flyway,health,influx,info,integration,">
+<meta name="keywords" content="SpringBoot,Actuator">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot2.X性能监控Actuator">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;12162&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="一、前言SpringBoot Actuator 服务监控与管理**其中包含了很多的服务，比如我们常用的amqp、JVM、cache等等，下面是actuator包下的目录amqp,audit,beans,cache,cassandra,context,couchbase,elasticsearch,endpoint,env,flyway,health,influx,info,integration,">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-24T02:48:56.670Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/12162/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>SpringBoot2.X性能监控Actuator | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/12162/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot2.X性能监控Actuator
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-24 10:48:56" itemprop="dateModified" datetime="2021-08-24T10:48:56+08:00">2021-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>SpringBoot Actuator 服务监控与管理**</p><p>其中包含了很多的服务，比如我们常用的<code>amqp</code>、<code>JVM</code>、<code>cache</code>等等，下面是<code>actuator</code>包下的目录</p><p><code>amqp,audit,beans,cache,cassandra,context,couchbase,elasticsearch,endpoint,env,flyway,health,influx,info,integration,jdbc,jms,ldap,liquibase,logging,mail,management,metrics,mongo,neo4j,redis,scheduling,security,session,solr,system,http,web</code></p><a id="more"></a>
+
+
+<p>是不是感觉挺全面的。</p>
+<blockquote>
+<p>2021-04-20 补充2.4.2 与之前版本的差异</p>
+</blockquote>
+<h2 id="二、服务监控与管理"><a href="#二、服务监控与管理" class="headerlink" title="二、服务监控与管理"></a>二、服务监控与管理</h2><h3 id="Maven-依赖"><a href="#Maven-依赖" class="headerlink" title="Maven 依赖"></a>Maven 依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="主要配置"><a href="#主要配置" class="headerlink" title="主要配置"></a>主要配置</h3><p>Spring Boot2.x中，默认只开放了<code>info、health</code>两个端点，开放其他端点需要配置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启所有端点</span></span><br><span class="line"><span class="attr">management:</span></span><br><span class="line"><span class="attr">  endpoints:</span> <span class="comment"># 这里是 endpoints</span></span><br><span class="line"><span class="attr">    web:</span></span><br><span class="line">      <span class="comment"># 默认路径</span></span><br><span class="line"><span class="attr">      base-path:</span> <span class="string">/actuator</span></span><br><span class="line"><span class="attr">      exposure:</span></span><br><span class="line">        <span class="comment">#  Endpoint IDs that should be included or '*' for all.</span></span><br><span class="line"><span class="attr">        include:</span> <span class="string">'*'</span></span><br><span class="line">    <span class="comment"># 显示详细的 health 信息</span></span><br><span class="line"><span class="attr">    jmx:</span></span><br><span class="line">      <span class="comment"># Whether unique runtime object names should be ensured.</span></span><br><span class="line"><span class="attr">      domain:</span> <span class="string">org.springframework.boot</span></span><br><span class="line"><span class="attr">      exposure:</span></span><br><span class="line">        <span class="comment"># Endpoint IDs that should be included or '*' for all.</span></span><br><span class="line"><span class="attr">        include:</span> <span class="string">'*'</span></span><br><span class="line">  <span class="comment"># 显示详细的 health 信息</span></span><br><span class="line"><span class="attr">  endpoint:</span> <span class="comment"># 这里是 endpoint</span></span><br><span class="line"><span class="attr">    health:</span></span><br><span class="line"><span class="attr">      show-details:</span> <span class="string">always</span></span><br><span class="line">    <span class="comment"># 打开 shutdown 端点，通过 POST 访问该端点可以关闭应用</span></span><br><span class="line"><span class="attr">    shutdown:</span></span><br><span class="line"><span class="attr">      enabled:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="监控状态"><a href="#监控状态" class="headerlink" title="监控状态"></a>监控状态</h3><p>启动之后访问 <a href="http://localhost:8062/boot/actuator/health" target="_blank" rel="noopener">http://localhost:8062/boot/actuator/health</a>  就可以看到对应的项目监控状态。</p>
+<p>访问 <a href="http://localhost:8062/boot/actuator" target="_blank" rel="noopener">http://localhost:8062/boot/actuator</a> 可以查看有那些监控。</p>
+<p>健康指标 HealthIndicators 由 Spring Boot 自动配置，因此这里显示监控信息是由项目所使用的技术栈而决定的：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/cassandra/CassandraHealthIndicator.java">CassandraHealthIndicator</a></td>
+<td>检查 Cassandra 数据库是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/system/DiskSpaceHealthIndicator.java">DiskSpaceHealthIndicator</a></td>
+<td>检查磁盘空间不足。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/jdbc/DataSourceHealthIndicator.java">DataSourceHealthIndicator</a></td>
+<td>检查是否可以获得连接 DataSource。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/elasticsearch/ElasticsearchHealthIndicator.java">ElasticsearchHealthIndicator</a></td>
+<td>检查 Elasticsearch 集群是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/influx/InfluxDbHealthIndicator.java">InfluxDbHealthIndicator</a></td>
+<td>检查 InfluxDB 服务器是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/jms/JmsHealthIndicator.java">JmsHealthIndicator</a></td>
+<td>检查 JMS 代理是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/mail/MailHealthIndicator.java">MailHealthIndicator</a></td>
+<td>检查邮件服务器是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/mongo/MongoHealthIndicator.java">MongoHealthIndicator</a></td>
+<td>检查 Mongo 数据库是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/neo4j/Neo4jHealthIndicator.java">Neo4jHealthIndicator</a></td>
+<td>检查 Neo4j 服务器是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/amqp/RabbitHealthIndicator.java">RabbitHealthIndicator</a></td>
+<td>检查 Rabbit 服务器是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/redis/RedisHealthIndicator.java">RedisHealthIndicator</a></td>
+<td>检查 Redis 服务器是否启动。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/spring-projects/spring-boot/tree/v2.0.1.RELEASE/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/solr/SolrHealthIndicator.java">SolrHealthIndicator</a></td>
+<td>检查 Solr 服务器是否已启动。</td>
+</tr>
+</tbody></table>
+<h3 id="常用端点"><a href="#常用端点" class="headerlink" title="常用端点"></a>常用端点</h3><p>查看常用接口</p>
+<p><a href="http://localhost:8062/boot/actuator/" target="_blank" rel="noopener">http://localhost:8062/boot/actuator/</a></p>
+<p>env 端点，应用获取环境信息，包括：环境变量、JVM属性、应用的配置配置、命令行中的参数等等。<br><a href="http://localhost:8080/actuator/env" target="_blank" rel="noopener">localhost:8080/actuator/env</a></p>
+<p>mapping 端点，url 与 控制器映射关系信息<br><a href="http://localhost:8080/actuator/info" target="_blank" rel="noopener">localhost:8080/actuator/info</a></p>
+<p>metrics 端点，引用度量指标端点，提供引用再运行时的信息，如内存使用情况、HTTP请求统计、外部资源指标等<br>查看所有度量指标 <a href="http://localhost:8080/actuator/metrics" target="_blank" rel="noopener">localhost:8080/actuator/metrics</a><br>查看度量指标详细信息 <a href="http://localhost:8080/actuator/metrics/jvm.gc.pause" target="_blank" rel="noopener">localhost:8080/actuator/metrics/jvm.gc.pause</a></p>
+<p>loggers 端点，查看可配置 loggers 的列表及相关的等级信息<br><a href="http://localhost:8080/actuator/loggers" target="_blank" rel="noopener">localhost:8080/actuator/loggers</a><br>查看特定的 logger 详细信息<a href="http://localhost:8080/actuator/loggers/org.apache.tomcat" target="_blank" rel="noopener">localhost:8080/actuator/loggers/{name}</a></p>
+<h3 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h3><p>health 端点用于暴露程序运行的健康状态，暴露的信息的详细程度由 management.endpoint.health.show-details 来控制，它具有以下三个可选值：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>never</td>
+<td>细节永远不会显示。</td>
+</tr>
+<tr>
+<td>when-authorized</td>
+<td>详细信息仅向授权用户显示。授权角色可以使用配置 management.endpoint.health.roles。</td>
+</tr>
+<tr>
+<td>always</td>
+<td>详细信息显示给所有用户。</td>
+</tr>
+</tbody></table>
+<p>在 <code>org.springframework.boot.actuate.health.ShowDetails</code>中有详细说明。</p>
+<h3 id="端点列表"><a href="#端点列表" class="headerlink" title="端点列表"></a>端点列表</h3><ul>
+<li><code>info</code><br> 显示应用的基本信息</li>
+<li><code>health</code><br> 显示应用的健康状态</li>
+<li><code>metrics</code><br> 显示应用多样的度量信息</li>
+<li><code>loggers</code><br> 显示和修改配置的loggers</li>
+<li><code>logfile</code><br> 返回log file中的内容(如果logging.file或者logging.path被设置)</li>
+<li><code>httptrace</code><br> 显示HTTP足迹，最近100个HTTP request/repsponse</li>
+<li><code>env</code><br> 显示当前的环境特性</li>
+<li><code>flyway</code><br> 显示数据库迁移路径的详细信息</li>
+<li><code>liquidbase</code><br> 显示Liquibase 数据库迁移的纤细信息</li>
+<li><code>shutdown</code><br> 让你逐步关闭应用</li>
+<li><code>mappings</code><br> 显示所有的@RequestMapping路径</li>
+<li><code>scheduledtasks</code><br> 显示应用中的调度任务</li>
+<li><code>threaddump</code><br> 执行一个线程dump</li>
+<li><code>heapdump</code><br> 返回一个GZip压缩的JVM堆dump</li>
+</ul>
+<h2 id="三、自定义健康检查"><a href="#三、自定义健康检查" class="headerlink" title="三、自定义健康检查"></a>三、自定义健康检查</h2><p>在启动类中加入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomHealthIndicatorDemo</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">HealthIndicator <span class="title">customHealthIndicator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> () -&gt; Health.status(<span class="string">"DOWN"</span>)</span><br><span class="line">                .withDetail(<span class="string">"error code"</span>, <span class="string">"某健康专项检查失败"</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">HealthIndicator <span class="title">customUpHealthIndicator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> () -&gt; Health.up().withDetail(<span class="string">"success code"</span>, <span class="string">"自定义检查一切正常 UP"</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">HealthIndicator <span class="title">customDownHealthIndicator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> () -&gt; Health.up().withDetail(<span class="string">"success code"</span>, <span class="string">"自定义检查一切正常 DOWN "</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问  <a href="http://localhost:8062/boot/actuator/health" target="_blank" rel="noopener">http://localhost:8062/boot/actuator/health</a>  的结果为：</p>
+<p>这里我开启了<code>redis</code>，数据库为<code>mysql</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"status"</span>: <span class="string">"DOWN"</span>,</span><br><span class="line">  <span class="attr">"details"</span>: &#123;</span><br><span class="line">    <span class="attr">"custom"</span>: &#123;</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"FATAL"</span>,</span><br><span class="line">      <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"error code"</span>: <span class="string">"某健康专项检查失败"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"customUp"</span>: &#123;</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">      <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"success code"</span>: <span class="string">"自定义检查一切正常 UP"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"customDown"</span>: &#123;</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"DOWN"</span>,</span><br><span class="line">      <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"success code"</span>: <span class="string">"自定义检查一切正常 DOWN "</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"diskSpace"</span>: &#123;</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">      <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"total"</span>: <span class="string">"471182741504"</span>,</span><br><span class="line">        <span class="attr">"free"</span>: <span class="string">"375580655616"</span>,</span><br><span class="line">        <span class="attr">"threshold"</span>: <span class="string">"10485760"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"db"</span>: &#123;</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">      <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"database"</span>: <span class="string">"MySQL"</span>,</span><br><span class="line">        <span class="attr">"hello"</span>: <span class="string">"1"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"redis"</span>: &#123;</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">      <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"version"</span>: <span class="string">"5.0.8"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当前<code>details</code>中有一个检查<code>status</code>为<code>DOWN</code>时，<code>Health</code>检查的<code>status</code>就为<code>DOWN</code>，否则为<code>UP</code>。</p>
+<p>如果把第一个<code>FATAL</code>改为<code>DOWN</code>，<code>Health</code>检查结果同样为<code>DOWN</code>。</p>
+<p>下表显示了内置状态的默认映射：</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Mapping</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DOWN</td>
+<td>SERVICE_UNAVAILABLE (503)</td>
+</tr>
+<tr>
+<td>OUT_OF_SERVICE</td>
+<td>SERVICE_UNAVAILABLE (503)</td>
+</tr>
+<tr>
+<td>UP</td>
+<td>No mapping by default, so http status is 200</td>
+</tr>
+<tr>
+<td>UNKNOWN</td>
+<td>No mapping by default, so http status is 200</td>
+</tr>
+</tbody></table>
+<h2 id="四、自定义端点"><a href="#四、自定义端点" class="headerlink" title="四、自定义端点"></a>四、自定义端点</h2><p>Spring Boot 支持使用 <code>@Endpoint</code> 来自定义端点暴露信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Endpoint</span>(id = <span class="string">"customEndPoint"</span>)</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomEndPoint</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ReadOperation</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title">getInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Map&lt;String, Object&gt; dataMap = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        dataMap.put(<span class="string">"自定义信息"</span>, <span class="string">"custom endpoint "</span>);</span><br><span class="line">        <span class="keyword">return</span> dataMap;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求 <a href="http://localhost:8062/boot/actuator/customEndPoint" target="_blank" rel="noopener">http://localhost:8062/boot/actuator/customEndPoint</a> 的结果为</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"自定义信息"</span>: <span class="string">"custom endpoint "</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可用的方法注解由 HTTP 操作所决定：</p>
+<table>
+<thead>
+<tr>
+<th>operation</th>
+<th>HTTP 方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@ReadOperation</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>@WriteOperation</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>@DeleteOperation</td>
+<td>DELETE</td>
+</tr>
+</tbody></table>
+<h2 id="五、监控指标"><a href="#五、监控指标" class="headerlink" title="五、监控指标"></a>五、监控指标</h2><table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">参数说明</th>
+<th align="center">是否监控</th>
+<th align="center">监控手段</th>
+<th align="center">重要度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">–JVM–</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.memory.max</td>
+<td align="center">JVM最大内存</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.memory.committed</td>
+<td align="center">JVM可用内存</td>
+<td align="center">是</td>
+<td align="center">展示并监控堆内存和Metaspace</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">jvm.memory.used</td>
+<td align="center">JVM已用内存</td>
+<td align="center">是</td>
+<td align="center">展示并监控堆内存和Metaspace</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">jvm.buffer.memory.used</td>
+<td align="center">JVM缓冲区已用内存</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.buffer.count</td>
+<td align="center">当前缓冲区数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.threads.daemon</td>
+<td align="center">JVM守护线程数</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.threads.live</td>
+<td align="center">JVM当前活跃线程数</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面；监控达到阈值时报警</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">jvm.threads.peak</td>
+<td align="center">JVM峰值线程数</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.classes.loaded</td>
+<td align="center">加载classes数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.classes.unloaded</td>
+<td align="center">未加载的classes数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.gc.memory.allocated</td>
+<td align="center">GC时，年轻代分配的内存空间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.gc.memory.promoted</td>
+<td align="center">GC时，老年代分配的内存空间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.gc.max.data.size</td>
+<td align="center">GC时，老年代的最大内存空间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.gc.live.data.size</td>
+<td align="center">FullGC时，老年代的内存空间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jvm.gc.pause</td>
+<td align="center">GC耗时</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">–TOMCAT–</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.sessions.created</td>
+<td align="center">tomcat已创建session数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.sessions.expired</td>
+<td align="center">tomcat已过期session数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.sessions.active.current</td>
+<td align="center">tomcat活跃session数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.sessions.active.max</td>
+<td align="center">tomcat最多活跃session数</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面，超过阈值可报警或者进行动态扩容</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">tomcat.sessions.alive.max.second</td>
+<td align="center">tomcat最多活跃session数持续时间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.sessions.rejected</td>
+<td align="center">超过session最大配置后，拒绝的session个数</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面，方便分析问题</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.global.error</td>
+<td align="center">错误总数</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面，方便分析问题</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.global.sent</td>
+<td align="center">发送的字节数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.global.request.max</td>
+<td align="center">request最长时间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.global.request</td>
+<td align="center">全局request次数和时间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.global.received</td>
+<td align="center">全局received次数和时间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.servlet.request</td>
+<td align="center">servlet的请求次数和时间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.servlet.error</td>
+<td align="center">servlet发生错误总数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.servlet.request.max</td>
+<td align="center">servlet请求最长时间</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.threads.busy</td>
+<td align="center">tomcat繁忙线程</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面，据此检查是否有线程夯住</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.threads.current</td>
+<td align="center">tomcat当前线程数（包括守护线程）</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">tomcat.threads.config.max</td>
+<td align="center">tomcat配置的线程最大数</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">tomcat.cache.access</td>
+<td align="center">tomcat读取缓存次数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">tomcat.cache.hit</td>
+<td align="center">tomcat缓存命中次数</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">–CPU–</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">system.cpu.count</td>
+<td align="center">CPU数量</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">system.load.average.1m</td>
+<td align="center">load average</td>
+<td align="center">是</td>
+<td align="center">超过阈值报警</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">system.cpu.usage</td>
+<td align="center">系统CPU使用率</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">process.cpu.usage</td>
+<td align="center">当前进程CPU使用率</td>
+<td align="center">是</td>
+<td align="center">超过阈值报警</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">http.server.requests</td>
+<td align="center">http请求调用情况</td>
+<td align="center">是</td>
+<td align="center">显示10个请求量最大，耗时最长的URL；统计非200的请求量</td>
+<td align="center">重要</td>
+</tr>
+<tr>
+<td align="center">process.uptime</td>
+<td align="center">应用已运行时间</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">process.files.max</td>
+<td align="center">允许最大句柄数</td>
+<td align="center">是</td>
+<td align="center">配合当前打开句柄数使用</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">process.start.time</td>
+<td align="center">应用启动时间点</td>
+<td align="center">是</td>
+<td align="center">显示在监控页面</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">process.files.open</td>
+<td align="center">当前打开句柄数</td>
+<td align="center">是</td>
+<td align="center">监控文件句柄使用率，超过阈值后报警</td>
+<td align="center">重要</td>
+</tr>
+</tbody></table>
+<h3 id="Springboot-2-4-2"><a href="#Springboot-2-4-2" class="headerlink" title="Springboot 2.4.2"></a><code>Springboot 2.4.2</code></h3><h4 id="jvm-gc-pause"><a href="#jvm-gc-pause" class="headerlink" title="jvm.gc.pause"></a><code>jvm.gc.pause</code></h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"jvm.gc.pause"</span>,</span><br><span class="line">  <span class="attr">"description"</span>: <span class="string">"Time spent in GC pause"</span>,</span><br><span class="line">  <span class="attr">"baseUnit"</span>: <span class="string">"seconds"</span>,</span><br><span class="line">  <span class="attr">"measurements"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"statistic"</span>: <span class="string">"COUNT"</span>,</span><br><span class="line">      <span class="attr">"value"</span>: <span class="number">8</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"statistic"</span>: <span class="string">"TOTAL_TIME"</span>,</span><br><span class="line">      <span class="attr">"value"</span>: <span class="number">0.255</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"statistic"</span>: <span class="string">"MAX"</span>,</span><br><span class="line">      <span class="attr">"value"</span>: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"availableTags"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"tag"</span>: <span class="string">"cause"</span>,</span><br><span class="line">      <span class="attr">"values"</span>: [</span><br><span class="line">        <span class="string">"Metadata GC Threshold"</span>,</span><br><span class="line">        <span class="string">"Allocation Failure"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"tag"</span>: <span class="string">"action"</span>,</span><br><span class="line">      <span class="attr">"values"</span>: [</span><br><span class="line">        <span class="string">"end of minor GC"</span>,</span><br><span class="line">        <span class="string">"end of major GC"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="httptrace-404解决"><a href="#httptrace-404解决" class="headerlink" title="httptrace 404解决"></a><code>httptrace</code> 404解决</h4><p><code>Springboot</code>已经不推荐使用 <code>httptrace</code>。</p>
+<blockquote>
+<p><a href="https://docs.spring.io/spring-boot/docs/2.4.2/reference/html/production-ready-features.html#production-ready-http-tracing" target="_blank" rel="noopener">官方说明</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootAdminConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> InMemoryHttpTraceRepository <span class="title">getInMemoryHttpTrace</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> InMemoryHttpTraceRepository();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/12162/">https://github.com/maxzhao-it/blog/post/12162/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/blog/tags/Actuator/" rel="tag"># Actuator</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/54598/" rel="next" title="ant-design-vue中的a-tree-select使用">
+                  <i class="fa fa-chevron-left"></i> ant-design-vue中的a-tree-select使用
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/42913/" rel="prev" title="Git统计代码">
+                  Git统计代码 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、服务监控与管理"><span class="nav-number">2.</span> <span class="nav-text">二、服务监控与管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Maven-依赖"><span class="nav-number">2.1.</span> <span class="nav-text">Maven 依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主要配置"><span class="nav-number">2.2.</span> <span class="nav-text">主要配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监控状态"><span class="nav-number">2.3.</span> <span class="nav-text">监控状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用端点"><span class="nav-number">2.4.</span> <span class="nav-text">常用端点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#健康检查"><span class="nav-number">2.5.</span> <span class="nav-text">健康检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#端点列表"><span class="nav-number">2.6.</span> <span class="nav-text">端点列表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、自定义健康检查"><span class="nav-number">3.</span> <span class="nav-text">三、自定义健康检查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、自定义端点"><span class="nav-number">4.</span> <span class="nav-text">四、自定义端点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、监控指标"><span class="nav-number">5.</span> <span class="nav-text">五、监控指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Springboot-2-4-2"><span class="nav-number">5.1.</span> <span class="nav-text">Springboot 2.4.2</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jvm-gc-pause"><span class="nav-number">5.1.1.</span> <span class="nav-text">jvm.gc.pause</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#httptrace-404解决"><span class="nav-number">5.1.2.</span> <span class="nav-text">httptrace 404解决</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

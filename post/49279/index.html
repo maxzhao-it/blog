@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言一般情况下，在 SpringBoot 中，生成的代码默认在 resources 目录下，Mapper.xml 的路径也是固定的。当前路径不建议修改，因为在打包时，Mapper.xml 与 Mapper.class 是在一个文件夹下的。">
+<meta name="keywords" content="SpringBoot,MyBatisPlus,CodeGenerator">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MyBatisPlus代码生成器">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;49279&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="前言一般情况下，在 SpringBoot 中，生成的代码默认在 resources 目录下，Mapper.xml 的路径也是固定的。当前路径不建议修改，因为在打包时，Mapper.xml 与 Mapper.class 是在一个文件夹下的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-23T08:46:30.449Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/49279/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MyBatisPlus代码生成器 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/49279/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MyBatisPlus代码生成器
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/SpringBoot/MyBatisPlus/" itemprop="url" rel="index">
+                    <span itemprop="name">MyBatisPlus</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一般情况下，在 SpringBoot 中，生成的代码默认在 <code>resources</code> 目录下，<code>Mapper.xml</code> 的路径也是固定的。</p><p>当前路径不建议修改，因为在打包时，<code>Mapper.xml</code> 与 <code>Mapper.class</code> 是在一个文件夹下的。</p><a id="more"></a>
+
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.core.toolkit.StringPool;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.AutoGenerator;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.InjectionConfig;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.*;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.converts.OracleTypeConvert;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.converts.PostgreSqlTypeConvert;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.po.TableInfo;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.rules.DbColumnType;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代码生成器</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;当前使用 freemarker 引擎需要 pom 依赖&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021-04-08</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CodeGenerator</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 文件存放位置</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;当前为当前项目位置&lt;/p&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PROJECT_PATH = System.getProperty(<span class="string">"user.dir"</span>);</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 包的起始路径</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PACKAGE_PARENT = <span class="string">"boot"</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 模块名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String MODULE_NAME = <span class="string">"chats"</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 文件注释下的 auther 名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AUTHOR = <span class="string">"maxzhao"</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 表名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] TABLE_NAMES = <span class="string">"chat_group,chat_group_user,chat_history,chat_history_status,chat_session,chat_user,chat_user_grouping,chat_user_grouping_user"</span>.split(<span class="string">","</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 连接地址</span></span><br><span class="line"><span class="comment">     * oracle = "jdbc:mysql://127.0.0.1:3306/boot?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true";</span></span><br><span class="line"><span class="comment">     * postgresql = "jdbc:postgresql://127.0.0.1:5432/postgres?charSet=utf8&amp;currentSchema=pg_schema";</span></span><br><span class="line"><span class="comment">     * mysql8 = "jdbc:oracle:thin:@32.1.6.219:1521/orcl";</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DS_URL = <span class="string">"jdbc:mysql://127.0.0.1:3306/boot?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 驱动</span></span><br><span class="line"><span class="comment">     * oracle = "oracle.jdbc.driver.OracleDriver";</span></span><br><span class="line"><span class="comment">     * postgresql = "org.postgresql.Driver";</span></span><br><span class="line"><span class="comment">     * mysql8 = "com.mysql.cj.jdbc.Driver";</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DS_DRIVER_NAME = <span class="string">"com.mysql.cj.jdbc.Driver"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DS_USERNAME = <span class="string">"root"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DS_PASSWORD = <span class="string">"maxzhao"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * PostgreSql 的 schema（其它数据库不需要）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String POSTGRESQL_SCHEMA = <span class="string">"pg_schema"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * RUN</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        codeGenerate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码生成器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">codeGenerate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*代码生成器*/</span></span><br><span class="line">        AutoGenerator mpg = <span class="keyword">new</span> AutoGenerator();</span><br><span class="line">        <span class="comment">/*全局配置*/</span></span><br><span class="line">        mpg.setGlobalConfig(getGlobalConfig());</span><br><span class="line">        <span class="comment">/*数据源配置*/</span></span><br><span class="line">        mpg.setDataSource(getDataSourceConfig());</span><br><span class="line">        <span class="comment">/*跟包相关的配置项*/</span></span><br><span class="line">        mpg.setPackageInfo(getPackageConfig());</span><br><span class="line">        <span class="comment">/*自定义配置*/</span></span><br><span class="line">        mpg.setCfg(getInjectionConfig());</span><br><span class="line">        mpg.setTemplate(<span class="keyword">new</span> TemplateConfig().setXml(<span class="keyword">null</span>));</span><br><span class="line">        <span class="comment">/*策略配置*/</span></span><br><span class="line">        mpg.setStrategy(getStrategyConfig());</span><br><span class="line">        <span class="comment">// 选择 freemarker 引擎需要指定如下加，注意 pom 依赖必须有！</span></span><br><span class="line">        mpg.setTemplateEngine(<span class="keyword">new</span> FreemarkerTemplateEngine());</span><br><span class="line">        mpg.execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 全局配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> GlobalConfig <span class="title">getGlobalConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        GlobalConfig gc = <span class="keyword">new</span> GlobalConfig();</span><br><span class="line">        <span class="comment">/*生成文件的输出目录【默认 D 盘根目录】*/</span></span><br><span class="line">        gc.setOutputDir(PROJECT_PATH + File.separator + <span class="string">"src"</span> + File.separator + <span class="string">"main"</span> + File.separator + <span class="string">"java"</span>);</span><br><span class="line">        <span class="comment">/*是否覆盖已有文件*/</span></span><br><span class="line">        gc.setFileOverride(<span class="keyword">false</span>);</span><br><span class="line">        <span class="comment">/*是否打开输出目录*/</span></span><br><span class="line">        gc.setOpen(<span class="keyword">false</span>);</span><br><span class="line">        gc.setAuthor(AUTHOR);</span><br><span class="line">        gc.setSwagger2(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">return</span> gc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据库配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> DataSourceConfig <span class="title">getDataSourceConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        DataSourceConfig dsc = <span class="keyword">new</span> DataSourceConfig();</span><br><span class="line">        dsc.setUrl(DS_URL);</span><br><span class="line">        dsc.setDriverName(DS_DRIVER_NAME);</span><br><span class="line">        dsc.setUsername(DS_USERNAME);</span><br><span class="line">        dsc.setPassword(DS_PASSWORD);</span><br><span class="line">        <span class="keyword">if</span> (DS_DRIVER_NAME.contains(<span class="string">"postgresql"</span>)) &#123;</span><br><span class="line">            initPGSqlDataSourceConfig(dsc);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (DS_DRIVER_NAME.contains(<span class="string">"mysql"</span>)) &#123;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (DS_DRIVER_NAME.contains(<span class="string">"oracle"</span>)) &#123;</span><br><span class="line">            initOracleDataSourceConfig(dsc);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dsc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * PostgreSQL数据库连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initPGSqlDataSourceConfig</span><span class="params">(DataSourceConfig dsc)</span> </span>&#123;</span><br><span class="line">        dsc.setSchemaName(POSTGRESQL_SCHEMA);</span><br><span class="line">        dsc.setTypeConvert(<span class="keyword">new</span> PostgreSqlTypeConvert());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ORACLE 数据库连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initOracleDataSourceConfig</span><span class="params">(DataSourceConfig dsc)</span> </span>&#123;</span><br><span class="line">        dsc.setTypeConvert(<span class="keyword">new</span> OracleTypeConvert() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> DbColumnType <span class="title">processTypeConvert</span><span class="params">(GlobalConfig globalConfig, String fieldType)</span> </span>&#123;</span><br><span class="line">                <span class="comment">/*可以参考 super.processTypeConvert*/</span></span><br><span class="line">                <span class="keyword">return</span> (DbColumnType) <span class="keyword">super</span>.processTypeConvert(globalConfig, fieldType);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 跟包相关的配置项</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> PackageConfig <span class="title">getPackageConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        PackageConfig pc = <span class="keyword">new</span> PackageConfig();</span><br><span class="line">        <span class="comment">/*父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名*/</span></span><br><span class="line">        pc.setParent(PACKAGE_PARENT);</span><br><span class="line">        <span class="comment">/*父包模块名*/</span></span><br><span class="line">        pc.setModuleName(MODULE_NAME);</span><br><span class="line">        <span class="comment">/*Entity包名*/</span></span><br><span class="line">        pc.setEntity(<span class="string">"model.entity"</span>);</span><br><span class="line">        <span class="comment">/*Controller包名*/</span></span><br><span class="line">        pc.setController(<span class="string">"api"</span>);</span><br><span class="line">        <span class="keyword">return</span> pc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 自定义配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> InjectionConfig <span class="title">getInjectionConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        InjectionConfig cfg = <span class="keyword">new</span> InjectionConfig() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="comment">// to do nothing</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        List&lt;FileOutConfig&gt; focList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">/*配置 Mapper.xml的生成位置*/</span></span><br><span class="line">        focList.add(<span class="keyword">new</span> FileOutConfig(<span class="string">"/templates/mapper.xml.ftl"</span>) &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">outputFile</span><span class="params">(TableInfo tableInfo)</span> </span>&#123;</span><br><span class="line">                <span class="comment">// 自定义输入文件名称</span></span><br><span class="line">                <span class="keyword">return</span> PROJECT_PATH + File.separator +</span><br><span class="line">                        <span class="string">"src"</span> + File.separator +</span><br><span class="line">                        <span class="string">"main"</span> + File.separator +</span><br><span class="line">                        <span class="string">"resources"</span> + File.separator +</span><br><span class="line">                        PACKAGE_PARENT.replace(<span class="string">"."</span>, File.separator) +</span><br><span class="line">                        File.separator +</span><br><span class="line">                        MODULE_NAME.replace(<span class="string">"."</span>, File.separator) +</span><br><span class="line">                        File.separator + <span class="string">"mapper"</span> + File.separator +</span><br><span class="line">                        tableInfo.getEntityName() + <span class="string">"Mapper"</span> + StringPool.DOT_XML;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        cfg.setFileOutConfigList(focList);</span><br><span class="line">        <span class="keyword">return</span> cfg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 策略配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> StrategyConfig <span class="title">getStrategyConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StrategyConfig strategy = <span class="keyword">new</span> StrategyConfig();</span><br><span class="line">        <span class="comment">/*数据库表映射到实体的命名策略,下划线转驼峰*/</span></span><br><span class="line">        strategy.setNaming(NamingStrategy.underline_to_camel);</span><br><span class="line">        <span class="comment">/*数据库表字段映射到实体的命名策略，未指定按照 naming 执行*/</span></span><br><span class="line">        strategy.setColumnNaming(NamingStrategy.underline_to_camel);</span><br><span class="line">        <span class="comment">/*表前缀*/</span></span><br><span class="line">        strategy.setTablePrefix(<span class="string">"t_"</span>, <span class="string">"sys_"</span>, <span class="string">"p_"</span>);</span><br><span class="line">        <span class="comment">/*字段前缀*/</span></span><br><span class="line">        strategy.setFieldPrefix(<span class="string">"is"</span>, <span class="string">"has"</span>);</span><br><span class="line">        <span class="comment">/*需要包含的表名，允许正则表达式（与exclude二选一配置）*/</span></span><br><span class="line">        strategy.setInclude(TABLE_NAMES);</span><br><span class="line">        <span class="comment">/*实体是否生成 serialVersionUID*/</span></span><br><span class="line">        strategy.setEntitySerialVersionUID(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">/*【实体】是否为lombok模型（默认 false）*/</span></span><br><span class="line">        strategy.setEntityLombokModel(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">/*Boolean类型字段是否移除is前缀（默认 false） 比如 : 数据库字段名称 : 'is_xxx',类型为 : tinyint.</span></span><br><span class="line"><span class="comment">        在映射实体的时候则会去掉is,在实体类中映射最终结果为 xxx*/</span></span><br><span class="line">        strategy.setEntityBooleanColumnRemoveIsPrefix(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">/*是否生成实体时，生成字段注解*/</span></span><br><span class="line">        strategy.setEntityTableFieldAnnotationEnable(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">/*生成 @RestController 控制器*/</span></span><br><span class="line">        strategy.setRestControllerStyle(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">/*驼峰转连字符*/</span></span><br><span class="line">        strategy.setControllerMappingHyphenStyle(<span class="keyword">false</span>);</span><br><span class="line">        <span class="comment">/*是否生成实体时，生成字段注解*/</span></span><br><span class="line">        strategy.setEntityTableFieldAnnotationEnable(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">return</span> strategy;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/49279/">https://github.com/maxzhao-it/blog/post/49279/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/blog/tags/MyBatisPlus/" rel="tag"># MyBatisPlus</a>
+              <a href="/blog/tags/CodeGenerator/" rel="tag"># CodeGenerator</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/47890/" rel="next" title="MyBatisPlus在@Select中使用Like">
+                  <i class="fa fa-chevron-left"></i> MyBatisPlus在@Select中使用Like
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/61051/" rel="prev" title="SpringBoot中的WebSocket消息收发">
+                  SpringBoot中的WebSocket消息收发 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

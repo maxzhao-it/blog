@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="三种新的索引方式1、隐藏索引 MySQL8.0 支持隐藏索引（invisible index），不可见索引 隐藏索引不会被优化器使用，但需要维护。 应用场景：软删除、灰度发布。 软删除：不确定当前索引是否需要删除的时候，软删除，不会彻底删除，可以恢复索引，不需要重新创建，但需要维护。 灰度发布：测试索引，对当前数据库不会参生太多影响，确认有效后，可以取消隐藏，改变为正常索引。">
+<meta name="keywords" content="MySql,索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL8.0新特性-新的索引方式">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;64934&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="三种新的索引方式1、隐藏索引 MySQL8.0 支持隐藏索引（invisible index），不可见索引 隐藏索引不会被优化器使用，但需要维护。 应用场景：软删除、灰度发布。 软删除：不确定当前索引是否需要删除的时候，软删除，不会彻底删除，可以恢复索引，不需要重新创建，但需要维护。 灰度发布：测试索引，对当前数据库不会参生太多影响，确认有效后，可以取消隐藏，改变为正常索引。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-23T08:46:30.336Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/64934/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MySQL8.0新特性-新的索引方式 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/64934/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL8.0新特性-新的索引方式
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/MySql/" itemprop="url" rel="index">
+                    <span itemprop="name">MySql</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="三种新的索引方式"><a href="#三种新的索引方式" class="headerlink" title="三种新的索引方式"></a>三种新的索引方式</h1><h2 id="1、隐藏索引"><a href="#1、隐藏索引" class="headerlink" title="1、隐藏索引"></a>1、隐藏索引</h2><ul>
+<li>MySQL8.0 支持隐藏索引（invisible index），不可见索引</li>
+<li>隐藏索引不会被优化器使用，但需要维护。</li>
+<li>应用场景：软删除、灰度发布。<ul>
+<li>软删除：不确定当前索引是否需要删除的时候，软删除，不会彻底删除，可以恢复索引，不需要重新创建，但需要维护。</li>
+<li>灰度发布：测试索引，对当前数据库不会参生太多影响，确认有效后，可以取消隐藏，改变为正常索引。</li>
+</ul>
+</li>
+</ul><a id="more"></a>
+<p>操作：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> app_user (</span><br><span class="line">pkid <span class="built_in">int</span>,</span><br><span class="line">age <span class="built_in">int</span></span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 正常索引</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">index</span> age_idx <span class="keyword">on</span> app_user(age) ;</span><br><span class="line"><span class="comment">-- 隐藏索引 ，主键不可以设置尾隐藏索引</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">index</span> id_idx <span class="keyword">on</span> app_user(pkid) <span class="keyword">invisible</span>;</span><br><span class="line"><span class="comment">-- 有一个参数Visible为NO</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">index</span> <span class="keyword">from</span> app_user;</span><br><span class="line"><span class="comment">-- 查询优化器对索引的使用情况</span></span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> app_user <span class="keyword">where</span> age=<span class="number">18</span>;</span><br><span class="line"><span class="comment">-- 不会使用索引</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> app_user <span class="keyword">where</span> pkid=<span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 查询优化器的隐藏索引的开关</span></span><br><span class="line"><span class="keyword">select</span> @@optimizer_switch\G</span><br><span class="line"><span class="comment">-- 查询优化器使用隐藏索引，在当前会话中</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> optimizer_switch=<span class="string">"use_invisible_indexes=on"</span>;</span><br><span class="line"><span class="comment">-- 打开之后可以使用索引</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> app_user <span class="keyword">where</span> pkid=<span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 设置索引可见</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> app_user <span class="keyword">index</span> id_idx visiblle;</span><br><span class="line"><span class="comment">-- 设置索引隐藏</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> app_user <span class="keyword">index</span> id_idx invisiblle;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、降序索引"><a href="#2、降序索引" class="headerlink" title="2、降序索引"></a>2、降序索引</h2><ul>
+<li><p>MySQL8.0真正支持降序索引（descending index）。</p>
+</li>
+<li><p>只有InnoDB存储引擎支持降序索引，只支持<code>BTREE</code>降序索引。</p>
+</li>
+<li><p>MySQL8.0不再对<code>GROUP BY</code>操作进行隐式排序，也就是说，排序必须要使用<code>ORDER BY</code>。</p>
+</li>
+</ul>
+<p>操作：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> app_dept</span><br><span class="line">(</span><br><span class="line">pkid <span class="built_in">int</span>,</span><br><span class="line"><span class="keyword">num</span> <span class="built_in">int</span>,</span><br><span class="line">cou <span class="built_in">int</span>,</span><br><span class="line"><span class="keyword">index</span> idx1(<span class="keyword">num</span> <span class="keyword">asc</span>,cou <span class="keyword">desc</span>)</span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 在5.7中是没有desc的，只有8.0才会有desc</span></span><br><span class="line"><span class="keyword">show</span> cteate <span class="keyword">table</span> app_dept\G</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> app_dept <span class="keyword">values</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">300</span>),(<span class="number">2</span>,<span class="number">6</span>,<span class="number">500</span>),(<span class="number">5</span>,<span class="number">1</span>,<span class="number">256</span>),(<span class="number">3</span>,<span class="number">4</span>,<span class="number">400</span>);</span><br><span class="line"><span class="comment">-- 查询优化器使用索引的情况，会发现使用当前索引，但不用额外的排序（using filesort）操作</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> app_dept <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">num</span>,cou <span class="keyword">desc</span>;</span><br><span class="line"><span class="comment">-- 反顺序查询，只会出现反向索引扫描（backward index scan），不会重新排序</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> app_dept <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">num</span> <span class="keyword">desc</span>,cou ;</span><br><span class="line"><span class="comment">-- GROUP BY 没有默认排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) ,cou <span class="keyword">from</span> app_dept <span class="keyword">group</span> <span class="keyword">by</span> cou;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、函数索引"><a href="#3、函数索引" class="headerlink" title="3、函数索引"></a>3、函数索引</h2><ul>
+<li>MySQL8.0支持在索引中使用函数（表达式）的值。</li>
+<li>支持降序索引，支持JSON数据索引。</li>
+<li>函数索引基于虚拟列功能实现。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t1(</span><br><span class="line">c1 <span class="built_in">varchar</span>(<span class="number">100</span>),</span><br><span class="line">c2 <span class="built_in">varchar</span>(<span class="number">100</span>)</span><br><span class="line">);</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">index</span> idx1 <span class="keyword">on</span> t1(c1);</span><br><span class="line"><span class="comment">-- 创建函数索引</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">index</span> fun_idx2 <span class="keyword">on</span> t1(<span class="keyword">UPPER</span>(c1);</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">index</span> <span class="keyword">from</span> t1\G</span><br><span class="line"><span class="comment">-- 当使用函数时候，就不会走当前普通索引</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t1 <span class="keyword">where</span> <span class="keyword">upper</span>(c1)=<span class="string">'A'</span>;</span><br><span class="line"><span class="comment">-- 走当前函数索引</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t1 <span class="keyword">where</span> <span class="keyword">upper</span>(c2)=<span class="string">'A'</span>;</span><br><span class="line"><span class="comment">-- 添加一个 计算列,并未该列实现索引，虚拟列实现函数索引，</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t1 <span class="keyword">add</span> <span class="keyword">column</span> c3 <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">generated</span> <span class="keyword">always</span> <span class="keyword">as</span> (<span class="keyword">upper</span>(c1));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建JSON数据索引测试，data-&gt;&gt;'$.name' as char(30) 意思是取当前name值，类型尾char</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> emp(</span><br><span class="line"><span class="keyword">data</span> <span class="keyword">json</span>,</span><br><span class="line"><span class="keyword">index</span>((<span class="keyword">CAST</span>(<span class="keyword">data</span>-&gt;&gt;<span class="string">'$.name'</span> <span class="keyword">as</span> <span class="built_in">char</span>(<span class="number">30</span>))))</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">index</span> <span class="keyword">from</span> emp\G</span><br><span class="line"><span class="comment">-- 当前就会使用JSON索引</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> emp <span class="keyword">where</span> <span class="keyword">CAST</span>(<span class="keyword">data</span>-&gt;&gt;<span class="string">'$.name'</span> <span class="keyword">as</span> <span class="built_in">char</span>(<span class="number">30</span>))=<span class="string">'A'</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>本文地址：<a href="https://www.jianshu.com/p/b64fcc6f3c21" target="_blank" rel="noopener">MySQL8.0新特性-新的索引方式</a></p>
+<p>推荐<br><a href="https://www.jianshu.com/p/523802f07f28" target="_blank" rel="noopener">MySQL8.0创建用户及其配置</a><br><a href="https://www.jianshu.com/p/b64fcc6f3c21" target="_blank" rel="noopener">MySQL8.0新特性-新的索引方式</a><br><a href="https://www.jianshu.com/p/937ec3f0136b" target="_blank" rel="noopener">MySQL8.0新特性-通用表表达式（CTE）</a><br><a href="https://www.jianshu.com/p/99fb337cdbc1" target="_blank" rel="noopener">MySQL8.0新特性-窗口函数</a><br><a href="https://www.jianshu.com/p/582766140f17" target="_blank" rel="noopener">MySQL8.0新特性-InnoDB增强</a><br><a href="https://www.jianshu.com/p/50524b1b0050" target="_blank" rel="noopener">MySQL8.0新特性-JSON增强</a><br><a href="[https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts](https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">官方介绍</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/64934/">https://github.com/maxzhao-it/blog/post/64934/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/MySql/" rel="tag"># MySql</a>
+              <a href="/blog/tags/%E7%B4%A2%E5%BC%95/" rel="tag"># 索引</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/33720/" rel="next" title="MySQL8.0新特性-窗口函数">
+                  <i class="fa fa-chevron-left"></i> MySQL8.0新特性-窗口函数
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/26542%20-/" rel="prev" title="Centos7 解压安装MYSQL8">
+                  Centos7 解压安装MYSQL8 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#三种新的索引方式"><span class="nav-number">1.</span> <span class="nav-text">三种新的索引方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、隐藏索引"><span class="nav-number">1.1.</span> <span class="nav-text">1、隐藏索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、降序索引"><span class="nav-number">1.2.</span> <span class="nav-text">2、降序索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、函数索引"><span class="nav-number">1.3.</span> <span class="nav-text">3、函数索引</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

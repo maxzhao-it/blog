@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="都说MySql8.x比5.7快两倍，可以参考一下。但不支持从 MySQL 8.0 降级到 MySQL 5.7（或从某个 MySQL 8.0 版本降级到任意一个更早的 MySQL 8.0 版本）。数据备份方式还是可以的。">
+<meta name="keywords" content="MySql,ArchLinux,Manjaro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Archlinux或Manjaro安装MYSQL8">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;20858&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="都说MySql8.x比5.7快两倍，可以参考一下。但不支持从 MySQL 8.0 降级到 MySQL 5.7（或从某个 MySQL 8.0 版本降级到任意一个更早的 MySQL 8.0 版本）。数据备份方式还是可以的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-24T07:25:21.125Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/20858/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Archlinux或Manjaro安装MYSQL8 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/20858/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Archlinux或Manjaro安装MYSQL8
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-24 15:25:21" itemprop="dateModified" datetime="2021-08-24T15:25:21+08:00">2021-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/MySql/" itemprop="url" rel="index">
+                    <span itemprop="name">MySql</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>都说MySql8.x比5.7快两倍，可以<a href="https://www.oschina.net/news/95325/mysql-8-0-ga-released" target="_blank" rel="noopener">参考</a>一下。<br>但不支持从 MySQL 8.0 降级到 MySQL 5.7（或从某个 MySQL 8.0 版本降级到任意一个更早的 MySQL 8.0 版本）。数据备份方式还是可以的。</p><a id="more"></a>
+<ul>
+<li>注意MySql8 的用户安全策略的改变</li>
+<li>注意MySql8 编码格式</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="先查看有没有-mariadb"><a href="#先查看有没有-mariadb" class="headerlink" title="先查看有没有 mariadb"></a>先查看有没有 mariadb</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Qs mariadb</span><br></pre></td></tr></table></figure>
+
+<h3 id="有就强制卸载"><a href="#有就强制卸载" class="headerlink" title="有就强制卸载"></a>有就强制卸载</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -R xxx</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S mysql</span><br></pre></td></tr></table></figure>
+
+<h3 id="初始化配置"><a href="#初始化配置" class="headerlink" title="初始化配置"></a>初始化配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化，最后会输出密码</span></span><br><span class="line">sudo mysqld --initialize --user=mysql --basedir=/usr --datadir=/var/lib/mysql</span><br><span class="line">chown mysql:mysql /var/lib/mysql -R</span><br><span class="line">systemctl start mysqld.service</span><br><span class="line"><span class="comment"># 开机自起</span></span><br><span class="line">systemctl <span class="built_in">enable</span> mysqld</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看安装日志中的密码"><a href="#查看安装日志中的密码" class="headerlink" title="查看安装日志中的密码"></a>查看安装日志中的密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /var/<span class="built_in">log</span>/mysqld.log | grep password</span><br></pre></td></tr></table></figure>
+
+<h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br></pre></td></tr></table></figure>
+
+<p>比如这个<code>uQ3sw%Cu;IKk</code>复制粘贴就可以了。</p>
+<h3 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">alter user <span class="string">'root'</span>@<span class="string">'localhost'</span> identified  by <span class="string">"123456"</span>;</span><br><span class="line"><span class="comment"># alter user 'root'@'localhost' identified WITH caching_sha2_password by "123456";</span></span><br><span class="line"><span class="comment">#创建远程连接</span></span><br><span class="line">create user root@<span class="string">'%'</span> identified by <span class="string">'123456'</span>;</span><br><span class="line">grant all privileges on *.* to root@<span class="string">'%'</span>;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+<h3 id="无密码的方式，可用于找回密码。"><a href="#无密码的方式，可用于找回密码。" class="headerlink" title="无密码的方式，可用于找回密码。"></a>无密码的方式，可用于找回密码。</h3><p>输入一百次也输入不对默认密码 配置文件 MySQL 免密码登录 编辑 MySQL 的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br><span class="line">#在 datadir开头的下面一行加入下面这句</span><br><span class="line">skip-grant-tables</span><br></pre></td></tr></table></figure>
+
+<p>修改密码(记得删除my.cnf文件的东西)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/mysql </span><br><span class="line">use mysql;</span><br><span class="line">update user SET Password = <span class="string">'new-password'</span> WHERE User = <span class="string">'root'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">basedir=/var/lib/mysql</span><br><span class="line">datadir=/var/lib/mysql</span><br><span class="line">port=3336</span><br><span class="line">character-set-server=utf8mb4</span><br><span class="line"><span class="comment"># 下面这个选项是可以选择的</span></span><br><span class="line"><span class="comment">#default_authentication_plugin=mysql_native_password</span></span><br><span class="line"></span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8mb4</span><br><span class="line"><span class="comment"># 不使用密码进入</span></span><br><span class="line"><span class="comment"># skip-grant-table</span></span><br><span class="line"></span><br><span class="line">[client]</span><br><span class="line">default-character-set=utf8mb4</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="问题1-NO-ZERO-DATE"><a href="#问题1-NO-ZERO-DATE" class="headerlink" title="问题1 NO_ZERO_DATE"></a>问题1 <code>NO_ZERO_DATE</code></h3><p><strong>问题描述</strong>：安装mysql执行初始化命令mysqld –initialize时出现如下错误：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2021-04-12T05:57:03.198202Z 0 [Warning] [MY-010915] [Server] <span class="string">'NO_ZERO_DATE'</span>, <span class="string">'NO_ZERO_IN_DATE'</span> and <span class="string">'ERROR_FOR_DIVISION_BY_ZERO'</span> sql modes should be used with strict mode. They will be merged with strict mode <span class="keyword">in</span> a future release.</span><br><span class="line">2021-04-12T05:57:03.198234Z 0 [System] [MY-013169] [Server] /usr/bin/mysqld (mysqld 8.0.23) initializing of server <span class="keyword">in</span> progress as process 6289</span><br><span class="line">2021-04-12T05:57:03.199359Z 0 [ERROR] [MY-010457] [Server] --initialize specified but the data directory has files <span class="keyword">in</span> it. Aborting.</span><br><span class="line">2021-04-12T05:57:03.199363Z 0 [ERROR] [MY-013236] [Server] The designated data directory /var/lib/mysql/ is unusable. You can remove all files that the server added to it.</span><br><span class="line">2021-04-12T05:57:03.199405Z 0 [ERROR] [MY-010119] [Server] Aborting</span><br><span class="line">2021-04-12T05:57:03.199471Z 0 [System] [MY-010910] [Server] /usr/bin/mysqld: Shutdown complete (mysqld 8.0.23)  Source distribution.</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题原因</strong>：根目录下data文件夹问题。一般在初始化前手动建立data文件夹会有问题，需要初始化时自动创建。</p>
+<p><strong>解决办法</strong>：将根目录下data文件夹删除或修改名字，再次执行初始化命令时会自动简历data文件夹。</p>
+<h3 id="问题2-libicuuc-so-65"><a href="#问题2-libicuuc-so-65" class="headerlink" title="问题2 libicuuc.so.65"></a>问题2 <code>libicuuc.so.65</code></h3><p><a href="https://github.com/unicode-org/icu/releases">下载icu4c-65_1-src.zip</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">解压icu4c-65_1-src.zip</span><br><span class="line"><span class="built_in">cd</span> icu/<span class="built_in">source</span></span><br><span class="line"><span class="comment"># 这里如果执行失败，就看一下文件中有没有 \n\r，如果有删除\r</span></span><br><span class="line">./configure</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>本文地址： <a href="https://www.jianshu.com/p/9a5e4fea031c" target="_blank" rel="noopener">Centos7 解压安装MYSQL8</a></p>
+<p>推荐</p>
+<p><a href="https://www.jianshu.com/p/523802f07f28" target="_blank" rel="noopener">MySQL8.0创建用户及其配置</a><br><a href="https://www.jianshu.com/p/b64fcc6f3c21" target="_blank" rel="noopener">MySQL8.0新特性-新的索引方式</a><br><a href="https://www.jianshu.com/p/937ec3f0136b" target="_blank" rel="noopener">MySQL8.0新特性-通用表表达式（CTE）</a><br><a href="https://www.jianshu.com/p/99fb337cdbc1" target="_blank" rel="noopener">MySQL8.0新特性-窗口函数</a><br><a href="https://www.jianshu.com/p/582766140f17" target="_blank" rel="noopener">MySQL8.0新特性-InnoDB增强</a><br><a href="https://www.jianshu.com/p/50524b1b0050" target="_blank" rel="noopener">MySQL8.0新特性-JSON增强</a><br>[官方介绍]([<a href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/20858/">https://github.com/maxzhao-it/blog/post/20858/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/MySql/" rel="tag"># MySql</a>
+              <a href="/blog/tags/ArchLinux/" rel="tag"># ArchLinux</a>
+              <a href="/blog/tags/Manjaro/" rel="tag"># Manjaro</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/61051/" rel="next" title="SpringBoot中的WebSocket消息收发">
+                  <i class="fa fa-chevron-left"></i> SpringBoot中的WebSocket消息收发
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/13199/" rel="prev" title="Linux开机自启">
+                  Linux开机自启 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#先查看有没有-mariadb"><span class="nav-number">1.1.</span> <span class="nav-text">先查看有没有 mariadb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有就强制卸载"><span class="nav-number">1.2.</span> <span class="nav-text">有就强制卸载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-1"><span class="nav-number">1.3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化配置"><span class="nav-number">1.4.</span> <span class="nav-text">初始化配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看安装日志中的密码"><span class="nav-number">1.5.</span> <span class="nav-text">查看安装日志中的密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登录"><span class="nav-number">1.6.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改密码"><span class="nav-number">1.7.</span> <span class="nav-text">修改密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无密码的方式，可用于找回密码。"><span class="nav-number">1.8.</span> <span class="nav-text">无密码的方式，可用于找回密码。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本配置"><span class="nav-number">1.9.</span> <span class="nav-text">基本配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题1-NO-ZERO-DATE"><span class="nav-number">2.1.</span> <span class="nav-text">问题1 NO_ZERO_DATE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题2-libicuuc-so-65"><span class="nav-number">2.2.</span> <span class="nav-text">问题2 libicuuc.so.65</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

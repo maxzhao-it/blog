@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="常用到的注解有：   作用范围 API 使用位置    协议集描述 @Api 用于controller类上   协议描述 @ApiOperation 用在controller的方法上   非对象参数集 @ApiImplicitParams 用在controller的方法上   非对象参数描述 @ApiImplicitParam 用在@ApiImplicitParams的方法里边   对象参数描述">
+<meta name="keywords" content="Swagger">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swagger2.X注解">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;15110&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="常用到的注解有：   作用范围 API 使用位置    协议集描述 @Api 用于controller类上   协议描述 @ApiOperation 用在controller的方法上   非对象参数集 @ApiImplicitParams 用在controller的方法上   非对象参数描述 @ApiImplicitParam 用在@ApiImplicitParams的方法里边   对象参数描述">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-23T08:46:30.392Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/15110/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Swagger2.X注解 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/15110/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Swagger2.X注解
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Java/Swagger2/" itemprop="url" rel="index">
+                    <span itemprop="name">Swagger2</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="常用到的注解有："><a href="#常用到的注解有：" class="headerlink" title="常用到的注解有："></a>常用到的注解有：</h3><table>
+<thead>
+<tr>
+<th align="left">作用范围</th>
+<th align="left">API</th>
+<th align="left">使用位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">协议集描述</td>
+<td align="left">@Api</td>
+<td align="left">用于controller类上</td>
+</tr>
+<tr>
+<td align="left">协议描述</td>
+<td align="left">@ApiOperation</td>
+<td align="left">用在controller的方法上</td>
+</tr>
+<tr>
+<td align="left">非对象参数集</td>
+<td align="left">@ApiImplicitParams</td>
+<td align="left">用在controller的方法上</td>
+</tr>
+<tr>
+<td align="left">非对象参数描述</td>
+<td align="left">@ApiImplicitParam</td>
+<td align="left">用在@ApiImplicitParams的方法里边</td>
+</tr>
+<tr>
+<td align="left">对象参数描述</td>
+<td align="left">@ApiParam</td>
+<td align="left">用在@ApiImplicitParams的方法里边，定义接收的参数形式</td>
+</tr>
+<tr>
+<td align="left">描述返回对象的意义</td>
+<td align="left">@ApiModel</td>
+<td align="left">用在返回对象类上</td>
+</tr>
+<tr>
+<td align="left">对象属性</td>
+<td align="left">@ApiModelProperty</td>
+<td align="left">用在参数对象的字段上</td>
+</tr>
+<tr>
+<td align="left">Response集</td>
+<td align="left">@ApiResponses</td>
+<td align="left">用在controller的方法上</td>
+</tr>
+<tr>
+<td align="left">Response</td>
+<td align="left">@ApiResponse</td>
+<td align="left">用在 @ApiResponses里边</td>
+</tr>
+<tr>
+<td align="left">Response</td>
+<td align="left">@ResponseHeader</td>
+<td align="left"></td>
+</tr>
+</tbody></table><a id="more"></a>
+<h4 id="1-Api标记"><a href="#1-Api标记" class="headerlink" title="1. @Api标记"></a>1. @Api标记</h4><p>Api 用在类上，说明该类的作用。可以标记一个 Controller 类做为 swagger  文档资源，使用方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api</span>(value = <span class="string">"/user"</span>, description = <span class="string">"Operations about user"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>与Controller注解并列使用。 属性配置：</p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th align="left">备注</th>
+<th>是否弃用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td align="left">url的路径值</td>
+<td></td>
+</tr>
+<tr>
+<td>tags</td>
+<td align="left">如果设置这个值、value的值会被覆盖</td>
+<td></td>
+</tr>
+<tr>
+<td>description</td>
+<td align="left">对api资源的描述</td>
+<td>@Deprecated</td>
+</tr>
+<tr>
+<td>basePath</td>
+<td align="left">基本路径可以不配置</td>
+<td>@Deprecated</td>
+</tr>
+<tr>
+<td>position</td>
+<td align="left">如果配置多个Api 想改变显示的顺序位置</td>
+<td>@Deprecated</td>
+</tr>
+<tr>
+<td>produces</td>
+<td align="left">For example, “application/json, application/xml”</td>
+<td></td>
+</tr>
+<tr>
+<td>consumes</td>
+<td align="left">For example, “application/json, application/xml”</td>
+<td></td>
+</tr>
+<tr>
+<td>protocols</td>
+<td align="left">Possible values: http, https, ws, wss.</td>
+<td></td>
+</tr>
+<tr>
+<td>authorizations</td>
+<td align="left">高级特性认证时配置</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>在SpringMvc中的配置如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/app/table"</span>)</span><br><span class="line"><span class="meta">@Api</span>(value = <span class="string">"/app/table"</span>, protocols = <span class="string">"http"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppTableController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-ApiOperation标记"><a href="#2-ApiOperation标记" class="headerlink" title="2. @ApiOperation标记"></a>2. @ApiOperation标记</h4><p>ApiOperation：用在方法上，说明方法的作用，每一个url资源的定义,使用方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation</span>(</span><br><span class="line">          value = <span class="string">"Find purchase order by ID"</span>,</span><br><span class="line">          notes = <span class="string">""</span>,</span><br><span class="line">          response = A.class,</span><br><span class="line">          tags = &#123;<span class="string">""</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>与Controller中的方法并列使用。<br> 属性配置：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="left">备注</th>
+<th>是否弃用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">value</td>
+<td align="left">url的路径值</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">tags</td>
+<td align="left">如果设置这个值、value的值会被覆盖</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">description</td>
+<td align="left">对api资源的描述</td>
+<td>无</td>
+</tr>
+<tr>
+<td align="left">basePath</td>
+<td align="left">基本路径可以不配置</td>
+<td>无</td>
+</tr>
+<tr>
+<td align="left">position</td>
+<td align="left">如果配置多个Api 想改变显示的顺序位置</td>
+<td>@Deprecated</td>
+</tr>
+<tr>
+<td align="left">produces</td>
+<td align="left">For example, “application/json, application/xml”</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">consumes</td>
+<td align="left">For example, “application/json, application/xml”</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">protocols</td>
+<td align="left">Possible values: http, https, ws, wss.</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">authorizations</td>
+<td align="left">高级特性认证时配置</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">hidden</td>
+<td align="left">配置为true 将在文档中隐藏</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">response</td>
+<td align="left">返回的对象</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">responseContainer</td>
+<td align="left">这些对象是有效的 “List”, “Set” or “Map”.，其他无效</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">responseReference</td>
+<td align="left">指定对响应类型的引用。指定的引用可以是本地的，也可以是远程的*将按原样使用，并覆盖任何指定的response()类。</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">responseHeaders</td>
+<td align="left">响应旁边提供的可能标题列表。</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">httpMethod</td>
+<td align="left">“GET”, “HEAD”, “POST”, “PUT”, “DELETE”, “OPTIONS” and “PATCH”</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">code</td>
+<td align="left">http的状态码 默认 200</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">extensions</td>
+<td align="left">扩展属性</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">notes</td>
+<td align="left">注释说明</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">response</td>
+<td align="left">方法的返回值的类型class</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>在SpringMvc中的配置如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation</span>(value = <span class="string">"/createCode"</span>, notes = <span class="string">"创建文件"</span>, response = ResultObj.class)</span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/createCode"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ResultObj <span class="title">createCode</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        @RequestParam(value = <span class="string">"tab_name"</span>, required = <span class="keyword">true</span>)</span> String tab_name</span></span><br><span class="line"><span class="function">        , @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"type"</span>, required = <span class="keyword">true</span>)</span> Integer type</span></span><br><span class="line"><span class="function">        , @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"includeSwagger"</span>, required = <span class="keyword">true</span>)</span> Boolean includeSwagger</span></span><br><span class="line"><span class="function">        , @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"moduleName"</span>, required = <span class="keyword">true</span>)</span> String moduleName</span></span><br><span class="line"><span class="function">        , @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"packageName"</span>, required = <span class="keyword">true</span>)</span> String packageName) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ResultObj.getDefaultResponse(appTableService.listTable(tab_name, <span class="keyword">null</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-ApiImplicitParams、-ApiImplicitParam、-ApiParam标记"><a href="#3-ApiImplicitParams、-ApiImplicitParam、-ApiParam标记" class="headerlink" title="3. @ApiImplicitParams、@ApiImplicitParam、@ApiParam标记"></a>3. @ApiImplicitParams、@ApiImplicitParam、@ApiParam标记</h4><h5 id="ApiImplicitParams"><a href="#ApiImplicitParams" class="headerlink" title="@ApiImplicitParams"></a>@ApiImplicitParams</h5><p>只有<code>value</code>一个属性，用来装多个<code>@ApiImplicitParam</code>。</p>
+<h5 id="ApiImplicitParam"><a href="#ApiImplicitParam" class="headerlink" title="@ApiImplicitParam"></a>@ApiImplicitParam</h5><p>用在<code>@ApiImplicitParams</code>注解中，指定一个请求参数的各个方面<br>| 属性名称        |         备注 |<br>| :————– | :———– |<br>|  paramType | 参数放在哪个地方 |<br>|  name | 参数名称 |<br>|  value | 参数代表的含义 |<br>|  dataType | 参数类型 |<br>| dataTypeClass | 参数类型 |<br>| required |  是否必要 |<br>| defaultValue | 参数的默认值 |</p>
+<h6 id="paramType"><a href="#paramType" class="headerlink" title="paramType:"></a>paramType:</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">header--&gt;请求参数的获取：<span class="meta">@RequestHeader</span>(代码中接收注解)    </span><br><span class="line">query--&gt;请求参数的获取：<span class="meta">@RequestParam</span>(代码中接收注解)    </span><br><span class="line">path（用于restful接口）--&gt;请求参数的获取：<span class="meta">@PathVariable</span>(代码中接收注解)</span><br><span class="line">body--&gt;请求参数的获取：<span class="meta">@RequestBody</span>(代码中接收注解)    </span><br><span class="line">form（不常用）)</span><br></pre></td></tr></table></figure>
+<h6 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation</span>(value = <span class="string">"/createCode"</span>, notes = <span class="string">"创建文件"</span>, response = ResultObj.class)</span><br><span class="line"><span class="meta">@ApiImplicitParams</span>(&#123;</span><br><span class="line"><span class="meta">@ApiImplicitParam</span>(name = <span class="string">"表名"</span>, value = <span class="string">"tab_name"</span>, paramType = <span class="string">"query"</span>, dataType = <span class="string">"String"</span>, required = <span class="keyword">true</span>)</span><br><span class="line">, <span class="meta">@ApiImplicitParam</span>(name = <span class="string">"生成代码类别参数"</span>, value = <span class="string">"type"</span>, paramType = <span class="string">"query"</span>, dataType = <span class="string">"Integer"</span>, required = <span class="keyword">true</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/createCode"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultObj <span class="title">createCode</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        @RequestParam(value = <span class="string">"tab_name"</span>, required = <span class="keyword">true</span>)</span> String tabName</span></span><br><span class="line"><span class="function">        , @<span class="title">RequestParam</span><span class="params">(value = <span class="string">"type"</span>, required = <span class="keyword">true</span>, defaultValue = <span class="string">"-1"</span>)</span> Integer type)</span>&#123;<span class="keyword">return</span> <span class="keyword">null</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="ApiParam"><a href="#ApiParam" class="headerlink" title="@ApiParam"></a>@ApiParam</h5><p>用在接收参数中，指定一个请求参数的信息<br>| 属性名称 | 备注 |<br>| :————– | :———– |<br>| name | 要绑定到的请求参数的名称 |<br>| value | 参数的简单描述 |<br>| required |  是否必要 |<br>| defaultValue | 参数的默认值 |<br>具体参考<a href="http://docs.swagger.io/swagger-core/v1.5.0/apidocs/io/swagger/annotations/ApiParam.html" target="_blank" rel="noopener">文档v1.5.0</a></p>
+<h6 id="ApiParam请求属性-使用方式：与Controller中的方法并列使用。"><a href="#ApiParam请求属性-使用方式：与Controller中的方法并列使用。" class="headerlink" title="@ApiParam请求属性,使用方式：与Controller中的方法并列使用。"></a>@ApiParam请求属性,使用方式：与Controller中的方法并列使用。</h6><p>属性配置：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">name</td>
+<td align="left">属性名称</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">属性值</td>
+</tr>
+<tr>
+<td align="left">defaultValue</td>
+<td align="left">默认属性值</td>
+</tr>
+<tr>
+<td align="left">allowableValues</td>
+<td align="left">可以不配置</td>
+</tr>
+<tr>
+<td align="left">required</td>
+<td align="left">是否属性必填</td>
+</tr>
+<tr>
+<td align="left">access</td>
+<td align="left">不过多描述</td>
+</tr>
+<tr>
+<td align="left">allowMultiple</td>
+<td align="left">默认为false</td>
+</tr>
+<tr>
+<td align="left">hidden</td>
+<td align="left">隐藏该属性</td>
+</tr>
+<tr>
+<td align="left">example</td>
+<td align="left">举例子</td>
+</tr>
+</tbody></table>
+<p>在SpringMvc中的配置如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ResponseEntity&lt;Order&gt; <span class="title">getOrderById</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">     @ApiParam(value = <span class="string">"ID of pet that needs to be fetched"</span>, allowableValues = <span class="string">"range[1,5]"</span>, required = <span class="keyword">true</span>)</span></span></span><br><span class="line"><span class="function">     @<span class="title">PathVariable</span><span class="params">(<span class="string">"orderId"</span>)</span> String orderId)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-ApiModel、-ApiModelProperty"><a href="#4-ApiModel、-ApiModelProperty" class="headerlink" title="4. @ApiModel、@ApiModelProperty"></a>4. @ApiModel、@ApiModelProperty</h4><h5 id="ApiModel"><a href="#ApiModel" class="headerlink" title="@ApiModel"></a>@ApiModel</h5><p>描述一个Model的信息（这种一般用在post创建的时候，使用<code>@RequestBody</code>这样的场景，请求参数无法使用 <code>@ApiImplicitParam</code>注解进行描述的时候；</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">value</td>
+<td align="left">名称</td>
+</tr>
+<tr>
+<td align="left">description</td>
+<td align="left">描述</td>
+</tr>
+<tr>
+<td align="left">parent</td>
+<td align="left">父类  （class）</td>
+</tr>
+<tr>
+<td align="left">discriminator</td>
+<td align="left">官方描述：支持模型继承和多态性。这是用作鉴别器的字段名。基于这个领域，可以断言需要使用哪种子类型。</td>
+</tr>
+<tr>
+<td align="left">subTypes</td>
+<td align="left">子类型   {（class）}</td>
+</tr>
+<tr>
+<td align="left">reference</td>
+<td align="left">官方描述：指定对相应类型定义的引用，覆盖指定的任何其他元数据</td>
+</tr>
+</tbody></table>
+<h5 id="ApiModelProperty"><a href="#ApiModelProperty" class="headerlink" title="@ApiModelProperty"></a>@ApiModelProperty</h5><p>描述一个model的属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Table</span>(name = <span class="string">"app_table"</span>, schema = <span class="string">""</span>, catalog = <span class="string">""</span>)</span><br><span class="line"><span class="meta">@ApiModel</span>(value = <span class="string">"物理表信息表"</span>, description = <span class="string">"当前数据库表信息"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppTable</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"tab_name"</span>, unique = <span class="keyword">true</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"表名主键"</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="5-ApiResponses、-ApiResponse"><a href="#5-ApiResponses、-ApiResponse" class="headerlink" title="5. @ApiResponses、@ApiResponse"></a>5. @ApiResponses、@ApiResponse</h4><h5 id="ApiResponses：响应集配置，使用方式："><a href="#ApiResponses：响应集配置，使用方式：" class="headerlink" title="@ApiResponses：响应集配置，使用方式："></a>@ApiResponses：响应集配置，使用方式：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiResponses</span>(&#123; <span class="meta">@ApiResponse</span>(code = <span class="number">400</span>, message = <span class="string">"Invalid Order"</span>) &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>与Controller中的方法并列使用。 属性配置：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="right">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">value</td>
+<td align="right">多个ApiResponse配置</td>
+</tr>
+</tbody></table>
+<p>在SpringMvc中的配置如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/order"</span>, method = POST)</span><br><span class="line"> <span class="meta">@ApiOperation</span>(value = <span class="string">"Place an order for a pet"</span>, response = Order.class)</span><br><span class="line"> <span class="meta">@ApiResponses</span>(&#123; <span class="meta">@ApiResponse</span>(code = <span class="number">400</span>, message = <span class="string">"Invalid Order"</span>) &#125;)</span><br><span class="line"> <span class="function"><span class="keyword">public</span> ResponseEntity&lt;String&gt; <span class="title">placeOrder</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">     @ApiParam(value = <span class="string">"order placed for purchasing the pet"</span>, required = <span class="keyword">true</span>)</span> Order order) </span>&#123;</span><br><span class="line">   storeData.add(order);</span><br><span class="line">   <span class="keyword">return</span> ok(<span class="string">""</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="ApiResponse：响应配置，使用方式："><a href="#ApiResponse：响应配置，使用方式：" class="headerlink" title="@ApiResponse：响应配置，使用方式："></a>@ApiResponse：响应配置，使用方式：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiResponse</span>(code = <span class="number">400</span>, message = <span class="string">"Invalid user supplied"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>与Controller中的方法并列使用。 属性配置：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="right">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">code</td>
+<td align="right">http的状态码</td>
+</tr>
+<tr>
+<td align="left">message</td>
+<td align="right">描述</td>
+</tr>
+<tr>
+<td align="left">response</td>
+<td align="right">默认响应类 Void</td>
+</tr>
+<tr>
+<td align="left">reference</td>
+<td align="right">参考ApiOperation中配置</td>
+</tr>
+<tr>
+<td align="left">responseHeaders</td>
+<td align="right">参考 ResponseHeader 属性配置说明</td>
+</tr>
+<tr>
+<td align="left">responseContainer</td>
+<td align="right">参考ApiOperation中配置</td>
+</tr>
+</tbody></table>
+<p>在SpringMvc中的配置如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/order"</span>, method = POST)</span><br><span class="line"> <span class="meta">@ApiOperation</span>(value = <span class="string">"Place an order for a pet"</span>, response = Order.class)</span><br><span class="line"> <span class="meta">@ApiResponses</span>(&#123; <span class="meta">@ApiResponse</span>(code = <span class="number">400</span>, message = <span class="string">"Invalid Order"</span>) &#125;)</span><br><span class="line"> <span class="function"><span class="keyword">public</span> ResponseEntity&lt;String&gt; <span class="title">placeOrder</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">     @ApiParam(value = <span class="string">"order placed for purchasing the pet"</span>, required = <span class="keyword">true</span>)</span> Order order) </span>&#123;</span><br><span class="line">   storeData.add(order);</span><br><span class="line">   <span class="keyword">return</span> ok(<span class="string">""</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="6-ResponseHeader"><a href="#6-ResponseHeader" class="headerlink" title="6. ResponseHeader"></a>6. ResponseHeader</h4><blockquote>
+<p>响应头设置，使用方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ResponseHeader</span>(name=<span class="string">"head1"</span>,description=<span class="string">"response head conf"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>与Controller中的方法并列使用。 属性配置：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="right">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">name</td>
+<td align="right">响应头名称</td>
+</tr>
+<tr>
+<td align="left">description</td>
+<td align="right">头描述</td>
+</tr>
+<tr>
+<td align="left">response</td>
+<td align="right">默认响应类 Void</td>
+</tr>
+<tr>
+<td align="left">responseContainer</td>
+<td align="right">参考ApiOperation中配置</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>本文地址：<a href="https://www.jianshu.com/p/515e48e98152" target="_blank" rel="noopener">Swagger2.X注解</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/15110/">https://github.com/maxzhao-it/blog/post/15110/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Swagger/" rel="tag"># Swagger</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/21486/" rel="next" title="U盘安装manjaro——抛弃Centos的旅程开始">
+                  <i class="fa fa-chevron-left"></i> U盘安装manjaro——抛弃Centos的旅程开始
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/4258/" rel="prev" title="Solr安装">
+                  Solr安装 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用到的注解有："><span class="nav-number">1.</span> <span class="nav-text">常用到的注解有：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Api标记"><span class="nav-number">1.1.</span> <span class="nav-text">1. @Api标记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-ApiOperation标记"><span class="nav-number">1.2.</span> <span class="nav-text">2. @ApiOperation标记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-ApiImplicitParams、-ApiImplicitParam、-ApiParam标记"><span class="nav-number">1.3.</span> <span class="nav-text">3. @ApiImplicitParams、@ApiImplicitParam、@ApiParam标记</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ApiImplicitParams"><span class="nav-number">1.3.1.</span> <span class="nav-text">@ApiImplicitParams</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApiImplicitParam"><span class="nav-number">1.3.2.</span> <span class="nav-text">@ApiImplicitParam</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#paramType"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">paramType:</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使用方式"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">使用方式</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApiParam"><span class="nav-number">1.3.3.</span> <span class="nav-text">@ApiParam</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ApiParam请求属性-使用方式：与Controller中的方法并列使用。"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">@ApiParam请求属性,使用方式：与Controller中的方法并列使用。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-ApiModel、-ApiModelProperty"><span class="nav-number">1.4.</span> <span class="nav-text">4. @ApiModel、@ApiModelProperty</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ApiModel"><span class="nav-number">1.4.1.</span> <span class="nav-text">@ApiModel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApiModelProperty"><span class="nav-number">1.4.2.</span> <span class="nav-text">@ApiModelProperty</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-ApiResponses、-ApiResponse"><span class="nav-number">1.5.</span> <span class="nav-text">5. @ApiResponses、@ApiResponse</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ApiResponses：响应集配置，使用方式："><span class="nav-number">1.5.1.</span> <span class="nav-text">@ApiResponses：响应集配置，使用方式：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApiResponse：响应配置，使用方式："><span class="nav-number">1.5.2.</span> <span class="nav-text">@ApiResponse：响应配置，使用方式：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-ResponseHeader"><span class="nav-number">1.6.</span> <span class="nav-text">6. ResponseHeader</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

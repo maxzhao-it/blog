@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Docker安装可以参考： Manjaro安装Docker Centos7 安装 docker 一、创建 docker 节点拉取centos镜像1docker pull centos这里如果没有权限，则参考 Manjaro安装Docker 中的分组操作。">
+<meta name="keywords" content="DB,PostgreSql,Docker,Greenplum,集群">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker安装Greenplum集群">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;47598&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="Docker安装可以参考： Manjaro安装Docker Centos7 安装 docker 一、创建 docker 节点拉取centos镜像1docker pull centos这里如果没有权限，则参考 Manjaro安装Docker 中的分组操作。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-24T02:44:30.353Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/47598/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Docker安装Greenplum集群 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/47598/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker安装Greenplum集群
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-24 10:44:30" itemprop="dateModified" datetime="2021-08-24T10:44:30+08:00">2021-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/PostgreSql/" itemprop="url" rel="index">
+                    <span itemprop="name">PostgreSql</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/PostgreSql/Greenplum/" itemprop="url" rel="index">
+                    <span itemprop="name">Greenplum</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/PostgreSql/Greenplum/%E9%9B%86%E7%BE%A4/" itemprop="url" rel="index">
+                    <span itemprop="name">集群</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><code>Docker</code>安装可以参考：</p>
+<p><a href="../22928/">Manjaro安装Docker</a></p>
+<p><a href="../21945/">Centos7 安装 docker</a></p>
+</blockquote><h3 id="一、创建-docker-节点"><a href="#一、创建-docker-节点" class="headerlink" title="一、创建 docker 节点"></a>一、创建 <code>docker</code> 节点</h3><h4 id="拉取centos镜像"><a href="#拉取centos镜像" class="headerlink" title="拉取centos镜像"></a>拉取centos镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull centos</span><br></pre></td></tr></table></figure><p>这里如果没有权限，则参考 <a href="../22928/">Manjaro安装Docker</a> 中的分组操作。</p><a id="more"></a>
+
+
+
+<h4 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建几个容器，作为greenplum的节点"><a href="#创建几个容器，作为greenplum的节点" class="headerlink" title="创建几个容器，作为greenplum的节点"></a>创建几个容器，作为<code>greenplum</code>的节点</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用 exit退出</span></span><br><span class="line">docker run -it --name gp-master centos /bin/bash</span><br><span class="line">docker run -it --name gp-master1 centos /bin/bash</span><br><span class="line">docker run -it --name gp-master2 centos /bin/bash</span><br><span class="line">docker run -it --name gp-master3 centos /bin/bash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：<code>exit</code> 退出后，容器停止(<code>Exited</code>)</p>
+<p>命令解释：为<code>centos</code>这个镜像创建一个容器</p>
+<ul>
+<li><code>run</code>: 在新的容器中运行命令 . <code>run</code>=<code>create</code> + <code>start</code></li>
+<li><code>-it</code> : <code>-i</code>和<code>-t</code>, 为该<code>docker</code>创建一个伪终端，这样就可以进入到容器的交互模式</li>
+<li><code>--name</code>  <code>gp-master</code> 容器名称</li>
+<li><code>centos</code>： 镜像</li>
+<li><code>*/bin/bash</code> ：表示启动容器后启动<code>bash</code>。<code>docker</code>中必须要保持一个进程的运行，要不然整个容器启动后就会马上<code>kill itself</code></li>
+</ul>
+<p>查看帮助：<code>docker run --help</code></p>
+<p>守护态运行，通过 <code>run</code>后加<code>-d</code>实现</p>
+</blockquote>
+<h3 id="二、配置基础环境"><a href="#二、配置基础环境" class="headerlink" title="二、配置基础环境"></a>二、配置基础环境</h3><p>进入每个<code>greenplum</code>节点，配置基础环境</p>
+<p>由于<code>docker</code>的<code>centos</code>镜像是<code>centos</code>的简化版本，里面有很多包是没有安装的，会影响到后面部署<code>greenplum</code>，因此在<code>docker</code>的每个节点中安装相关的依赖包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在运行的容器</span></span><br><span class="line">docker ps -s</span><br><span class="line"><span class="comment"># 查看所有容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">docker start gp-master</span><br><span class="line">docker start gp-master1</span><br><span class="line">docker start gp-master2</span><br><span class="line">docker start gp-master3</span><br><span class="line"><span class="comment"># 停止容器</span></span><br><span class="line"><span class="comment"># docker stop gp-master</span></span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it gp-master /bin/bash</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装相关的依赖包</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y net-tools <span class="built_in">which</span> openssh-clients openssh-server less zip unzip iproute</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动ssh</li>
+</ul>
+<p>docker中默认没有启动ssh，为了方便各节点之间的互连，创建相关的认证key，并启动docker的每个节点里面的ssh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key</span><br><span class="line">ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key</span><br><span class="line">ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key</span><br><span class="line">/usr/sbin/sshd</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改/etc/hosts文件</li>
+</ul>
+<p>在每个<code>docker</code>节点中添加如下配置，方便后续<code>greenplum</code>集群的配置文件中用到，<code>ip</code>为各个<code>docker</code>节点中的ip地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">cat /etc/hosts</span><br><span class="line"><span class="comment"># 写入</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"172.17.0.2 dw-greenplum-1 mdw"</span> &gt;&gt; /etc/hosts</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"172.17.0.3 dw-greenplum-2 sdw1"</span> &gt;&gt; /etc/hosts</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"172.17.0.4 dw-greenplum-3 sdw2"</span> &gt;&gt; /etc/hosts</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"172.17.0.5 dw-greenplum-4 sdw3"</span> &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>同时修改所有节点里面的<code>/etc/sysconfig/network</code>文件，保持与主机名一致</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">cat /etc/sysconfig/network</span><br><span class="line"><span class="comment"># 不存在,则写入</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"NETWORKING=yes"</span> &gt;&gt; /etc/sysconfig/network</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"HOSTNAME=mdw"</span> &gt;&gt; /etc/sysconfig/network</span><br><span class="line"><span class="comment"># 存在,则修改</span></span><br><span class="line">vi /etc/sysconfig/network</span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=mdw</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建greenplum的用户和用户组</li>
+</ul>
+<p>为了方便安装<code>greenplum</code>集群，且使<code>greenplum</code>自带的<code>python</code>不与系统的<code>python</code>版本相冲突，在每个节点中创建<code>greenplum</code>的用户和用户组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">groupadd -g 530 gpadmin</span><br><span class="line">useradd -g 530 -u 530 -m -d /home/gpadmin -s /bin/bash gpadmin</span><br><span class="line">chown -R gpadmin:gpadmin /home/gpadmin</span><br><span class="line"><span class="comment"># 这里可能会提示 bash: passwd: command not found</span></span><br><span class="line">passwd gpadmin</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改每个节点上的文件打开数量限制</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/security/limits.conf</span><br><span class="line"><span class="comment"># 不存在,则写入, 存在,则用 vi 修改</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"soft nofile 65536"</span> &gt;&gt; /etc/security/limits.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hard nofile 65536"</span> &gt;&gt; /etc/security/limits.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"soft nproc 131072"</span> &gt;&gt; /etc/security/limits.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hard nproc 131072"</span> &gt;&gt; /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>关闭每个节点上的防火墙，关闭selinux</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 最新的centos好像这些都不需要操作</span></span><br><span class="line">service iptables stop</span><br><span class="line">chkconfig iptables off</span><br><span class="line">vi /etc/selinux/config </span><br><span class="line"><span class="comment"># This file controls the state of SELinux on the system.</span></span><br><span class="line"><span class="comment"># SELINUX= can take one of these three values:</span></span><br><span class="line"><span class="comment">#     enforcing - SELinux security policy is enforced.</span></span><br><span class="line"><span class="comment">#     permissive - SELinux prints warnings instead of enforcing.</span></span><br><span class="line"><span class="comment">#     disabled - No SELinux policy is loaded.</span></span><br><span class="line">SELINUX=disabled</span><br><span class="line"><span class="comment"># SELINUXTYPE= can take one of these two values:</span></span><br><span class="line"><span class="comment">#     targeted - Targeted processes are protected,</span></span><br><span class="line"><span class="comment">#     mls - Multi Level Security protection.</span></span><br><span class="line">SELINUXTYPE=targeted</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、下载greenplum安装包"><a href="#三、下载greenplum安装包" class="headerlink" title="三、下载greenplum安装包"></a>三、下载<code>greenplum</code>安装包</h3><p>到<code>greenplum</code>的官网上，下载<a href="https://network.pivotal.io/products/pivotal-gpdb" target="_blank" rel="noopener">greenplum安装包</a><br>或<a href="https://github.com/greenplum-db/gpdb/releases">GitHub下载</a>，点开<code>Greenplum Database Server</code>，根据自己的操作系统下载安装包，我下载当前最新的<code>greenplum-db-6.15.0-rhel7-x86_64.rpm</code>，将其拷到<code>master</code>节点的<code>/home/gpadmin</code>目录中</p>
+<blockquote>
+<p>版本快速链接: <a href="https://github.com/greenplum-db/gpdb/releases/download/6.15.0/open-source-greenplum-db-6.15.0-rhel7-x86_64.rpm">github:open-source-greenplum-db-6.15.0-rhel7-x86_64.rpm</a></p>
+</blockquote>
+<h3 id="四、在master节点上安装greenplum"><a href="#四、在master节点上安装greenplum" class="headerlink" title="四、在master节点上安装greenplum"></a>四、在<code>master</code>节点上安装<code>greenplum</code></h3><p>切换到gpadmin用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su gpadmin</span><br><span class="line"><span class="built_in">cd</span> ~/</span><br></pre></td></tr></table></figure>
+
+<h4 id="传递文件到docker"><a href="#传递文件到docker" class="headerlink" title="传递文件到docker"></a>传递文件到<code>docker</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps </span><br><span class="line">docker cp /home/maxzhao/Downloads/open-source-greenplum-db-6.15.0-rhel7-x86_64.rpm 348d61c65324:/home/gpadmin/open-source-greenplum-db-6.15.0-rhel7-x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<h4 id="Rpm-安装"><a href="#Rpm-安装" class="headerlink" title="Rpm 安装"></a><code>Rpm</code> 安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum localinstall /home/gpadmin/open-source-greenplum-db-6.15.0-rhel7-x86_64.rpm -y</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看安装地址</span></span><br><span class="line">[root@3b2ae1fbe58b /]<span class="comment"># whereis greenplum-db</span></span><br><span class="line">greenplum-db: /usr/<span class="built_in">local</span>/greenplum-db</span><br><span class="line">[root@3b2ae1fbe58b /]<span class="comment"># ls -l /usr/local/greenplum-db </span></span><br><span class="line">lrwxrwxrwx 1 root root 30 Apr 20 11:14 /usr/<span class="built_in">local</span>/greenplum-db -&gt; /usr/<span class="built_in">local</span>/greenplum-db-6.15.0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>gpssh-exkeys</code> 报错问题:</p>
+<p>cd /usr/bin</p>
+<p>mv python python.bak</p>
+</blockquote>
+<h4 id="解压安装-ZIP"><a href="#解压安装-ZIP" class="headerlink" title="解压安装(ZIP)"></a>解压安装(ZIP)</h4><p>解压下载后的zip文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip greenplum-db-5.10.2-rhel7-x86_64.zip</span><br></pre></td></tr></table></figure>
+
+<p>执行安装文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./greenplum-db-5.10.2-rhel7-x86_64.bin</span><br></pre></td></tr></table></figure>
+
+<p>安装期间需要配置安装目录，输入<code>/home/gpadmin/greenplum-db-5.10.2</code></p>
+<h4 id="为了方便安装集群，greenplum提供了批量操作节点的命令，通过指定配置文件使用批处理命令"><a href="#为了方便安装集群，greenplum提供了批量操作节点的命令，通过指定配置文件使用批处理命令" class="headerlink" title="为了方便安装集群，greenplum提供了批量操作节点的命令，通过指定配置文件使用批处理命令"></a>为了方便安装集群，<code>greenplum</code>提供了批量操作节点的命令，通过指定配置文件使用批处理命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/ ;mkdir conf</span><br><span class="line"><span class="built_in">echo</span> mdw &gt; ./conf/hostlist</span><br><span class="line"><span class="built_in">echo</span> sdw1 &gt;&gt; ./conf/hostlist</span><br><span class="line"><span class="built_in">echo</span> sdw2 &gt;&gt; ./conf/hostlist</span><br><span class="line"><span class="built_in">echo</span> sdw3 &gt;&gt; ./conf/hostlist</span><br><span class="line">cat ./conf/hostlist</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> sdw1 &gt; ./conf/seg_hosts </span><br><span class="line"><span class="built_in">echo</span> sdw2 &gt;&gt; ./conf/seg_hosts </span><br><span class="line"><span class="built_in">echo</span> sdw3 &gt;&gt; ./conf/seg_hosts </span><br><span class="line">cat ./conf/seg_hosts</span><br></pre></td></tr></table></figure>
+
+<p><code>greenplum-db/greenplum_path.sh</code>中保存了运行<code>greenplum</code>的一些环境变量，包括GPHOME、PYTHONHOME等，在<code>gpadmin</code>账号下设置环境变量，并将master节点的<code>key</code><br>交换到各个<code>segment</code>节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ <span class="built_in">source</span> /home/gpadmin/greenplum-db/greenplum_path.sh </span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">[gpadmin@mdw ~]$ <span class="built_in">source</span> /usr/<span class="built_in">local</span>/greenplum-db/greenplum_path.sh </span><br><span class="line">[gpadmin@mdw ~]$ gpssh-exkeys -f /home/gpadmin/conf/hostlist</span><br><span class="line">[STEP 1 of 5] create <span class="built_in">local</span> ID and authorize on <span class="built_in">local</span> host</span><br><span class="line"></span><br><span class="line">[STEP 2 of 5] keyscan all hosts and update known_hosts file</span><br><span class="line"></span><br><span class="line">[STEP 3 of 5] authorize current user on remote hosts</span><br><span class="line">  ... send to mdw</span><br><span class="line">  ... send to sdw1</span><br><span class="line">  ***</span><br><span class="line">  *** Enter password <span class="keyword">for</span> sdw1: </span><br><span class="line">  ... send to sdw2</span><br><span class="line">  ... send to sdw3</span><br><span class="line"></span><br><span class="line">[STEP 4 of 5] determine common authentication file content</span><br><span class="line"></span><br><span class="line">[STEP 5 of 5] copy authentication files to all remote hosts</span><br><span class="line">  ... finished key exchange with mdw</span><br><span class="line">  ... finished key exchange with sdw1</span><br><span class="line">  ... finished key exchange with sdw2</span><br><span class="line">  ... finished key exchange with sdw3</span><br><span class="line"></span><br><span class="line">[INFO** completed successfully</span><br></pre></td></tr></table></figure>
+
+<h4 id="交换成功后，后续就可以使用一些命令执行批量操作"><a href="#交换成功后，后续就可以使用一些命令执行批量操作" class="headerlink" title="交换成功后，后续就可以使用一些命令执行批量操作"></a>交换成功后，后续就可以使用一些命令执行批量操作</h4><p><strong>注意</strong>：使用<code>gpssh-exkeys</code>命令时一定要使用<code>gpadmin</code>用户，因为会在<code>/home/gpadmin/.ssh</code>中生成ssh的免密码登录秘钥，如果使用其它账号登录，则会在其它账号下生成密钥，在<code>gpadmin</code><br>账号下就无法使用<code>gpssh</code>的批处理命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ gpssh -f /home/gpadmin/conf/hostlist</span><br><span class="line">=&gt; pwd</span><br><span class="line">[sdw1] /home/gpadmin</span><br><span class="line">[sdw3] /home/gpadmin</span><br><span class="line">[ mdw] /home/gpadmin</span><br><span class="line">[sdw2] /home/gpadmin</span><br><span class="line">=&gt; ls</span><br><span class="line">[sdw1]</span><br><span class="line">[sdw3]</span><br><span class="line">[ mdw] conf  greenplum-db  greenplum-db-5.10.2</span><br><span class="line">[sdw2]</span><br><span class="line">=&gt; exit</span><br></pre></td></tr></table></figure>
+
+<p>pwd命令是linux中的查看路径命令，在这里也是查看批量操作时各个节点当前所在的路径，从中可以看到已经成功连通了4个节点</p>
+<h3 id="五、分发安装包到每个子节点"><a href="#五、分发安装包到每个子节点" class="headerlink" title="五、分发安装包到每个子节点"></a>五、分发安装包到每个子节点</h3><p>打包master节点上的安装包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ tar -czf gp.tar.gz greenplum-db-5.10.2</span><br></pre></td></tr></table></figure>
+
+<p>使用gpscp命令将这个文件复制到每个子节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ gpscp -f /home/gpadmin/conf/seg_hosts gp.tar.gz =:/home/gpadmin</span><br></pre></td></tr></table></figure>
+
+<p>批量解压，并创建软链接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ gpssh -f /home/gpadmin/conf/seg_hosts</span><br><span class="line">=&gt; tar -zxf gp.tar.gz</span><br><span class="line">[sdw3]</span><br><span class="line">[sdw1]</span><br><span class="line">[sdw2]</span><br><span class="line">=&gt; ln -s greenplum-db-5.10.2 greenplum-db</span><br><span class="line">[sdw3]</span><br><span class="line">[sdw2]</span><br><span class="line">[sdw1]</span><br></pre></td></tr></table></figure>
+
+<p>这样就完成了所有子节点数据库的安装</p>
+<h3 id="六、初始化安装数据库"><a href="#六、初始化安装数据库" class="headerlink" title="六、初始化安装数据库"></a>六、初始化安装数据库</h3><ul>
+<li>批量创建数据目录</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ gpssh -f /home/gpadmin/conf/hostlist</span><br><span class="line">=&gt; mkdir gpdata</span><br><span class="line">[sdw1]</span><br><span class="line">[sdw3]</span><br><span class="line">[ mdw]</span><br><span class="line">[sdw2]</span><br><span class="line">=&gt; cd gpdata</span><br><span class="line">[sdw1]</span><br><span class="line">[sdw3]</span><br><span class="line">[ mdw]</span><br><span class="line">[sdw2]</span><br><span class="line">=&gt; mkdir gpmaster gpdatap1 gpdatap2 gpdatam1 gpdatam2</span><br><span class="line">[sdw1]</span><br><span class="line">[sdw3]</span><br><span class="line">[ mdw]</span><br><span class="line">[sdw2]</span><br><span class="line">=&gt; exit</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在master节点上修改<code>.bash_profile</code>配置环境变量，并发送给其他子节点，确保这些环境变量生效</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ vi .bash_profile </span><br><span class="line">source /opt/gpadmin/greenplum-db/greenplum_path.sh</span><br><span class="line">export MASTER_DATA_DIRECTORY=/home/gpadmin/gpdata/gpmaster/gpseg-1</span><br><span class="line">export PGPORT=2345</span><br><span class="line">export PGDATABASE=testDB</span><br><span class="line">[gpadmin@mdw ~]$ source .bash_profile</span><br><span class="line">[gpadmin@mdw ~]$ gpscp -f /home/gpadmin/conf/seg_hosts /home/gpadmin/.bash_profile</span><br><span class="line">[gpadmin@sdw1 ~]$ source .bash_profile</span><br><span class="line">[gpadmin@sdw2 ~]$ source .bash_profile</span><br><span class="line">[gpadmin@sdw3 ~]$ source .bash_profile</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化配置文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ vi /home/gpadmin/conf/gpinitsystem_config</span><br><span class="line">ARRAY_NAME=&quot;Greenplum&quot;</span><br><span class="line">MACHINE_LIST_FILE=/home/gpadmin/conf/seg_hosts</span><br><span class="line"></span><br><span class="line"># Segment 的名称前缀</span><br><span class="line">SEG_PREFIX=gpseg</span><br><span class="line"># Primary Segment 起始的端口号</span><br><span class="line">PORT_BASE=33000</span><br><span class="line"># 指定 Primary Segment 的数据目录</span><br><span class="line">declare -a DATA_DIRECTORY=(/home/gpadmin/gpdata/gpdatap1 /home/gpadmin/gpdata/gpdatap2)</span><br><span class="line"># Master 所在机器的 Hostname</span><br><span class="line">MASTER_HOSTNAME=mdw</span><br><span class="line"># 指定 Master 的数据目录</span><br><span class="line">MASTER_DIRECTORY=/home/gpadmin/gpdata/gpmaster</span><br><span class="line"># Master 的端口 </span><br><span class="line">MASTER_PORT=2345</span><br><span class="line"># 指定Bash的版本</span><br><span class="line">TRUSTED_SHELL=/usr/bin/ssh</span><br><span class="line"># Mirror Segment起始的端口号</span><br><span class="line">MIRROR_PORT_BASE=43000</span><br><span class="line"># Primary Segment 主备同步的起始端口号</span><br><span class="line">REPLICATION_PORT_BASE=34000</span><br><span class="line"># Mirror Segment 主备同步的起始端口号</span><br><span class="line">MIRROR_REPLICATION_PORT_BASE=44000</span><br><span class="line"># Mirror Segment 的数据目录</span><br><span class="line">declare -a MIRROR_DATA_DIRECTORY=(/home/gpadmin/gpdata/gpdatam1 /home/gpadmin/gpdata/gpdatam2)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化数据库</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[gpadmin@mdw ~]$ gpinitsystem -c /home/gpadmin/conf/gpinitsystem_config -s sdw3</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>-s sdw3</code>是指配置master的standby节点，然后按照提示步骤就能完成安装了</p>
+<p>如果gpinitsystem不成功，在master节点的<code>/home/gpadmin/gpAdminLogs</code>目录下gpinitsystem_*
+.log文件中查看日志信息，找出原因进行修改，然后再重新执行gpinitsystem进行初始化安装。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/47598/">https://github.com/maxzhao-it/blog/post/47598/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/DB/" rel="tag"># DB</a>
+              <a href="/blog/tags/PostgreSql/" rel="tag"># PostgreSql</a>
+              <a href="/blog/tags/Docker/" rel="tag"># Docker</a>
+              <a href="/blog/tags/Greenplum/" rel="tag"># Greenplum</a>
+              <a href="/blog/tags/%E9%9B%86%E7%BE%A4/" rel="tag"># 集群</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/40115/" rel="next" title="PostgreSQL基于Citus的分布式">
+                  <i class="fa fa-chevron-left"></i> PostgreSQL基于Citus的分布式
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/26523/" rel="prev" title="pacman忽略软件包的升级">
+                  pacman忽略软件包的升级 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、创建-docker-节点"><span class="nav-number">1.</span> <span class="nav-text">一、创建 docker 节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#拉取centos镜像"><span class="nav-number">1.1.</span> <span class="nav-text">拉取centos镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看镜像"><span class="nav-number">1.2.</span> <span class="nav-text">查看镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建几个容器，作为greenplum的节点"><span class="nav-number">1.3.</span> <span class="nav-text">创建几个容器，作为greenplum的节点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、配置基础环境"><span class="nav-number">2.</span> <span class="nav-text">二、配置基础环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、下载greenplum安装包"><span class="nav-number">3.</span> <span class="nav-text">三、下载greenplum安装包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、在master节点上安装greenplum"><span class="nav-number">4.</span> <span class="nav-text">四、在master节点上安装greenplum</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#传递文件到docker"><span class="nav-number">4.1.</span> <span class="nav-text">传递文件到docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rpm-安装"><span class="nav-number">4.2.</span> <span class="nav-text">Rpm 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解压安装-ZIP"><span class="nav-number">4.3.</span> <span class="nav-text">解压安装(ZIP)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为了方便安装集群，greenplum提供了批量操作节点的命令，通过指定配置文件使用批处理命令"><span class="nav-number">4.4.</span> <span class="nav-text">为了方便安装集群，greenplum提供了批量操作节点的命令，通过指定配置文件使用批处理命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#交换成功后，后续就可以使用一些命令执行批量操作"><span class="nav-number">4.5.</span> <span class="nav-text">交换成功后，后续就可以使用一些命令执行批量操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、分发安装包到每个子节点"><span class="nav-number">5.</span> <span class="nav-text">五、分发安装包到每个子节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、初始化安装数据库"><span class="nav-number">6.</span> <span class="nav-text">六、初始化安装数据库</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

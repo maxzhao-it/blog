@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="解压安装一、下载Redis手动下载地址：http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;或1wget http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;redis-5.0.3.tar.gz">
+<meta name="keywords" content="Redis,Centos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos7下的Redis安装">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;30297&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="解压安装一、下载Redis手动下载地址：http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;或1wget http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;redis-5.0.3.tar.gz">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-23T08:46:30.432Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/30297/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Centos7下的Redis安装 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/30297/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Centos7下的Redis安装
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index">
+                    <span itemprop="name">Centos</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Linux/Centos/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="解压安装"><a href="#解压安装" class="headerlink" title="解压安装"></a>解压安装</h2><h3 id="一、下载Redis"><a href="#一、下载Redis" class="headerlink" title="一、下载Redis"></a>一、下载Redis</h3><p>手动下载地址：<a href="http://download.redis.io/releases/" target="_blank" rel="noopener">http://download.redis.io/releases/</a><br>或</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-5.0.3.tar.gz</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+<h3 id="二、解压Redis"><a href="#二、解压Redis" class="headerlink" title="二、解压Redis"></a>二、解压Redis</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf redis-5.0.3.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="三、编译安装"><a href="#三、编译安装" class="headerlink" title="三、编译安装"></a>三、编译安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下面操作如果报gcc错误，需要先安装gcc，</span></span><br><span class="line">yum install -y gcc</span><br><span class="line"><span class="built_in">cd</span> redis-5.0.3/</span><br><span class="line">make MALLOC=libc</span><br><span class="line"><span class="built_in">cd</span> src &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<p>成功安装的提示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">    CC Makefile.dep</span><br><span class="line"></span><br><span class="line">Hint: It<span class="string">'s a good idea to run '</span>make <span class="built_in">test</span><span class="string">' ;)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br></pre></td></tr></table></figure>
+<h3 id="四-开机自启"><a href="#四-开机自启" class="headerlink" title="四 开机自启"></a>四 开机自启</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig redis on</span><br></pre></td></tr></table></figure>
+
+<h2 id="另外-yum-安装"><a href="#另外-yum-安装" class="headerlink" title="另外: yum 安装"></a>另外: yum 安装</h2><h3 id="安装库"><a href="#安装库" class="headerlink" title="安装库"></a>安装库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装redis"><a href="#安装redis" class="headerlink" title="安装redis"></a>安装<code>redis</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install redis</span><br></pre></td></tr></table></figure>
+
+<h3 id="服务操作"><a href="#服务操作" class="headerlink" title="服务操作"></a>服务操作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl status redis <span class="comment"># redis 状态</span></span><br><span class="line">systemctl entable redis <span class="comment"># 开机自启 </span></span><br><span class="line">systemctl start redis <span class="comment">#启动</span></span><br><span class="line">systemctl restart redis <span class="comment"># 重启</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="启动操作"><a href="#启动操作" class="headerlink" title="启动操作"></a>启动操作</h2><h4 id="直接启动"><a href="#直接启动" class="headerlink" title="直接启动"></a>直接启动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#如果当前模式安装，会自动添加全局快捷方式</span></span><br><span class="line"><span class="comment">#直接执行下面命令可以启动redis</span></span><br><span class="line">redis-server</span><br></pre></td></tr></table></figure>
+<h3 id="后台方式启动"><a href="#后台方式启动" class="headerlink" title="后台方式启动"></a>后台方式启动</h3><p><strong>方式一：</strong></p>
+<ul>
+<li>修改<code>redis.conf</code>文件<br><code>daemonize no</code><br>修改为<br><code>daemonize yes</code></li>
+<li>指定redis配置文件启动<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server /usr/<span class="built_in">local</span>/redis-4.0.6/redis.conf</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>方式二：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup redis-server &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="后台方式启动的关闭"><a href="#后台方式启动的关闭" class="headerlink" title="后台方式启动的关闭"></a>后台方式启动的关闭</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep redis</span><br><span class="line">#root      7767  5357  0 10:31 pts/1    00:00:00 redis-server *:6379</span><br><span class="line">kill -9 7767</span><br></pre></td></tr></table></figure>
+<h5 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h5><p><code>redis-cli -h  yourIp-p yourPort  -a youPassword</code></p>
+<h3 id="设置远程连接"><a href="#设置远程连接" class="headerlink" title="设置远程连接"></a>设置远程连接</h3><p>编辑 <code>redis.conf</code>文件<br><code>bind 127.0.0.1</code>这一行注释掉，或者 <code>bind 0.0.0.0</code><br><code>protected-mode</code>要设置成 <code>no</code><br>重启redis</p>
+<h3 id="防火墙配置"><a href="#防火墙配置" class="headerlink" title="防火墙配置"></a>防火墙配置</h3><p>参考<a href="https://blog.csdn.net/irokay/article/details/72717132" target="_blank" rel="noopener">https://blog.csdn.net/irokay/article/details/72717132</a><br><strong>切记：</strong>ssh远程访问时，不要把22端口删掉，22是ssh连接的端口。<br>各种数据库需要的默认端口：<a href="https://www.jianshu.com/p/50f15b3d0de6" target="_blank" rel="noopener">https://www.jianshu.com/p/50f15b3d0de6</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#清除所有规则，开放所有端口</span><br><span class="line">iptables -F</span><br></pre></td></tr></table></figure>
+<p>下面是我的一个iptables的配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sample configuration for iptables service</span></span><br><span class="line"><span class="comment"># you can edit this manually or use system-config-firewall</span></span><br><span class="line"><span class="comment"># please do not ask us to add additional ports/services to this default configuration</span></span><br><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">-A INPUT -p icmp -j ACCEPT</span><br><span class="line">-A INPUT -i lo -j ACCEPT</span><br><span class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT</span><br><span class="line"><span class="comment">#-A INPUT -p tcp -m state --state NEW -m multiport tcp --dport 1433,1521,3306,5000,5432,6379,9092,11211,27017 -j ACCEPT</span></span><br><span class="line">-A INPUT -m state --state NEW -p tcp -m multiport --dport 1433,1521,3306,5000,5432,6379,9092,11211,27017 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 8000:8888 -j ACCEPT</span><br><span class="line"></span><br><span class="line">-A INPUT -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">-A FORWARD -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="获取默认配置文件"><a href="#获取默认配置文件" class="headerlink" title="获取默认配置文件"></a>获取默认配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">daemonize no <span class="comment"># 后台运行</span></span><br><span class="line"><span class="built_in">bind</span> 0.0.0.0  <span class="comment"># 访问地址</span></span><br><span class="line">port 6379 <span class="comment">#端口</span></span><br><span class="line">requirepass <span class="comment"># 密码</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动redis</span></span><br><span class="line">service redis start</span><br><span class="line"><span class="comment"># 停止redis</span></span><br><span class="line">service redis stop</span><br><span class="line"><span class="comment"># 查看redis运行状态</span></span><br><span class="line">service redis status</span><br><span class="line"><span class="comment"># 查看redis进程</span></span><br><span class="line">ps -ef | grep redis</span><br><span class="line"><span class="comment"># 进入本机redis</span></span><br><span class="line">redis-cli</span><br><span class="line"><span class="comment"># 列出所有key</span></span><br><span class="line">keys *</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>本文地址 <a href="https://www.jianshu.com/p/89c6982296b5" target="_blank" rel="noopener">Centos7下的Redis安装</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/30297/">https://github.com/maxzhao-it/blog/post/30297/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Redis/" rel="tag"># Redis</a>
+              <a href="/blog/tags/Centos/" rel="tag"># Centos</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/36180/" rel="next" title="Centos7安装nexus3">
+                  <i class="fa fa-chevron-left"></i> Centos7安装nexus3
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/9187/" rel="prev" title="Centos7 安装Chrome">
+                  Centos7 安装Chrome <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#解压安装"><span class="nav-number">1.</span> <span class="nav-text">解压安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、下载Redis"><span class="nav-number">1.1.</span> <span class="nav-text">一、下载Redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、解压Redis"><span class="nav-number">1.2.</span> <span class="nav-text">二、解压Redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、编译安装"><span class="nav-number">1.3.</span> <span class="nav-text">三、编译安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-开机自启"><span class="nav-number">1.4.</span> <span class="nav-text">四 开机自启</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#另外-yum-安装"><span class="nav-number">2.</span> <span class="nav-text">另外: yum 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装库"><span class="nav-number">2.1.</span> <span class="nav-text">安装库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装redis"><span class="nav-number">2.2.</span> <span class="nav-text">安装redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务操作"><span class="nav-number">2.3.</span> <span class="nav-text">服务操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动操作"><span class="nav-number">3.</span> <span class="nav-text">启动操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#直接启动"><span class="nav-number">3.0.1.</span> <span class="nav-text">直接启动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后台方式启动"><span class="nav-number">3.1.</span> <span class="nav-text">后台方式启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后台方式启动的关闭"><span class="nav-number">3.2.</span> <span class="nav-text">后台方式启动的关闭</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#链接"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">链接</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置远程连接"><span class="nav-number">3.3.</span> <span class="nav-text">设置远程连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#防火墙配置"><span class="nav-number">3.4.</span> <span class="nav-text">防火墙配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件"><span class="nav-number">4.</span> <span class="nav-text">配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取默认配置文件"><span class="nav-number">4.1.</span> <span class="nav-text">获取默认配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他操作"><span class="nav-number">5.</span> <span class="nav-text">其他操作</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

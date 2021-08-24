@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="简介Tomcat本身完全用java语言编写，要先安装JDK，才能运行。目前是Apache开源软件组织的一个软件项目，它的官网 http:&#x2F;&#x2F;tomcat.apache.org。Tomcat类加载默认使用的是双亲委托模型-子类优先。">
+<meta name="keywords" content="Tomcat,优化,负载均衡,Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat详细配置、优化、负载均衡">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;61791&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="简介Tomcat本身完全用java语言编写，要先安装JDK，才能运行。目前是Apache开源软件组织的一个软件项目，它的官网 http:&#x2F;&#x2F;tomcat.apache.org。Tomcat类加载默认使用的是双亲委托模型-子类优先。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;9787847-5a126951c6bbe8d0.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;9787847-ec6378b397858f37.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;9787847-8dfc436b103c56b7.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;9787847-de558512301b70de.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;9787847-91ef8b5946f398ee.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:updated_time" content="2021-08-23T08:46:30.190Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;9787847-5a126951c6bbe8d0.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/61791/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Tomcat详细配置、优化、负载均衡 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/61791/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tomcat详细配置、优化、负载均衡
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index">
+                    <span itemprop="name">DevelopTools</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DevelopTools/Tomcat/" itemprop="url" rel="index">
+                    <span itemprop="name">Tomcat</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Tomcat本身完全用java语言编写，要先安装JDK，才能运行。目前是Apache开源软件组织的一个软件项目，它的官网 <a href="http://tomcat.apache.org/" target="_blank" rel="noopener">http://tomcat.apache.org</a>。</p><p>Tomcat类加载默认使用的是<code>双亲委托模型-子类优先</code>。</p><a id="more"></a>
+
+<h1 id="一、目录结构"><a href="#一、目录结构" class="headerlink" title="一、目录结构"></a>一、目录结构</h1><h2 id="1、Tomcat-的目录层次结构"><a href="#1、Tomcat-的目录层次结构" class="headerlink" title="1、Tomcat 的目录层次结构"></a>1、Tomcat 的目录层次结构</h2><ul>
+<li>bin:   存放启动和关闭等 <code>Tomcat</code> 的脚本文件、环境变量，<code>catalina</code>可以设置<code>JDK、JRE</code> 路径和<code>Tomcat</code> 内存。</li>
+<li>conf： 存放 <code>Tomcat</code> 服务器的各种配置文件，catalina目录下可以设置默认加载的项目。catalina文件可以设置tomcat服务器内存大小。context.xml可以用来配置数据源之类的东西。logging文件记录tomcat服务器运行的日志记录。server.xml可以设置域名、端口号、IP、请求的编码、默认加载的项目。web.xml可以设置tomcat服务器支持的文件类型。</li>
+<li>lib:   存放 <code>Tomcat</code> 服务器支撑的<code>jar</code>包，可以做多项目的<code>jar</code>优化。</li>
+<li>logs:  存放 <code>Tomcat</code> 的日志文件。</li>
+<li>temp:  存放 <code>Tomcat</code> 运行时产生的临时文件，对<code>Tomcat</code> 没有影响。</li>
+<li>webapps:web应用虽在目录，即供外界访问的web资源的存放目录，支持以war包、Jar包、普通文件夹三种形式发布应用。</li>
+<li>work:  <code>Tomcat</code> 的工作目录， <code>Catalina</code> 就在这目录中，用来存放Tomcat运行时编译后的文件。清空work目录，重启Tomcat，可以达到清除Tomcat服务器缓存的目的。</li>
+<li>文件<code>LICENSE、NOTICE、RELEASE-NOTES、RUNNING.txt</code>：<code>Tomcat</code>服务器的一些签证，运行，注意的信息，比如<code>JDK</code>版本、变量及作用。</li>
+</ul>
+<h2 id="2、JavaWeb应用的组成结构"><a href="#2、JavaWeb应用的组成结构" class="headerlink" title="2、JavaWeb应用的组成结构"></a>2、JavaWeb应用的组成结构</h2><pre><code>webapps\aoolication______Web应用所在目录
+|----html、jsp、css、js等文件，根目录下的文件外界可以直接访问
+|----WEB-INF目录：目录下的文件外界无法直接访问，由web服务器负责调用
+    |---------classes目录(java类)
+    |---------lib目录(java类运行所需的jar包)
+    |---------web.xml(web应用的配置文件)</code></pre><h2 id="3、Tomcat的组成结构"><a href="#3、Tomcat的组成结构" class="headerlink" title="3、Tomcat的组成结构"></a>3、Tomcat的组成结构</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 代表整个Servlet容器组件，是最顶层元素，可以包含一个或多个&lt;Service&gt;元素 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Server</span> <span class="attr">port</span>=<span class="string">"8005"</span> <span class="attr">shutdown</span>=<span class="string">"SHUTDOWN"</span>&gt;</span></span><br><span class="line">    	<span class="comment">&lt;!-- 包含一个&lt;Engine&gt;元素以及一个或多个&lt;Connector&gt;元素，这些&lt;Connector&gt;共享一个&lt;Engine&gt; --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Service</span> <span class="attr">name</span>=<span class="string">"Catalina"</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 代表和客户程序实际交互的组件，负责接收客户请求，以及向客户返回响应 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8080"</span> <span class="attr">protocol</span>=<span class="string">"HTTP/1.1"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">connectionTimeout</span>=<span class="string">"20000"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8009"</span> <span class="attr">protocol</span>=<span class="string">"AJP/1.3"</span> <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 它处理在同一个&lt;Service&gt;中所有&lt;Connector&gt;接收到的客户请求 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">Engine</span> <span class="attr">name</span>=<span class="string">"Catalina"</span> <span class="attr">defaultHost</span>=<span class="string">"localhost"</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 在一个&lt;Engine&gt;中可以包含多个&lt;Host&gt;,它代表一个虚拟主机(即一个服务器程序可以部署在多个有不同IP的服务器主机上)，它可以包含一个或多个应用 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Realm</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.realm.LockOutRealm"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">Realm</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.realm.UserDatabaseRealm"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">resourceName</span>=<span class="string">"UserDatabase"</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">Realm</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Host</span> <span class="attr">name</span>=<span class="string">"localhost"</span>  <span class="attr">appBase</span>=<span class="string">"webapps"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">unpackWARs</span>=<span class="string">"true"</span> <span class="attr">autoDeploy</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!-- 应用映射 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">Context</span> <span class="attr">path</span>=<span class="string">"/myapp"</span><span class="attr">docBase</span>=<span class="string">"/home/myapp"</span>&gt;</span><span class="tag">&lt;/<span class="name">Context</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">Valve</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span> <span class="attr">directory</span>=<span class="string">"logs"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">prefix</span>=<span class="string">"localhost_access_log."</span> <span class="attr">suffix</span>=<span class="string">".txt"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">pattern</span>=<span class="string">"%h %l %u %t &amp;quot;%r&amp;quot; %s %b"</span> /&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">Host</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">Engine</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">Service</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Server</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4、Tomcat体系结构"><a href="#4、Tomcat体系结构" class="headerlink" title="4、Tomcat体系结构"></a>4、Tomcat体系结构</h2><p><img src="https://upload-images.jianshu.io/upload_images/9787847-5a126951c6bbe8d0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h2 id="5、项目虚拟目录的映射方式"><a href="#5、项目虚拟目录的映射方式" class="headerlink" title="5、项目虚拟目录的映射方式"></a>5、项目虚拟目录的映射方式</h2><p>从<code>Tomcat6</code>开始，<code>Tomcat</code>支持自动映射，即<code>Tomcat</code>服务器会自动管理<code>webapps</code>目录下的所有<code>web</code>应用，并把它映射成虚拟目录，换句话说，只需把<code>web</code> 应用放在<code>webapps</code>目录下，不需要配置<code>Context</code>，外界可以直接访问，但是如果你不想讲项目放在<code>webapps</code>下，而是放在其他地方，还是需要配置<code>Context</code>，比如我的<code>tomcat</code>在<code>/home</code>路径下，我的项目在D盘,则需要在<code>Host</code>下增加如下虚拟目录映射语句</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Context</span> <span class="attr">path</span>=<span class="string">"/myapp"</span><span class="attr">docBase</span>=<span class="string">"/home/myapp"</span>&gt;</span><span class="tag">&lt;/<span class="name">Context</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6、Context的寻址优先级"><a href="#6、Context的寻址优先级" class="headerlink" title="6、Context的寻址优先级"></a>6、Context的寻址优先级</h2><p>-1）：到Tomcat安装目录<code>/conf/Context.xml</code>文件中查找<context>元素。</context></p>
+<ul>
+<li><p>2）：到Tomcat安装目录<code>/conf/[enginename]/[hostname]/context.xml.default</code>文件中查找<context>元素。</context></p>
+<ul>
+<li><p>enginename：表示<engine>的name属性</engine></p>
+</li>
+<li><p>hostname：表示<host>d的那么属性</host></p>
+</li>
+</ul>
+</li>
+<li><p>3）：到Tomcat安装目录<code>/conf/[enginename]/[hostname]/[contextpath].xml</code>文件中查找<context>元素</context></p>
+<ul>
+<li>contextpath：表示单个Web应用的URL入口</li>
+</ul>
+</li>
+<li><p>4）：到Web应用的<code>META-INF/context.xml</code>文件中查找<code>&lt;Context&gt;</code>元素</p>
+</li>
+<li><p>5）：到Tomcat安装目录<code>/conf/server.xml</code>文件中查找<code>&lt;Context&gt;</code>元素。只适用于单个Web应用</p>
+</li>
+</ul>
+<h2 id="7、修改项目为默认路径"><a href="#7、修改项目为默认路径" class="headerlink" title="7、修改项目为默认路径"></a>7、修改项目为默认路径</h2><h3 id="方式一："><a href="#方式一：" class="headerlink" title="方式一："></a>方式一：</h3><p>在Tomcat默认安装后，tomcat的主目录是webapps/root目录，所以如果想改变tomcat的主目录的话可以如下所做：</p>
+<p>在<code>/conf/server.xml</code>文件的<code>&lt;Host&gt;&lt;/Host&gt;</code> 之间加入代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=&quot;&quot; docBase=&quot;/home/myapp&quot; reloadable=&quot;true&quot; debug=&quot;0&quot;&gt;&lt;/Context&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="方式二："><a href="#方式二：" class="headerlink" title="方式二："></a>方式二：</h3><p>将tomcat安装目录下的ROOT下的所有文件删除，换成自己项目的文件。</p>
+<h1 id="二、常用配置"><a href="#二、常用配置" class="headerlink" title="二、常用配置"></a>二、常用配置</h1><h2 id="1、Context元素的属性"><a href="#1、Context元素的属性" class="headerlink" title="1、Context元素的属性"></a>1、Context元素的属性</h2><ul>
+<li>path：    指定访问该 <code>Web</code> 应用的URL入口</li>
+<li>docBase： 指定 <code>Web</code> 应用的文件路径，可以写绝对路径，也可以写相对于<code>appBase</code>属性的相对路径</li>
+<li>className：指定实现<code>Context</code>组件的<code>Java</code>类的名字，这个类必须实现<code>org.apache.catalina.Contex</code>接口，该属性默认值为<code>org.apache.catalina.core.StandardContext</code>（不建议大家改动）</li>
+<li>reloadable：如果为 <code>true</code> ，<code>Tomcat</code>服务器在运行状态下回监视在<code>WEB-INF/classes</code>和<code>WEB-INF/lib</code>目录下的<code>class</code>文件的改动，以及监视Web应用的<code>WEB-INF/web.xml</code>文件的改动，如果检测到有更新，服务器会自动更新加载 <code>web</code> 应用。其默认值为 <code>false</code> 。在开发和调试阶段，将其改为 <code>true</code> ，一般像<code>Eclipse</code>等开发环境都会默认改为true。在正式发布阶段，应将其该为false，可以降低 <code>Tomcat</code> 的运行负荷，提高<code>Tomcat</code>的运行性能，<br>在一般情况下，<code>&lt;Context&gt;</code>元素都会使用默认的标准<code>Context</code>组件，即<code>className</code>属性采用默认值<code>org.apache.catalina.core.StandardContext</code>，它除了拥有上面介绍到的属性外，还有自身专有的属性：</li>
+<li>cachingAllowed：是否允许启用静态资源(HTML、图片、声音等)的缓存。默认值为 <code>true</code> 。</li>
+<li>cacheMaxSize：设置静态资源缓存的最大值，单位为K。</li>
+<li>workDir：指定Web应用的工作目录。</li>
+<li>uppackWAR：如果为 <code>true</code> ，会把war文件展开为开放目录后再运行。为 <code>false</code> ，直接运行 <code>war</code> 文件。默认值为 <code>true</code> 。</li>
+</ul>
+<h2 id="2、web-xml文件"><a href="#2、web-xml文件" class="headerlink" title="2、web.xml文件"></a>2、web.xml文件</h2><p>该文件必须放在/WEB-INF目录下，但是从7.0版本开始，Tomcat可以不使用web.xml文件，而是使用注解方式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebServlet</span>(<span class="string">"/helloServlet"</span>) <span class="comment">//注释定义</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>TOMCAT中web.xml文件和java项目中WEB-INF目录下的web.xml文件的区别：<br>加载顺序：<br>1、tomcat conf目录下；<br>2、项目目录下的；<br>　　tomcat config目录下的为服务器全局作用域，一般用来配置全局设置、数据源等，而项目目录下的为局部作用域。<br>　　在tomcat 的web.xml是可以设置session的;</p>
+<h1 id="三、Tomcat-优化"><a href="#三、Tomcat-优化" class="headerlink" title="三、Tomcat 优化"></a>三、Tomcat 优化</h1><h2 id="1、内存使用配置"><a href="#1、内存使用配置" class="headerlink" title="1、内存使用配置"></a>1、内存使用配置</h2><ul>
+<li><code>Tomcat</code> 是依赖于 <code>JVM</code> 的，所以 <code>Tomcat</code> 的使用内存配置实质上是 <code>JVM</code> 的内存配置</li>
+</ul>
+<p>-在 <code>/bin</code> 目录下的 <code>catalina.sh</code> 可以直接通过 <code>Tomcat</code> 设置 <code>JVM</code> 内存参数</p>
+<p> <code>set &quot;JAVA_OPTS=%JAVA_OPT% -server -Xms2048m -Xmx2048m -XX:PermSize=256m -XX:MaxPermSize=512m -Djava.awt.headless=true&quot;</code></p>
+<p>-通过内存设置充分利用服务器内存</p>
+<ul>
+<li><p><code>-server</code> ：   模式启动应用慢，但是极大程度提高运行性能</p>
+</li>
+<li><p><code>-Xms2048m -Xmx2048m</code> ：   设置的是堆内存</p>
+</li>
+<li><p><code>java8</code> 开始， <code>PermSize</code> 被 <code>MetaspaceSize</code> 代替， <code>MetaspaceSize</code> 共享 <code>heap</code> ，不会再有 <code>java.lang.OutOfMemoryError：PermGen space</code> ，可以不设置．</p>
+</li>
+<li><p><code>Headless=true</code> ：   适用于Linux系统，与图形操作有关，如生成验证码含义是当前的是无显示器的服务器，应用中如果获取系统显示有关的参数会抛出异常， <code>windows</code> 系统可不用设置．</p>
+</li>
+</ul>
+<p>-可通过 <code>jmap -heap process_id</code> 查看设置是否成功</p>
+<h2 id="2、最大连接数配置（并发能力）"><a href="#2、最大连接数配置（并发能力）" class="headerlink" title="2、最大连接数配置（并发能力）"></a>2、最大连接数配置（并发能力）</h2><ul>
+<li><p>在 <code>/conf/server.xml</code> 里进行配置</p>
+</li>
+<li><p>在 <code>&lt;Connector&gt;</code> 属性中</p>
+</li>
+<li><p>将 <code>protocol</code> 属性改为 <code>&quot;org.apache.coyote.http11.Http11NioProtocol&quot;,NIO</code> 模型的效率更高</p>
+<p>加入</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">maxThreads="500" //当前可以同时处理的最大用户访问数</span><br><span class="line">minSpareThreads="100" //最小空闲线程连接数，用于优化线程池</span><br><span class="line">maxSpareThreads="200"</span><br><span class="line">acceptCount="200" //当所有的线程以分配，仍然允许连接进来，但是出于等待状态的用户数。等待线程数+工作线程数=总的可最大连接数,如果超过此数，新的连接将不会被接受，就会产生一个http错误</span><br><span class="line">enableLookups="false"//是否允许DNS反查，如果为true，request.getRemoteHost会执行DNS查找，反向解析ip对应域名或主机名，当没有这样需要的时候，可以将这个功能关闭，在一定程度上提高了Tomcat服务器的性能</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="四、负载均衡配置"><a href="#四、负载均衡配置" class="headerlink" title="四、负载均衡配置"></a>四、负载均衡配置</h1><p> 负载均衡是提高应用负载量和容错的有效手段，可以结合 <code>Nginxs</code> 与 <code>Tomcat</code> 实现， <code>Nginx</code> 是一款性能优异的反向代理服务器。</p>
+<h2 id="1、负载均衡配置实现"><a href="#1、负载均衡配置实现" class="headerlink" title="1、负载均衡配置实现"></a>1、负载均衡配置实现</h2><h3 id="反向代理原理示意图："><a href="#反向代理原理示意图：" class="headerlink" title="反向代理原理示意图："></a>反向代理原理示意图：</h3><p><img src="https://upload-images.jianshu.io/upload_images/9787847-ec6378b397858f37.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h3 id="负载均衡示意图："><a href="#负载均衡示意图：" class="headerlink" title="负载均衡示意图："></a>负载均衡示意图：</h3><p><img src="https://upload-images.jianshu.io/upload_images/9787847-8dfc436b103c56b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h3 id="负载均衡策略："><a href="#负载均衡策略：" class="headerlink" title="负载均衡策略："></a>负载均衡策略：</h3><ul>
+<li>Nginx 提供轮询（round robin）</li>
+<li>用户IP哈希（client IP）</li>
+<li>指定权重</li>
+</ul>
+<h2 id="2、负载均衡时Session的处理策略"><a href="#2、负载均衡时Session的处理策略" class="headerlink" title="2、负载均衡时Session的处理策略"></a>2、负载均衡时Session的处理策略</h2><h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><pre><code>` Session ` 是 ` Tomcat ` 服务器上的内存空间，如果一个用户发出多个请求，却发到了多个 ` tomcat ` 服务器中，那么就会出现 ` Session ` 不同步的问题。</code></pre><h3 id="解决方案1：请求锁定"><a href="#解决方案1：请求锁定" class="headerlink" title="解决方案1：请求锁定"></a>解决方案1：请求锁定</h3><pre><code>将一个用户的请求锁定到某一台服务器上，简单，但是缺乏容错性，一旦某个服务器发生故障， ` Session ` 可能丢失，（但是服务器发生故障是一个低概率事件，如果一个服务器经常挂掉，要么是硬件有问题，要么是应用有问题）。
+
+可以使用用户IP哈希实现</code></pre><h3 id="解决方案2：Session复制"><a href="#解决方案2：Session复制" class="headerlink" title="解决方案2：Session复制"></a>解决方案2：Session复制</h3><pre><code>` Session ` 复制策略，基于网络的广播策略，一个节点 ` Session ` 变化，其他节点同步复制，具有容错性，但节点多或复制量大时对网络负荷大，使网络效率低下，甚至阻塞</code></pre><ul>
+<li><p>① 在 <code>/conf/server.xml</code> 文件中开启 <code>Session</code> 复制的选项，将 <code>&lt;Cluster&gt;</code> 注释去掉，7.0默认值以配置好，需要接收器 <code>&lt;Receiver&gt;</code> 绑定内网(一般服务器都有两块网卡)网卡地址,修改端口&gt;。</p>
+</li>
+<li><p>② 在应用中指定应用是在分布式部署之下，在 <code>web.xml</code> 中添加 <code>&lt;distributable/&gt;</code> 选项</p>
+</li>
+</ul>
+<h3 id="解决方案3：共享Session"><a href="#解决方案3：共享Session" class="headerlink" title="解决方案3：共享Session"></a>解决方案3：共享Session</h3><pre><code>额外创建一个共享的空间用来存放 ` Session ` ，所有服务器共享一个 ` Session `
+
+`  memcached ` 缓存共享方案基本原理
+
+粘性 ` Session ` 与非粘性 ` Session ` 方式：</code></pre><p><img src="https://upload-images.jianshu.io/upload_images/9787847-de558512301b70de.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-91ef8b5946f398ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>   需要一些工具 <code>jar</code> 包，官网有目录和下载连接，在 <code>/conf/context.xml</code> 中进行配置，全局有效。</p>
+<h2 id="3、集群环境中应用代码应注意的问题"><a href="#3、集群环境中应用代码应注意的问题" class="headerlink" title="3、集群环境中应用代码应注意的问题"></a>3、集群环境中应用代码应注意的问题</h2><ul>
+<li><p>① 传递 <code>Session</code> 需要实体类序列化支持，实现可序列化接口，设置版本号</p>
+</li>
+<li><p>② 获取用户IP地址方法的变化，获取真实客户端ip而不是 <code>Nginx</code> 代理地址</p>
+</li>
+<li><p>③ 动静分离结构的预规划，</p>
+<p>  /一般高并发的网站上，资源类的文件，如 <code>js</code> 、<code>css</code> ,图片通常是由静态服务器处理， <code>Nginx</code> 处理静态文件效率就非常高，而 <code>Tomcat</code> 处理静态文件是它很大的一个弱势， <code>Tomcat</code> 只负责动态请求的处理。那么编码的时候就要考虑静态资源最后可能要被拿出去，地址会有变化，所以在开发的时候应该规划访问地址，保持最大灵活性。</p>
+</li>
+</ul>
+<blockquote>
+<p>本文地址：<a href="https://www.jianshu.com/p/e55cceaa3c76" target="_blank" rel="noopener">Tomcat详细配置、优化、负载均衡</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/61791/">https://github.com/maxzhao-it/blog/post/61791/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Tomcat/" rel="tag"># Tomcat</a>
+              <a href="/blog/tags/%E4%BC%98%E5%8C%96/" rel="tag"># 优化</a>
+              <a href="/blog/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag"># 负载均衡</a>
+              <a href="/blog/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/36399/" rel="next" title="Lodash操作以及问题">
+                  <i class="fa fa-chevron-left"></i> Lodash操作以及问题
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/55763/" rel="prev" title="Tomcat内部署多个应用，实现class隔离与共享">
+                  Tomcat内部署多个应用，实现class隔离与共享 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、目录结构"><span class="nav-number">2.</span> <span class="nav-text">一、目录结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、Tomcat-的目录层次结构"><span class="nav-number">2.1.</span> <span class="nav-text">1、Tomcat 的目录层次结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、JavaWeb应用的组成结构"><span class="nav-number">2.2.</span> <span class="nav-text">2、JavaWeb应用的组成结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、Tomcat的组成结构"><span class="nav-number">2.3.</span> <span class="nav-text">3、Tomcat的组成结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、Tomcat体系结构"><span class="nav-number">2.4.</span> <span class="nav-text">4、Tomcat体系结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、项目虚拟目录的映射方式"><span class="nav-number">2.5.</span> <span class="nav-text">5、项目虚拟目录的映射方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、Context的寻址优先级"><span class="nav-number">2.6.</span> <span class="nav-text">6、Context的寻址优先级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、修改项目为默认路径"><span class="nav-number">2.7.</span> <span class="nav-text">7、修改项目为默认路径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方式一："><span class="nav-number">2.7.1.</span> <span class="nav-text">方式一：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方式二："><span class="nav-number">2.7.2.</span> <span class="nav-text">方式二：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、常用配置"><span class="nav-number">3.</span> <span class="nav-text">二、常用配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、Context元素的属性"><span class="nav-number">3.1.</span> <span class="nav-text">1、Context元素的属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、web-xml文件"><span class="nav-number">3.2.</span> <span class="nav-text">2、web.xml文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Tomcat-优化"><span class="nav-number">4.</span> <span class="nav-text">三、Tomcat 优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、内存使用配置"><span class="nav-number">4.1.</span> <span class="nav-text">1、内存使用配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、最大连接数配置（并发能力）"><span class="nav-number">4.2.</span> <span class="nav-text">2、最大连接数配置（并发能力）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、负载均衡配置"><span class="nav-number">5.</span> <span class="nav-text">四、负载均衡配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、负载均衡配置实现"><span class="nav-number">5.1.</span> <span class="nav-text">1、负载均衡配置实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反向代理原理示意图："><span class="nav-number">5.1.1.</span> <span class="nav-text">反向代理原理示意图：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#负载均衡示意图："><span class="nav-number">5.1.2.</span> <span class="nav-text">负载均衡示意图：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#负载均衡策略："><span class="nav-number">5.1.3.</span> <span class="nav-text">负载均衡策略：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、负载均衡时Session的处理策略"><span class="nav-number">5.2.</span> <span class="nav-text">2、负载均衡时Session的处理策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题："><span class="nav-number">5.2.1.</span> <span class="nav-text">问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案1：请求锁定"><span class="nav-number">5.2.2.</span> <span class="nav-text">解决方案1：请求锁定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案2：Session复制"><span class="nav-number">5.2.3.</span> <span class="nav-text">解决方案2：Session复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案3：共享Session"><span class="nav-number">5.2.4.</span> <span class="nav-text">解决方案3：共享Session</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、集群环境中应用代码应注意的问题"><span class="nav-number">5.3.</span> <span class="nav-text">3、集群环境中应用代码应注意的问题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

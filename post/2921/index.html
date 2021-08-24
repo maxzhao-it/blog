@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一、JMS介绍和使用场景及基础编程模型  简介：讲解什么是小写队列，JMS的基础知识和使用场景 什么是JMS: Java消息服务（Java Message Service),Java平台中关于面向消息中间件的接口  JMS是一种与厂商无关的 API，用来访问消息收发系统消息，它类似于JDBC(Java Database Connectivity)。这里，JDBC 是可以用来访问许多不同关系数据库的">
+<meta name="keywords" content="MQ,SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot MQ参考资料">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;2921&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="一、JMS介绍和使用场景及基础编程模型  简介：讲解什么是小写队列，JMS的基础知识和使用场景 什么是JMS: Java消息服务（Java Message Service),Java平台中关于面向消息中间件的接口  JMS是一种与厂商无关的 API，用来访问消息收发系统消息，它类似于JDBC(Java Database Connectivity)。这里，JDBC 是可以用来访问许多不同关系数据库的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-23T08:46:30.287Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/2921/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>SpringBoot MQ参考资料 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/2921/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot MQ参考资料
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/SpringBoot/MQ/" itemprop="url" rel="index">
+                    <span itemprop="name">MQ</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、JMS介绍和使用场景及基础编程模型"><a href="#一、JMS介绍和使用场景及基础编程模型" class="headerlink" title="一、JMS介绍和使用场景及基础编程模型"></a>一、JMS介绍和使用场景及基础编程模型</h2><p>  简介：讲解什么是小写队列，JMS的基础知识和使用场景</p><ol>
+<li><p>什么是JMS: Java消息服务（Java Message Service),Java平台中关于面向消息中间件的接口</p>
+</li>
+<li><p>JMS是一种与厂商无关的 API，用来访问消息收发系统消息，它类似于JDBC(Java Database Connectivity)。这里，JDBC 是可以用来访问许多不同关系数据库的 API</p>
+</li>
+<li><p>使用场景：</p>
+<ol>
+<li>跨平台</li>
+<li>多语言</li>
+<li>多项目</li>
+<li>解耦</li>
+<li>分布式事务</li>
+<li>流量控制</li>
+<li>最终一致性</li>
+<li>RPC调用</li>
+<li>上下游对接，数据源变动-&gt;通知下属</li>
+</ol>
+</li>
+<li><p>概念</p>
+</li>
+</ol><a id="more"></a>
+
+<ul>
+<li><p>JMS提供者：Apache ActiveMQ、RabbitMQ、Kafka、Notify、MetaQ、RocketMQ</p>
+</li>
+<li><p>JMS生产者(Message Producer)</p>
+</li>
+<li><p>JMS消费者(Message Consumer)</p>
+</li>
+<li><p>JMS消息</p>
+</li>
+<li><p>JMS队列</p>
+</li>
+<li><p>JMS主题</p>
+</li>
+<li><p>JMS消息通常有两种类型：点对点（Point-to-Point)、发布/订阅（Publish/Subscribe）</p>
+</li>
+</ul>
+<ol start="5">
+<li><p>编程模型</p>
+<p>MQ中需要用的一些类</p>
+</li>
+</ol>
+<ul>
+<li><p>ConnectionFactory ：连接工厂，JMS 用它创建连接</p>
+</li>
+<li><p>Connection ：JMS 客户端到JMS Provider 的连接</p>
+</li>
+<li><p>Session： 一个发送或接收消息的线程</p>
+</li>
+<li><p>Destination ：消息的目的地;消息发送给谁.</p>
+</li>
+<li><p>MessageConsumer / MessageProducer： 消息接收者，消费者</p>
+</li>
+</ul>
+<h2 id="二、ActiveMQ5-x消息队列基础介绍和安装"><a href="#二、ActiveMQ5-x消息队列基础介绍和安装" class="headerlink" title="二、ActiveMQ5.x消息队列基础介绍和安装"></a>二、ActiveMQ5.x消息队列基础介绍和安装</h2><p>  简介：介绍ActiveMQ5.x消息队列基础特性和本地快速安装</p>
+<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
+<li><p>1）支持来自Java，C，C ++，C＃，Ruby，Perl，Python，PHP的各种跨语言客户端和协议</p>
+</li>
+<li><p>2）支持许多高级功能，如消息组，虚拟目标，通配符和复合目标</p>
+</li>
+<li><p>3) 完全支持JMS 1.1和J2EE 1.4，支持瞬态，持久，事务和XA消息</p>
+</li>
+<li><p>4) Spring支持，ActiveMQ可以轻松嵌入到Spring应用程序中，并使用Spring的XML配置机制进行配置</p>
+</li>
+<li><p>5) 支持在流行的J2EE服务器（如TomEE，Geronimo，JBoss，GlassFish和WebLogic）中进行测试</p>
+</li>
+<li><p>6) 使用JDBC和高性能日志支持非常快速的持久化</p>
+</li>
+</ul>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ul>
+<li><p>下载地址：<a href="http://activemq.apache.org/activemq-5153-release.html" target="_blank" rel="noopener">http://activemq.apache.org/activemq-5153-release.html</a></p>
+</li>
+<li><p>快速开始：<a href="http://activemq.apache.org/getting-started.html" target="_blank" rel="noopener">http://activemq.apache.org/getting-started.html</a></p>
+</li>
+<li><p>如果我们是32位的机器，就双击win32目录下的activemq.bat,如果是64位机器，则双击win64目录下的activemq.bat</p>
+</li>
+<li><p>bin目录里面启动 选择对应的系统版本和位数，activeMQ start 启动</p>
+</li>
+<li><p>启动后访问路径<a href="http://127.0.0.1:8161/" target="_blank" rel="noopener">http://127.0.0.1:8161/</a></p>
+</li>
+<li><p>用户名和密码默认都是admin</p>
+</li>
+<li><p>官方案例集合<a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples">https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples</a></p>
+</li>
+</ul>
+<h3 id="面板："><a href="#面板：" class="headerlink" title="面板："></a>面板：</h3><ul>
+<li><p>Name：队列名称。</p>
+</li>
+<li><p>Number Of Pending Messages：等待消费的消息个数。</p>
+</li>
+<li><p>Number Of Consumers：当前连接的消费者数目</p>
+</li>
+<li><p>Messages Enqueued：进入队列的消息总个数，包括出队列的和待消费的，这个数量只增不减。</p>
+</li>
+<li><p>Messages Dequeued：已经消费的消息数量。</p>
+</li>
+</ul>
+<h2 id="三、SpringBoot2整合ActiveMQ实战之点对点消息"><a href="#三、SpringBoot2整合ActiveMQ实战之点对点消息" class="headerlink" title="三、SpringBoot2整合ActiveMQ实战之点对点消息"></a>三、SpringBoot2整合ActiveMQ实战之点对点消息</h2><p>  简介:SpringBoot2.x整合ActiveMQ实战之点对点消息</p>
+<h3 id="1、官网地址"><a href="#1、官网地址" class="headerlink" title="1、官网地址"></a>1、<a href="https://docs.spring.io/spring-boot/docs/2.2.x-SNAPSHOT/reference/html/#using-boot-starter" target="_blank" rel="noopener">官网地址</a></h3><h3 id="2、加入依赖"><a href="#2、加入依赖" class="headerlink" title="2、加入依赖"></a>2、加入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 整合消息队列ActiveMQ --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-activemq<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 如果配置线程池则加入 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>activemq-pool<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、application-properties配置文件配置"><a href="#3、application-properties配置文件配置" class="headerlink" title="3、application.properties配置文件配置"></a>3、application.properties配置文件配置</h3> <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#整合jms测试，安装在别的机器，防火墙和端口号记得开放</span></span><br><span class="line"> <span class="meta">spring.activemq.broker-url</span>=<span class="string">tcp://127.0.0.1:61616</span></span><br><span class="line"><span class="comment"> #集群配置</span></span><br><span class="line"><span class="comment"> #spring.activemq.broker-url=failover:(tcp://localhost:61616,tcp://localhost:61617)</span></span><br><span class="line"> <span class="meta">spring.activemq.user</span>=<span class="string">admin</span></span><br><span class="line"> <span class="meta">spring.activemq.password</span>=<span class="string">admin</span></span><br><span class="line"><span class="comment"> #下列配置要增加依赖</span></span><br><span class="line"> <span class="meta">spring.activemq.pool.enabled</span>=<span class="string">true</span></span><br><span class="line"> <span class="meta">spring.activemq.pool.max-connections</span>=<span class="string">100</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4、springboot启动类-EnableJms，开启支持jms"><a href="#4、springboot启动类-EnableJms，开启支持jms" class="headerlink" title="4、springboot启动类 @EnableJms，开启支持jms"></a>4、springboot启动类 @EnableJms，开启支持jms</h3><h3 id="5、模拟请求"><a href="#5、模拟请求" class="headerlink" title="5、模拟请求"></a>5、模拟请求</h3><p> localhost:8080/api/v1/order?msg=12312321321312</p>
+<h3 id="6、消费者：实时监听对应的队列"><a href="#6、消费者：实时监听对应的队列" class="headerlink" title="6、消费者：实时监听对应的队列"></a>6、消费者：实时监听对应的队列</h3><p> @JmsListener(destination = “order.queue”)</p>
+<h2 id="四、SpringBoot2整合ActiveMQ实战之发布订阅模式"><a href="#四、SpringBoot2整合ActiveMQ实战之发布订阅模式" class="headerlink" title="四、SpringBoot2整合ActiveMQ实战之发布订阅模式"></a>四、SpringBoot2整合ActiveMQ实战之发布订阅模式</h2><p>  简介：SpringBoot整合ActiveMQ实战之发布订阅模式(pub/sub),及同时支持点对点和发布订阅模型</p>
+<h3 id="1、需要加入配置文件，支持发布订阅模型，默认只支持点对点"><a href="#1、需要加入配置文件，支持发布订阅模型，默认只支持点对点" class="headerlink" title="1、需要加入配置文件，支持发布订阅模型，默认只支持点对点"></a>1、需要加入配置文件，支持发布订阅模型，默认只支持点对点</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#default point to point</span></span><br><span class="line"><span class="meta">spring.jms.pub-sub-domain</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p>  注意点：</p>
+<h4 id="1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听"><a href="#1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听" class="headerlink" title="1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听"></a>1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听</h4><p>  修改配置：spring.jms.pub-sub-domain=true</p>
+<h4 id="2、-JmsListener如果不指定独立的containerFactory的话是只能消费queue消息"><a href="#2、-JmsListener如果不指定独立的containerFactory的话是只能消费queue消息" class="headerlink" title="2、@JmsListener如果不指定独立的containerFactory的话是只能消费queue消息"></a>2、@JmsListener如果不指定独立的containerFactory的话是只能消费queue消息</h4><p>  修改订阅者container：containerFactory=”jmsListenerContainerTopic”</p>
+<p> //需要给topic定义独立的JmsListenerContainer</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> JmsListenerContainerFactory&lt;?&gt; jmsListenerContainerTopic(ConnectionFactory activeMQConnectionFactory) &#123;</span><br><span class="line">	DefaultJmsListenerContainerFactory bean = <span class="keyword">new</span>  DefaultJmsListenerContainerFactory();</span><br><span class="line">	bean.setPubSubDomain(<span class="keyword">true</span>);</span><br><span class="line">	bean.setConnectionFactory(activeMQConnectionFactory);</span><br><span class="line">	<span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>  在配置文件里面，注释掉 #spring.jms.pub-sub-domain=true</p>
+<h2 id="五、RocketMQ4-x消息队列介绍"><a href="#五、RocketMQ4-x消息队列介绍" class="headerlink" title="五、RocketMQ4.x消息队列介绍"></a>五、RocketMQ4.x消息队列介绍</h2><p>  简介：阿里开源消息队列 RocketMQ4.x介绍和新概念讲解</p>
+<p> 1、Apache RocketMQ作为阿里开源的一款高性能、高吞吐量的分布式消息中间件</p>
+<p> 2、特点</p>
+<p> 1)在高压下1毫秒内响应延迟超过99.6％。</p>
+<p> 2)适合金融类业务，高可用性跟踪和审计功能。</p>
+<p> 3)支持发布订阅模型，和点对点</p>
+<p> 4）支持拉pull和推push两种消息模式</p>
+<p> 5)单一队列百万消息</p>
+<p> 6)支持单master节点，多master节点，多master多slave节点</p>
+<p> …</p>
+<p> 3、概念</p>
+<p> Producer:消息生产者</p>
+<p> Producer Group:消息生产者组，发送同类消息的一个消息生产组</p>
+<p> Consumer:消费者</p>
+<p> Consumer Group:消费同个消息的多个实例</p>
+<p> Tag:标签，子主题（二级分类）,用于区分同一个主题下的不同业务的消息</p>
+<p> Topic:主题</p>
+<p> Message：消息</p>
+<p> Broker：MQ程序，接收生产的消息，提供给消费者消费的程序</p>
+<p> Name Server：给生产和消费者提供路由信息，提供轻量级的服务发现和路由         </p>
+<p> 3、官网地址：<a href="http://rocketmq.apache.org/" target="_blank" rel="noopener">http://rocketmq.apache.org/</a></p>
+<p>  学习资源：</p>
+<p> 1）<a href="http://jm.taobao.org/" target="_blank" rel="noopener">http://jm.taobao.org/</a>&lt;st1:chsdate year=”2017” month=”1” day=”12” islunardate=”False” isrocdate=”False” w:st=”on”&gt;2017/01/12/rocketmq-quick-start-in-10-minutes/</p>
+<p> 2）<a href="https://www.jianshu.com/p/453c6e7ff81c" target="_blank" rel="noopener">https://www.jianshu.com/p/453c6e7ff81c</a></p>
+<h2 id="六、RocketMQ4-x本地快速部署"><a href="#六、RocketMQ4-x本地快速部署" class="headerlink" title="六、RocketMQ4.x本地快速部署"></a>六、RocketMQ4.x本地快速部署</h2><p>  简介:RocketMQ4.x本地快速部署</p>
+<p> 1、安装前提条件(推荐)</p>
+<p> 64bit OS, Linux/Unix/Mac</p>
+<p> 64bit JDK 1.8+;</p>
+<p> 2、快速开始 <a href="http://rocketmq.apache.org/docs/quick-start/" target="_blank" rel="noopener">http://rocketmq.apache.org/docs/quick-start/</a></p>
+<p>  下载安装包：<a href="https://www.apache.org/dyn/closer.cgi?path=rocketmq/" target="_blank" rel="noopener">https://www.apache.org/dyn/closer.cgi?path=rocketmq/</a>&lt;st1:chsdate year=”1899” month=”12” day=”30” islunardate=”False” isrocdate=”False” w:st=”on”&gt;4.2.0/rocketmq-all-4.2.0-bin-release.zip</p>
+<p>  路径：/Users/jack/Desktop/person/springboot/资料/第13章/第5课/rocketmq-all-&lt;st1:chsdate year=”1899” month=”12” day=”30” islunardate=”False” isrocdate=”False” w:st=”on”&gt;4.2.0-bin-release/bin</p>
+<p> 3、解压压缩包</p>
+<p> 1）进入bin目录，启动namesrv</p>
+<p> nohup sh mqnamesrv &amp;</p>
+<p> 2) 查看日志 tail -f nohup.out</p>
+<p>  结尾：The Name Server boot success. serializeType=JSON 表示启动成功</p>
+<p> 3、启动broker  </p>
+<p> nohup sh mqbroker -n 127.0.0.1:9876 &amp;</p>
+<p> 4)、关闭nameserver broker执行的命令</p>
+<p> sh mqshutdown namesrv</p>
+<p> sh mqshutdown broker</p>
+<h2 id="七、RoekerMQ4-x可视化控制台讲解"><a href="#七、RoekerMQ4-x可视化控制台讲解" class="headerlink" title="七、RoekerMQ4.x可视化控制台讲解"></a>七、RoekerMQ4.x可视化控制台讲解</h2><p>  简介：RoekerMQ4.x可视化控制台讲解</p>
+<p> 1、下载 <a href="https://github.com/apache/rocketmq-externals">https://github.com/apache/rocketmq-externals</a></p>
+<p> 2、编译打包 mvn clean package -Dmaven.test.skip=true</p>
+<p> 3、target目录 通过java -jar的方式运行</p>
+<p> 4、无法连接获取broker信息</p>
+<p> 1）修改配置文件,名称路由地址为 namesrvAddr，例如我本机为</p>
+<p> 2）src/main/resources/application.properties</p>
+<p> rocketmq.config.namesrvAddr=192.168.0.101:9876</p>
+<p> 5、默认端口 localhost:8080</p>
+<p> 6、注意：</p>
+<p>  在阿里云，腾讯云或者虚拟机，记得检查端口号和防火墙是否启动</p>
+<h2 id="八、Springboot2整合RocketMQ4-x实战上集"><a href="#八、Springboot2整合RocketMQ4-x实战上集" class="headerlink" title="八、Springboot2整合RocketMQ4.x实战上集"></a>八、Springboot2整合RocketMQ4.x实战上集</h2><p>  简介：Springboot2.x整合RocketMQ4.x实战，加入相关依赖，开发生产者代码</p>
+<p>  启动nameser和broker</p>
+<p> 1、加入相关依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.rocketmq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rocketmq-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;rocketmq.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.rocketmq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rocketmq-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;rocketmq.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p> 2、application.properties加入配置文件            </p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 消费者的组名</span></span><br><span class="line"><span class="meta">apache.rocketmq.consumer.PushConsumer</span>=<span class="string">orderConsumer</span></span><br><span class="line"><span class="comment"># 生产者的组名</span></span><br><span class="line"><span class="meta">apache.rocketmq.producer.producerGroup</span>=<span class="string">Producer</span></span><br><span class="line"><span class="comment"># NameServer地址</span></span><br><span class="line"><span class="meta">apache.rocketmq.namesrvAddr</span>=<span class="string">127.0.0.1:9876</span></span><br></pre></td></tr></table></figure>
+
+<p> 3、开发MsgProducer</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> - 生产者的组名</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="meta">@Value</span>(<span class="string">"$&#123;apache.rocketmq.producer.producerGroup&#125;"</span>)</span><br><span class="line"> <span class="keyword">private</span> String producerGroup;</span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">- NameServer 地址</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="meta">@Value</span>(<span class="string">"$&#123;apache.rocketmq.namesrvAddr&#125;"</span>)</span><br><span class="line"> <span class="keyword">private</span> String namesrvAddr;</span><br><span class="line"> <span class="keyword">private</span> DefaultMQProducer producer ;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> DefaultMQProducer <span class="title">getProducer</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="keyword">this</span>.producer;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@PostConstruct</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">defaultMQProducer</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="comment">//生产者的组名</span></span><br><span class="line"> 	producer = <span class="keyword">new</span> DefaultMQProducer(producerGroup);</span><br><span class="line"> <span class="comment">//指定NameServer地址，多个地址以 ; 隔开</span></span><br><span class="line"> <span class="comment">//如 producer.setNamesrvAddr("192.168.100.141:9876;192.168.100.142:9876;192.168.100.149:9876");</span></span><br><span class="line">     producer.setNamesrvAddr(namesrvAddr);</span><br><span class="line">     producer.setVipChannelEnabled(<span class="keyword">false</span>);</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> - Producer对象在使用之前必须要调用start初始化，只能初始化一次</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> 	producer.start();</span><br><span class="line"> &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"> 	e.printStackTrace();</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">// producer.shutdown(); 一般在应用上下文，关闭的时候进行关闭，用上下文监听器</span></span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="九、Springboot2整合RocketMQ4-x实战下集"><a href="#九、Springboot2整合RocketMQ4-x实战下集" class="headerlink" title="九、Springboot2整合RocketMQ4.x实战下集"></a>九、Springboot2整合RocketMQ4.x实战下集</h2><p>  简介：Springboot2.x整合RocketMQ4.x实战，开发消费者代码，常见问题处理</p>
+<p> 1、创建消费者</p>
+<p>  问题：</p>
+<p> 1、Caused by: org.apache.rocketmq.remoting.exception.RemotingConnectException: connect to &lt;172.17.42.1:10911&gt; failed</p>
+<p> 2、com.alibaba.rocketmq.client.exception.MQClientException: Send [1] times, still failed, cost [1647]ms, Topic: TopicTest1, BrokersSent: [broker-a, null, null]</p>
+<p> 3、org.apache.rocketmq.client.exception.MQClientException: Send [3] times, still failed, cost [497]ms, Topic: TopicTest, BrokersSent: [chenyaowudeMacBook-Air.local, chenyaowudeMacBook-Air.local, chenyaowudeMacBook-Air.local]</p>
+<p>  解决：多网卡问题处理</p>
+<p> 1、设置producer: producer.setVipChannelEnabled(false);</p>
+<p> 2、编辑ROCKETMQ 配置文件：broker.conf（下列ip为自己的ip）</p>
+<p> namesrvAddr = 192.168.0.101:9876</p>
+<p> brokerIP1 = 192.168.0.101</p>
+<p> 4、DESC: service not available now, maybe disk full, CL:</p>
+<p>  解决：修改启动脚本runbroker.sh，在里面增加一句话即可：            </p>
+<p> JAVA_OPT=”${JAVA_OPT} -Drocketmq.broker.diskSpaceWarningLevelRatio=0.98”</p>
+<p>  （磁盘保护的百分比设置成98%，只有磁盘空间使用率达到98%时才拒绝接收producer消息）</p>
+<p>  常见问题处理：</p>
+<p> <a href="https://blog.csdn.net/sqzhao/article/details/54834761" target="_blank" rel="noopener">https://blog.csdn.net/sqzhao/article/details/54834761</a></p>
+<p> <a href="https://blog.csdn.net/mayifan0/article/details/67633729" target="_blank" rel="noopener">https://blog.csdn.net/mayifan0/article/details/67633729</a></p>
+<p> <a href="https://blog.csdn.net/a906423355/article/details/78192828" target="_blank" rel="noopener">https://blog.csdn.net/a906423355/article/details/78192828</a></p>
+<h2 id="十、SpringBoot多环境配置介绍和项目实战（核心知识）"><a href="#十、SpringBoot多环境配置介绍和项目实战（核心知识）" class="headerlink" title="十、SpringBoot多环境配置介绍和项目实战（核心知识）"></a>十、SpringBoot多环境配置介绍和项目实战（核心知识）</h2><p>  简介：SpringBoot介绍多环境配置和使用场景</p>
+<p> 1、不同环境使用不同配置</p>
+<p>  例如数据库配置，在开发的时候，我们一般用开发数据库，而在生产环境的时候，我们是用正式的数据</p>
+<p> 2、配置文件存放路径</p>
+<p> classpath根目录的“/config”包下</p>
+<p> classpath的根目录下</p>
+<p> 3、spring boot允许通过命名约定按照一定的格式(application-{profile}.properties)来定义多个配置文件</p>
+<h2 id="十一、SprinBoot2-x响应式编程简介"><a href="#十一、SprinBoot2-x响应式编程简介" class="headerlink" title="十一、SprinBoot2.x响应式编程简介"></a>十一、SprinBoot2.x响应式编程简介</h2><p>  简介:讲解什么是reactive响应式编程和使用的好处</p>
+<p> 1、基础理解：</p>
+<p>  依赖于事件，事件驱动(Event-driven)</p>
+<p>  一系列事件称为“流”</p>
+<p>  异步</p>
+<p>  非阻塞</p>
+<p>  观察者模式</p>
+<p>  网上的一个例子：</p>
+<p> int b= 2;</p>
+<p> int c=3</p>
+<p> int a = b+c //命令式编程后续b和c变化，都不影响a</p>
+<p> b=5;</p>
+<p> int b= 2;</p>
+<p> int c= 3</p>
+<p> int a = b+c //响应式编程中，a的变化，会和b、c的变化而变化（事件驱动）</p>
+<p> b=5;</p>
+<p> 2、官网：<a href="https://docs.spring.io/spring-boot/docs/" target="_blank" rel="noopener">https://docs.spring.io/spring-boot/docs/</a>&lt;st1:chsdate year=”1899” month=”12” day=”30” islunardate=”False” isrocdate=”False” w:st=”on”&gt;2.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#boot-features-webflux</p>
+<p> SpingBoot2底层是用spring5,开始支持响应式编程，Spring又是基于Reactor试下响应式。</p>
+<p>  学习资料</p>
+<p> 1、reactive-streams学习资料：<a href="http://www.reactive-streams.org/" target="_blank" rel="noopener">http://www.reactive-streams.org/</a></p>
+<p> 2、web-flux相关资料：<a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux</a></p>
+<h2 id="十二、SpringBoot2-x响应式编程webflux介绍"><a href="#十二、SpringBoot2-x响应式编程webflux介绍" class="headerlink" title="十二、SpringBoot2.x响应式编程webflux介绍"></a>十二、SpringBoot2.x响应式编程webflux介绍</h2><p>  简介：讲解SpringBoot2.x响应式编程介绍 Mono、Flux对象和优缺点</p>
+<p> 1、Spring WebFlux是Spring Framework 5.0中引入的新的反应式Web框架</p>
+<p>  与Spring MVC不同，它不需要Servlet API，完全异步和非阻塞，并 通过Reactor项目实现Reactive Streams规范。</p>
+<p> RxJava</p>
+<p> 2、Flux和Mono User List<user></user></p>
+<p> 1）简单业务而言：和其他普通对象差别不大，复杂请求业务，就可以提升性能</p>
+<p> 2）通俗理解：</p>
+<p> Mono 表示的是包含 0 或者 1 个元素的异步序列</p>
+<p> mono-&gt;单一对象 User redis-&gt;用户ID-》唯一的用户Mono<user></user></p>
+<p> Flux 表示的是包含 0 到 N 个元素的异步序列</p>
+<p> flux-&gt;数组列表对象 List<user> redis-&gt;男性用户-&gt;Flux<user></user></user></p>
+<p> Flux 和 Mono 之间可以进行转换</p>
+<p> 3、Spring WebFlux有两种风格：基于功能和基于注解的。基于注解非常接近Spring MVC模型，如以下示例所示：</p>
+<p>  第一种：</p>
+<p> @RestController</p>
+<p> @RequestMapping（“/ users”）</p>
+<p> public class MyRestController {</p>
+<p> @GetMapping（“/ {user}”）</p>
+<p> public Mono <user> getUser（ @PathVariable Long user）{</user></p>
+<p> // …</p>
+<p> }</p>
+<p> @GetMapping（“/ {user} / customers”）</p>
+<p> public Flux <customer> getUserCustomers（ @PathVariable Long user）{</customer></p>
+<p> // …</p>
+<p> }</p>
+<p> @DeleteMapping（“/ {user}”）</p>
+<p> public Mono <user> deleteUser（ @PathVariable Long user）{</user></p>
+<p> // …</p>
+<p> }</p>
+<p> }</p>
+<p>  第二种： 路由配置与请求的实际处理分开</p>
+<p> @Configuration</p>
+<p> public class RoutingConfiguration {</p>
+<p> @Bean</p>
+<p> public RouterFunction <serverresponse> monoRouterFunction（UserHandler userHandler）{</serverresponse></p>
+<p> return route（GET（ “/ {user}”）.and（accept（APPLICATION_JSON）），userHandler :: getUser）</p>
+<p> .andRoute（GET（“/ {user} / customers”）.and（accept（APPLICATION_JSON）），userHandler :: getUserCustomers）</p>
+<p> .andRoute（DELETE（“/ {user}”）.and（accept（APPLICATION_JSON）），userHandler :: deleteUser）;</p>
+<p> }</p>
+<p> }</p>
+<p> @Component</p>
+<p> public class UserHandler {</p>
+<p>  公共 Mono <serverresponse> getUser（ServerRequest请求）{</serverresponse></p>
+<p> // …</p>
+<p> }</p>
+<p> public Mono <serverresponse> getUserCustomers（ServerRequest request）{</serverresponse></p>
+<p> // …</p>
+<p> }</p>
+<p>  公共 Mono <serverresponse> deleteUser（ServerRequest请求）{</serverresponse></p>
+<p> // …</p>
+<p> }</p>
+<p> }</p>
+<p> 4、Spring WebFlux应用程序不严格依赖于Servlet API，因此它们不能作为war文件部署，也不能使用src/main/webapp目录</p>
+<p> 5、可以整合多个模板引擎</p>
+<p>  除了REST Web服务外，您还可以使用Spring WebFlux提供动态HTML内容。Spring WebFlux支持各种模板技术，包括Thymeleaf，FreeMarker</p>
+<h2 id="十三、SpringBoot2-x-webflux实战"><a href="#十三、SpringBoot2-x-webflux实战" class="headerlink" title="十三、SpringBoot2.x webflux实战"></a>十三、SpringBoot2.x webflux实战</h2><p>  简介:webflux响应式编程实战</p>
+<p> 1、WebFlux中，请求和响应不再是WebMVC中的ServletRequest和ServletResponse，而是ServerRequest和ServerResponse</p>
+<p> 2、加入依赖，如果同时存在spring-boot-starter-web，则会优先用spring-boot-starter-web</p>
+ <dependency>
+
+<p> <groupid>org.springframework.boot</groupid></p>
+<p> <artifactid>spring-boot-starter-webflux</artifactid></p>
+ </dependency>
+
+<p>  测试</p>
+<p> localhost:8080/api/v1/user/test</p>
+<p> 3、启动方式默认是Netty,8080端口</p>
+<p> 4、参考：<a href="https://spring.io/blog/2016/04/19/understanding-reactive-types" target="_blank" rel="noopener">https://spring.io/blog/2016/04/19/understanding-reactive-types</a>、</p>
+<h2 id="十四、服务端推送常用技术介绍"><a href="#十四、服务端推送常用技术介绍" class="headerlink" title="十四、服务端推送常用技术介绍"></a>十四、服务端推送常用技术介绍</h2><p>  简介：服务端常用推送技术介绍，如websocket，sse轮询等</p>
+<p> 1、客户端轮询:ajax定时拉取</p>
+<p> 2、服务端主动推送:WebSocket</p>
+<p>  全双工的，本质上是一个额外的tcp连接，建立和关闭时握手使用http协议，其他数据传输不使用http协议</p>
+<p>  更加复杂一些，适用于需要进行复杂双向数据通讯的场景</p>
+<p> 3、服务端主动推送:SSE (Server Send Event)</p>
+<p> html5新标准，用来从服务端实时推送数据到浏览器端，</p>
+<p>  直接建立在当前http连接上，本质上是保持一个http长连接，轻量协议</p>
+<p>  简单的服务器数据推送的场景，使用服务器推送事件   </p>
+<p>  学习资料：<a href="http://www.w3school.com.cn/html5/html_5_serversentevents.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/html5/html_5_serversentevents.asp</a></p>
+<h2 id="十五、高级篇幅之云服务器介绍和部署生产环境实战"><a href="#十五、高级篇幅之云服务器介绍和部署生产环境实战" class="headerlink" title="十五、高级篇幅之云服务器介绍和部署生产环境实战"></a>十五、高级篇幅之云服务器介绍和部署生产环境实战</h2><p>1、阿里云服务器介绍和使用讲解</p>
+<p>  简介：阿里云服务器介绍和使用讲解</p>
+<p>2、阿里云Linux服务器部署JDK8实战</p>
+<p>  简介：在阿里云服务器上安装JDK8和配置环境变量</p>
+<p> lnux下使用wget下载jdk8:</p>
+<p>  进到目录/usr/local/software</p>
+<p>  配置环境变量</p>
+<p> vim /etc/profile</p>
+<p>  加入</p>
+<p> export JAVA_HOME=/usr/local/software/jdk8</p>
+<p> export PATH=$PATH:$JAVA_HOME/bin</p>
+<p> export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</p>
+<p> export JAVA_HOME PATH CLASSPATH</p>
+<p>  使用 source /etc/profile 让配置立刻生效</p>
+<p>3、阿里云服务器SpringBoot2.x生产环境部署实战</p>
+<p>  简介：讲解SpringBoot生产环境部署和常见注意事项</p>
+<p> 1、去除相关生产环境没用的jar</p>
+<p>  比如热部署dev-tool</p>
+<p> 2、本地maven打包成jar包</p>
+<p> mvn clean package -Dmaven.test.skip=true 跳过测试</p>
+<p> 3、服务器安装jdk，上传Jar包</p>
+<p>  上传工具：</p>
+<p> windows:</p>
+<p> winscp</p>
+<p> securtyCRT</p>
+<p> mac：</p>
+<p> filezilla</p>
+<p> ssh <a href="mailto:root@120.79.160.143" target="_blank" rel="noopener">root@120.79.160.143</a></p>
+<p>  访问路径 <a href="http://120.79.160.143:8080/api/v1/user/find" target="_blank" rel="noopener">http://120.79.160.143:8080/api/v1/user/find</a></p>
+<p> java -jar xxxx.jar</p>
+<p>  守护进程、系统服务、shell脚本</p>
+<p>  打包指定配置文件</p>
+<p> 1、使用maven的profiles</p>
+<p> 2、使用springboot的profile=active</p>
+<p>  访问不了</p>
+<p> 1、阿里云防火墙是否开启，可以选择关闭，关闭是不安全的，可以选择开放端口</p>
+<p> 2、阿里云的安全访问组，开启对应的端口，如果应用是以80端口启动，则默认可以访问</p>
+<p> 4、成熟的互联网公司应该有的架构</p>
+<p>  本地提交生产代码-&gt;gitlab仓库-&gt;Jenkins自动化构建-&gt;运维或者开发人员发布</p>
+<h2 id="十六、SpringBoot2-x监控Actuator实战上集"><a href="#十六、SpringBoot2-x监控Actuator实战上集" class="headerlink" title="十六、SpringBoot2.x监控Actuator实战上集"></a>十六、SpringBoot2.x监控Actuator实战上集</h2><p>  简介：讲解SpringBoot使用actuator监控配置和使用</p>
+<p>  可用性：100%，99.9%</p>
+<p> 1、介绍什么是actuator</p>
+<p>  官方介绍：</p>
+<p> Spring Boot包含许多附加功能，可帮助您在将应用程序投入生产时监视和管理应用程序。 可以选择使用HTTP端点或JMX来管理和监控您的应用程序，自动应用于审计，健康和指标收集;</p>
+<p>  一句话：springboot提供用于监控和管理生产环境的模块</p>
+<p>  官方文档：<a href="https://docs.spring.io/spring-boot/docs/" target="_blank" rel="noopener">https://docs.spring.io/spring-boot/docs/</a>&lt;st1:chsdate year=”1899” month=”12” day=”30” islunardate=”False” isrocdate=”False” w:st=”on”&gt;2.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#production-ready</p>
+<p> 2、加入依赖</p>
+ <dependency>
+
+<p> <groupid>org.springframework.boot</groupid></p>
+<p> <artifactid>spring-boot-starter-actuator</artifactid></p>
+ </dependency>
+
+<p> 3、加入上述依赖后，访问几个url</p>
+<p> /actuator/health</p>
+<p> /actuator/info</p>
+<p> /actuator</p>
+<h2 id="十七、SpringBoot2监控Actuator下集及生产环境建议"><a href="#十七、SpringBoot2监控Actuator下集及生产环境建议" class="headerlink" title="十七、SpringBoot2监控Actuator下集及生产环境建议"></a>十七、SpringBoot2监控Actuator下集及生产环境建议</h2><p>  简介：SpringBoot2.x监控Actuator实战下集及生产环境建议，SpringBoot新旧版本区别</p>
+<p>  注意点: 网上的资料大多数没有讲到访问的前缀</p>
+<p>  端点基础路径由 / 调整到 /actuator</p>
+<p>  如：/info调整为/actuator/info</p>
+<p> /actuator/xxx</p>
+<p> 1、只能访问几个url</p>
+<p> 1）需要在配置文件中加入下列配置</p>
+<p> management.endpoints.web.exposure.include=*</p>
+<p> 2）官网说明：<a href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-security-actuator" target="_blank" rel="noopener">https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-security-actuator</a></p>
+<p>  原因：</p>
+<p>  出于安全考虑，除/ health和/ info之外的所有执行器默认都是禁用的。 management.endpoints.web.exposure.include属性可用于启用执行器</p>
+<p> 2、建议</p>
+<p>  在设置management.endpoints.web.exposure.include之前，请确保暴露的执行器不包含敏感信息和/</p>
+<p>  或通过将其放置在防火墙进行控制，不对外进行使用</p>
+<p>  禁用的端点将从应用程序上下文中完全删除。如果您只想更改端点所暴露的技术，请改用 include和exclude属性 。</p>
+<p>  例子：</p>
+<p>  开启全部：management.endpoints.web.exposure.include=*</p>
+<p>  开启某个：management.endpoints.web.exposure.include=metrics</p>
+<p>  关闭某个：management.endpoints.web.exposure.exclude=metrics</p>
+<p>  或者用springadmin进行管理</p>
+<p>  相关资料：<a href="https://www.cnblogs.com/ityouknow/p/8440455.html" target="_blank" rel="noopener">https://www.cnblogs.com/ityouknow/p/8440455.html</a></p>
+<p>  或者用自己编写脚本监控</p>
+<p> CPU、内存、磁盘、nginx的http响应状态码200,404,5xx</p>
+<p> 3、介绍常用的几个</p>
+<p> /health 查看应用健康指标</p>
+<p> /actuator/metrics 查看应用基本指标列表</p>
+<p> /actuator/metrics/{name} 通过上述列表，查看具体 查看具体指标</p>
+<p> /actuator/env 显示来自Spring的 ConfigurableEnvironment的属性</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/2921/">https://github.com/maxzhao-it/blog/post/2921/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/MQ/" rel="tag"># MQ</a>
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/2922/" rel="next" title="SpringBoot MQ参考资料">
+                  <i class="fa fa-chevron-left"></i> SpringBoot MQ参考资料
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/4368/" rel="prev" title="JAVA中的Cloneable接口">
+                  JAVA中的Cloneable接口 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、JMS介绍和使用场景及基础编程模型"><span class="nav-number">1.</span> <span class="nav-text">一、JMS介绍和使用场景及基础编程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、ActiveMQ5-x消息队列基础介绍和安装"><span class="nav-number">2.</span> <span class="nav-text">二、ActiveMQ5.x消息队列基础介绍和安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特点："><span class="nav-number">2.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">2.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#面板："><span class="nav-number">2.3.</span> <span class="nav-text">面板：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、SpringBoot2整合ActiveMQ实战之点对点消息"><span class="nav-number">3.</span> <span class="nav-text">三、SpringBoot2整合ActiveMQ实战之点对点消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、官网地址"><span class="nav-number">3.1.</span> <span class="nav-text">1、官网地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、加入依赖"><span class="nav-number">3.2.</span> <span class="nav-text">2、加入依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、application-properties配置文件配置"><span class="nav-number">3.3.</span> <span class="nav-text">3、application.properties配置文件配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、springboot启动类-EnableJms，开启支持jms"><span class="nav-number">3.4.</span> <span class="nav-text">4、springboot启动类 @EnableJms，开启支持jms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、模拟请求"><span class="nav-number">3.5.</span> <span class="nav-text">5、模拟请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、消费者：实时监听对应的队列"><span class="nav-number">3.6.</span> <span class="nav-text">6、消费者：实时监听对应的队列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、SpringBoot2整合ActiveMQ实战之发布订阅模式"><span class="nav-number">4.</span> <span class="nav-text">四、SpringBoot2整合ActiveMQ实战之发布订阅模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、需要加入配置文件，支持发布订阅模型，默认只支持点对点"><span class="nav-number">4.1.</span> <span class="nav-text">1、需要加入配置文件，支持发布订阅模型，默认只支持点对点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听"><span class="nav-number">4.1.1.</span> <span class="nav-text">1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、-JmsListener如果不指定独立的containerFactory的话是只能消费queue消息"><span class="nav-number">4.1.2.</span> <span class="nav-text">2、@JmsListener如果不指定独立的containerFactory的话是只能消费queue消息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、RocketMQ4-x消息队列介绍"><span class="nav-number">5.</span> <span class="nav-text">五、RocketMQ4.x消息队列介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、RocketMQ4-x本地快速部署"><span class="nav-number">6.</span> <span class="nav-text">六、RocketMQ4.x本地快速部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、RoekerMQ4-x可视化控制台讲解"><span class="nav-number">7.</span> <span class="nav-text">七、RoekerMQ4.x可视化控制台讲解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、Springboot2整合RocketMQ4-x实战上集"><span class="nav-number">8.</span> <span class="nav-text">八、Springboot2整合RocketMQ4.x实战上集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、Springboot2整合RocketMQ4-x实战下集"><span class="nav-number">9.</span> <span class="nav-text">九、Springboot2整合RocketMQ4.x实战下集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、SpringBoot多环境配置介绍和项目实战（核心知识）"><span class="nav-number">10.</span> <span class="nav-text">十、SpringBoot多环境配置介绍和项目实战（核心知识）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十一、SprinBoot2-x响应式编程简介"><span class="nav-number">11.</span> <span class="nav-text">十一、SprinBoot2.x响应式编程简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十二、SpringBoot2-x响应式编程webflux介绍"><span class="nav-number">12.</span> <span class="nav-text">十二、SpringBoot2.x响应式编程webflux介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十三、SpringBoot2-x-webflux实战"><span class="nav-number">13.</span> <span class="nav-text">十三、SpringBoot2.x webflux实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十四、服务端推送常用技术介绍"><span class="nav-number">14.</span> <span class="nav-text">十四、服务端推送常用技术介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十五、高级篇幅之云服务器介绍和部署生产环境实战"><span class="nav-number">15.</span> <span class="nav-text">十五、高级篇幅之云服务器介绍和部署生产环境实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十六、SpringBoot2-x监控Actuator实战上集"><span class="nav-number">16.</span> <span class="nav-text">十六、SpringBoot2.x监控Actuator实战上集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十七、SpringBoot2监控Actuator下集及生产环境建议"><span class="nav-number">17.</span> <span class="nav-text">十七、SpringBoot2监控Actuator下集及生产环境建议</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

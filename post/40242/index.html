@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言当前主要记录问题的发现过程以及解决过程，其中包含关键性的代码（也包含错误代码）。主线任务外的分析过程省略，但会展示部分的分析结果。问题的发现1. 使用文件服务有一个文件服务，这个文件服务可以对接多种存储，所以我们封装了上传、下载文件的方法。">
+<meta name="keywords" content="混合开发,IOS使用H5播放音频（视频）流">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOS用H5播放语音（视频）流失败">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;40242&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="前言当前主要记录问题的发现过程以及解决过程，其中包含关键性的代码（也包含错误代码）。主线任务外的分析过程省略，但会展示部分的分析结果。问题的发现1. 使用文件服务有一个文件服务，这个文件服务可以对接多种存储，所以我们封装了上传、下载文件的方法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-23T12:58:52.201Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/40242/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>IOS用H5播放语音（视频）流失败 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/40242/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IOS用H5播放语音（视频）流失败
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-23 20:58:52" itemprop="dateModified" datetime="2021-08-23T20:58:52+08:00">2021-08-23</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当前主要记录问题的<strong>发现过程</strong>以及<strong>解决过程</strong>，其中包含关键性的<strong>代码（也包含错误代码）</strong>。</p><p>主线任务外的分析过程省略，但会展示部分的分析结果。</p><h2 id="问题的发现"><a href="#问题的发现" class="headerlink" title="问题的发现"></a>问题的发现</h2><h4 id="1-使用文件服务"><a href="#1-使用文件服务" class="headerlink" title="1. 使用文件服务"></a>1. 使用文件服务</h4><p>有一个文件服务，这个文件服务可以对接多种存储，所以我们封装了上传、下载文件的方法。</p><a id="more"></a>
+
+
+<h4 id="2-调用文件服务接口"><a href="#2-调用文件服务接口" class="headerlink" title="2. 调用文件服务接口"></a>2. 调用文件服务接口</h4><p>上传、下载文件是没什么问题的，问题出现在了使用 <strong><audio></audio></strong>   与  <strong><video></video></strong> 标签上。</p>
+<p>标签的 <code>src</code> 指向音频（视频）文件的下载地址。</p>
+<p><code>备注：如果这里不是通过下载地址返回文件流，下面的叙述就可以不用看了。</code></p>
+<h5 id="下载代码展示"><a href="#下载代码展示" class="headerlink" title="下载代码展示"></a>下载代码展示</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileSystemController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping</span>(&#123;<span class="string">"/&#123;id&#125;"</span>&#125;)</span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;org.springframework.core.io.Resource&gt; download(<span class="meta">@PathVariable</span> String id) <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        org.springframework.core.io.Resource resource = <span class="keyword">this</span>.fileServerService.downloadAttach(id);</span><br><span class="line">        HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">        <span class="keyword">long</span> contentLength = <span class="number">0L</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            headers.add(<span class="string">"Content-Disposition"</span>, <span class="string">"attachment;filename="</span> + resource.getFilename());</span><br><span class="line">            contentLength = resource.contentLength();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException var7) &#123;</span><br><span class="line">            log.error(var7.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ((BodyBuilder) ResponseEntity.ok().headers(headers)).contentLength(contentLength).contentType(MediaType.parseMediaType(<span class="string">"application/octet-stream"</span>)).body(resource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时会发现，所有的音频（视频）文件流 <code>src</code>都是播放不了的。</p>
+<p>如果仔细探究当前代码，会发现当前会返回”多余的结果”，<strong>由此猜测：</strong>这些”多余的结果”导致无法直接播放音频（视频），图片也是一样的道理。</p>
+<h4 id="3-单独开发音频（视频）文件预览接口"><a href="#3-单独开发音频（视频）文件预览接口" class="headerlink" title="3. 单独开发音频（视频）文件预览接口"></a>3. 单独开发音频（视频）文件预览接口</h4><h5 id="第一个版本比较简陋，这里不做分析。"><a href="#第一个版本比较简陋，这里不做分析。" class="headerlink" title="第一个版本比较简陋，这里不做分析。"></a>第一个版本比较简陋，这里不做分析。</h5><h5 id="代码展示：第二个版本"><a href="#代码展示：第二个版本" class="headerlink" title="代码展示：第二个版本"></a>代码展示：第二个版本</h5><p>第二个版本对音频（视频）文件做了分片处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileSystemController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping</span>(&#123;<span class="string">"/&#123;id&#125;"</span>&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">download</span><span class="params">(@PathVariable String id,</span></span></span><br><span class="line"><span class="function"><span class="params">                         HttpServletRequest request,</span></span></span><br><span class="line"><span class="function"><span class="params">                         HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        org.springframework.core.io.Resource resource;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            resource = <span class="keyword">this</span>.fileServerService.downloadAttach(id);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RuntimeException runtimeException) &#123;</span><br><span class="line">            <span class="comment">/*文件不存在*/</span></span><br><span class="line">            log.error(<span class="string">"当前获取的文件不存在 &#123;&#125; "</span>, id);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            response.setHeader(<span class="string">"Content-Disposition"</span>, <span class="string">"attachment;filename="</span> + resource.getFilename());</span><br><span class="line">            String fileName = id.toLowerCase();</span><br><span class="line">            <span class="comment">/*获取扩展名*/</span></span><br><span class="line">            String extName = fileName.substring(fileName.lastIndexOf(<span class="string">"."</span>) + <span class="number">1</span>);</span><br><span class="line">            <span class="comment">/*获取 range*/</span></span><br><span class="line">            String requestRange = request.getHeader(<span class="string">"range"</span>);</span><br><span class="line">            <span class="comment">/*实际长度*/</span></span><br><span class="line">            <span class="keyword">long</span> contentLength = resource.contentLength();</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(requestRange)) &#123;</span><br><span class="line">                <span class="comment">/*获取需要的长度*/</span></span><br><span class="line">                String[] rangeLimit = requestRange.substring(<span class="number">6</span>).split(<span class="string">"-"</span>);</span><br><span class="line">                String rangeStart = rangeLimit[<span class="number">0</span>];</span><br><span class="line">                <span class="keyword">if</span> (!StringUtils.hasText(rangeStart)) &#123;</span><br><span class="line">                    rangeStart = <span class="string">"0"</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                String rangeEnd = rangeLimit.length == <span class="number">2</span> ? rangeLimit[<span class="number">1</span>] : <span class="string">""</span>;</span><br><span class="line">                <span class="keyword">if</span> (StringUtils.hasText(rangeEnd)) &#123;</span><br><span class="line">                    <span class="comment">/*存在结束*/</span></span><br><span class="line">                    response.setHeader(<span class="string">"Content-Range"</span>, <span class="string">"bytes "</span> + rangeStart + <span class="string">"-"</span> + rangeEnd + <span class="string">"/"</span> + resource.contentLength());</span><br><span class="line">                    contentLength = Integer.parseInt(rangeEnd) - Integer.parseInt(rangeStart) + <span class="number">1</span>;</span><br><span class="line">                    response.setHeader(<span class="string">"Accept-Ranges"</span>, <span class="string">"bytes"</span>);</span><br><span class="line">                    response.setHeader(<span class="string">"Last-Modified"</span>, <span class="keyword">new</span> Date().toString());</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">/*不存在分片*/</span></span><br><span class="line">                    response.setHeader(<span class="string">"Content-Range"</span>, <span class="string">"bytes "</span> + rangeStart + <span class="string">"-"</span> + resource.contentLength() + <span class="string">"/"</span> + resource.contentLength());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                response.setHeader(<span class="string">"Content-Range"</span>, <span class="string">"bytes 0-"</span> + resource.contentLength() + <span class="string">"/"</span> + resource.contentLength());</span><br><span class="line">            &#125;</span><br><span class="line">            response.setContentLengthLong(contentLength);</span><br><span class="line">            <span class="keyword">if</span> (videoExtNames.contains(extName)) &#123;</span><br><span class="line">                response.setHeader(<span class="string">"Content-Type"</span>, <span class="string">"video/"</span> + extName);</span><br><span class="line">                response.setContentType(<span class="string">"video/"</span> + extName);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (audioExtNames.contains(extName)) &#123;</span><br><span class="line">                response.setHeader(<span class="string">"Content-Type"</span>, <span class="string">"audio/"</span> + extName);</span><br><span class="line">                response.setContentType(<span class="string">"audio/"</span> + extName);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                response.setContentType(<span class="string">"application/octet-stream"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            BufferedInputStream bufferedInputStream = <span class="keyword">new</span> BufferedInputStream(resource.getInputStream());</span><br><span class="line">            <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[bufferedInputStream.available()];</span><br><span class="line">            bufferedInputStream.read(b);</span><br><span class="line">            ServletOutputStream outputStream = response.getOutputStream();</span><br><span class="line">            outputStream.write(b);</span><br><span class="line">            outputStream.flush();</span><br><span class="line">            outputStream.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">"获取文件报错:&#123;&#125;"</span>, e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-使用第二个版本的代码"><a href="#4-使用第二个版本的代码" class="headerlink" title="4. 使用第二个版本的代码"></a>4. 使用第二个版本的代码</h4><ol>
+<li>当前代码在<strong>安卓</strong>、<strong>chrome</strong>等苹果外的设备测试正常，图片、音频（视频）展示正常，播放正常；</li>
+<li>当打包<strong>IOS</strong>和<strong>safari</strong>浏览器中使用时，会出现两种现象：<ol>
+<li>视频在网络信号差时会缺少片段；</li>
+<li>音频文件大于 <code>50KB</code>时，会出现异常情况，比如：全是杂音、播放出错；</li>
+</ol>
+</li>
+</ol>
+<h4 id="5-对苹果设备中的现象不断测试"><a href="#5-对苹果设备中的现象不断测试" class="headerlink" title="5. 对苹果设备中的现象不断测试"></a>5. 对苹果设备中的现象不断测试</h4><p>经过长时间的测试，发现了不少现象：</p>
+<ol>
+<li>本地访问不会报错（<code>app</code>与文件服务在同一台设备上）；</li>
+<li>音频大于 <code>50KB</code>时，会出现杂音、播放出错、时长不够、重复播放片段；</li>
+<li>视频播放会缺少部分片段、时长不够；</li>
+</ol>
+<h4 id="6-根据出现的现象，对现象进行分析"><a href="#6-根据出现的现象，对现象进行分析" class="headerlink" title="6. 根据出现的现象，对现象进行分析"></a>6. 根据出现的现象，对现象进行分析</h4><p>这些问题的出现，主要在<code>app</code>与文件服务是否在统一服务器上；</p>
+<ol>
+<li><strong>测试情况1</strong>：<code>app</code>与文件服务部署在同一台服务器上；</li>
+<li><strong>测试情况2</strong>：<code>app</code>与文件服务部署在不同服务器上；</li>
+</ol>
+<p>针对这个相同服务器与不同服务器的请求进行分析，得出几种结论：</p>
+<ol>
+<li>苹果外的设备会<strong>一次获取</strong>整个音频（视频）文件；<ol>
+<li><code>header</code>中的<code>range</code>为 <code>bytes=0-</code>；</li>
+</ol>
+</li>
+<li>苹果设备在<strong>测试情况1</strong>中，会发送两次请求获取文件：<ol>
+<li><code>range 0-1</code>请求当前文件是否存在。</li>
+<li><code>range 0-3000</code> 请求当前文件（<code>3000</code>是文件大小，也就是<code>header</code>中的<code>ContentLength</code>）。</li>
+<li><strong>结果：音频（视频）可以正常播放；</strong></li>
+</ol>
+</li>
+<li>苹果设备在<strong>测试情况2</strong>中，会发送多次请求获取文件：<ol>
+<li><code>range 0-1</code>请求当前文件是否存在。<strong>——请求正常返回</strong></li>
+<li><code>range 0-3000</code> 请求当前文件。<span style="color:red;"><strong>——请求错误</strong></span></li>
+<li><code>range 588-2563</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
+<li><code>range 2563-3000</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
+<li><strong>结果：会出现杂音、播放出错、时长不够、重复播放片段等现象</strong></li>
+</ol>
+</li>
+</ol>
+<h4 id="7-通过现象调整代码"><a href="#7-通过现象调整代码" class="headerlink" title="7. 通过现象调整代码"></a>7. 通过现象调整代码</h4><p>经过一番风雨发现：</p>
+<p>分片操作不对，在分片时，需要根据分片的大小，读取文件不同的片段。</p>
+<p>改动后的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileSystemController</span> </span>&#123;</span><br><span class="line">    <span class="comment">//    ****</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">download</span><span class="params">(@PathVariable String id,</span></span></span><br><span class="line"><span class="function"><span class="params">                         HttpServletRequest request,</span></span></span><br><span class="line"><span class="function"><span class="params">                         HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasText(requestRange)) &#123;</span><br><span class="line">            outputStream.write(b, (<span class="keyword">int</span>) rangeStart, (<span class="keyword">int</span>) contentLength);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            outputStream.write(b);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里会把当前<strong>苹果设备</strong>请求的分片大小，写到输出流中。</p>
+<h4 id="8-针对有问题的测试情况2进行测试"><a href="#8-针对有问题的测试情况2进行测试" class="headerlink" title="8. 针对有问题的测试情况2进行测试"></a>8. 针对有问题的<strong>测试情况2</strong>进行测试</h4><p>苹果设备在<strong>测试情况2</strong>中，会发送多次请求获取文件：</p>
+<ol>
+<li><code>range 0-1</code>请求当前文件是否存在。<strong>——请求正常返回</strong></li>
+<li><code>range 0-3000</code> 请求当前文件。<span style="color:red;"><strong>——请求错误</strong></span></li>
+<li><code>range 588-2563</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
+<li><code>range 2563-3000</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
+<li><strong>结果：语音（视频）</strong>播放正常。</li>
+</ol>
+<h4 id="9-针对正常结果进行分析"><a href="#9-针对正常结果进行分析" class="headerlink" title="9. 针对正常结果进行分析"></a>9. 针对正常结果进行分析</h4><ol>
+<li>对于苹果设备的分片请求，没有正确的分片，会导致苹果设备获取到错误的片段，从而导致杂音。</li>
+<li>苹果设备有一个分片是<strong>请求全部文件</strong>，但是报错了，不影响播放。</li>
+</ol>
+<h4 id="代码中的问题"><a href="#代码中的问题" class="headerlink" title="代码中的问题"></a>代码中的问题</h4><p>这里的问题主要体现在文件分片的逻辑错误，在苹果设备外的其它设备上，是体现不出当前分片效果的。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/40242/">https://github.com/maxzhao-it/blog/post/40242/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/%E6%B7%B7%E5%90%88%E5%BC%80%E5%8F%91/" rel="tag"># 混合开发</a>
+              <a href="/blog/tags/IOS%E4%BD%BF%E7%94%A8H5%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91%EF%BC%88%E8%A7%86%E9%A2%91%EF%BC%89%E6%B5%81/" rel="tag"># IOS使用H5播放音频（视频）流</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/18836/" rel="next" title="Cordova打包Angular项目">
+                  <i class="fa fa-chevron-left"></i> Cordova打包Angular项目
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/4636/" rel="prev" title="JAVA-Java类中自定义序列化">
+                  JAVA-Java类中自定义序列化 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题的发现"><span class="nav-number">2.</span> <span class="nav-text">问题的发现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-使用文件服务"><span class="nav-number">2.0.1.</span> <span class="nav-text">1. 使用文件服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-调用文件服务接口"><span class="nav-number">2.0.2.</span> <span class="nav-text">2. 调用文件服务接口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#下载代码展示"><span class="nav-number">2.0.2.1.</span> <span class="nav-text">下载代码展示</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-单独开发音频（视频）文件预览接口"><span class="nav-number">2.0.3.</span> <span class="nav-text">3. 单独开发音频（视频）文件预览接口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#第一个版本比较简陋，这里不做分析。"><span class="nav-number">2.0.3.1.</span> <span class="nav-text">第一个版本比较简陋，这里不做分析。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码展示：第二个版本"><span class="nav-number">2.0.3.2.</span> <span class="nav-text">代码展示：第二个版本</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-使用第二个版本的代码"><span class="nav-number">2.0.4.</span> <span class="nav-text">4. 使用第二个版本的代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-对苹果设备中的现象不断测试"><span class="nav-number">2.0.5.</span> <span class="nav-text">5. 对苹果设备中的现象不断测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-根据出现的现象，对现象进行分析"><span class="nav-number">2.0.6.</span> <span class="nav-text">6. 根据出现的现象，对现象进行分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-通过现象调整代码"><span class="nav-number">2.0.7.</span> <span class="nav-text">7. 通过现象调整代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-针对有问题的测试情况2进行测试"><span class="nav-number">2.0.8.</span> <span class="nav-text">8. 针对有问题的测试情况2进行测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-针对正常结果进行分析"><span class="nav-number">2.0.9.</span> <span class="nav-text">9. 针对正常结果进行分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码中的问题"><span class="nav-number">2.0.10.</span> <span class="nav-text">代码中的问题</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

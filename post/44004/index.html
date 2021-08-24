@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="git基本操作整理之前用的svn，很少使用命令，如今要使用gitlab，所以整理一下 git 的简单用法。基本快照Git 的工作就是创建和保存你的项目的快照及与之后的快照进行对比。###git status 查看状态">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git基本操作整理">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;44004&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="git基本操作整理之前用的svn，很少使用命令，如今要使用gitlab，所以整理一下 git 的简单用法。基本快照Git 的工作就是创建和保存你的项目的快照及与之后的快照进行对比。###git status 查看状态">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-08-24T02:48:56.698Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/44004/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>git基本操作整理 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/44004/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          git基本操作整理
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-24 10:48:56" itemprop="dateModified" datetime="2021-08-24T10:48:56+08:00">2021-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index">
+                    <span itemprop="name">DevelopTools</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DevelopTools/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>git基本操作整理</p><p>之前用的svn，很少使用命令，如今要使用gitlab，所以整理一下 git 的简单用法。</p><h2 id="基本快照"><a href="#基本快照" class="headerlink" title="基本快照"></a>基本快照</h2><p>Git 的工作就是创建和保存你的项目的快照及与之后的快照进行对比。</p><p>###</p><h3 id="git-status-查看状态"><a href="#git-status-查看状态" class="headerlink" title="git status 查看状态"></a>git status 查看状态</h3><a id="more"></a>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git-status - Show the working tree status</span></span><br><span class="line"><span class="comment"># git status --help 帮助</span></span><br><span class="line"><span class="comment"># git status -s 简约查看</span></span><br><span class="line">git status -s</span><br><span class="line">$ A  .gitignore</span><br><span class="line">$ AM  README.md</span><br><span class="line">$ A  pom.xml</span><br><span class="line">$ ??  root.md</span><br><span class="line">$ ?? .attach_pid24604</span><br><span class="line"><span class="comment"># A 是新添加的文件 AM 是添加之后又有改动  M 是commit 之后有修改  ??是未操作的文件</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git-add-添加文件进缓存"><a href="#git-add-添加文件进缓存" class="headerlink" title="git add 添加文件进缓存"></a>git add 添加文件进缓存</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git add root.md</span><br><span class="line">git status -s</span><br><span class="line">$ A  .gitignore</span><br><span class="line">$ AM  README.md</span><br><span class="line">$ A  pom.xml</span><br><span class="line">$ A  root.md</span><br><span class="line">$ ?? .attach_pid24604</span><br><span class="line"></span><br><span class="line">git add README.md</span><br><span class="line">$ A  .gitignore</span><br><span class="line">$ A  README.md</span><br><span class="line">$ A  pom.xml</span><br><span class="line">$ A  root.md</span><br><span class="line">$ ?? .attach_pid24604</span><br></pre></td></tr></table></figure>
+
+<h3 id="git-reset-HEAD-取消-git-add-添加的文件"><a href="#git-reset-HEAD-取消-git-add-添加的文件" class="headerlink" title="git reset HEAD 取消 git add 添加的文件"></a>git reset HEAD 取消 git add 添加的文件</h3><h3 id="git-commit-将缓存内容添加到仓库中"><a href="#git-commit-将缓存内容添加到仓库中" class="headerlink" title="git commit 将缓存内容添加到仓库中"></a>git commit 将缓存内容添加到仓库中</h3><p>如果新安装git，需要添加名称和邮箱</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">"maxzhao"</span></span><br><span class="line">git config --global user.email <span class="string">"1441439636@qq.com"</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">'first commit'</span>;</span><br><span class="line">git status -s</span><br><span class="line">$ ?? .attach_pid24604</span><br></pre></td></tr></table></figure>
+
+<p>修改 README.md</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span>  <span class="string">'xxx'</span> &gt; README.md</span><br><span class="line">git status -s</span><br><span class="line">$ M README.md</span><br></pre></td></tr></table></figure>
+
+<h4 id="git-commit-a-直接提交缓存"><a href="#git-commit-a-直接提交缓存" class="headerlink" title="git commit -a 直接提交缓存"></a>git commit -a 直接提交缓存</h4><p>上面修改了文件，想直接添加到仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -am <span class="string">'modify readme.md'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git-rm-删除文件"><a href="#git-rm-删除文件" class="headerlink" title="git rm 删除文件"></a>git rm 删除文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 简单删除，文件就没有了</span></span><br><span class="line">git rm &lt;file&gt;</span><br><span class="line"><span class="comment"># 如果把文件从暂存区域移除，文件还在</span></span><br><span class="line">git rm --cached &lt;file&gt;</span><br><span class="line"><span class="comment"># 递归删除</span></span><br><span class="line">git rm –r *</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看提交历史"><a href="#查看提交历史" class="headerlink" title="查看提交历史"></a>查看提交历史</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span></span><br><span class="line"><span class="comment">## 简约查看</span></span><br><span class="line">git <span class="built_in">log</span> --oneline</span><br><span class="line"><span class="comment">## --graph 选项，查看历史中什么时候出现了分支、合并。</span></span><br><span class="line">git <span class="built_in">log</span> --oneline --graph</span><br><span class="line"><span class="comment">## --reverse 参数来逆向显示所有日志。</span></span><br><span class="line"><span class="comment">## --author 参数来查看指定用户所有日志。</span></span><br><span class="line">git <span class="built_in">log</span> --oneline --author=maxzhao</span><br><span class="line"><span class="comment">## --before=&#123;3.weeks.ago&#125; --after=&#123;2010-04-18&#125; 三周前且在四月十八日之后的所有提交  --no-merges 隐藏合并提交</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看提交记录详情"><a href="#查看提交记录详情" class="headerlink" title="查看提交记录详情"></a>查看提交记录详情</h3><ul>
+<li><p>查看commitId <code>git log --oneline</code></p>
+</li>
+<li><p>查看最新的commit <code>git show</code></p>
+</li>
+<li><p>查看指定commit hashID的所有修改：<code>git show commitId</code></p>
+</li>
+<li><p>查看某次commit中具体某个文件的修改： <code>git show commitId fileName</code></p>
+</li>
+</ul>
+<h2 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h2><h3 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add [shortname] [url]</span><br></pre></td></tr></table></figure>
+
+<h4 id="设置公钥"><a href="#设置公钥" class="headerlink" title="设置公钥"></a>设置公钥</h4><p>添加之前，需要设置公钥：</p>
+<p>需要3次回车，两次是输入密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"1441439636@qq.com"</span></span><br></pre></td></tr></table></figure>
+
+<p>查看公钥</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>然后根据不同网站的设置公钥的方式，设置好公钥。</p>
+<h4 id="添加仓库"><a href="#添加仓库" class="headerlink" title="添加仓库"></a>添加仓库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@gitee.com:&lt;名称&gt;/&lt;项目名称&gt;.git</span><br><span class="line">git pull origin master --allow-unrelated-histories</span><br><span class="line">git push -u origin master</span><br><span class="line"><span class="comment"># -f 覆盖</span></span><br><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看仓库"><a href="#查看仓库" class="headerlink" title="查看仓库"></a>查看仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote</span><br><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取远程仓库代码"><a href="#获取远程仓库代码" class="headerlink" title="获取远程仓库代码"></a>获取远程仓库代码</h3><p>1、从远程仓库下载新分支与数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br></pre></td></tr></table></figure>
+
+<p>该命令执行完后需要执行git merge 远程分支到你所在的分支。</p>
+<p>2、从远端仓库提取数据并尝试合并到当前分支：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge</span><br></pre></td></tr></table></figure>
+
+<p>该命令就是在执行 git fetch 之后紧接着执行 git merge 远程分支到你所在的任意分支。</p>
+<p>假设你配置好了一个远程仓库，并且你想要提取更新的数据，你可以首先执行 <strong>git fetch [alias]</strong> 告诉 Git 去获取它有你没有的数据，然后你可以执行 <strong>git merge [alias]/[branch]</strong><br>以将服务器上的任何更新（假设有人这时候推送到服务器了）合并到你的当前分支。</p>
+<h3 id="推送到远程仓库"><a href="#推送到远程仓库" class="headerlink" title="推送到远程仓库"></a>推送到远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git push [<span class="built_in">alias</span>] [branch]</span><br><span class="line"><span class="comment"># 推送到origin 的 master 分支</span></span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+
+<h4 id="推送之前："><a href="#推送之前：" class="headerlink" title="推送之前："></a>推送之前：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3ceeb5a (HEAD -&gt; master) modify readme.md</span><br><span class="line">e66d82e create readme.md</span><br><span class="line">bc5a5d8 (origin/master) first commit</span><br></pre></td></tr></table></figure>
+
+<h4 id="推送之后："><a href="#推送之后：" class="headerlink" title="推送之后："></a>推送之后：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3ceeb5a (HEAD -&gt; master, origin/master) modify readme.md</span><br><span class="line">e66d82e create readme.md</span><br><span class="line">bc5a5d8 first commit</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除远程仓库"><a href="#删除远程仓库" class="headerlink" title="删除远程仓库"></a>删除远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote rm xxx</span><br></pre></td></tr></table></figure>
+
+<h2 id="协作开发"><a href="#协作开发" class="headerlink" title="协作开发"></a>协作开发</h2><ul>
+<li>创建开发分支</li>
+<li>fork项目</li>
+<li>clone 项目(注意要有自己的地址和团队地址,自己的地址用来提交自己的修改,团队地址用来获取更新 <code>git remote add 自己库名 仓库地址</code>)</li>
+<li>使用 <code>git branch</code> 命令查看本地分支</li>
+<li>使用 <code>git branch -a</code> 查看项目所有分支</li>
+<li>创建并 clone 仓库开发分支</li>
+<li><code>git checkout -b dev origin/dev</code> 创建（-b）dev分支，clone 远程dev分支（origin/dev）的内容。切换到该分支（checkout）</li>
+<li>切换分支<code>git checkout master</code></li>
+<li>获取最新版本<code>git fetch origin</code></li>
+<li>合并 <code>git merge origin/dev</code></li>
+<li>解决冲突</li>
+</ul>
+<h3 id="强制解决合并冲突"><a href="#强制解决合并冲突" class="headerlink" title="强制解决合并冲突"></a>强制解决合并冲突</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf .git/MERGE*</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>本文地址： <a href="https://www.jianshu.com/p/630f675d4762" target="_blank" rel="noopener">git基本操作整理</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44004/">https://github.com/maxzhao-it/blog/post/44004/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/git/" rel="tag"># git</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/29880/" rel="next" title="SpringBoot开启定时任务、异步任务.md">
+                  <i class="fa fa-chevron-left"></i> SpringBoot开启定时任务、异步任务.md
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/58808/" rel="prev" title="Maven安装(Linux)">
+                  Maven安装(Linux) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本快照"><span class="nav-number">1.</span> <span class="nav-text">基本快照</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#git-status-查看状态"><span class="nav-number">1.1.</span> <span class="nav-text">git status 查看状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-add-添加文件进缓存"><span class="nav-number">1.2.</span> <span class="nav-text">git add 添加文件进缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-reset-HEAD-取消-git-add-添加的文件"><span class="nav-number">1.3.</span> <span class="nav-text">git reset HEAD 取消 git add 添加的文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-commit-将缓存内容添加到仓库中"><span class="nav-number">1.4.</span> <span class="nav-text">git commit 将缓存内容添加到仓库中</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#git-commit-a-直接提交缓存"><span class="nav-number">1.4.1.</span> <span class="nav-text">git commit -a 直接提交缓存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-rm-删除文件"><span class="nav-number">1.5.</span> <span class="nav-text">git rm 删除文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看提交历史"><span class="nav-number">2.</span> <span class="nav-text">查看提交历史</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看提交记录详情"><span class="nav-number">2.1.</span> <span class="nav-text">查看提交记录详情</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程仓库"><span class="nav-number">3.</span> <span class="nav-text">远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加远程仓库"><span class="nav-number">3.1.</span> <span class="nav-text">添加远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置公钥"><span class="nav-number">3.1.1.</span> <span class="nav-text">设置公钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加仓库"><span class="nav-number">3.1.2.</span> <span class="nav-text">添加仓库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看仓库"><span class="nav-number">3.2.</span> <span class="nav-text">查看仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取远程仓库代码"><span class="nav-number">3.3.</span> <span class="nav-text">获取远程仓库代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#推送到远程仓库"><span class="nav-number">3.4.</span> <span class="nav-text">推送到远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#推送之前："><span class="nav-number">3.4.1.</span> <span class="nav-text">推送之前：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#推送之后："><span class="nav-number">3.4.2.</span> <span class="nav-text">推送之后：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除远程仓库"><span class="nav-number">3.5.</span> <span class="nav-text">删除远程仓库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协作开发"><span class="nav-number">4.</span> <span class="nav-text">协作开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#强制解决合并冲突"><span class="nav-number">4.1.</span> <span class="nav-text">强制解决合并冲突</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
