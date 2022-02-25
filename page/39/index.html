@@ -22,10 +22,10 @@
         }
     })();
 </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
-  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
 
 <link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
 
@@ -239,10 +239,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/45583/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/62112/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -253,7 +253,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/45583/" class="post-title-link" itemprop="url">SpringBoot整合Redis及Redis简介</a>
+            <a href="/blog/post/62112/" class="post-title-link" itemprop="url">SpringBoot+Security+JWT进阶：二、自定义认证实践</a>
         </h1>
 
         <div class="post-meta">
@@ -262,7 +262,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2021-08-26 14:59:20" itemprop="dateModified" datetime="2021-08-26T14:59:20+08:00">2021-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,158 +276,20 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/SpringBoot/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
+                  <a href="/blog/categories/SpringBoot/Security/" itemprop="url" rel="index">
+                    <span itemprop="name">Security</span>
                   </a>
                 </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于版本原因，SpringBoot2.0整合Redis和低版本的SpringBoot不太一样，此方案基于<code>Srping Boot 2.x</code>。</p><p><a href="https://www.jianshu.com/p/d586b476c4cd" target="_blank" rel="noopener">Linux下Redis安装</a></p><h1 id="整合"><a href="#整合" class="headerlink" title="整合"></a>整合</h1><h2 id="maven-依赖"><a href="#maven-依赖" class="headerlink" title="maven 依赖"></a>maven 依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 下面的不用加，用于分布式共享session的配置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.session<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-session-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/post/45583/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/52100/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/post/52100/" class="post-title-link" itemprop="url">JAVA中常用的依赖</a>
-        </h1>
-
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
+                  , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/blog/categories/SpringBoot/Security/JWT/" itemprop="url" rel="index">
+                    <span itemprop="name">JWT</span>
                   </a>
                 </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>日常遇到就收集啦,时间长了版本可能就旧了.</p><p>仅仅是收集</p><h4 id="commons-codec是Apache开源组织提供的用于摘要运算、编码解码的包。常见的编码解码工具Base64、MD5、Hex、SHA1、DES等。"><a href="#commons-codec是Apache开源组织提供的用于摘要运算、编码解码的包。常见的编码解码工具Base64、MD5、Hex、SHA1、DES等。" class="headerlink" title="commons-codec是Apache开源组织提供的用于摘要运算、编码解码的包。常见的编码解码工具Base64、MD5、Hex、SHA1、DES等。"></a>commons-codec是Apache开源组织提供的用于摘要运算、编码解码的包。常见的编码解码工具Base64、MD5、Hex、SHA1、DES等。</h4>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/post/52100/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/4368/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/post/4368/" class="post-title-link" itemprop="url">JAVA中的Cloneable接口</a>
-        </h1>
-
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
+                  , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/blog/categories/SpringBoot/Security/JWT/Authentication/" itemprop="url" rel="index">
+                    <span itemprop="name">Authentication</span>
                   </a>
                 </span>
             </span>
@@ -443,13 +305,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Java中的<code>Cloneable</code>并没有具体的方法，那为什么我们需要实现<code>Cloneable</code>这个空接口才能使用<code>clone</code>方法呢？</p><p>这里有两方面的原因：</p><ul>
-<li>首先，可能有一个上溯造型句柄指向一个基础类型，而且不知道它是否真的能克隆那个对象。在这种情况下，可以用<code>instanceof</code>关键字来判断句柄是否确实实现同一个能克隆的对象连接。</li>
-<li>第二个原因是考虑到我们可能不愿所有的对象都能克隆。所以<code>Object.clone()</code>会验证一个类是否真的是实现了<code>Cloneable</code>接口。若没有实现，则抛出<code>CloneNotSupportedException</code>异常。</li>
-</ul>
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>阅读下文要了解</p><ul>
+<li>java（。。。）</li>
+<li><a href="https://www.jianshu.com/p/6e4371d74248" target="_blank" rel="noopener">spring security</a></li>
+<li><a href="https://www.jianshu.com/p/6e4371d74248" target="_blank" rel="noopener">jwt 基础</a></li>
+<li>redis（不会也没关系，缓存用户用的）</li>
+</ul><p>注释是按照我初学的时候写的，如果有错误或者不清楚的地方，希望大家能给我指出。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/4368/#more" rel="contents">
+              <a class="btn" href="/blog/post/62112/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -473,10 +337,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/2921/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/64981/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -487,7 +351,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/2921/" class="post-title-link" itemprop="url">SpringBoot MQ参考资料</a>
+            <a href="/blog/post/64981/" class="post-title-link" itemprop="url">SpringBoot的Security中AuthenticationException不能抛出 UsernameNotFoundException问题解决</a>
         </h1>
 
         <div class="post-meta">
@@ -496,7 +360,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2021-08-26 14:59:28" itemprop="dateModified" datetime="2021-08-26T14:59:28+08:00">2021-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -510,8 +374,20 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/SpringBoot/MQ/" itemprop="url" rel="index">
-                    <span itemprop="name">MQ</span>
+                  <a href="/blog/categories/SpringBoot/Security/" itemprop="url" rel="index">
+                    <span itemprop="name">Security</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/SpringBoot/Security/JWT/" itemprop="url" rel="index">
+                    <span itemprop="name">JWT</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/SpringBoot/Security/JWT/Authentication/" itemprop="url" rel="index">
+                    <span itemprop="name">Authentication</span>
                   </a>
                 </span>
             </span>
@@ -527,30 +403,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="一、JMS介绍和使用场景及基础编程模型"><a href="#一、JMS介绍和使用场景及基础编程模型" class="headerlink" title="一、JMS介绍和使用场景及基础编程模型"></a>一、JMS介绍和使用场景及基础编程模型</h2><p>  简介：讲解什么是小写队列，JMS的基础知识和使用场景</p><ol>
-<li><p>什么是JMS: Java消息服务（Java Message Service),Java平台中关于面向消息中间件的接口</p>
-</li>
-<li><p>JMS是一种与厂商无关的 API，用来访问消息收发系统消息，它类似于JDBC(Java Database Connectivity)。这里，JDBC 是可以用来访问许多不同关系数据库的 API</p>
-</li>
-<li><p>使用场景：</p>
-<ol>
-<li>跨平台</li>
-<li>多语言</li>
-<li>多项目</li>
-<li>解耦</li>
-<li>分布式事务</li>
-<li>流量控制</li>
-<li>最终一致性</li>
-<li>RPC调用</li>
-<li>上下游对接，数据源变动-&gt;通知下属</li>
-</ol>
-</li>
-<li><p>概念</p>
-</li>
-</ol>
+          <h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>问题：UsernameNotFoundException 不能抛出问题不能获取 问题解决<br>DaoAuthenticationProvider类的retrieveUser 中会重写输出的异常<br>在这个方法会捕获 UsernameNotFoundException 异常，会执行到父抽象类 AbstractUserDetailsAuthenticationProvider的authenticate方法</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/2921/#more" rel="contents">
+              <a class="btn" href="/blog/post/64981/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -574,10 +430,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/2922/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/43589/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -588,7 +444,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/2922/" class="post-title-link" itemprop="url">SpringBoot MQ参考资料</a>
+            <a href="/blog/post/43589/" class="post-title-link" itemprop="url">Docker从0安装MySql8(Linux)</a>
         </h1>
 
         <div class="post-meta">
@@ -597,7 +453,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2021-08-26 14:49:26" itemprop="dateModified" datetime="2021-08-26T14:49:26+08:00">2021-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -605,14 +461,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index">
-                    <span itemprop="name">SpringBoot</span>
+                  <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index">
+                    <span itemprop="name">DevelopTools</span>
                   </a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/SpringBoot/MQ/" itemprop="url" rel="index">
-                    <span itemprop="name">MQ</span>
+                  <a href="/blog/categories/DevelopTools/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
                   </a>
                 </span>
             </span>
@@ -628,13 +484,166 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="SpringBoot使用RabbitMQ"><a href="#SpringBoot使用RabbitMQ" class="headerlink" title="SpringBoot使用RabbitMQ"></a>SpringBoot使用RabbitMQ</h1><h3 id="RabbitMQ-是"><a href="#RabbitMQ-是" class="headerlink" title="RabbitMQ 是"></a>RabbitMQ 是</h3><ul>
-<li>消息队列</li>
-<li>实现AMQP（高级消息队列协议Advanced Message Queuing Protocol）的消息中间件的一种</li>
-</ul><p>作用：主要是用来实现应用程序的异步和解耦，同时也能起到消息缓冲，消息分发的作用。</p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Manjaro 安装MySQL8很简单粗暴，为什么还要装 Docker 呢？</p><p>滚动更新惹得祸！！！</p><p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code>GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code>GCC 9.1.0</code> 版本，操作系统都起不来了。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/2922/#more" rel="contents">
+              <a class="btn" href="/blog/post/43589/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/43590/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/post/43590/" class="post-title-link" itemprop="url">Docker从0安装MySql8(Linux)</a>
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-26 14:49:26" itemprop="dateModified" datetime="2021-08-26T14:49:26+08:00">2021-08-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Manjaro 安装MySQL8很简单粗暴，为什么还要装 Docker 呢？</p><p>滚动更新惹得祸！！！</p><p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code>GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code>GCC 9.1.0</code> 版本，操作系统都起不来了。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/post/43590/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/44183/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/post/44183/" class="post-title-link" itemprop="url">OAuth2与JWT</a>
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-24 10:48:56" itemprop="dateModified" datetime="2021-08-24T10:48:56+08:00">2021-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Spring/OAuth/" itemprop="url" rel="index">
+                    <span itemprop="name">OAuth</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://oauth.net/images/oauth-2-sm.png" alt></p><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是Oauth2？"><a href="#什么是Oauth2？" class="headerlink" title="什么是Oauth2？"></a>什么是Oauth2？</h3><p>OAuth（Open Authorization，开放授权）是为用户资源的授权定义了一个安全、开放及简单的标准，第三方无需知道用户的账号及密码，就可获取到用户的授权信息。<br> OAuth2.0是OAuth协议的延续版本，但不向后兼容OAuth 1.0即完全废止了OAuth1.0</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/post/44183/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -658,7 +667,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/38/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/blog/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/44/">44</a><a class="extend next" rel="next" href="/blog/page/40/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/38/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/blog/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/50/">50</a><a class="extend next" rel="next" href="/blog/page/40/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -695,7 +704,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <img class="site-author-image" itemprop="image" alt="赵联胜"
-    src="/blog/uploads/avatar.jpg">
+    src="/blog/uploads/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">赵联胜</p>
   <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
 </div>
@@ -704,20 +713,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-count">248</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-count">117</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-count">140</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -761,7 +770,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

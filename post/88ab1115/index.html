@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="备份数据 输出目录格式的归档 这个方式备份可以避免操作系统对单个文件的大小的限制1pg_dump  -U postgres -F -O d -f  &#x2F;home&#x2F;back mydb备份完成后，会生成一个备份文件夹">
+<meta name="keywords" content="PostgreSql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL备份与恢复">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;88ab1115&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="备份数据 输出目录格式的归档 这个方式备份可以避免操作系统对单个文件的大小的限制1pg_dump  -U postgres -F -O d -f  &#x2F;home&#x2F;back mydb备份完成后，会生成一个备份文件夹">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-09-20T01:25:50.011Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/88ab1115/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>PostgreSQL备份与恢复 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/88ab1115/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PostgreSQL备份与恢复
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-20 09:25:50" itemprop="dateModified" datetime="2021-09-20T09:25:50+08:00">2021-09-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/PostgreSql/" itemprop="url" rel="index">
+                    <span itemprop="name">PostgreSql</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="备份数据"><a href="#备份数据" class="headerlink" title="备份数据"></a>备份数据</h2><ul>
+<li>输出目录格式的归档</li>
+</ul><p>这个方式备份可以避免操作系统对单个文件的大小的限制</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_dump  -U postgres -F -O d -f  /home/back mydb</span><br></pre></td></tr></table></figure><p>备份完成后，会生成一个备份文件夹</p><a id="more"></a>
+
+
+
+
+<ul>
+<li><code>tar</code>格式的归档(在用<code>pg_resotre</code>恢复时不支持并行恢复)</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_dump -U postgres -F t postgres &gt; mydb.tar</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>生成<code>sql</code>脚本(不支持<code>pg_restore</code> 恢复)</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_dump -U postgres -F p postgres &gt; mydb.sql</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>生成自定格式的归档</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_dump -U postgres -F c postgres &gt; mydb.bin</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="恢复数据"><a href="#恢复数据" class="headerlink" title="恢复数据"></a>恢复数据</h2><ul>
+<li>恢复前，创建目标数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">　<span class="keyword">create</span> <span class="keyword">database</span> mydb;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>恢复数据</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_restore -U postgres -d mydb -j 4 /home/back</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>恢复结构</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_restore -U postgres -d mydb --section=pre-data -j 4 /home/back</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p> <code>-j 4</code> 是并行执行线程 其中tar格式备份不支持并行恢复</p>
+</blockquote>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h2 id="pg-restore"><a href="#pg-restore" class="headerlink" title="pg_restore"></a><code>pg_restore</code></h2><p>用法:<br>  pg_restore [选项]… [文件名]</p>
+<p>一般选项:<br>  -d, –dbname=名字        连接数据库名字<br>  -f, –file=文件名       输出文件名(- 对于stdout)<br>  -F, –format=c|d|t       备份文件格式(应该自动进行)<br>  -l, –list               打印归档文件的 TOC 概述<br>  -v, –verbose            详细模式<br>  -V, –version            输出版本信息, 然后退出<br>  -?, –help               显示此帮助, 然后退出</p>
+<p>恢复控制选项:<br>  -a, –data-only              只恢复数据, 不包括模式<br>  -c, –clean                  在重新创建之前，先清除（删除）数据库对象<br>  -C, –create                 创建目标数据库<br>  -e, –exit-on-error          发生错误退出, 默认为继续<br>  -I, –index=NAME             恢复指定名称的索引<br>  -j, –jobs=NUM               执行多个并行任务进行恢复工作<br>  -L, –use-list=FILENAME      从这个文件中使用指定的内容表排序<br>                               输出<br>  -n, –schema=NAME            在这个模式中只恢复对象<br>  -N, –exclude-schema=NAME    不恢复此模式中的对象<br>  -O, –no-owner               不恢复对象所属者<br>  -P, –function=NAME(args)    恢复指定名字的函数<br>  -s, –schema-only            只恢复模式, 不包括数据<br>  -S, –superuser=NAME         使用指定的超级用户来禁用触发器<br>  -t, –table=NAME             恢复命名关系（表、视图等）<br>  -T, –trigger=NAME           恢复指定名字的触发器<br>  -x, –no-privileges          跳过处理权限的恢复 (grant/revoke)<br>  -1, –single-transaction     作为单个事务恢复<br>  –disable-triggers           在只恢复数据的过程中禁用触发器<br>  –enable-row-security        启用行安全性<br>  –if-exists                  当删除对象时使用IF EXISTS<br>  –no-comments                不恢复注释<br>  –no-data-for-failed-tables  对那些无法创建的表不进行<br>                               数据恢复<br>  –no-publications            不恢复发行<br>  –no-security-labels         不恢复安全标签信息<br>  –no-subscriptions           不恢复订阅<br>  –no-tablespaces             不恢复表空间的分配信息<br>  –section=SECTION            恢复命名节 (数据前、数据及数据后)<br>  –strict-names               要求每个表和(或)schema包括模式以匹配至少一个实体<br>  –use-set-session-authorization<br>                               使用 SESSION AUTHORIZATION 命令代替<br>                               ALTER OWNER 命令来设置所有权</p>
+<p>联接选项:<br>  -h, –host=主机名        数据库服务器的主机名或套接字目录<br>  -p, –port=端口号        数据库服务器的端口号<br>  -U, –username=名字      以指定的数据库用户联接<br>  -w, –no-password        永远不提示输入口令<br>  -W, –password           强制口令提示 (自动)<br>  –role=ROLENAME          在恢复前执行SET ROLE操作</p>
+<p>选项 -I, -n, -N, -P, -t, -T, 以及 –section 可以组合使用和指定<br>多次用于选择多个对象.</p>
+<h2 id="pg-dump"><a href="#pg-dump" class="headerlink" title="pg_dump"></a><code>pg_dump</code></h2><p>用法:<br>  pg_dump [选项]… [数据库名字]</p>
+<p>一般选项:<br>  -f, –file=FILENAME          输出文件或目录名<br>  -F, –format=c|d|t|p         输出文件格式 (定制, 目录, tar)<br>                               明文 (默认值))<br>  -j, –jobs=NUM               执行多个并行任务进行备份转储工作<br>  -v, –verbose                详细模式<br>  -V, –version                输出版本信息，然后退出<br>  -Z, –compress=0-9           被压缩格式的压缩级别<br>  –lock-wait-timeout=TIMEOUT  在等待表锁超时后操作失败<br>  –no-sync                    do not wait for changes to be written safely to disk<br>  -?, –help                   显示此帮助, 然后退出</p>
+<p>控制输出内容选项:<br>  -a, –data-only              只转储数据,不包括模式<br>  -b, –blobs                  在转储中包括大对象<br>  -B, –no-blobs               exclude large objects in dump<br>  -c, –clean                  在重新创建之前，先清除（删除）数据库对象<br>  -C, –create                 在转储中包括命令,以便创建数据库<br>  -E, –encoding=ENCODING      转储以ENCODING形式编码的数据<br>  -n, –schema=SCHEMA          只转储指定名称的模式<br>  -N, –exclude-schema=SCHEMA  不转储已命名的模式<br>  -o, –oids                   在转储中包括 OID<br>  -O, –no-owner               在明文格式中, 忽略恢复对象所属者</p>
+<p>  -s, –schema-only            只转储模式, 不包括数据<br>  -S, –superuser=NAME         在明文格式中使用指定的超级用户名<br>  -t, –table=TABLE            只转储指定名称的表<br>  -T, –exclude-table=TABLE    不转储指定名称的表<br>  -x, –no-privileges          不要转储权限 (grant/revoke)<br>  –binary-upgrade             只能由升级工具使用<br>  –column-inserts             以带有列名的INSERT命令形式转储数据<br>  –disable-dollar-quoting     取消美元 (符号) 引号, 使用 SQL 标准引号<br>  –disable-triggers           在只恢复数据的过程中禁用触发器<br>  –enable-row-security        启用行安全性（只转储用户能够访问的内容）<br>  –exclude-table-data=TABLE   不转储指定名称的表中的数据<br>  –if-exists              当删除对象时使用IF EXISTS<br>  –inserts                    以INSERT命令，而不是COPY命令的形式转储数据<br>  –no-publications            do not dump publications<br>  –no-security-labels         不转储安全标签的分配<br>  –no-subscriptions           do not dump subscriptions<br>  –no-synchronized-snapshots  在并行工作集中不使用同步快照<br>  –no-tablespaces             不转储表空间分配信息<br>  –no-unlogged-table-data     不转储没有日志的表数据<br>  –quote-all-identifiers      所有标识符加引号，即使不是关键字<br>  –section=SECTION            备份命名的节 (数据前, 数据, 及 数据后)<br>  –serializable-deferrable   等到备份可以无异常运行<br>  –snapshot=SNAPSHOT          为转储使用给定的快照<br>  –strict-names               要求每个表和/或schema包括模式以匹配至少一个实体<br>  –use-set-session-authorization<br>                               使用 SESSION AUTHORIZATION 命令代替<br>                ALTER OWNER 命令来设置所有权</p>
+<p>联接选项:<br>  -d, –dbname=DBNAME       对数据库 DBNAME备份<br>  -h, –host=主机名        数据库服务器的主机名或套接字目录<br>  -p, –port=端口号        数据库服务器的端口号<br>  -U, –username=名字      以指定的数据库用户联接<br>  -w, –no-password        永远不提示输入口令<br>  -W, –password           强制口令提示 (自动)<br>  –role=ROLENAME          在转储前运行SET ROLE</p>
+<p>如果没有提供数据库名字,</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/88ab1115/">https://github.com/maxzhao-it/blog/post/88ab1115/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/PostgreSql/" rel="tag"># PostgreSql</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/e2a00d68/" rel="next" title="Linux无法开启网卡的问题">
+                  <i class="fa fa-chevron-left"></i> Linux无法开启网卡的问题
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/49280/" rel="prev" title="MyBatisPlus代码生成器添加自定义模板">
+                  MyBatisPlus代码生成器添加自定义模板 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#备份数据"><span class="nav-number">1.</span> <span class="nav-text">备份数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#恢复数据"><span class="nav-number">2.</span> <span class="nav-text">恢复数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附录"><span class="nav-number"></span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pg-restore"><span class="nav-number">1.</span> <span class="nav-text">pg_restore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pg-dump"><span class="nav-number">2.</span> <span class="nav-text">pg_dump</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">117</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">140</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

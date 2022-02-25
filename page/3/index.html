@@ -22,10 +22,10 @@
         }
     })();
 </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
-  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
 
 <link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
 
@@ -239,10 +239,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/28907/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/cf860b21/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -253,7 +253,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/28907/" class="post-title-link" itemprop="url">ElasticSearch近义词(synonym)配置</a>
+            <a href="/blog/post/cf860b21/" class="post-title-link" itemprop="url">SpringBoot集成liquibase案例</a>
         </h1>
 
         <div class="post-meta">
@@ -262,7 +262,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2022-02-25 17:10:12" itemprop="dateModified" datetime="2022-02-25T17:10:12+08:00">2022-02-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -270,14 +270,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/" itemprop="url" rel="index">
-                    <span itemprop="name">ELK</span>
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/ElasticSearch/" itemprop="url" rel="index">
-                    <span itemprop="name">ElasticSearch</span>
+                  <a href="/blog/categories/Java/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
                   </a>
                 </span>
             </span>
@@ -293,10 +293,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>索引近义词的配置，需要在创建索引时就配置好</p><h2 id="近义词配置"><a href="#近义词配置" class="headerlink" title="近义词配置"></a>近义词配置</h2><h3 id="创建索引时"><a href="#创建索引时" class="headerlink" title="创建索引时"></a>创建索引时</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"settings"</span>: &#123;</span><br><span class="line">    <span class="attr">"analysis"</span>: &#123;</span><br><span class="line">      <span class="attr">"analyzer"</span>: &#123;</span><br><span class="line">        <span class="attr">"my_hanlp_analyzer"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"custom"</span>,</span><br><span class="line">          <span class="attr">"char_filter"</span>: [</span><br><span class="line">            <span class="string">"html_strip"</span></span><br><span class="line">          ],</span><br><span class="line">          <span class="attr">"filter"</span>: [</span><br><span class="line">            <span class="string">"my_synonym"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"filter"</span>: &#123;</span><br><span class="line">        <span class="attr">"my_synonym"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"synonym_graph"</span>,</span><br><span class="line">          <span class="attr">"synonyms_path"</span>: <span class="string">"analysis/synonym/synonym.txt"</span>,</span><br><span class="line">          <span class="attr">"updateable"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>项目中版本发布需要做一个版本管理工具，项目使用 <code>SpringBoot</code> 框架。</p><p>目前有两款 <code>liquibase</code> 和 <code>flyway</code>。</p><p><code>flyway</code>不支持并发，也就是集群项目会执行多次，进而否掉。</p><p><code>Liquibase</code> ：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/28907/#more" rel="contents">
+              <a class="btn" href="/blog/post/cf860b21/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -320,10 +320,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/48916/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/b2db72d0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -334,7 +334,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/48916/" class="post-title-link" itemprop="url">ElasticSearch高可用集群部署</a>
+            <a href="/blog/post/b2db72d0/" class="post-title-link" itemprop="url">SpringBoot-cache-Jetcache注解全局自定义CacheType方案（初稿）</a>
         </h1>
 
         <div class="post-meta">
@@ -343,25 +343,8 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-24 15:38:34" itemprop="dateModified" datetime="2021-08-24T15:38:34+08:00">2021-08-24</time>
+                <time title="Modified: 2022-01-13 16:22:25" itemprop="dateModified" datetime="2022-01-13T16:22:25+08:00">2022-01-13</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/" itemprop="url" rel="index">
-                    <span itemprop="name">ELK</span>
-                  </a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/ElasticSearch/" itemprop="url" rel="index">
-                    <span itemprop="name">ElasticSearch</span>
-                  </a>
-                </span>
-            </span>
 
           
 
@@ -374,15 +357,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h1><h2 id="集群基本概念"><a href="#集群基本概念" class="headerlink" title="集群基本概念"></a>集群基本概念</h2><ul>
-<li><code>Cluster</code> 代表一个集群</li>
-<li><code>Shards</code> 代表索引分片，分布在不同节点上，构成分部署搜索。分片数量在创建索引时指定，不能修改。</li>
-<li><code>Replicas</code> 副本，提高系统的容错性，提高查询效率。ES 会自动对请求进行负载均衡。</li>
-<li><code>Recovery</code>数据重新分布，ES 在节点加入或退出时，会根据机器的负载对索引分片进行重新分配，挂掉的节点重新启动时也会进行数据恢复。</li>
-</ul>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Jetcache</code>缓存可以使用的 <code>CacheType</code> 有 <code>REMOTE</code>, <code>LOCAL</code>, <code>BOTH</code> ；</p><p>注解 <code>@Cached</code> 在使用时，可以 <code>CacheType</code>，如果不指定，则默认为 <code>REMOTE</code>。</p><p>平台中的缓存注解在各个项目运行时，是无法修改的，并且平台中的缓存注解没有指定 <code>CacheType</code>。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/48916/#more" rel="contents">
+              <a class="btn" href="/blog/post/b2db72d0/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -406,10 +384,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/34329/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/784e58da/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -420,7 +398,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/34329/" class="post-title-link" itemprop="url">ElasticSearch部署</a>
+            <a href="/blog/post/784e58da/" class="post-title-link" itemprop="url">JetCache注解配置全局默认CacheType</a>
         </h1>
 
         <div class="post-meta">
@@ -429,7 +407,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2022-01-13 16:22:25" itemprop="dateModified" datetime="2022-01-13T16:22:25+08:00">2022-01-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -437,14 +415,8 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/" itemprop="url" rel="index">
-                    <span itemprop="name">ELK</span>
-                  </a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/ElasticSearch/" itemprop="url" rel="index">
-                    <span itemprop="name">ElasticSearch</span>
+                  <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
                   </a>
                 </span>
             </span>
@@ -460,10 +432,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><code>Elasticsearch</code>是位于Elastic Stack核心的分布式搜索和分析引擎，是一个基于<code>Apache Lucene(TM)</code>的开源搜索引擎，无论在开源还是专有领域，<code>Lucene</code>可以被认为是迄今为止最先进、性能最好的、功能最全的搜索引擎库。<br> 但是，Lucene只是一个库。想要发挥其强大的作用，你需使用Java并要将其集成到你的应用中。Lucene非常复杂，你需要深入的了解检索相关知识来理解它是如何工作的。</p>
+          <h2 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h2><ol>
+<li>重写 <code>jetcache</code>下的<code>ConfigMap</code>类，处理 <code>CacheType</code>。</li>
+<li>建议修改平台缓存的 <code>area</code>（为了适配一个项目多种缓存系统）。</li>
+</ol><h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="平台中的缓存注解"><a href="#平台中的缓存注解" class="headerlink" title="平台中的缓存注解"></a>平台中的缓存注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CategoryItemServiceImpl</span> <span class="keyword">extends</span> <span class="title">ServiceImpl</span>&lt;<span class="title">CategoryItemMapper</span>, <span class="title">CategoryItem</span>&gt; <span class="keyword">implements</span> <span class="title">ICategoryItemService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="meta">@Cached</span>(name = <span class="string">"categoryItemList:parentId:"</span>, key = <span class="string">"#parentId+''"</span>, area = <span class="string">"systemo_demo"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;CategoryItemDTO&gt; <span class="title">loadCategoryItemListByParentId</span><span class="params">(Long parentId)</span> </span>&#123;</span><br><span class="line">        LambdaQueryWrapper&lt;CategoryItem&gt; queryWrapper = <span class="keyword">new</span> LambdaQueryWrapper&lt;&gt;();</span><br><span class="line">        queryWrapper.select(</span><br><span class="line">                        CategoryItem::getId,</span><br><span class="line">                        CategoryItem::getParentId,</span><br><span class="line">                        CategoryItem::getItemCode,</span><br><span class="line">                        CategoryItem::getName)</span><br><span class="line">                .eq(CategoryItem::getParentId, parentId)</span><br><span class="line">                .eq(CategoryItem::getDelStatus, BaseConstant.NO)</span><br><span class="line">                .orderByAsc(CategoryItem::getSortIndex);</span><br><span class="line">        List list = <span class="keyword">this</span>.list(queryWrapper);</span><br><span class="line">        <span class="keyword">return</span> categoryConvert.convertToCategoryItemDTOList(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/34329/#more" rel="contents">
+              <a class="btn" href="/blog/post/784e58da/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -487,10 +462,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/23131/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/15752/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -501,7 +476,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/23131/" class="post-title-link" itemprop="url">HanLP自定义分词</a>
+            <a href="/blog/post/15752/" class="post-title-link" itemprop="url">MyBatisPlus代码生成器打包ZIP</a>
         </h1>
 
         <div class="post-meta">
@@ -510,7 +485,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2021-09-04 09:19:40" itemprop="dateModified" datetime="2021-09-04T09:19:40+08:00">2021-09-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -518,14 +493,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/" itemprop="url" rel="index">
-                    <span itemprop="name">ELK</span>
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/HanLP/" itemprop="url" rel="index">
-                    <span itemprop="name">HanLP</span>
+                  <a href="/blog/categories/Java/MyBatis/" itemprop="url" rel="index">
+                    <span itemprop="name">MyBatis</span>
                   </a>
                 </span>
             </span>
@@ -541,10 +516,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="下载-HanLP"><a href="#下载-HanLP" class="headerlink" title="下载 HanLP"></a>下载 <code>HanLP</code></h3><p><a href="https://github.com/hankcs/HanLP/tags">GitHub</a></p><p>这里下载的 <code>hanlp-1.8.2-release.zip</code></p><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>解压后，修改 <code>hanlp.properties</code> 中的 <code>root</code> 路径。</p><p>以及自定义词典文件的相对 <code>root</code> 的路径 <code>CustomDictionaryPath</code>。</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>MyBatisPlus</code> 通过自定义生成器、模板引擎、模板，可以生成许多简化开发的类、方法等等。</p><p>这里把生成的文件，导出到<code>ZIP</code>文件。</p><p>主要目的是方便统一管理代码生成器。</p><blockquote>
+<p>需要了解自定义代码生成器</p>
+<p>参考：<a href="../15751">MyBatisPlus代码生成器自定义FreemarkerEngine</a></p>
+</blockquote>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/23131/#more" rel="contents">
+              <a class="btn" href="/blog/post/15752/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -568,10 +546,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/9074/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/15751/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -582,7 +560,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/9074/" class="post-title-link" itemprop="url">Logstash部署</a>
+            <a href="/blog/post/15751/" class="post-title-link" itemprop="url">MyBatisPlus代码生成器自定义FreemarkerEngine</a>
         </h1>
 
         <div class="post-meta">
@@ -591,7 +569,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2021-09-04 09:07:55" itemprop="dateModified" datetime="2021-09-04T09:07:55+08:00">2021-09-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -599,14 +577,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/" itemprop="url" rel="index">
-                    <span itemprop="name">ELK</span>
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/ELK/Logstash/" itemprop="url" rel="index">
-                    <span itemprop="name">Logstash</span>
+                  <a href="/blog/categories/Java/MyBatis/" itemprop="url" rel="index">
+                    <span itemprop="name">MyBatis</span>
                   </a>
                 </span>
             </span>
@@ -622,10 +600,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>Logstash</code> 是一个自由和开放的服务器端数据处理管道吸入来自多种数据源的数据,转换,然后将其发送给你最喜欢的“储备”。</p><p>工作原理就是一种  <code>输入-&gt;过滤-&gt;输出</code> 的模式。</p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>下载最新版本的<a href="https://link.jianshu.com/?t=https://www.elastic.co/cn/downloads/logstash" target="_blank" rel="noopener"><code>Logstash</code>压缩包</a></p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>MyBatisPlus：AutoGenerator 是 MyBatis-Plus 的代码生成器，通过 AutoGenerator 可以快速生成 Entity、Mapper、Mapper XML、Service、Controller<br>等各个模块的代码，极大的提升了开发效率。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/9074/#more" rel="contents">
+              <a class="btn" href="/blog/post/15751/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -649,7 +627,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><a class="page-number" href="/blog/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/blog/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/44/">44</a><a class="extend next" rel="next" href="/blog/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><a class="page-number" href="/blog/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/blog/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/50/">50</a><a class="extend next" rel="next" href="/blog/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -686,7 +664,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <img class="site-author-image" itemprop="image" alt="赵联胜"
-    src="/blog/uploads/avatar.jpg">
+    src="/blog/uploads/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">赵联胜</p>
   <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
 </div>
@@ -695,20 +673,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-count">248</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-count">117</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-count">140</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -752,7 +730,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

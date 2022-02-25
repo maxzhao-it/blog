@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言如今高度信息化的互联网时代，生活中Instant Messaging与我们息息相关，例如微信、钉钉等以 IM 系统为核心的产品。像一些游戏、社交软件都离不开 IM。 IM 从早起的 QQ、飞信等发展到现在，软件架构也不断的在迭代，从早期的CS、P2P演变到现在，后台已经成为了一个复杂的分布式系统，涉及网络通讯、移动端、安全、存储、检索等技术。">
+<meta name="keywords" content="IM,架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IM的消息系统架构">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;7552f68d&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="前言如今高度信息化的互联网时代，生活中Instant Messaging与我们息息相关，例如微信、钉钉等以 IM 系统为核心的产品。像一些游戏、社交软件都离不开 IM。 IM 从早起的 QQ、飞信等发展到现在，软件架构也不断的在迭代，从早期的CS、P2P演变到现在，后台已经成为了一个复杂的分布式系统，涉及网络通讯、移动端、安全、存储、检索等技术。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;4cc3b1ade97b9290c56aeda2e8147b9e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;eff4116cb2daa5db6eab53eb72c07e80.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;3d3c24fc5be76697d79339b459568013.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;176939b469c63765ab0a543c4832f034.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220112085735400.png">
+<meta property="og:updated_time" content="2022-01-13T08:27:08.048Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;4cc3b1ade97b9290c56aeda2e8147b9e.png">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/7552f68d/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>IM的消息系统架构 | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/7552f68d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IM的消息系统架构
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-13 16:27:08" itemprop="dateModified" datetime="2022-01-13T16:27:08+08:00">2022-01-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/IM/" itemprop="url" rel="index">
+                    <span itemprop="name">IM</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如今高度信息化的互联网时代，生活中<code>Instant Messaging</code>与我们息息相关，例如微信、钉钉等以 <code>IM</code> 系统为核心的产品。像一些游戏、社交软件都离不开 <code>IM</code>。</p><p> <code>IM</code> 从早起的 <code>QQ</code>、飞信等发展到现在，软件架构也不断的在迭代，从早期的CS、P2P演变到现在，后台已经成为了一个复杂的分布式系统，涉及网络通讯、移动端、安全、存储、检索等技术。</p><a id="more"></a>
+
+<p><code>IM</code>系统中最核心的是消息系统，消息系统的核心功能有消息的同步、存储和检索；</p>
+<p>下面就基于社区比较火的 <code>Timeline</code>模型来构建消息系统（不依赖 <code>TableStore</code>）。</p>
+<h2 id="传统架构VS现代架构"><a href="#传统架构VS现代架构" class="headerlink" title="传统架构VS现代架构"></a>传统架构VS现代架构</h2><p><img src="/blog/uploads/images/4cc3b1ade97b9290c56aeda2e8147b9e.png" alt></p>
+<p>主要区别就是 现代架构下，消息是先存储后同步，消息不会丢失，多端同步、消息检索都是全量消息存储带来的好处。</p>
+<p>现在架构下最大的挑战就是消息管理和索引。</p>
+<h2 id="基础模型"><a href="#基础模型" class="headerlink" title="基础模型"></a>基础模型</h2><h3 id="Timeline-模型"><a href="#Timeline-模型" class="headerlink" title="Timeline 模型"></a><code>Timeline</code> 模型</h3><p><code>Timeline</code>模型是针对消息数据场景所新创的一个数据模型，它的特色在于能够满足消息数据场景对消息保序、海量消息存储、实时同步的特殊需求。</p>
+<p><img src="/blog/uploads/images/eff4116cb2daa5db6eab53eb72c07e80.png" alt></p>
+<p><code>Timeline</code>的构成主要包括：</p>
+<ul>
+<li><code>Timeline ID</code>：唯一标识Timeline的ID。</li>
+<li><code>Timeline Meta</code>：<code>Timeline</code>的元数据，元数据内可包含任意键值对属性。</li>
+<li><code>Message Sequence</code>：消息队列，承载该Timeline下的所有消息。消息在队列里有序保存，并且根据写入顺序分配自增的ID。一个消息队列可承载的消息个数无上限，在消息队列内部可根据消息ID随机定位某条消息，并提供正序或者反序扫描。</li>
+<li><code>Message Entry</code>：消息体，包含消息的具体内容，可以包含任意键值对。</li>
+</ul>
+<p><strong>消息同步</strong>可以基于 <code>Timeline</code>实现，搭配 <code>ack</code> 机制，无障碍拉取各端消息。</p>
+<p><strong>消息存储</strong>可以基于 <code>Timeline</code>实现，持久化所有数据。</p>
+<p><strong>消息检索</strong>一般基于消息内容和消息类型来灵活检索。</p>
+<h3 id="消息存储模型"><a href="#消息存储模型" class="headerlink" title="消息存储模型"></a>消息存储模型</h3><p><img src="/blog/uploads/images/3d3c24fc5be76697d79339b459568013.png" alt></p>
+<p>消息存储要求每个会话都对应一个 <code>Timeline</code>,消息根据会话顺序排序，然后持久化存储。</p>
+<h3 id="消息同步模型"><a href="#消息同步模型" class="headerlink" title="消息同步模型"></a>消息同步模型</h3><p><img src="/blog/uploads/images/176939b469c63765ab0a543c4832f034.png" alt></p>
+<p>消息同步模型一般有读扩散（也叫拉模式）和写扩散（也叫推模式）两种不同的方式。</p>
+<ul>
+<li><strong>读扩散</strong>：消息存储模型中，每个会话的 <code>Timeline</code> 中保存了这个会话的全量消息。读扩散的消息同步模式下，每个会话中产生的新的消息，只需要写一次到其用于存储的 Timeline 中，接收端从这个 <code>Timeline</code> 中拉取新的消息。优点是消息只需要写一次，相比写扩散的模式，能够大大降低消息写入次数，特别是在群消息这种场景下。但其缺点也比较明显，接收端去同步消息的逻辑会相对复杂和低效。接收端需要对每个会话都拉取一次才能获取全部消息，读被大大的放大，并且会产生很多无效的读，因为并不是每个会话都会有新消息产生。</li>
+</ul>
+<ol>
+<li><strong>写扩散</strong>：写扩散的消息同步模式，需要有一个额外的 <code>Timeline</code> 来专门用于消息同步，通常是每个接收端都会拥有一个独立的同步 <code>Timeline</code>（或者叫收件箱），用于存放需要向这个接收端同步的所有消息。每个会话中的消息，会产生多次写，除了写入用于消息存储的会话 <code>Timeline</code>，还需要写入需要同步到的接收端的同步 <code>Timeline</code>。在个人与个人的会话中，消息会被额外写两次，除了写入这个会话的存储 <code>Timeline</code>，还需要写入参与这个会话的两个接收者的同步 <code>Timeline</code>。而在群这个场景下，写入会被更加的放大，如果这个群拥有 N 个参与者，那每条消息都需要额外的写 N 次。写扩散同步模式的优点是，在接收端消息同步逻辑会非常简单，只需要从其同步 <code>Timeline</code> 中读取一次即可，大大降低了消息同步所需的读的压力。其缺点就是消息写入会被放大，特别是针对群这种场景。</li>
+</ol>
+<p><code>Timeline</code> 模型不会对选择读扩散还是写扩散做约束，而是能同时支持两种模式，因为本质上两种模式的逻辑数据模型并无差别，只是消息数据是用一个 <code>Timeline</code> 来支持多端读还是复制到多个 Timeline 来支持多端读的问题。</p>
+<p><code>IM</code>消息系统用，通常选择<strong>写扩散</strong>，消息一般写入一次，频繁读取，典型的读多写少的场景。大大增加了读的性能，用空间换时间。但是对于万人大群，读扩散又是一个好的选择。</p>
+<h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><p><img src="/blog/uploads/images/image-20220112085735400.png" alt></p>
+<p>如图是一个典型的消息系统架构，架构中包含几个重要组件：</p>
+<ul>
+<li><strong>接入端</strong>：作为消息的发送和接收端。</li>
+<li><strong>消息服务</strong>：一组无状态的服务器，可水平扩展，处理消息的发送和接收请求，连接后端消息系统。</li>
+<li><strong>消息队列</strong>：新写入消息的缓冲队列，消息系统的前置消息存储，用于削峰填谷以及异步消费。</li>
+<li><strong>消息处理</strong>：一组无状态的消费处理服务器，用于异步消费消息队列中的消息数据，处理消息的持久化和写扩散同步。</li>
+<li><strong>消息存储和索引库</strong>：持久化存储消息，每个会话对应一个 <code>Timeline</code> 进行消息存储，存储的消息建立索引来实现消息检索。</li>
+<li><strong>消息同步库</strong>：写扩散形式同步消息，每个用户的收件箱对应一个 Timeline，同步库内消息不需要永久保存，通常对消息设定一个生命周期。<br>新消息会由端发出，通常消息体中会携带消息 ID（用于去重）、逻辑时间戳（用于排序）、消息类型（控制消息、图片消息或者文本消息等）、消息体等内容。消息会先写入消息队列，作为底层存储的一个临时缓冲区。消息队列中的消息会由消息处理服务器消费，可以允许乱序消费。消息处理服务器对消息先存储后同步，先写入发件箱 Timeline（存储库），后写扩散至各个接收端的收件箱（同步库）。消息数据写入存储库后，会被近实时的构建索引，索引包括文本消息的全文索引以及多字段索引（发送方、消息类型等）。</li>
+</ul>
+<p>对于在线的设备，可以由消息服务器主动推送至在线设备端。对于离线设备，登录后会主动向服务端同步消息。每个设备会在本地保留有最新一条消息的顺序 <code>ID</code>，向服务端同步该顺序 <code>ID</code> 后的所有消息。</p>
+<h2 id="数据库选型"><a href="#数据库选型" class="headerlink" title="数据库选型"></a>数据库选型</h2><h3 id="基于-TableStore"><a href="#基于-TableStore" class="headerlink" title="基于 TableStore"></a>基于 <code>TableStore</code></h3><p>消息系统最核心的两个库是消息同步库和消息存储库，两个库对数据库有不同的要求：</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">消息同步库</th>
+<th align="left">消息存储库</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">数据模型</td>
+<td align="left">Timeline模型</td>
+<td align="left">Timeline模型</td>
+</tr>
+<tr>
+<td align="left">写能力</td>
+<td align="left">高并发写，十万级TPS</td>
+<td align="left">高并发写，少量读，万级TPS</td>
+</tr>
+<tr>
+<td align="left">读能力</td>
+<td align="left">高并发范围读，十万级TPS</td>
+<td align="left">少量范围读，千级TPS</td>
+</tr>
+<tr>
+<td align="left">存储规模</td>
+<td align="left">保存一段时间内的同步消息，TB级。保留千万级的<code>Timeline</code>规模。</td>
+<td align="left">保存全量消息，百TB级。保留亿级的<code>Timeline</code>规模。</td>
+</tr>
+</tbody></table>
+<p>总结下来，对数据库的要求有如下几点：</p>
+<ol>
+<li>表结构设计能够满足<code>Timeline</code>模型的功能要求：不要求关系模型，能够实现队列模型，并能够支持生成自增的<code>SeqId</code>。</li>
+<li>能够支持高并发写和范围读，规模在十万级TPS。</li>
+<li>能够保存海量数据，百TB级。</li>
+<li>能够为数据定义生命周期。</li>
+</ol>
+<p>阿里云表格存储（<code>TableStore</code>）是基于<code>LSM</code>存储引擎的分布式<code>NoSQL</code>数据库，支持百万<code>TPS</code>高并发读写，<code>PB</code>级数据存储，数据支持<code>TTL</code>，能够很好的满足以上需求，并且支持自增列，能够非常完美的设计和实现Timeline的物理模型。</p>
+<h3 id="基于传统数据库"><a href="#基于传统数据库" class="headerlink" title="基于传统数据库"></a>基于传统数据库</h3><table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">消息同步库</th>
+<th align="left">消息存储库</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">数据模型</td>
+<td align="left">MongoDB</td>
+<td align="left">MySQL</td>
+</tr>
+<tr>
+<td align="left">写能力</td>
+<td align="left">高并发写，万级TPS</td>
+<td align="left">高并发写，少量读，千级TPS</td>
+</tr>
+<tr>
+<td align="left">读能力</td>
+<td align="left">高并发范围读，万级TPS</td>
+<td align="left">少量范围读，千级TPS</td>
+</tr>
+<tr>
+<td align="left">存储规模</td>
+<td align="left">保存一段时间内的同步消息，GB级。</td>
+<td align="left">保存全量消息，GB级。</td>
+</tr>
+</tbody></table>
+<p>在写能力与读能力上，基于目前所用服务器的性能标准，在目标上与<code>TableStore</code>存储有巨大差距。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
+<p><a href="https://developer.aliyun.com/article/253242" target="_blank" rel="noopener">现代IM系统中消息推送和存储架构的实现</a></p>
+<p><a href="https://developer.aliyun.com/article/319138" target="_blank" rel="noopener"><code>TableStore Timeline</code>：轻松构建千万级IM和Feed流系统</a></p>
+<p><a href="https://www.cnblogs.com/lovecindywang/archive/2011/03/02/1969324.html" target="_blank" rel="noopener">MongoDB亿级数据量的性能测试</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7552f68d/">https://github.com/maxzhao-it/blog/post/7552f68d/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/IM/" rel="tag"># IM</a>
+              <a href="/blog/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/e1cf5d/" rel="next" title="CentOS安装Jenkins">
+                  <i class="fa fa-chevron-left"></i> CentOS安装Jenkins
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/eb63d0bf/" rel="prev" title="IM系统分析">
+                  IM系统分析 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传统架构VS现代架构"><span class="nav-number">2.</span> <span class="nav-text">传统架构VS现代架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础模型"><span class="nav-number">3.</span> <span class="nav-text">基础模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Timeline-模型"><span class="nav-number">3.1.</span> <span class="nav-text">Timeline 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息存储模型"><span class="nav-number">3.2.</span> <span class="nav-text">消息存储模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息同步模型"><span class="nav-number">3.3.</span> <span class="nav-text">消息同步模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#架构设计"><span class="nav-number">4.</span> <span class="nav-text">架构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库选型"><span class="nav-number">5.</span> <span class="nav-text">数据库选型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于-TableStore"><span class="nav-number">5.1.</span> <span class="nav-text">基于 TableStore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于传统数据库"><span class="nav-number">5.2.</span> <span class="nav-text">基于传统数据库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">117</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">140</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

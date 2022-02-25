@@ -22,10 +22,10 @@
         }
     })();
 </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=7.4.2">
-  <link rel="mask-icon" href="/blog/images/logo.svg?v=7.4.2" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
 
 <link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
 
@@ -239,10 +239,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/33972/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/380b5f6e/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -253,7 +253,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/33972/" class="post-title-link" itemprop="url">RabbitMQ镜像模式：VMware（一）.md</a>
+            <a href="/blog/post/380b5f6e/" class="post-title-link" itemprop="url">SpringBoot获取有特定注解的Bean</a>
         </h1>
 
         <div class="post-meta">
@@ -262,7 +262,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-24 15:38:34" itemprop="dateModified" datetime="2021-08-24T15:38:34+08:00">2021-08-24</time>
+                <time title="Modified: 2021-09-20 09:25:50" itemprop="dateModified" datetime="2021-09-20T09:25:50+08:00">2021-09-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -270,14 +270,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index">
-                    <span itemprop="name">DevelopTools</span>
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/DevelopTools/RabbitMQ/" itemprop="url" rel="index">
-                    <span itemprop="name">RabbitMQ</span>
+                  <a href="/blog/categories/Java/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
                   </a>
                 </span>
             </span>
@@ -293,14 +293,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p><code>RabbitMQ</code>集群搭建，当前选择使用镜像模式。</p><p>技术架构：</p><ol>
-<li><code>HaProxy</code>：高可用负载</li>
-<li><code>KeepAlived</code>：网络服务高可用(主从热备、秒级切换)</li>
-<li><code>RabiitMQ</code>：消息队列</li>
-</ol><p>镜像模式，需要3台<code>RabbitMQ</code>服务器，一台<code>HaProxy</code>服务器，一台 <code>keepAlived</code>服务器。</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这里发一个案例，获取 <code>RestController</code> 注解的所有<code>bean</code>。</p><h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationListener;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.event.ContextRefreshedEvent;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取有特定注解的Bean&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * demo</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InitRestControllerBeanCache</span> <span class="keyword">implements</span> <span class="title">ApplicationListener</span>&lt;<span class="title">ContextRefreshedEvent</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(ContextRefreshedEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 根容器为Spring容器</span></span><br><span class="line">        <span class="keyword">if</span> (event.getApplicationContext().getParent() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Map&lt;String, Object&gt; beans = event.getApplicationContext().getBeansWithAnnotation(RestController.class);</span><br><span class="line">            <span class="keyword">for</span> (Object bean : beans.values()) &#123;</span><br><span class="line">                System.err.println(bean == <span class="keyword">null</span> ? <span class="string">"null"</span> : bean.getClass().getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/33972/#more" rel="contents">
+              <a class="btn" href="/blog/post/380b5f6e/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -324,10 +320,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/21590/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/8bda86f4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -338,7 +334,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/21590/" class="post-title-link" itemprop="url">Linux-Centos-Centos7安装RabbitMQ</a>
+            <a href="/blog/post/8bda86f4/" class="post-title-link" itemprop="url">Java操作图片裁剪</a>
         </h1>
 
         <div class="post-meta">
@@ -347,8 +343,19 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2021-09-20 09:25:50" itemprop="dateModified" datetime="2021-09-20T09:25:50+08:00">2021-09-20</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+            </span>
 
           
 
@@ -361,10 +368,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>RabbitMQ是一个免费的开源企业消息代理软件。 它是用Erlang编写的，并实现了高级消息队列协议（AMQP）。 它提供所有主要编程语言的客户端库。 它支持多种消息传递协议，消息队列，传送确认，灵活的路由到队列，多种交换类型。 它还提供易于使用的HTTP-API，命令行工具和用于管理RabbitMQ的Web UI；在本教程中，我们将在CentOS 7服务器上安装RabbitMQ。</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Java</code> 操作图片，实现图片的裁剪</p><h1 id="裁剪图片"><a href="#裁剪图片" class="headerlink" title="裁剪图片"></a>裁剪图片</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageUtil</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取人脸图片数据</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pictureBytes 照片数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> contentType  请求内容类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> faceName     人脸模型名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 人脸图片数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">byte</span>[] getFaceHead(String faceName, <span class="keyword">byte</span>[] pictureBytes, MediaType contentType) &#123;</span><br><span class="line">         <span class="comment">/*获取人脸位置与大小*/</span></span><br><span class="line">        <span class="keyword">double</span>[] faceDetectResult = <span class="keyword">this</span>.getFaceDetectResult(faceName, pictureBytes, contentType);</span><br><span class="line">        <span class="keyword">if</span> (faceDetectResult[<span class="number">0</span>] == <span class="number">0</span></span><br><span class="line">                &amp;&amp; faceDetectResult[<span class="number">1</span>] == <span class="number">0</span></span><br><span class="line">                &amp;&amp; (faceDetectResult[<span class="number">2</span>] == <span class="number">0</span></span><br><span class="line">                || faceDetectResult[<span class="number">3</span>] == <span class="number">0</span>)) &#123;</span><br><span class="line">            log.warn(<span class="string">"图片无法裁剪，使用原图片"</span>);</span><br><span class="line">            <span class="keyword">return</span> pictureBytes;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*裁剪图片*/</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">/*获取图片 buffer*/</span></span><br><span class="line">            BufferedImage pictureImage = ImageIO.read(<span class="keyword">new</span> ByteArrayInputStream(pictureBytes));</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> width = pictureImage.getWidth();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> height = pictureImage.getHeight();</span><br><span class="line">            <span class="comment">/*图片裁剪*/</span></span><br><span class="line">            <span class="keyword">int</span> x = (<span class="keyword">int</span>) (faceDetectResult[<span class="number">0</span>] * width);</span><br><span class="line">            <span class="comment">/*坐标 - 10*/</span></span><br><span class="line">            x = Math.max((x - <span class="number">10</span>), <span class="number">0</span>);</span><br><span class="line">            <span class="keyword">int</span> y = (<span class="keyword">int</span>) (faceDetectResult[<span class="number">1</span>] * height);</span><br><span class="line">            <span class="comment">/*坐标 - 10*/</span></span><br><span class="line">            y = Math.max((y - <span class="number">10</span>), <span class="number">0</span>);</span><br><span class="line">            <span class="keyword">int</span> w = (<span class="keyword">int</span>) (faceDetectResult[<span class="number">2</span>] * width);</span><br><span class="line">            <span class="comment">/*宽度 + 10*/</span></span><br><span class="line">            w = Math.min((w + <span class="number">10</span>), width - x);</span><br><span class="line">            <span class="keyword">int</span> h = (<span class="keyword">int</span>) (faceDetectResult[<span class="number">3</span>] * height);</span><br><span class="line">            <span class="comment">/*高度 + 10*/</span></span><br><span class="line">            h = Math.min((h + <span class="number">10</span>), height - y);</span><br><span class="line">            BufferedImage headImage = pictureImage.getSubimage(x, y, w, h);</span><br><span class="line">            ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            ImageIO.write(headImage, <span class="string">"jpg"</span>, out);</span><br><span class="line">            <span class="keyword">return</span> out.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.warn(<span class="string">"裁剪图片失败使用原照片 &#123;&#125;"</span>, e.getMessage());</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"裁剪图片失败"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/21590/#more" rel="contents">
+              <a class="btn" href="/blog/post/8bda86f4/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -388,10 +395,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/47398/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/1a9b93f6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
       <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
@@ -402,7 +409,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/blog/post/47398/" class="post-title-link" itemprop="url">VMWare配置CentOS7本地源</a>
+            <a href="/blog/post/1a9b93f6/" class="post-title-link" itemprop="url">Java操作图片翻转</a>
         </h1>
 
         <div class="post-meta">
@@ -411,7 +418,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+                <time title="Modified: 2021-09-20 09:25:50" itemprop="dateModified" datetime="2021-09-20T09:25:50+08:00">2021-09-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -419,95 +426,170 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Java</code> 操作图片，实现图片的翻转</p><h1 id="裁剪图片"><a href="#裁剪图片" class="headerlink" title="裁剪图片"></a>裁剪图片</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageUtil</span> </span>&#123;</span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 测试</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         FileInputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"D:\\Pictures\\temp\\1.jpg"</span>);</span><br><span class="line">         <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[in.available()];</span><br><span class="line">         <span class="keyword">int</span> read = in.read(bytes);</span><br><span class="line">         in.close();</span><br><span class="line">         bytes = getFaceHead(getFaceHead);</span><br><span class="line">         OutputStream outputStream = <span class="keyword">new</span> FileOutputStream(<span class="string">"D:\\Pictures\\temp\\"</span> + System.currentTimeMillis() + <span class="string">".jpg"</span>);</span><br><span class="line">         outputStream.write(bytes);</span><br><span class="line">         outputStream.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"翻转图片失败"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 水平翻转图片</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> pictureBytes 照片数据</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> 人脸图片数据</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">byte</span>[] getFaceHead(<span class="keyword">byte</span>[] pictureBytes) &#123;</span><br><span class="line">      <span class="comment">/*翻转图片*/</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="comment">/*获取图片 buffer*/</span></span><br><span class="line">         BufferedImage pictureImage = ImageIO.read(<span class="keyword">new</span> ByteArrayInputStream(pictureBytes));</span><br><span class="line">         <span class="keyword">final</span> <span class="keyword">int</span> width = pictureImage.getWidth();</span><br><span class="line">         <span class="keyword">final</span> <span class="keyword">int</span> height = pictureImage.getHeight();</span><br><span class="line">         <span class="comment">/*读取所有的像素*/</span></span><br><span class="line">         <span class="keyword">int</span>[] rgbs = pictureImage.getRGB(<span class="number">0</span>, <span class="number">0</span>, width, height, <span class="keyword">null</span>, <span class="number">0</span>, width);</span><br><span class="line">         <span class="comment">/*水平切换像素*/</span></span><br><span class="line">         <span class="keyword">int</span> temp;</span><br><span class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> row = <span class="number">0</span>; row &lt; height; row++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> col = <span class="number">0</span>; col &lt; width / <span class="number">2</span>; col++) &#123;</span><br><span class="line">               temp = rgbs[row * width + col];</span><br><span class="line">               rgbs[row * width + col] = rgbs[row * width + (width - <span class="number">1</span> - col)];</span><br><span class="line">               rgbs[row * width + (width - <span class="number">1</span> - col)] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="comment">/*写入像素*/</span></span><br><span class="line">         pictureImage.setRGB(<span class="number">0</span>, <span class="number">0</span>, width, height, rgbs, <span class="number">0</span>, width);</span><br><span class="line">         ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">         ImageIO.write(pictureImage, <span class="string">"jpg"</span>, out);</span><br><span class="line">         <span class="keyword">return</span> out.toByteArray();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"翻转图片失败"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/post/1a9b93f6/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/5949bf48/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/post/5949bf48/" class="post-title-link" itemprop="url">JS实现图片裁剪功能</a>
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-20 09:25:50" itemprop="dateModified" datetime="2021-09-20T09:25:50+08:00">2021-09-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/JS/" itemprop="url" rel="index">
+                    <span itemprop="name">JS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>JS</code> 实现图片的裁剪</p><h1 id="JS-代码"><a href="#JS-代码" class="headerlink" title="JS 代码"></a><code>JS</code> 代码</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id=<span class="string">"images"</span> style=<span class="string">"width:100px;height:200px;"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;img src=<span class="string">"3.jpg"</span>/&gt;</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/body&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    var loadTimer;</span></span><br><span class="line"><span class="regexp">    var imgObject = new Image();</span></span><br><span class="line"><span class="regexp">    imgObject.src = '3.jpg';</span></span><br><span class="line"><span class="regexp">    imgObject.onLoad = onImgLoaded();</span></span><br><span class="line"><span class="regexp">    console.log('imgObject.naturalHeight==============&gt;', imgObject.naturalHeight);</span></span><br><span class="line"><span class="regexp">    console.log('imgObject.naturalWidth==============&gt;', imgObject.naturalWidth);</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">    function onImgLoaded() &#123;</span></span><br><span class="line"><span class="regexp">        if (loadTimer != null) clearTimeout(loadTimer);</span></span><br><span class="line"><span class="regexp">        if (!imgObject.complete) &#123;</span></span><br><span class="line"><span class="regexp">            loadTimer = setTimeout(function () &#123;</span></span><br><span class="line"><span class="regexp">                onImgLoaded();</span></span><br><span class="line"><span class="regexp">            &#125;, 3);</span></span><br><span class="line"><span class="regexp">        &#125; else &#123;</span></span><br><span class="line"><span class="regexp">            onPreloadComplete();</span></span><br><span class="line"><span class="regexp">        &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">    function onPreloadComplete() &#123;</span></span><br><span class="line"><span class="regexp">        /</span><span class="regexp">/call the methods that will create a 64-bit version of thumbnail here.</span></span><br><span class="line"><span class="regexp">        var newImg = getImagePortion(imgObject,</span></span><br><span class="line"><span class="regexp">            0.17443209886550903* imgObject.naturalWidth,</span></span><br><span class="line"><span class="regexp">            0.1213589534163475 * imgObject.naturalHeight,</span></span><br><span class="line"><span class="regexp">                0.44079777598381042 * imgObject.naturalWidth,</span></span><br><span class="line"><span class="regexp">                0.44744855165481567 * imgObject.naturalHeight,</span></span><br><span class="line"><span class="regexp">            2);</span></span><br><span class="line"><span class="regexp">        console.log("newImg", newImg);</span></span><br><span class="line"><span class="regexp">        /</span><span class="regexp">/place image in appropriate div</span></span><br><span class="line"><span class="regexp">        document.getElementById("images").innerHTML = "&lt;img alt=\"\" src=\"" + newImg + "\" /</span>&gt;<span class="string">";</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    function getImagePortion(imgObj, newWidth, newHeight, startX, startY, ratio) &#123;</span></span><br><span class="line"><span class="string">        console.log('newWidth', newWidth);</span></span><br><span class="line"><span class="string">        console.log('newHeight', newHeight);</span></span><br><span class="line"><span class="string">        console.log('startX', startX);</span></span><br><span class="line"><span class="string">        console.log('startY', startY);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        // newWidth = Math.floor(newWidth);</span></span><br><span class="line"><span class="string">        // newHeight = Math.floor(newHeight);</span></span><br><span class="line"><span class="string">        // startX = Math.floor(startX);</span></span><br><span class="line"><span class="string">        // startY = Math.floor(startY);</span></span><br><span class="line"><span class="string">        /* the parameters: - the image element - the new width - the new height - the x point we start taking pixels - the y point we start taking pixels - the ratio */</span></span><br><span class="line"><span class="string">        //set up canvas for thumbnail</span></span><br><span class="line"><span class="string">        var tnCanvas = document.createElement('canvas');</span></span><br><span class="line"><span class="string">        var tnCanvasContext = tnCanvas.getContext('2d');</span></span><br><span class="line"><span class="string">        tnCanvas.width = newWidth;</span></span><br><span class="line"><span class="string">        tnCanvas.height = newHeight;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        /* use the sourceCanvas to duplicate the entire image. This step was crucial for iOS4 and under devices. Follow the link at the end of this post to see what happens when you don’t do this */</span></span><br><span class="line"><span class="string">        var bufferCanvas = document.createElement('canvas');</span></span><br><span class="line"><span class="string">        var bufferContext = bufferCanvas.getContext('2d');</span></span><br><span class="line"><span class="string">        bufferCanvas.width = imgObj.width;</span></span><br><span class="line"><span class="string">        bufferCanvas.height = imgObj.height;</span></span><br><span class="line"><span class="string">        bufferContext.drawImage(imgObj, 0, 0);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        /* now we use the drawImage method to take the pixels from our bufferCanvas and draw them into our thumbnail canvas */</span></span><br><span class="line"><span class="string">        tnCanvasContext.drawImage(bufferCanvas, startX, startY, newWidth * ratio, newHeight * ratio, 0, 0, newWidth, newHeight);</span></span><br><span class="line"><span class="string">        return tnCanvas.toDataURL();</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    setTimeout(function () &#123;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &#125;, 1000);</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;/html&gt;</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/post/5949bf48/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/8e2fc2ac/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/post/8e2fc2ac/" class="post-title-link" itemprop="url">PostgreSQL基于Citus的分布式搭建</a>
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-20 09:25:50" itemprop="dateModified" datetime="2021-09-20T09:25:50+08:00">2021-09-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
                   </a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index">
-                    <span itemprop="name">Centos</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>先在虚拟机中挂载光驱</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">lsblk <span class="comment">##查看光盘是否连接上</span></span><br><span class="line"><span class="comment"># sr0              11:0    1  8.8G  0 rom  /mnt/cdrom			</span></span><br><span class="line">mkdir /mnt/cdrom/						<span class="comment">##创建挂载点</span></span><br><span class="line">mount /dev/cdrom  /mnt/cdrom/			<span class="comment">##挂载光盘</span></span><br><span class="line">cp /etc/yum.repos.d/ -r /root/</span><br><span class="line">rm -rf /etc/yum.repos.d/*				<span class="comment">##删除原有仓库文件</span></span><br><span class="line">vi /etc/yum.repos.d/localrepo.repo 		<span class="comment">##编辑仓库配置文件</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/post/47398/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/9815/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/post/9815/" class="post-title-link" itemprop="url">VMWare配置CentOS7网络</a>
-        </h1>
-
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-24 15:38:34" itemprop="dateModified" datetime="2021-08-24T15:38:34+08:00">2021-08-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/blog/categories/DB/PostgreSql/" itemprop="url" rel="index">
+                    <span itemprop="name">PostgreSql</span>
                   </a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index">
-                    <span itemprop="name">Centos</span>
+                  <a href="/blog/categories/DB/PostgreSql/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式</span>
                   </a>
                 </span>
             </span>
@@ -523,93 +605,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>需要安装 <code>net-tools</code></p><h4 id="查看网络"><a href="#查看网络" class="headerlink" title="查看网络"></a>查看网络</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure><p><img src="/blog/uploads/images/image-202108031658384041.png" alt></p><p>我这里的网络魏 <code>ens33</code></p><p><img src="/blog/uploads/images/image-202108031723203181.png" alt></p><h4 id="编辑网络"><a href="#编辑网络" class="headerlink" title="编辑网络"></a>编辑网络</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ifcfg-ens33</span><br></pre></td></tr></table></figure><p><img src="/blog/uploads/images/image-202108031728462791.png" alt></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">BOOTPROTO=static        #开机协议，有dhcp及static；</span><br><span class="line">ONBOOT=yes              #设置为开机启动；</span><br><span class="line">DNS1=114.114.114.114    #这个是国内的DNS地址，是固定的；</span><br><span class="line">IPADDR=192.168.2.2      #你想要设置的固定IP，理论上192.168.2.2-255之间都可以，请自行验证；</span><br><span class="line">NETMASK=255.255.255.0   #子网掩码，不需要修改；</span><br><span class="line">GATEWAY=192.168.2.254     #网关，这里应该和你“2.配置虚拟机的NAT模式具体地址参数”中的（2）选择VMnet8--取消勾选使用本地DHCP--设置子网IP--网关IP设置 一样才行。</span><br></pre></td></tr></table></figure>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p><a href="../439bd436"><code>yum</code>快速安装</a></p>
+<p><a href="https://www.citusdata.com/getting-started/" target="_blank" rel="noopener">官方介绍</a></p>
+</blockquote><h2 id="Citus简介"><a href="#Citus简介" class="headerlink" title="Citus简介"></a><strong>Citus</strong>简介</h2><p>Citus以插件的方式扩展到postgresql中，独立于postgresql内核，所以能很快的跟上pg主版本的更新，部署也比较简单，是现在非常流行的分布式方案。Citus在苏宁有大规模应用，微软也提供citus的商业支持。下面是citus的架构：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/post/9815/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/12280/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/post/12280/" class="post-title-link" itemprop="url">Docker管理Volume</a>
-        </h1>
-
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Docker/" itemprop="url" rel="index">
-                    <span itemprop="name">Docker</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在 <code>Docker</code> 中，<code>volumes</code> 相比 <code>mounts</code></p><ol>
-<li>更容易备份或者迁移</li>
-<li><code>Docker Cli</code> 或者 <code>Docker Api</code> 管理 <code>Volumes</code></li>
-<li>跨平台的</li>
-<li>安全的容器之间共享 <code>Volumes</code></li>
-<li><code>Volumes</code>驱动 可以远程存储或云提供，可以加密，可以添加其他功能</li>
-<li>新的 <code>Volumes</code> 可以通过容器预先填充内容</li>
-<li><code>Volumes</code>在 <code>Mac</code>和<code>Windows</code>主机上，有更高的性能。</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/post/12280/#more" rel="contents">
+              <a class="btn" href="/blog/post/8e2fc2ac/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -633,7 +635,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/blog/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/44/">44</a><a class="extend next" rel="next" href="/blog/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/blog/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/50/">50</a><a class="extend next" rel="next" href="/blog/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -670,7 +672,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <img class="site-author-image" itemprop="image" alt="赵联胜"
-    src="/blog/uploads/avatar.jpg">
+    src="/blog/uploads/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">赵联胜</p>
   <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
 </div>
@@ -679,20 +681,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">219</span>
+          <span class="site-state-item-count">248</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">96</span>
+        <span class="site-state-item-count">117</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-count">140</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -736,7 +738,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
