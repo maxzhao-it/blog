@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+        if (history.length === 1) {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言轻型目录访问协议（英文：Lightweight Directory Access Protocol，缩写：LDAP，&#x2F;ˈɛldæp&#x2F;）是一个开放的，中立的，工业标准的应用协议，通过IP协议提供访问控制和维护分布式信息的目录信息。">
+<meta name="keywords" content="Linux,CentOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS安装LDAP">
+<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;4754f56b&#x2F;">
+<meta property="og:site_name" content="maxzhao">
+<meta property="og:description" content="前言轻型目录访问协议（英文：Lightweight Directory Access Protocol，缩写：LDAP，&#x2F;ˈɛldæp&#x2F;）是一个开放的，中立的，工业标准的应用协议，通过IP协议提供访问控制和维护分布式信息的目录信息。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518194041425.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518193954213.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518194138726.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518194451664.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518195011644.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518195600679.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518195823844.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518195845785.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518200312581.png">
+<meta property="og:updated_time" content="2022-05-19T09:01:24.926Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20220518194041425.png">
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/4754f56b/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>CentOS安装LDAP | maxzhao</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">maxzhao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/4754f56b/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS安装LDAP
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-19 17:01:24" itemprop="dateModified" datetime="2022-05-19T17:01:24+08:00">2022-05-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Linux/CentOS/" itemprop="url" rel="index">
+                    <span itemprop="name">CentOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>轻型目录访问协议</strong>（<a href="https://baike.baidu.com/item/英文" target="_blank" rel="noopener">英文</a>：<strong>Lightweight Directory Access Protocol</strong>，<a href="https://baike.baidu.com/item/缩写" target="_blank" rel="noopener">缩写</a>：<strong>LDAP</strong>，/ˈɛldæp/）是一个开放的，中立的，工业标准的<a href="https://baike.baidu.com/item/应用协议" target="_blank" rel="noopener">应用协议</a>，通过<a href="https://baike.baidu.com/item/IP协议" target="_blank" rel="noopener">IP协议</a>提供访问控制和维护分布式信息的目录信息。</p><a id="more"></a>
+<h4 id="LDAP的主要应用场景"><a href="#LDAP的主要应用场景" class="headerlink" title="LDAP的主要应用场景"></a>LDAP的主要应用场景</h4><p>1.网络服务：DNS服务<br>2.统一认证服务：<br>3.Linux PAM (ssh, login, cvs. . . )<br>4.Apache访问控制<br>5.各种服务登录(ftpd, php based, perl based, python based. . . )<br>6.个人信息类，如地址簿<br>7.服务器信息，如帐号管理、邮件服务等</p>
+<blockquote>
+<p><code>注意</code>:从<code>OpenLDAP2.4.23</code>版本开始所有配置数据都保存在<code>/etc/openldap/slapd.d/</code>中，不再使用<code>slapd.conf</code>作为配置文件</p>
+</blockquote>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="LDAP"><a href="#LDAP" class="headerlink" title="LDAP"></a><code>LDAP</code></h2><h3 id="安装工具"><a href="#安装工具" class="headerlink" title="安装工具"></a>安装工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y openldap compat-openldap openldap  openldap-clients  openldap-devel openldap-servers </span><br><span class="line"><span class="comment"># 可选 collectd-openldap</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装后的目录：<code>/etc/openldap/</code></li>
+<li>数据文件路径：<code>/var/lib/ldap</code></li>
+<li>模板数据库配置文件： <code>/usr/share/openldap-servers/DB_CONFIG.example</code> </li>
+<li><code>/usr/share/openldap-servers/slapd.ldif</code></li>
+</ul>
+<blockquote>
+<p>如果是虚拟机安装：需要挂载<code>cdrom</code></p>
+</blockquote>
+<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start slapd</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> slapd</span><br><span class="line">sudo systemctl status slapd</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看端口"><a href="#查看端口" class="headerlink" title="查看端口"></a>查看端口</h3><p>占用 <code>389</code> 端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tlnp | grep slapd</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看用户"><a href="#查看用户" class="headerlink" title="查看用户"></a>查看用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -n 1 /etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="修改域信息"><a href="#修改域信息" class="headerlink" title="修改域信息"></a>修改域信息</h4><p>设置管理员密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slappasswd</span><br><span class="line"><span class="comment"># 也可以指明密码</span></span><br><span class="line">slappasswd -s maxzhao</span><br></pre></td></tr></table></figure>
+
+<p>输出的密码：<code>{SSHA}0tKDKqne3gJ30xZ73rDO491r/AlaJd0N</code></p>
+<p>修改域信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/openldap/slapd.d/cn\=config</span><br><span class="line">vim /etc/openldap/slapd.d/cn\=config/olcDatabase\=\&#123;2\&#125;hdb.ldif</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518194041425.png" alt="image-20220518194041425"></p>
+<ul>
+<li><code>olcRootDN：cn=root</code> 中的 <code>root</code>是管理员用户名</li>
+<li><code>olcRootPW</code>：表示管理员密码</li>
+</ul>
+<h4 id="修改管理员信息"><a href="#修改管理员信息" class="headerlink" title="修改管理员信息"></a>修改管理员信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/openldap/slapd.d/cn\=config/olcDatabase\=\&#123;1\&#125;monitor.ldif</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518193954213.png" alt="image-20220518193954213"></p>
+<ul>
+<li><strong>dn.base</strong>是修改<strong>OpenLDAP的管理员的相关信息</strong></li>
+</ul>
+<p>验证OpenLDAP的基本配置，使用如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaptest -u</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518194138726.png" alt="image-20220518194138726"></p>
+<p>重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart slapd</span><br><span class="line">sudo systemctl status slapd</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置OpenLDAP数据库"><a href="#配置OpenLDAP数据库" class="headerlink" title="配置OpenLDAP数据库"></a>配置<code>OpenLDAP</code>数据库</h3><p>OpenLDAP默认使用的数据库是BerkeleyDB，现在来开始配置OpenLDAP数据库，使用如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG</span><br><span class="line">cp /usr/share/openldap-servers/slapd.ldif /etc/openldap/slapd.ldif</span><br><span class="line">chown ldap:ldap -R /var/lib/ldap</span><br><span class="line">chmod 700 -R /var/lib/ldap</span><br><span class="line">ll /var/lib/ldap/</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518194451664.png" alt="image-20220518194451664"></p>
+<blockquote>
+<p><code>/var/lib/ldap/</code>就是 <code>BerkeleyDB</code> 数据库默认存储的路径。</p>
+</blockquote>
+<h3 id="导入基本Schema"><a href="#导入基本Schema" class="headerlink" title="导入基本Schema"></a>导入基本Schema</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif</span><br><span class="line">ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif</span><br><span class="line">ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-migrationtools"><a href="#安装-migrationtools" class="headerlink" title="安装  migrationtools"></a>安装  <code>migrationtools</code></h2><p><code>migrationtools</code> 实现<code>OpenLDAP</code> 用户及用户组的添加，<code>migrationtools</code> 开源工具通过查找/etc/passwd、/etc/shadow、/etc/groups 生成LDIF 文件，并通过<code>ldapadd</code> 命令更新数据库数据，完成用户添加。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y migrationtools</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改migrate-common-ph文件"><a href="#修改migrate-common-ph文件" class="headerlink" title="修改migrate_common.ph文件"></a>修改migrate_common.ph文件</h3><p><code>migrate_common.ph</code>文件主要是用于生成<code>ldif</code>文件使用，修改<code>migrate_common.ph</code>文件，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/share/migrationtools/migrate_common.ph +71</span><br></pre></td></tr></table></figure>
+
+<p>写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$DEFAULT_MAIL_DOMAIN = “maxzhao.com”;</span><br><span class="line">$DEFAULT_BASE = “dc=maxzhao,dc=com”;</span><br><span class="line">$EXTENDED_SCHEMA = 1;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518195011644.png" alt="image-20220518195011644"></p>
+<h2 id="添加用户和用户组"><a href="#添加用户和用户组" class="headerlink" title="添加用户和用户组"></a>添加用户和用户组</h2><p>管理员用户就是 <code>root</code>，没有普通用户</p>
+<h3 id="添加系统用户"><a href="#添加系统用户" class="headerlink" title="添加系统用户"></a>添加系统用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">groupadd ldapg1</span><br><span class="line">groupadd ldapg2</span><br><span class="line">useradd -g ldapg1 ldapu1</span><br><span class="line">useradd -g ldapg2 ldapu2</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'1'</span> | passwd --stdin ldapu1</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'2'</span> | passwd --stdin ldapu2</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成-ldif文件"><a href="#生成-ldif文件" class="headerlink" title="生成 ldif文件"></a>生成 <code>ldif</code>文件</h3><p>取出用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">":10[0-9][0-9]"</span> /etc/passwd &gt; /root/users</span><br><span class="line">grep <span class="string">":10[0-9][0-9]"</span> /etc/group &gt; /root/groups</span><br><span class="line">cat users</span><br><span class="line">cat groups</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518195600679.png" alt="image-20220518195600679"></p>
+<p>根据上述生成的用户和用户组属性，使用<code>migrate_passwd.pl</code>文件生成要添加用户和用户组的<code>ldif</code>，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/usr/share/migrationtools/migrate_passwd.pl /root/users &gt; /root/users.ldif</span><br><span class="line">/usr/share/migrationtools/migrate_group.pl /root/groups &gt; /root/groups.ldif</span><br><span class="line">cat users.ldif</span><br><span class="line">cat groups.ldif</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518195823844.png" alt="image-20220518195823844"></p>
+<p><img src="/blog/uploads/images/image-20220518195845785.png" alt="image-20220518195845785"></p>
+<h3 id="导入用户到LDAP"><a href="#导入用户到LDAP" class="headerlink" title="导入用户到LDAP"></a>导入用户到<code>LDAP</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /root/base.ldif &lt;&lt; EOF</span><br><span class="line">dn: dc=maxzhao,dc=com</span><br><span class="line">o: maxzhao com</span><br><span class="line">dc: maxzhao</span><br><span class="line">objectClass: top</span><br><span class="line">objectClass: dcObject</span><br><span class="line">objectclass: organization</span><br><span class="line">dn: cn=root,dc=maxzhao,dc=com</span><br><span class="line">cn: root</span><br><span class="line">objectClass: organizationalRole</span><br><span class="line">description: Directory Manager</span><br><span class="line">dn: ou=People,dc=maxzhao,dc=com</span><br><span class="line">ou: People</span><br><span class="line">objectClass: top</span><br><span class="line">objectClass: organizationalUnit</span><br><span class="line">dn: ou=Group,dc=maxzhao,dc=com</span><br><span class="line">ou: Group</span><br><span class="line">objectClass: top</span><br><span class="line">objectClass: organizationalUnit</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>导入基础数据库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapadd -x -w <span class="string">"maxzhao"</span> -D <span class="string">"cn=root,dc=maxzhao,dc=com"</span> -f /root/base.ldif</span><br></pre></td></tr></table></figure>
+
+<p>导入用户到数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapadd -x -w <span class="string">"maxzhao"</span> -D <span class="string">"cn=root,dc=maxzhao,dc=com"</span> -f /root/users.ldif</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20220518200312581.png" alt="image-20220518200312581"></p>
+<p>查看<code>BerkeleyDB</code>数据库文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll /var/lib/ldap/</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<blockquote>
+<p><a href="https://www.ilanni.com/?p=13775" target="_blank" rel="noopener">https://www.ilanni.com/?p=13775</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/blog/tags/CentOS/" rel="tag"># CentOS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/blog/post/805f48c5/" rel="next" title="Linux获取当前日期+时间">
+                  <i class="fa fa-chevron-left"></i> Linux获取当前日期+时间
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/blog/post/de2905c4/" rel="prev" title="Linux安装NFS">
+                  Linux安装NFS <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LDAP的主要应用场景"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">LDAP的主要应用场景</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LDAP"><span class="nav-number">2.1.</span> <span class="nav-text">LDAP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装工具"><span class="nav-number">2.1.1.</span> <span class="nav-text">安装工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务"><span class="nav-number">2.1.2.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看端口"><span class="nav-number">2.1.3.</span> <span class="nav-text">查看端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看用户"><span class="nav-number">2.1.4.</span> <span class="nav-text">查看用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">2.1.5.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改域信息"><span class="nav-number">2.1.5.1.</span> <span class="nav-text">修改域信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改管理员信息"><span class="nav-number">2.1.5.2.</span> <span class="nav-text">修改管理员信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置OpenLDAP数据库"><span class="nav-number">2.1.6.</span> <span class="nav-text">配置OpenLDAP数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导入基本Schema"><span class="nav-number">2.1.7.</span> <span class="nav-text">导入基本Schema</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-migrationtools"><span class="nav-number">2.2.</span> <span class="nav-text">安装  migrationtools</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改migrate-common-ph文件"><span class="nav-number">2.2.1.</span> <span class="nav-text">修改migrate_common.ph文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加用户和用户组"><span class="nav-number">2.3.</span> <span class="nav-text">添加用户和用户组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加系统用户"><span class="nav-number">2.3.1.</span> <span class="nav-text">添加系统用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成-ldif文件"><span class="nav-number">2.3.2.</span> <span class="nav-text">生成 ldif文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导入用户到LDAP"><span class="nav-number">2.3.3.</span> <span class="nav-text">导入用户到LDAP</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="赵联胜"
+    src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
+<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+  <script src="/blog/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

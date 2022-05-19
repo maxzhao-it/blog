@@ -76,7 +76,7 @@
 <meta property="og:description" content="Docker 要求 CentOS 系统的内核版本高于 3.10 。不要使用 root用户管理 Docker。1uname -r版本底的可以不用向下看了。1、基本操作123sudo rpm -qa|grep docker# 卸载所有低版本docker以及docker相关sudo yum remove docker  docker-common docker-selinux docker-engine">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20210809173414754.png">
-<meta property="og:updated_time" content="2022-01-10T09:15:31.865Z">
+<meta property="og:updated_time" content="2022-05-19T08:00:48.937Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;github.com&#x2F;blog&#x2F;uploads&#x2F;images&#x2F;image-20210809173414754.png">
 
@@ -264,7 +264,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-10 17:15:31" itemprop="dateModified" datetime="2022-01-10T17:15:31+08:00">2022-01-10</time>
+                <time title="Modified: 2022-05-19 16:00:48" itemprop="dateModified" datetime="2022-05-19T16:00:48+08:00">2022-05-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -405,6 +405,13 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"registry-mirrors"</span>: [</span><br><span class="line">    <span class="string">"https://kfwkfulq.mirror.aliyuncs.com"</span>,</span><br><span class="line">    <span class="string">"https://2lqq34jg.mirror.aliyuncs.com"</span>,</span><br><span class="line">    <span class="string">"https://pee6w651.mirror.aliyuncs.com"</span>,</span><br><span class="line">    <span class="string">"https://docker.mirrors.ustc.edu.cn"</span>,</span><br><span class="line">    <span class="string">"https://registry.docker-cn.com"</span>,</span><br><span class="line">    <span class="string">"http://hub-mirror.c.163.com"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"dns"</span>: [<span class="string">"8.8.8.8"</span>, <span class="string">"8.8.4.4"</span>],</span><br><span class="line">  <span class="attr">"insecure-registries"</span>: [],</span><br><span class="line">  <span class="attr">"debug"</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">"experimental"</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">"features"</span>: &#123;</span><br><span class="line">    <span class="attr">"buildkit"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"builder"</span>: &#123;</span><br><span class="line">    <span class="attr">"gc"</span>: &#123;</span><br><span class="line">      <span class="attr">"enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">"defaultKeepStorage"</span>: <span class="string">"20GB"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
+<h2 id="允许请求转发"><a href="#允许请求转发" class="headerlink" title="允许请求转发"></a>允许请求转发</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+<p>写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.ip_forward=1</span><br></pre></td></tr></table></figure>
+<p>重启</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart network</span><br><span class="line">sysctl net.ipv4.ip_forward</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启docker</span></span><br><span class="line">systemctl restart docker</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查询运行过的容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="meta">#</span><span class="bash"> 开机启动容器</span></span><br><span class="line">docker update portainer/portainer-ce:2.9.3 --restart=always</span><br></pre></td></tr></table></figure>
+
+
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/21945/">https://github.com/maxzhao-it/blog/post/21945/</a> </p>
 
     </div>
@@ -423,8 +430,8 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/blog/post/9187/" rel="next" title="Centos7 安装Chrome">
-                  <i class="fa fa-chevron-left"></i> Centos7 安装Chrome
+                <a href="/blog/post/30332/" rel="next" title="CentOS7用U盘安装">
+                  <i class="fa fa-chevron-left"></i> CentOS7用U盘安装
                 </a>
             </div>
 
@@ -472,7 +479,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、基本操作"><span class="nav-number">1.</span> <span class="nav-text">1、基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-repository"><span class="nav-number">1.0.1.</span> <span class="nav-text">使用 repository</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看docker版本"><span class="nav-number">1.0.2.</span> <span class="nav-text">查看docker版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装docker"><span class="nav-number">1.0.3.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动-Docker"><span class="nav-number">1.0.4.</span> <span class="nav-text">启动 Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试"><span class="nav-number">1.0.5.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新"><span class="nav-number">1.0.6.</span> <span class="nav-text">更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置修改"><span class="nav-number">1.0.7.</span> <span class="nav-text">配置修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自启"><span class="nav-number">1.0.8.</span> <span class="nav-text">开机自启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加-docker-组用户"><span class="nav-number">1.0.9.</span> <span class="nav-text">添加 docker 组用户</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、常用命令"><span class="nav-number">2.</span> <span class="nav-text">2、常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#镜像相关"><span class="nav-number">2.0.1.</span> <span class="nav-text">镜像相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器相关"><span class="nav-number">2.0.2.</span> <span class="nav-text">容器相关</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、迁移镜像"><span class="nav-number">3.</span> <span class="nav-text">3、迁移镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保存镜像到本地"><span class="nav-number">3.1.</span> <span class="nav-text">保存镜像到本地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导入镜像"><span class="nav-number">3.2.</span> <span class="nav-text">导入镜像</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附录"><span class="nav-number"></span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#daemon-json"><span class="nav-number">1.</span> <span class="nav-text">daemon.json</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、基本操作"><span class="nav-number">1.</span> <span class="nav-text">1、基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-repository"><span class="nav-number">1.0.1.</span> <span class="nav-text">使用 repository</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看docker版本"><span class="nav-number">1.0.2.</span> <span class="nav-text">查看docker版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装docker"><span class="nav-number">1.0.3.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动-Docker"><span class="nav-number">1.0.4.</span> <span class="nav-text">启动 Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试"><span class="nav-number">1.0.5.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新"><span class="nav-number">1.0.6.</span> <span class="nav-text">更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置修改"><span class="nav-number">1.0.7.</span> <span class="nav-text">配置修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自启"><span class="nav-number">1.0.8.</span> <span class="nav-text">开机自启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加-docker-组用户"><span class="nav-number">1.0.9.</span> <span class="nav-text">添加 docker 组用户</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、常用命令"><span class="nav-number">2.</span> <span class="nav-text">2、常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#镜像相关"><span class="nav-number">2.0.1.</span> <span class="nav-text">镜像相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器相关"><span class="nav-number">2.0.2.</span> <span class="nav-text">容器相关</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、迁移镜像"><span class="nav-number">3.</span> <span class="nav-text">3、迁移镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保存镜像到本地"><span class="nav-number">3.1.</span> <span class="nav-text">保存镜像到本地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导入镜像"><span class="nav-number">3.2.</span> <span class="nav-text">导入镜像</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附录"><span class="nav-number"></span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#daemon-json"><span class="nav-number">1.</span> <span class="nav-text">daemon.json</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#允许请求转发"><span class="nav-number">2.</span> <span class="nav-text">允许请求转发</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -488,20 +495,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">267</span>
+          <span class="site-state-item-count">272</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">123</span>
+        <span class="site-state-item-count">127</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">147</span>
+        <span class="site-state-item-count">151</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
