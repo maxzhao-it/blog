@@ -1,289 +1,265 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.0.0">
-
-<script>
-    (function(){
-        if(''){
-            if (prompt('请输入文章密码') !== ''){
-                alert('密码错误！');
-        if (history.length === 1) {
-            window.opener = null;
-            window.open('', '_self');
-            window.close();
-                } else {
-                    history.back();
-                }
-            }
-        }
-    })();
-</script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
-  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
-
-<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
-<script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/blog/',
-    scheme: 'Gemini',
-    version: '7.4.2',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: 'Copy',
-      copy_success: 'Copied',
-      copy_failure: 'Copy failed'
-    },
-    sidebarPadding: 40
-  };
-</script>
 
-  <meta name="description" content="了解包管理工具 apt and snapapt所采用的包是deb包，deb包最初是Debian Linux推出的，由于ubuntu基于debian，ubuntu将其集成到了apt包管理器中，apt可以自动解决软件之间依赖问题，对于当时的Linux软件市场来说，是一个巨大的进步，ubuntu还造了一个类似apple store的软件商店出来，以提供UI支持。">
-<meta name="keywords" content="Linux,JDK">
-<meta property="og:type" content="article">
-<meta property="og:title" content="JDK环境变量无效问题(Linux)">
-<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;60430&#x2F;">
-<meta property="og:site_name" content="maxzhao">
-<meta property="og:description" content="了解包管理工具 apt and snapapt所采用的包是deb包，deb包最初是Debian Linux推出的，由于ubuntu基于debian，ubuntu将其集成到了apt包管理器中，apt可以自动解决软件之间依赖问题，对于当时的Linux软件市场来说，是一个巨大的进步，ubuntu还造了一个类似apple store的软件商店出来，以提供UI支持。">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2022-05-02T05:02:14.955Z">
-<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
 
 <link rel="canonical" href="https://github.com/maxzhao-it/blog/post/60430/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
-  };
-</script>
 
-  <title>JDK环境变量无效问题(Linux) | maxzhao</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/60430/","path":"post/60430/","title":"JDK环境变量无效问题(Linux)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JDK环境变量无效问题(Linux) | maxzhao</title>
   
-
-
-
 
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
 <link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/blog/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">maxzhao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-        <p class="site-subtitle">不要害怕Exception和Error</p>
   </div>
 
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
 
 
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
+           type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-apt-and-snap"><span class="nav-number">1.</span> <span class="nav-text">了解包管理工具 apt and snap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#deb"><span class="nav-number">2.</span> <span class="nav-text">deb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snap"><span class="nav-number">3.</span> <span class="nav-text">snap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#snap-%E4%B8%8B%E8%BD%BD%E6%85%A2%E9%97%AE%E9%A2%98"><span class="nav-number">3.1.</span> <span class="nav-text">snap 下载慢问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%BA%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F"><span class="nav-number">4.</span> <span class="nav-text">修改为国内镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-number">5.</span> <span class="nav-text">安装开发环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Typort"><span class="nav-number">5.1.</span> <span class="nav-text">安装 Typort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Chrome"><span class="nav-number">5.2.</span> <span class="nav-text">安装 Chrome</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-JDK8-x2F-14"><span class="nav-number">5.3.</span> <span class="nav-text">安装 JDK8&#x2F;14</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Maven"><span class="nav-number">5.4.</span> <span class="nav-text">安装 Maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-IDEA"><span class="nav-number">5.5.</span> <span class="nav-text">安装 IDEA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-VSCode"><span class="nav-number">5.6.</span> <span class="nav-text">安装 VSCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Git"><span class="nav-number">5.7.</span> <span class="nav-text">安装 Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Docker"><span class="nav-number">5.8.</span> <span class="nav-text">安装 Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-NodeJS"><span class="nav-number">5.9.</span> <span class="nav-text">安装 NodeJS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%BA%90"><span class="nav-number">5.9.1.</span> <span class="nav-text">修改源</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Flutter"><span class="nav-number">5.10.</span> <span class="nav-text">安装 Flutter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%B7%A5%E5%85%B7"><span class="nav-number">6.</span> <span class="nav-text">其它工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Vim"><span class="nav-number">6.1.</span> <span class="nav-text">安装 Vim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Curl"><span class="nav-number">6.2.</span> <span class="nav-text">安装 Curl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-wps-office"><span class="nav-number">6.3.</span> <span class="nav-text">安装 wps-office</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Dash-to-dock"><span class="nav-number">6.4.</span> <span class="nav-text">安装 Dash-to-dock</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
-  <div class="back-to-top">
+  <div class="back-to-top" role="button" aria-label="Back to top">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content">
-            
+    <div class="main-inner post posts-expand">
 
-  <div class="posts-expand">
-      
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/60430/">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/60430/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JDK环境变量无效问题(Linux) | maxzhao">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           JDK环境变量无效问题(Linux)
         </h1>
 
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-02 13:02:14" itemprop="dateModified" datetime="2022-05-02T13:02:14+08:00">2022-05-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-            </span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-05-02 13:02:14" itemprop="dateModified" datetime="2022-05-02T13:02:14+08:00">2022-05-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
 
-          
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
+  
+</div>
 
         </div>
       </header>
@@ -292,9 +268,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-        <h2 id="了解包管理工具-apt-and-snap"><a href="#了解包管理工具-apt-and-snap" class="headerlink" title="了解包管理工具 apt and snap"></a>了解包管理工具 <code>apt and snap</code></h2><p>apt所采用的包是deb包，deb包最初是Debian Linux推出的，由于ubuntu基于debian，ubuntu将其集成到了apt包管理器中，apt可以自动解决软件之间依赖问题，对于当时的Linux软件市场来说，是一个巨大的进步，ubuntu还造了一个类似apple store的软件商店出来，以提供UI支持。</p><a id="more"></a>
+        <h2 id="了解包管理工具-apt-and-snap"><a href="#了解包管理工具-apt-and-snap" class="headerlink" title="了解包管理工具 apt and snap"></a>了解包管理工具 <code>apt and snap</code></h2><p>apt所采用的包是deb包，deb包最初是Debian Linux推出的，由于ubuntu基于debian，ubuntu将其集成到了apt包管理器中，apt可以自动解决软件之间依赖问题，对于当时的Linux软件市场来说，是一个巨大的进步，ubuntu还造了一个类似apple store的软件商店出来，以提供UI支持。</p>
 <p>在ubuntu上配置好apt的国内源后，就可以使用apt-get轻松的安装软件了。</p>
 <p>但是，随着软件包管理技术的进步和更新，随着计算机存储的提升，又随着开发者和用户对安全的重视提升，虚拟化和沙盒的概念逐渐兴起，虽然几年前ubuntu用apt代替了apt-get，ubuntu的母公司Canonical又整出了一个snap，我认为其理念和技术在很多方面都优于apt。而apt和apt-get只是换了个名字，但是snap是使用了沙盒，或者说容器的技术，是很大的进步。</p>
 <p>总觉得在抄袭docker的思想，docker又是从虚拟化技术来的。</p>
@@ -306,28 +280,28 @@
 <li>仅支持deb系的Linux</li>
 </ul>
 <p><strong>常用命令</strong><br>更新源</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt udpate</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt udpate</span><br></pre></td></tr></table></figure>
 
 <p>更新已经安装的软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
 
 <p>安装软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install firefox</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install firefox</span><br></pre></td></tr></table></figure>
 
 <p>移除软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt remove firefox</span><br><span class="line"># 删除并清除配置文件</span><br><span class="line">sudo apt --purge remove firefox</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt remove firefox</span><br><span class="line"># 删除并清除配置文件</span><br><span class="line">sudo apt --purge remove firefox</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>清理安装包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt autoclean</span><br><span class="line">#清理所有安装包</span><br><span class="line">sudo apt clean</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt autoclean</span><br><span class="line">#清理所有安装包</span><br><span class="line">sudo apt clean</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>搜索软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt search firefox</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt search firefox</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>列出已安装的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt list --installed</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt list --installed</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>卸载多余依赖</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt autoremove</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt autoremove</span><br></pre></td></tr></table></figure>
 
 <h2 id="snap"><a href="#snap" class="headerlink" title="snap"></a>snap</h2><p>没有代理不建议尝试，下载太慢了。<br>什么是snap？引用下面这段话：</p>
 <blockquote>
@@ -351,40 +325,40 @@
 <li>Snaps更加安全</li>
 </ul>
 <p>snap安装软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo snap install firefox</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo snap install firefox</span><br></pre></td></tr></table></figure>
 
 <p>列出安装的软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap list</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">snap list</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>搜索软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap find</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">snap find</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>更新软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo snap refresh firefox</span><br><span class="line"># 更新全部</span><br><span class="line">sudo snap refresh all</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo snap refresh firefox</span><br><span class="line"># 更新全部</span><br><span class="line">sudo snap refresh all</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>卸载软件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap remove firefox</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">snap remove firefox</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h3 id="snap-下载慢问题"><a href="#snap-下载慢问题" class="headerlink" title="snap 下载慢问题"></a>snap 下载慢问题</h3><p><a href="[https://snapcraft.io/search?q=intellij-idea](https://snapcraft.io/search?)">snapcraft</a>可以直接下载软件，下载对应的 <code>amd or amd64</code><br>然后</p>
+<h3 id="snap-下载慢问题"><a href="#snap-下载慢问题" class="headerlink" title="snap 下载慢问题"></a>snap 下载慢问题</h3><p><a href="%5Bhttps://snapcraft.io/search?q=intellij-idea%5D(https://snapcraft.io/search?)">snapcraft</a>可以直接下载软件，下载对应的 <code>amd or amd64</code><br>然后</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo snap install xxx.snap --dangerous</span><br></pre></td></tr></table></figure>
 
-<h2 id="修改为国内镜像"><a href="#修改为国内镜像" class="headerlink" title="修改为国内镜像"></a>修改为国内镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /etc/apt/sources.list /etc/apt/sources.list.back</span><br><span class="line">sudo gedit /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
-<p>把里面的内容修改为 <a href="https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/" target="_blank" rel="noopener">清华大学</a> </p>
+<h2 id="修改为国内镜像"><a href="#修改为国内镜像" class="headerlink" title="修改为国内镜像"></a>修改为国内镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> /etc/apt/sources.list /etc/apt/sources.list.back</span><br><span class="line">sudo gedit /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<p>把里面的内容修改为 <a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/">清华大学</a> </p>
 <h2 id="安装开发环境"><a href="#安装开发环境" class="headerlink" title="安装开发环境"></a>安装开发环境</h2><h3 id="安装-Typort"><a href="#安装-Typort" class="headerlink" title="安装 Typort"></a>安装 Typort</h3><p>写文档的<code>Markdown</code></p>
-<p><a href="https://typora.io/#linux" target="_blank" rel="noopener">官方安装方式</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># or run:</span></span><br><span class="line"><span class="comment"># sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE</span></span><br><span class="line">wget -qO - https://typora.io/linux/public-key.asc | sudo apt-key add -</span><br><span class="line"><span class="comment"># add Typora's repository</span></span><br><span class="line">sudo add-apt-repository <span class="string">'deb https://typora.io/linux ./'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line"><span class="comment"># install typora</span></span><br><span class="line">sudo apt-get install typora</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://typora.io/#linux">官方安装方式</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># or run:</span></span><br><span class="line"><span class="comment"># sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE</span></span><br><span class="line">wget -qO - https://typora.io/linux/public-key.asc | sudo apt-key add -</span><br><span class="line"><span class="comment"># add Typora&#x27;s repository</span></span><br><span class="line">sudo add-apt-repository <span class="string">&#x27;deb https://typora.io/linux ./&#x27;</span></span><br><span class="line">sudo apt-get update</span><br><span class="line"><span class="comment"># install typora</span></span><br><span class="line">sudo apt-get install typora</span><br></pre></td></tr></table></figure>
 <h3 id="安装-Chrome"><a href="#安装-Chrome" class="headerlink" title="安装 Chrome"></a>安装 Chrome</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询</span></span><br><span class="line">sudo apt-cache search chrome |grep chrome</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">sudo apt-get install chrome-gnome-shell</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">sudo wget http://www.linuxidc.com/files/repo/google-chrome.list -P /etc/apt/sources.list.d/</span><br><span class="line">wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install google-chrome-stable</span><br></pre></td></tr></table></figure>
 
-<h3 id="安装-JDK8-14"><a href="#安装-JDK8-14" class="headerlink" title="安装 JDK8/14"></a>安装 JDK8/14</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询是否 `jdk` 版本</span></span><br><span class="line"> sudo apt-cache search jdk |grep 8</span><br><span class="line"> sudo apt-cache search jdk |grep 14</span><br><span class="line"><span class="comment"># 安装 `jdk`</span></span><br><span class="line">sudo apt-get install openjdk-8-jdk openjdk-8-doc openjdk-8-source openjdk-14-jdk openjdk-14-jre openjdk-14-doc openjdk-14-source</span><br></pre></td></tr></table></figure>
+<h3 id="安装-JDK8-x2F-14"><a href="#安装-JDK8-x2F-14" class="headerlink" title="安装 JDK8&#x2F;14"></a>安装 JDK8&#x2F;14</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询是否 `jdk` 版本</span></span><br><span class="line"> sudo apt-cache search jdk |grep 8</span><br><span class="line"> sudo apt-cache search jdk |grep 14</span><br><span class="line"><span class="comment"># 安装 `jdk`</span></span><br><span class="line">sudo apt-get install openjdk-8-jdk openjdk-8-doc openjdk-8-source openjdk-14-jdk openjdk-14-jre openjdk-14-doc openjdk-14-source  </span><br></pre></td></tr></table></figure>
 <p>切换 jdk 版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo update-alternatives --config java</span><br></pre></td></tr></table></figure>
 <p>添加本地jdk</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_211/bin/java 700</span><br><span class="line">sudo update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_211/bin/javac 700</span><br><span class="line">sudo update-alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_211/bin/jar 700</span><br></pre></td></tr></table></figure>
 <h3 id="安装-Maven"><a href="#安装-Maven" class="headerlink" title="安装 Maven"></a>安装 Maven</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询</span></span><br><span class="line">sudo apt-cache search all |grep maven</span><br><span class="line"><span class="comment"># 官方推荐脚本</span></span><br><span class="line">sudo apt-get install maven</span><br></pre></td></tr></table></figure>
 <h3 id="安装-IDEA"><a href="#安装-IDEA" class="headerlink" title="安装 IDEA"></a>安装 IDEA</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询，没有结果</span></span><br><span class="line">sudo apt-cache search all |grep intellij-idea</span><br><span class="line"><span class="comment"># 官方推荐脚本，但是这个好像安装不了</span></span><br><span class="line">sudo snap install intellij-idea-ultimate --classic</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#问题</span></span><br><span class="line">cannot install <span class="string">"intellij-idea-community"</span>: snap <span class="string">"intellij-idea-community"</span></span><br><span class="line">       has <span class="string">"install-snap"</span> change <span class="keyword">in</span> progress</span><br><span class="line"><span class="comment"># 解决方式 </span></span><br><span class="line">sudo snap changes</span><br><span class="line"><span class="comment"># 终止安装</span></span><br><span class="line">sudo snap abort 5</span><br><span class="line"><span class="comment"># 这里需要去 snapcraft 下载</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#问题</span></span><br><span class="line">cannot install <span class="string">&quot;intellij-idea-community&quot;</span>: snap <span class="string">&quot;intellij-idea-community&quot;</span></span><br><span class="line">       has <span class="string">&quot;install-snap&quot;</span> change <span class="keyword">in</span> progress</span><br><span class="line"><span class="comment"># 解决方式 </span></span><br><span class="line">sudo snap changes</span><br><span class="line"><span class="comment"># 终止安装</span></span><br><span class="line">sudo snap abort 5</span><br><span class="line"><span class="comment"># 这里需要去 snapcraft 下载</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="安装-VSCode"><a href="#安装-VSCode" class="headerlink" title="安装 VSCode"></a>安装 VSCode</h3><p><a href="https://code.visualstudio.com/docs/?dv=linux64_deb" target="_blank" rel="noopener">官网</a>下载安装包 </p>
+<h3 id="安装-VSCode"><a href="#安装-VSCode" class="headerlink" title="安装 VSCode"></a>安装 VSCode</h3><p><a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/?dv=linux64_deb">官网</a>下载安装包 </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i code_1.47.3-1595520028_amd64.deb</span><br></pre></td></tr></table></figure>
 
 
@@ -414,7 +388,7 @@
 
 
 
-<h3 id="安装-wps-office"><a href="#安装-wps-office" class="headerlink" title="安装 wps-office"></a>安装 wps-office</h3><p><a href="https://linux.wps.cn/" target="_blank" rel="noopener">官方下载</a> x64版本的.deb包。</p>
+<h3 id="安装-wps-office"><a href="#安装-wps-office" class="headerlink" title="安装 wps-office"></a>安装 wps-office</h3><p><a target="_blank" rel="noopener" href="https://linux.wps.cn/">官方下载</a> x64版本的.deb包。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> Download</span><br><span class="line">sudo dpkg -i wps-office_******_amd64.deb</span><br><span class="line"><span class="comment"># 部分字体</span></span><br><span class="line">sudo apt -y install fonts-wqy-microhei fonts-wqy-zenhei</span><br></pre></td></tr></table></figure>
 
 <h3 id="安装-Dash-to-dock"><a href="#安装-Dash-to-dock" class="headerlink" title="安装 Dash-to-dock"></a>安装 Dash-to-dock</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-cache search dock |grep dash</span><br><span class="line">sudo apt-get install gnome-shell-extension-dash-to-panel</span><br></pre></td></tr></table></figure>
@@ -429,7 +403,7 @@
     
     
 
-      <footer class="post-footer">
+    <footer class="post-footer">
           <div class="post-tags">
               <a href="/blog/tags/Linux/" rel="tag"># Linux</a>
               <a href="/blog/tags/JDK/" rel="tag"># JDK</a>
@@ -438,128 +412,34 @@
         
 
           <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-                <a href="/blog/post/22928/" rel="next" title="Manjaro安装Docker">
+            <div class="post-nav-item">
+                <a href="/blog/post/22928/" rel="prev" title="Manjaro安装Docker">
                   <i class="fa fa-chevron-left"></i> Manjaro安装Docker
                 </a>
             </div>
-
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-                <a href="/blog/post/48634/" rel="prev" title="ArchLinux安装GRUB主题">
+            <div class="post-nav-item">
+                <a href="/blog/post/48634/" rel="next" title="ArchLinux安装GRUB主题">
                   ArchLinux安装GRUB主题 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
-      </footer>
-    
+    </footer>
   </article>
-  
-  
-  
-
-  </div>
-
-
-          </div>
-          
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#了解包管理工具-apt-and-snap"><span class="nav-number">1.</span> <span class="nav-text">了解包管理工具 apt and snap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#deb"><span class="nav-number">2.</span> <span class="nav-text">deb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snap"><span class="nav-number">3.</span> <span class="nav-text">snap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#snap-下载慢问题"><span class="nav-number">3.1.</span> <span class="nav-text">snap 下载慢问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改为国内镜像"><span class="nav-number">4.</span> <span class="nav-text">修改为国内镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装开发环境"><span class="nav-number">5.</span> <span class="nav-text">安装开发环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Typort"><span class="nav-number">5.1.</span> <span class="nav-text">安装 Typort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Chrome"><span class="nav-number">5.2.</span> <span class="nav-text">安装 Chrome</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-JDK8-14"><span class="nav-number">5.3.</span> <span class="nav-text">安装 JDK8/14</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Maven"><span class="nav-number">5.4.</span> <span class="nav-text">安装 Maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-IDEA"><span class="nav-number">5.5.</span> <span class="nav-text">安装 IDEA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-VSCode"><span class="nav-number">5.6.</span> <span class="nav-text">安装 VSCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Git"><span class="nav-number">5.7.</span> <span class="nav-text">安装 Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Docker"><span class="nav-number">5.8.</span> <span class="nav-text">安装 Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-NodeJS"><span class="nav-number">5.9.</span> <span class="nav-text">安装 NodeJS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改源"><span class="nav-number">5.9.1.</span> <span class="nav-text">修改源</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Flutter"><span class="nav-number">5.10.</span> <span class="nav-text">安装 Flutter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它工具"><span class="nav-number">6.</span> <span class="nav-text">其它工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Vim"><span class="nav-number">6.1.</span> <span class="nav-text">安装 Vim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Curl"><span class="nav-number">6.2.</span> <span class="nav-text">安装 Curl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-wps-office"><span class="nav-number">6.3.</span> <span class="nav-text">安装 wps-office</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Dash-to-dock"><span class="nav-number">6.4.</span> <span class="nav-text">安装 Dash-to-dock</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <img class="site-author-image" itemprop="image" alt="赵联胜"
-    src="/blog/uploads/images/avatar.jpg">
-  <p class="site-author-name" itemprop="name">赵联胜</p>
-  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
-        
-          <span class="site-state-item-count">272</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
-          
-        <span class="site-state-item-count">127</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
-          
-        <span class="site-state-item-count">151</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
+
+
+
+
+
+
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-  <div class="links-of-blogroll motion-element">
-    <div class="links-of-blogroll-title">
-      <i class="fa fa-fw fa-link"></i>
-      友情链接
-    </div>
-    <ul class="links-of-blogroll-list">
-        <li class="links-of-blogroll-item">
-          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
-        </li>
-    </ul>
-  </div>
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
 
 <div class="copyright">
-  
   &copy; 
   <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
@@ -568,80 +448,27 @@
   <span class="author" itemprop="copyrightHolder">赵联胜</span>
 </div>
 
-        
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
-  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
-<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
-<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
 
 
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
 
   
 
 
 
 
-
-
-  <script src="/blog/js/local-search.js?v=7.4.2"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
 
 </body>
 </html>

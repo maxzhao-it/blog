@@ -1,301 +1,273 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.0.0">
-
-<script>
-    (function(){
-        if(''){
-            if (prompt('请输入文章密码') !== ''){
-                alert('密码错误！');
-        if (history.length === 1) {
-            window.opener = null;
-            window.open('', '_self');
-            window.close();
-                } else {
-                    history.back();
-                }
-            }
-        }
-    })();
-</script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
-  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
-
-<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
-<script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/blog/',
-    scheme: 'Gemini',
-    version: '7.4.2',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: 'Copy',
-      copy_success: 'Copied',
-      copy_failure: 'Copy failed'
-    },
-    sidebarPadding: 40
-  };
-</script>
 
-  <meta name="description" content="一、前言　　由于项目中的表结构有很多复用的字段，比如创建时间、删除状态、主键等等，也是为个数据设计规范，我们把项目中的 实体（entity）默认都是继承一个父类（包含这些公共的属性）。　　所以我们这里要简单的实现这个父类。">
-<meta name="keywords" content="Java,SpringBoot,JPA">
-<meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot Jpa实体继承通用属性">
-<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;30217&#x2F;">
-<meta property="og:site_name" content="maxzhao">
-<meta property="og:description" content="一、前言　　由于项目中的表结构有很多复用的字段，比如创建时间、删除状态、主键等等，也是为个数据设计规范，我们把项目中的 实体（entity）默认都是继承一个父类（包含这些公共的属性）。　　所以我们这里要简单的实现这个父类。">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2022-02-25T09:10:54.658Z">
-<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
 
 <link rel="canonical" href="https://github.com/maxzhao-it/blog/post/30217/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
-  };
-</script>
 
-  <title>SpringBoot Jpa实体继承通用属性 | maxzhao</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/30217/","path":"post/30217/","title":"SpringBoot Jpa实体继承通用属性"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SpringBoot Jpa实体继承通用属性 | maxzhao</title>
   
-
-
-
 
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
 <link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/blog/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">maxzhao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-        <p class="site-subtitle">不要害怕Exception和Error</p>
   </div>
 
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
 
 
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
+           type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%80%9A%E7%94%A8%E7%88%B6%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">二、通用父类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E4%B8%BB%E9%94%AE%E5%92%8C%E9%80%BB%E8%BE%91%E5%88%A0%E9%99%A4%E7%8A%B6%E6%80%81"><span class="nav-number">2.1.</span> <span class="nav-text">通用主键和逻辑删除状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%88%9B%E5%BB%BA%E3%80%81%E4%BF%AE%E6%94%B9%E4%BF%A1%E6%81%AF"><span class="nav-number">2.2.</span> <span class="nav-text">通用创建、修改信息</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
-  <div class="back-to-top">
+  <div class="back-to-top" role="button" aria-label="Back to top">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content">
-            
+    <div class="main-inner post posts-expand">
 
-  <div class="posts-expand">
-      
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/30217/">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/30217/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SpringBoot Jpa实体继承通用属性 | maxzhao">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           SpringBoot Jpa实体继承通用属性
         </h1>
 
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-02-25 17:10:54" itemprop="dateModified" datetime="2022-02-25T17:10:54+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index">
-                    <span itemprop="name">SpringBoot</span>
-                  </a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/SpringBoot/JPA/" itemprop="url" rel="index">
-                    <span itemprop="name">JPA</span>
-                  </a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/SpringBoot/JPA/Entity/" itemprop="url" rel="index">
-                    <span itemprop="name">Entity</span>
-                  </a>
-                </span>
-            </span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-02-25 17:10:54" itemprop="dateModified" datetime="2022-02-25T17:10:54+08:00">2022-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/JPA/" itemprop="url" rel="index"><span itemprop="name">JPA</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/JPA/Entity/" itemprop="url" rel="index"><span itemprop="name">Entity</span></a>
+        </span>
+    </span>
 
-          
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
+  
+</div>
 
         </div>
       </header>
@@ -304,21 +276,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-        <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>　　由于项目中的表结构有很多复用的字段，比如创建时间、删除状态、主键等等，也是为个数据设计规范，我们把项目中的 实体（entity）默认都是继承一个父类（包含这些公共的属性）。</p><p>　　所以我们这里要简单的实现这个父类。</p><a id="more"></a>
-
+        <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>　　由于项目中的表结构有很多复用的字段，比如创建时间、删除状态、主键等等，也是为个数据设计规范，我们把项目中的 实体（entity）默认都是继承一个父类（包含这些公共的属性）。</p>
+<p>　　所以我们这里要简单的实现这个父类。</p>
 <p>　　在项目中一般没有物理删除，为了实现逻辑删除，一般会自己实现RepositoryFactoryBean 和 Repository。但是由于多个团队开发，表的结构没有统一，会出现有的表没有基础父类对应的字段，这样就会导致自定义的 jpa repository 操作这些表就会出错。<br>　　<code>@MappedSuperclass</code> 注解是重点！</p>
-<h2 id="二、通用父类"><a href="#二、通用父类" class="headerlink" title="二、通用父类"></a>二、通用父类</h2><h3 id="通用主键和逻辑删除状态"><a href="#通用主键和逻辑删除状态" class="headerlink" title="通用主键和逻辑删除状态"></a>通用主键和逻辑删除状态</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * BaseEntity</span></span><br><span class="line"><span class="comment"> * 实体继承映射类基础,保存实体的通用属性</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-08-15 09:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors</span>(chain = <span class="keyword">true</span>)</span><br><span class="line"><span class="meta">@MappedSuperclass</span><span class="comment">//实体继承映射</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseEntity</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"ID"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"主键"</span>)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"DEL_STATUS"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"状态 1启用 0 停用"</span>)</span><br><span class="line">    <span class="keyword">private</span> Integer delStatus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="二、通用父类"><a href="#二、通用父类" class="headerlink" title="二、通用父类"></a>二、通用父类</h2><h3 id="通用主键和逻辑删除状态"><a href="#通用主键和逻辑删除状态" class="headerlink" title="通用主键和逻辑删除状态"></a>通用主键和逻辑删除状态</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * BaseEntity</span></span><br><span class="line"><span class="comment"> * 实体继承映射类基础,保存实体的通用属性</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-08-15 09:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="meta">@MappedSuperclass</span><span class="comment">//实体继承映射</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BaseEntity</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;ID&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;主键&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;DEL_STATUS&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;状态 1启用 0 停用&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer delStatus;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>　　只要是实体继承当前类，就可以实现通用的主键和逻辑删除状态了。</p>
 <p>　　当然了，我们还可以继续继承，进行实体规范。</p>
-<h3 id="通用创建、修改信息"><a href="#通用创建、修改信息" class="headerlink" title="通用创建、修改信息"></a>通用创建、修改信息</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * BaseEntityId</span></span><br><span class="line"><span class="comment"> * 实体集成映射类,保存实体的通用属性</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-08-15 09:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors</span>(chain = <span class="keyword">true</span>)</span><br><span class="line"><span class="meta">@MappedSuperclass</span><span class="comment">//实体集成映射</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseEntityId</span> <span class="keyword">extends</span> <span class="title">BaseEntity</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"CREATE_ID"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"创建人主键"</span>)</span><br><span class="line">    <span class="keyword">private</span> Long createId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"CREATE_IP"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"创建IP"</span>)</span><br><span class="line">    <span class="keyword">private</span> String createIp;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"CREATE_DATE"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"创建时间"</span>)</span><br><span class="line">    <span class="keyword">private</span> Timestamp createDate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"UPDATE_DATE"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"修改时间"</span>)</span><br><span class="line">    <span class="keyword">private</span> Timestamp updateDate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"UPDATE_ID"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"修改人主键"</span>)</span><br><span class="line">    <span class="keyword">private</span> Long updateId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column</span>(name = <span class="string">"UPDATE_IP"</span>)</span><br><span class="line">    <span class="meta">@ApiModelProperty</span>(value = <span class="string">"修改IP"</span>)</span><br><span class="line">    <span class="keyword">private</span> String updateIp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="通用创建、修改信息"><a href="#通用创建、修改信息" class="headerlink" title="通用创建、修改信息"></a>通用创建、修改信息</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * BaseEntityId</span></span><br><span class="line"><span class="comment"> * 实体集成映射类,保存实体的通用属性</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-08-15 09:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="meta">@MappedSuperclass</span><span class="comment">//实体集成映射</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BaseEntityId</span> <span class="keyword">extends</span> <span class="title class_">BaseEntity</span> &#123;</span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;CREATE_ID&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;创建人主键&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long createId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;CREATE_IP&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;创建IP&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String createIp;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;CREATE_DATE&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;创建时间&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Timestamp createDate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;UPDATE_DATE&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;修改时间&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Timestamp updateDate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;UPDATE_ID&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;修改人主键&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long updateId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;UPDATE_IP&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;修改IP&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String updateIp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>　　自此，通用实体属性规范父类就完成了，我们还可以定义主键策略和验证，这里就不列举了。</p>
 <blockquote>
-<p>本文地址： <a href="https://www.jianshu.com/p/54762d51a40c" target="_blank" rel="noopener">SpringBoot Jpa实体继承通用属性</a></p>
-<p>推荐<br><a href="https://www.jianshu.com/p/c1f87b0dd597" target="_blank" rel="noopener">IDEA好用的插件</a><br><a href="https://www.jianshu.com/p/c60d3b36142e" target="_blank" rel="noopener">JAVA自定义注解</a></p>
+<p>本文地址： <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/54762d51a40c">SpringBoot Jpa实体继承通用属性</a></p>
+<p>推荐<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1f87b0dd597">IDEA好用的插件</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c60d3b36142e">JAVA自定义注解</a></p>
 </blockquote>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/30217/">https://github.com/maxzhao-it/blog/post/30217/</a> </p>
 
@@ -328,7 +298,7 @@
     
     
 
-      <footer class="post-footer">
+    <footer class="post-footer">
           <div class="post-tags">
               <a href="/blog/tags/Java/" rel="tag"># Java</a>
               <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
@@ -338,128 +308,34 @@
         
 
           <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-                <a href="/blog/post/45583/" rel="next" title="SpringBoot整合Redis及Redis简介">
-                  <i class="fa fa-chevron-left"></i> SpringBoot整合Redis及Redis简介
-                </a>
-            </div>
-
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
+            <div class="post-nav-item">
                 <a href="/blog/post/22565/" rel="prev" title="SpringBoot Jpa的SimpleJpaRepository">
-                  SpringBoot Jpa的SimpleJpaRepository <i class="fa fa-chevron-right"></i>
+                  <i class="fa fa-chevron-left"></i> SpringBoot Jpa的SimpleJpaRepository
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/51475/" rel="next" title="部署：华为云MPP(DWS)">
+                  部署：华为云MPP(DWS) <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
-      </footer>
-    
+    </footer>
   </article>
-  
-  
-  
-
-  </div>
-
-
-          </div>
-          
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、通用父类"><span class="nav-number">2.</span> <span class="nav-text">二、通用父类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通用主键和逻辑删除状态"><span class="nav-number">2.1.</span> <span class="nav-text">通用主键和逻辑删除状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通用创建、修改信息"><span class="nav-number">2.2.</span> <span class="nav-text">通用创建、修改信息</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <img class="site-author-image" itemprop="image" alt="赵联胜"
-    src="/blog/uploads/images/avatar.jpg">
-  <p class="site-author-name" itemprop="name">赵联胜</p>
-  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
-        
-          <span class="site-state-item-count">272</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
-          
-        <span class="site-state-item-count">127</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
-          
-        <span class="site-state-item-count">151</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
+
+
+
+
+
+
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-  <div class="links-of-blogroll motion-element">
-    <div class="links-of-blogroll-title">
-      <i class="fa fa-fw fa-link"></i>
-      友情链接
-    </div>
-    <ul class="links-of-blogroll-list">
-        <li class="links-of-blogroll-item">
-          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
-        </li>
-    </ul>
-  </div>
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
 
 <div class="copyright">
-  
   &copy; 
   <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
@@ -468,80 +344,27 @@
   <span class="author" itemprop="copyrightHolder">赵联胜</span>
 </div>
 
-        
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
-  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
-<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
-<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
 
 
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
 
   
 
 
 
 
-
-
-  <script src="/blog/js/local-search.js?v=7.4.2"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
 
 </body>
 </html>

@@ -1,297 +1,269 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.0.0">
-
-<script>
-    (function(){
-        if(''){
-            if (prompt('请输入文章密码') !== ''){
-                alert('密码错误！');
-        if (history.length === 1) {
-            window.opener = null;
-            window.open('', '_self');
-            window.close();
-                } else {
-                    history.back();
-                }
-            }
-        }
-    })();
-</script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
-  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
-
-<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
-<script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/blog/',
-    scheme: 'Gemini',
-    version: '7.4.2',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: 'Copy',
-      copy_success: 'Copied',
-      copy_failure: 'Copy failed'
-    },
-    sidebarPadding: 40
-  };
-</script>
 
-  <meta name="description" content="kafka介绍1kafka.apachecn介绍一、安装kafka 可以通过官网下载kafka 根据Scala版本不同，又分为多个版本，我不需要使用Scala，所以就下载官方推荐版本kafka_2.13-2.7.0.tgz。">
-<meta name="keywords" content="MQ,kafka,中间件">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Kafka安装配置">
-<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;4175&#x2F;">
-<meta property="og:site_name" content="maxzhao">
-<meta property="og:description" content="kafka介绍1kafka.apachecn介绍一、安装kafka 可以通过官网下载kafka 根据Scala版本不同，又分为多个版本，我不需要使用Scala，所以就下载官方推荐版本kafka_2.13-2.7.0.tgz。">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;img_convert&#x2F;38eea86ae43f4e40666d65f33fe590c0.png">
-<meta property="og:updated_time" content="2021-08-23T08:46:30.319Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;img_convert&#x2F;38eea86ae43f4e40666d65f33fe590c0.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
 
 <link rel="canonical" href="https://github.com/maxzhao-it/blog/post/4175/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
-  };
-</script>
 
-  <title>Kafka安装配置 | maxzhao</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/4175/","path":"post/4175/","title":"Kafka安装配置"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kafka安装配置 | maxzhao</title>
   
-
-
-
 
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
 <link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/blog/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">maxzhao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-        <p class="site-subtitle">不要害怕Exception和Error</p>
   </div>
 
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
 
 
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
+           type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">一、安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E5%85%B6%E8%87%AA%E5%B8%A6%E7%9A%84Zookeeper"><span class="nav-number">2.</span> <span class="nav-text">二、直接使用其自带的Zookeeper</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%90%AF%E5%8A%A8Zookeeper"><span class="nav-number">2.1.</span> <span class="nav-text">（1）启动Zookeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%85%B3%E9%97%ADZookeeper"><span class="nav-number">2.2.</span> <span class="nav-text">（2）关闭Zookeeper</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Kafka%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">三、Kafka配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%90%AF%E5%8A%A8%E5%8F%8A%E5%81%9C%E6%AD%A2Kafka"><span class="nav-number">4.</span> <span class="nav-text">四、启动及停止Kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%90%AF%E5%8A%A8kafka"><span class="nav-number">4.1.</span> <span class="nav-text">（1）启动kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%81%9C%E6%AD%A2kafka"><span class="nav-number">4.2.</span> <span class="nav-text">（2）停止kafka</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%B5%8B%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">五、测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%88%9B%E5%BB%BAtopic"><span class="nav-number">5.1.</span> <span class="nav-text">1、创建topic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%9F%A5%E7%9C%8B%E4%B8%BB%E9%A2%98"><span class="nav-number">5.2.</span> <span class="nav-text">2、查看主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF"><span class="nav-number">5.3.</span> <span class="nav-text">3、发送消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF"><span class="nav-number">5.4.</span> <span class="nav-text">4、接收消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E6%9F%A5%E7%9C%8B%E7%89%B9%E5%AE%9A%E4%B8%BB%E9%A2%98%E7%9A%84%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF"><span class="nav-number">5.5.</span> <span class="nav-text">5、查看特定主题的详细信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81%E5%88%A0%E9%99%A4%E4%B8%BB%E9%A2%98"><span class="nav-number">5.6.</span> <span class="nav-text">6、删除主题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%AE%BE%E7%BD%AE%E5%A4%9A%E4%B8%AAbroker%E9%9B%86%E7%BE%A4"><span class="nav-number">6.</span> <span class="nav-text">六、设置多个broker集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">6.1.</span> <span class="nav-text">1、创建多个节点的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%90%AF%E5%8A%A8%E5%85%B6%E5%AE%83%E9%85%8D%E7%BD%AE%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="nav-number">6.2.</span> <span class="nav-text">2、启动其它配置的服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84-topic"><span class="nav-number">6.3.</span> <span class="nav-text">3、创建新的 topic</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3"><span class="nav-number">6.3.1.</span> <span class="nav-text">启动失败解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E6%9F%A5%E7%9C%8B%E4%B8%BB%E9%A2%98%E5%88%97%E8%A1%A8"><span class="nav-number">6.4.</span> <span class="nav-text">4、查看主题列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E6%94%B6%E5%8F%91%E6%B6%88%E6%81%AF%E6%B5%8B%E8%AF%95"><span class="nav-number">6.5.</span> <span class="nav-text">5、收发消息测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF"><span class="nav-number">6.5.1.</span> <span class="nav-text">接收消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF"><span class="nav-number">6.5.2.</span> <span class="nav-text">发送消息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81%E6%B5%8B%E8%AF%95%E9%9B%86%E7%BE%A4-leader%E5%B4%A9%E6%BA%83"><span class="nav-number">6.6.</span> <span class="nav-text">6、测试集群 leader崩溃</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2-leader1"><span class="nav-number">6.6.1.</span> <span class="nav-text">停止 leader1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%BB%E9%A2%98"><span class="nav-number">6.6.2.</span> <span class="nav-text">查看主题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%E6%B5%8B%E8%AF%95"><span class="nav-number">6.6.3.</span> <span class="nav-text">发送消息测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E6%B6%88%E6%81%AF"><span class="nav-number">6.6.4.</span> <span class="nav-text">查询所有消息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper%E9%85%8D%E7%BD%AE"><span class="nav-number">7.</span> <span class="nav-text">Zookeeper配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%8D%95%E7%8B%AC%E4%BD%BF%E7%94%A8Zookeeper%E5%AE%89%E8%A3%85%E6%96%87%E4%BB%B6%E5%BB%BA%E7%AB%8B%E9%9B%86%E7%BE%A4"><span class="nav-number">7.1.</span> <span class="nav-text">1. 单独使用Zookeeper安装文件建立集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka%E4%B8%8EZookeeper%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">8.</span> <span class="nav-text">Kafka与Zookeeper的关系</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
-  <div class="back-to-top">
+  <div class="back-to-top" role="button" aria-label="Back to top">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content">
-            
+    <div class="main-inner post posts-expand">
 
-  <div class="posts-expand">
-      
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/4175/">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4175/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kafka安装配置 | maxzhao">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           Kafka安装配置
         </h1>
 
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index">
-                    <span itemprop="name">DevelopTools</span>
-                  </a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/DevelopTools/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
-                  </a>
-                </span>
-            </span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/kafka/" itemprop="url" rel="index"><span itemprop="name">kafka</span></a>
+        </span>
+    </span>
 
-          
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
+  
+</div>
 
         </div>
       </header>
@@ -300,14 +272,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-        <p><a href="https://www.cnblogs.com/qingyunzong/p/9004509.html" target="_blank" rel="noopener">kafka介绍1</a></p><p><a href="https://kafka.apachecn.org/quickstart.html" target="_blank" rel="noopener">kafka.apachecn介绍</a></p><h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><p><code>kafka</code> 可以通过<a href="https://kafka.apache.org/downloads" target="_blank" rel="noopener">官网下载</a></p><p><code>kafka</code> 根据Scala版本不同，又分为多个版本，我不需要使用<code>Scala</code>，所以就下载官方推荐版本<code>kafka_2.13-2.7.0.tgz</code>。</p><a id="more"></a>
-
-
-
+        <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qingyunzong/p/9004509.html">kafka介绍1</a></p>
+<p><a target="_blank" rel="noopener" href="https://kafka.apachecn.org/quickstart.html">kafka.apachecn介绍</a></p>
+<h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><p><code>kafka</code> 可以通过<a target="_blank" rel="noopener" href="https://kafka.apache.org/downloads">官网下载</a></p>
+<p><code>kafka</code> 根据Scala版本不同，又分为多个版本，我不需要使用<code>Scala</code>，所以就下载官方推荐版本<code>kafka_2.13-2.7.0.tgz</code>。</p>
 <p> 解压到<code>opt</code>目录下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf kafka_2.12-2.4.0.tgz -C /opt/</span><br><span class="line"><span class="comment"># 为了使用方便，可以创建软链接`kafka`</span></span><br><span class="line">ln -s kafka_2.13-2.7.0 kafka</span><br><span class="line"><span class="comment"># 或者可以直接改名，与软链接执行一个即可</span></span><br><span class="line">mv kafka_2.13-2.7.0 kafka</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf kafka_2.12-2.4.0.tgz -C /opt/</span><br><span class="line"><span class="comment"># 为了使用方便，可以创建软链接`kafka`</span></span><br><span class="line"><span class="built_in">ln</span> -s kafka_2.13-2.7.0 kafka</span><br><span class="line"><span class="comment"># 或者可以直接改名，与软链接执行一个即可</span></span><br><span class="line"><span class="built_in">mv</span> kafka_2.13-2.7.0 kafka</span><br></pre></td></tr></table></figure>
 
 <p><code>kafka</code>的安装需要依赖<code>Zookeeper</code>，下面先介绍<code>kafka</code>自带打包和配置好的<code>Zookeeper</code>，然后在介绍<code>Kafka</code>与<code>Zookeeper</code>的关系、如何安装<code>Zookeeper</code>。</p>
 <h2 id="二、直接使用其自带的Zookeeper"><a href="#二、直接使用其自带的Zookeeper" class="headerlink" title="二、直接使用其自带的Zookeeper"></a>二、直接使用其自带的<code>Zookeeper</code></h2><p><code>kafka</code>自带的<code>Zookeeper</code>程序使用<code>bin/zookeeper-server-start.sh</code>，以及<code>bin/zookeeper-server-stop.sh</code>来启动和停止<code>Zookeeper</code>。</p>
@@ -329,7 +299,7 @@
 <li><code>num.partitions</code> 为新建<code>Topic</code>的默认<code>Partition</code>数量，<code>partition</code>数量提升，一定程度上可以提升并发性，数值应该小于等于<code>broker</code>的数量</li>
 <li>因为要创建<code>kafka</code>集群，所以<code>kafka</code>的所有文件都复制两份，配置文件做相应的修改，尤其是<code>brokerid</code>、<code>IP</code>地址和<code>log.dirs</code>。分别创建软链接<code>kafka1</code>和<code>kafka2</code>。</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The id of the broker. This must be set to a unique integer for each broker.</span></span><br><span class="line">broker.id=0</span><br><span class="line"><span class="comment">############################# Socket Server Settings #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The address the socket server listens on. It will get the value returned from </span></span><br><span class="line"><span class="comment"># java.net.InetAddress.getCanonicalHostName() if not configured.</span></span><br><span class="line"><span class="comment">#   FORMAT:</span></span><br><span class="line"><span class="comment">#     listeners = listener_name://host_name:port</span></span><br><span class="line"><span class="comment">#   EXAMPLE:</span></span><br><span class="line"><span class="comment">#     listeners = PLAINTEXT://your.host.name:9092</span></span><br><span class="line"><span class="comment">#listeners=PLAINTEXT://:9092</span></span><br><span class="line"><span class="comment"># Hostname and port the broker will advertise to producers and consumers. If not set, </span></span><br><span class="line"><span class="comment"># it uses the value for "listeners" if configured.  Otherwise, it will use the value</span></span><br><span class="line"><span class="comment"># returned from java.net.InetAddress.getCanonicalHostName().</span></span><br><span class="line"><span class="comment">#advertised.listeners=PLAINTEXT://your.host.name:9092partitions</span></span><br><span class="line"><span class="comment"># Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details</span></span><br><span class="line"><span class="comment">#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL</span></span><br><span class="line"> 够</span><br><span class="line"><span class="comment">############################# Log Basics #############################</span></span><br><span class="line"><span class="comment"># A comma separated list of directories under which to store log files</span></span><br><span class="line">log.dirs=/tmp/kafka-logs</span><br><span class="line"><span class="comment"># The default number of log partitions per topic. More partitions allow greater</span></span><br><span class="line"><span class="comment"># parallelism for consumption, but this will also result in more files across</span></span><br><span class="line"><span class="comment"># the brokers.</span></span><br><span class="line">num.partitions=1 </span><br><span class="line"><span class="comment">############################# Zookeeper #############################</span></span><br><span class="line"><span class="comment"># Zookeeper connection string (see zookeeper docs for details).</span></span><br><span class="line"><span class="comment"># This is a comma separated host:port pairs, each corresponding to a zk</span></span><br><span class="line"><span class="comment"># server. e.g. "127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002".</span></span><br><span class="line"><span class="comment"># You can also append an optional chroot string to the urls to specify the</span></span><br><span class="line"><span class="comment"># root directory for all kafka znodes.</span></span><br><span class="line">zookeeper.connect=localhost:2181</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The id of the broker. This must be set to a unique integer for each broker.</span></span><br><span class="line">broker.id=0</span><br><span class="line"><span class="comment">############################# Socket Server Settings #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The address the socket server listens on. It will get the value returned from </span></span><br><span class="line"><span class="comment"># java.net.InetAddress.getCanonicalHostName() if not configured.</span></span><br><span class="line"><span class="comment">#   FORMAT:</span></span><br><span class="line"><span class="comment">#     listeners = listener_name://host_name:port</span></span><br><span class="line"><span class="comment">#   EXAMPLE:</span></span><br><span class="line"><span class="comment">#     listeners = PLAINTEXT://your.host.name:9092</span></span><br><span class="line"><span class="comment">#listeners=PLAINTEXT://:9092</span></span><br><span class="line"><span class="comment"># Hostname and port the broker will advertise to producers and consumers. If not set, </span></span><br><span class="line"><span class="comment"># it uses the value for &quot;listeners&quot; if configured.  Otherwise, it will use the value</span></span><br><span class="line"><span class="comment"># returned from java.net.InetAddress.getCanonicalHostName().</span></span><br><span class="line"><span class="comment">#advertised.listeners=PLAINTEXT://your.host.name:9092partitions</span></span><br><span class="line"><span class="comment"># Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details</span></span><br><span class="line"><span class="comment">#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL</span></span><br><span class="line"> 够</span><br><span class="line"><span class="comment">############################# Log Basics #############################</span></span><br><span class="line"><span class="comment"># A comma separated list of directories under which to store log files</span></span><br><span class="line">log.dirs=/tmp/kafka-logs</span><br><span class="line"><span class="comment"># The default number of log partitions per topic. More partitions allow greater</span></span><br><span class="line"><span class="comment"># parallelism for consumption, but this will also result in more files across</span></span><br><span class="line"><span class="comment"># the brokers.</span></span><br><span class="line">num.partitions=1 </span><br><span class="line"><span class="comment">############################# Zookeeper #############################</span></span><br><span class="line"><span class="comment"># Zookeeper connection string (see zookeeper docs for details).</span></span><br><span class="line"><span class="comment"># This is a comma separated host:port pairs, each corresponding to a zk</span></span><br><span class="line"><span class="comment"># server. e.g. &quot;127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002&quot;.</span></span><br><span class="line"><span class="comment"># You can also append an optional chroot string to the urls to specify the</span></span><br><span class="line"><span class="comment"># root directory for all kafka znodes.</span></span><br><span class="line">zookeeper.connect=localhost:2181</span><br></pre></td></tr></table></figure>
 
 
 
@@ -374,7 +344,7 @@
 <h3 id="6、删除主题"><a href="#6、删除主题" class="headerlink" title="6、删除主题"></a>6、删除主题</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --zookeeper localhost:2181 --delete  --topic <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="六、设置多个broker集群"><a href="#六、设置多个broker集群" class="headerlink" title="六、设置多个broker集群"></a>六、设置多个<code>broker</code>集群</h2><p>一个 <code>broker</code>只是集群中的一个节点，<code>id</code>是这个节点的名称。</p>
-<h3 id="1、创建多个节点的配置"><a href="#1、创建多个节点的配置" class="headerlink" title="1、创建多个节点的配置"></a>1、创建多个节点的配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp config/server.properties config/server-1.properties </span><br><span class="line">cp config/server.properties config/server-2.properties</span><br></pre></td></tr></table></figure>
+<h3 id="1、创建多个节点的配置"><a href="#1、创建多个节点的配置" class="headerlink" title="1、创建多个节点的配置"></a>1、创建多个节点的配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> config/server.properties config/server-1.properties </span><br><span class="line"><span class="built_in">cp</span> config/server.properties config/server-2.properties</span><br></pre></td></tr></table></figure>
 
 <p>修改每个配置的 <code>id</code>，<code>id</code> 从0开始。</p>
 <p>简单的配置如下</p>
@@ -386,9 +356,9 @@
 
 <h3 id="2、启动其它配置的服务"><a href="#2、启动其它配置的服务" class="headerlink" title="2、启动其它配置的服务"></a>2、启动其它配置的服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-server-start.sh -daemon config/server-1.properties</span><br><span class="line">bin/kafka-server-start.sh -daemon config/server-2.properties</span><br></pre></td></tr></table></figure>
 
-<h3 id="3、创建新的-topic"><a href="#3、创建新的-topic" class="headerlink" title="3、创建新的 topic"></a>3、创建新的 topic</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 1 --topic my-replicated-3-topic</span><br></pre></td></tr></table></figure>
+<h3 id="3、创建新的-topic"><a href="#3、创建新的-topic" class="headerlink" title="3、创建新的 topic"></a>3、创建新的 topic</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 1 --topic my-replicated-3-topic </span><br></pre></td></tr></table></figure>
 
-<p>成功提示：`Created topic my-replicated-3-topic.</p>
+<p>成功提示：&#96;Created topic my-replicated-3-topic.</p>
 <p>这时候已经完成了一个集群的配置。</p>
 <h4 id="启动失败解决"><a href="#启动失败解决" class="headerlink" title="启动失败解决"></a>启动失败解决</h4><p>如果报 <code>replication</code> 不够的错误，则是因为 <code>server1</code>、<code>server2</code>可能启动失败了。</p>
 <ol>
@@ -404,7 +374,7 @@
 
 <h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list localhost:9092 --topic my-replicated-3-topic</span><br></pre></td></tr></table></figure>
 
-<h3 id="6、测试集群-leader崩溃"><a href="#6、测试集群-leader崩溃" class="headerlink" title="6、测试集群 leader崩溃"></a>6、测试集群 <code>leader</code>崩溃</h3><h4 id="停止-leader1"><a href="#停止-leader1" class="headerlink" title="停止 leader1"></a>停止 <code>leader1</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询进程</span></span><br><span class="line">ps -ef|grep server-1.properties</span><br><span class="line"><span class="comment"># 查询 kafka java 进程更方便</span></span><br><span class="line">jps -mv |grep server-1.properties</span><br><span class="line"><span class="comment"># 杀掉进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 xxx</span><br></pre></td></tr></table></figure>
+<h3 id="6、测试集群-leader崩溃"><a href="#6、测试集群-leader崩溃" class="headerlink" title="6、测试集群 leader崩溃"></a>6、测试集群 <code>leader</code>崩溃</h3><h4 id="停止-leader1"><a href="#停止-leader1" class="headerlink" title="停止 leader1"></a>停止 <code>leader1</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询进程</span></span><br><span class="line">ps -ef|grep server-1.properties</span><br><span class="line"><span class="comment"># 查询 kafka java 进程更方便</span></span><br><span class="line">jps -<span class="built_in">mv</span> |grep server-1.properties</span><br><span class="line"><span class="comment"># 杀掉进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 xxx</span><br></pre></td></tr></table></figure>
 
 <h4 id="查看主题"><a href="#查看主题" class="headerlink" title="查看主题"></a>查看主题</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic my-replicated-3-topic</span><br></pre></td></tr></table></figure>
 
@@ -418,14 +388,14 @@
 <p>这个时候会发现所有的消息都没有丢</p>
 <h2 id="Zookeeper配置"><a href="#Zookeeper配置" class="headerlink" title="Zookeeper配置"></a>Zookeeper配置</h2><p>当前下载的kafka程序里自带Zookeeper，可以直接使用其自带的Zookeeper建立集群，也可以单独使用Zookeeper安装文件建立集群。</p>
 <h3 id="1-单独使用Zookeeper安装文件建立集群"><a href="#1-单独使用Zookeeper安装文件建立集群" class="headerlink" title="1. 单独使用Zookeeper安装文件建立集群"></a>1. 单独使用Zookeeper安装文件建立集群</h3><p>Zookeeper的安装及配置可以参考另一篇博客，里面有详细介绍</p>
-<p><a href="https://www.cnblogs.com/zhaoshizi/p/12105143.html" target="_blank" rel="noopener">ZooKeeper的安装和配置过程</a></p>
-<p><a href="https://www.cnblogs.com/zhaoshizi/p/12105143.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhaoshizi/p/12105143.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhaoshizi/p/12105143.html">ZooKeeper的安装和配置过程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhaoshizi/p/12105143.html">https://www.cnblogs.com/zhaoshizi/p/12105143.html</a></p>
 <h2 id="Kafka与Zookeeper的关系"><a href="#Kafka与Zookeeper的关系" class="headerlink" title="Kafka与Zookeeper的关系"></a>Kafka与Zookeeper的关系</h2><p>一个典型的Kafka集群中包含若干Produce，若干broker（一般broker数量越多，集群吞吐率越高），若干Consumer Group，以及一个Zookeeper集群。Kafka通过Zookeeper管理集群配置，选举leader，以及在Consumer Group发生变化时进行rebalance。Producer使用push模式将消息发布到broker，Consumer使用pull模式从broker订阅并消费消息。<br><img src="https://img-blog.csdnimg.cn/img_convert/38eea86ae43f4e40666d65f33fe590c0.png" alt="img"><br>1)Producer端直接连接broker.list列表,从列表中返回TopicMetadataResponse,该Metadata包含Topic下每个partition leader建立socket连接并发送消息.</p>
 <p>2)Broker端使用zookeeper用来注册broker信息,以及监控partition leader存活性.</p>
 <p>3)Consumer端使用zookeeper用来注册consumer信息,其中包括consumer消费的partition列表等,同时也用来发现broker列表,并和partition leader建立socket连接,并获取消息。</p>
 <p><strong>Zookeeper作用：管理broker、consumer</strong></p>
 <p>创建Broker后，向zookeeper注册新的broker信息，实现在服务器正常运行下的水平拓展。具体的，通过注册watcher，获取partition的信息。</p>
-<p>Topic的注册，zookeeper会维护topic与broker的关系，通/brokers/topics/topic.name节点来记录。</p>
+<p>Topic的注册，zookeeper会维护topic与broker的关系，通&#x2F;brokers&#x2F;topics&#x2F;topic.name节点来记录。</p>
 <p>Producer向zookeeper中注册watcher,了解topic的partition的消息，以动态了解运行情况，实现负载均衡。Zookeepr不管理producer，只是能够提供当前broker的相关信息。</p>
 <p>Consumer可以使用group形式消费kafka中的数据。所有的group将以轮询的方式消费broker中的数据，具体的按照启动的顺序。Zookeeper会给每个consumer group一个ID,即同一份数据可以被不同的用户ID多次消费。因此这就是单播与多播的实现。以单个消费者还是以组别的方式去消费数据，由用户自己去定义。Zookeeper管理consumer的offset跟踪当前消费的offset。</p>
 <p>kafka使用ZooKeeper用于管理、协调代理。每个Kafka代理通过Zookeeper协调其他Kafka代理。<br>当Kafka系统中新增了代理或某个代理失效时，Zookeeper服务将通知生产者和消费者。生产者与消费者据此开始与其他代理协调工作。</p>
@@ -439,7 +409,7 @@
     
     
 
-      <footer class="post-footer">
+    <footer class="post-footer">
           <div class="post-tags">
               <a href="/blog/tags/MQ/" rel="tag"># MQ</a>
               <a href="/blog/tags/kafka/" rel="tag"># kafka</a>
@@ -449,128 +419,34 @@
         
 
           <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-                <a href="/blog/post/23026/" rel="next" title="Linux删除文件之后恢复（ext3grep）">
-                  <i class="fa fa-chevron-left"></i> Linux删除文件之后恢复（ext3grep）
-                </a>
-            </div>
-
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
+            <div class="post-nav-item">
                 <a href="/blog/post/34489/" rel="prev" title="KafkaConnect导入导出数据">
-                  KafkaConnect导入导出数据 <i class="fa fa-chevron-right"></i>
+                  <i class="fa fa-chevron-left"></i> KafkaConnect导入导出数据
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/50825/" rel="next" title="SpringBoot+kafka初始配置与使用">
+                  SpringBoot+kafka初始配置与使用 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
-      </footer>
-    
+    </footer>
   </article>
-  
-  
-  
-
-  </div>
-
-
-          </div>
-          
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、安装"><span class="nav-number">1.</span> <span class="nav-text">一、安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、直接使用其自带的Zookeeper"><span class="nav-number">2.</span> <span class="nav-text">二、直接使用其自带的Zookeeper</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）启动Zookeeper"><span class="nav-number">2.1.</span> <span class="nav-text">（1）启动Zookeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）关闭Zookeeper"><span class="nav-number">2.2.</span> <span class="nav-text">（2）关闭Zookeeper</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Kafka配置"><span class="nav-number">3.</span> <span class="nav-text">三、Kafka配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、启动及停止Kafka"><span class="nav-number">4.</span> <span class="nav-text">四、启动及停止Kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）启动kafka"><span class="nav-number">4.1.</span> <span class="nav-text">（1）启动kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）停止kafka"><span class="nav-number">4.2.</span> <span class="nav-text">（2）停止kafka</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、测试"><span class="nav-number">5.</span> <span class="nav-text">五、测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、创建topic"><span class="nav-number">5.1.</span> <span class="nav-text">1、创建topic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、查看主题"><span class="nav-number">5.2.</span> <span class="nav-text">2、查看主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、发送消息"><span class="nav-number">5.3.</span> <span class="nav-text">3、发送消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、接收消息"><span class="nav-number">5.4.</span> <span class="nav-text">4、接收消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、查看特定主题的详细信息"><span class="nav-number">5.5.</span> <span class="nav-text">5、查看特定主题的详细信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、删除主题"><span class="nav-number">5.6.</span> <span class="nav-text">6、删除主题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、设置多个broker集群"><span class="nav-number">6.</span> <span class="nav-text">六、设置多个broker集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、创建多个节点的配置"><span class="nav-number">6.1.</span> <span class="nav-text">1、创建多个节点的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、启动其它配置的服务"><span class="nav-number">6.2.</span> <span class="nav-text">2、启动其它配置的服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、创建新的-topic"><span class="nav-number">6.3.</span> <span class="nav-text">3、创建新的 topic</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#启动失败解决"><span class="nav-number">6.3.1.</span> <span class="nav-text">启动失败解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、查看主题列表"><span class="nav-number">6.4.</span> <span class="nav-text">4、查看主题列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、收发消息测试"><span class="nav-number">6.5.</span> <span class="nav-text">5、收发消息测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#接收消息"><span class="nav-number">6.5.1.</span> <span class="nav-text">接收消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发送消息"><span class="nav-number">6.5.2.</span> <span class="nav-text">发送消息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、测试集群-leader崩溃"><span class="nav-number">6.6.</span> <span class="nav-text">6、测试集群 leader崩溃</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#停止-leader1"><span class="nav-number">6.6.1.</span> <span class="nav-text">停止 leader1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看主题"><span class="nav-number">6.6.2.</span> <span class="nav-text">查看主题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发送消息测试"><span class="nav-number">6.6.3.</span> <span class="nav-text">发送消息测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询所有消息"><span class="nav-number">6.6.4.</span> <span class="nav-text">查询所有消息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper配置"><span class="nav-number">7.</span> <span class="nav-text">Zookeeper配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-单独使用Zookeeper安装文件建立集群"><span class="nav-number">7.1.</span> <span class="nav-text">1. 单独使用Zookeeper安装文件建立集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka与Zookeeper的关系"><span class="nav-number">8.</span> <span class="nav-text">Kafka与Zookeeper的关系</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <img class="site-author-image" itemprop="image" alt="赵联胜"
-    src="/blog/uploads/images/avatar.jpg">
-  <p class="site-author-name" itemprop="name">赵联胜</p>
-  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
-        
-          <span class="site-state-item-count">272</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
-          
-        <span class="site-state-item-count">127</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
-          
-        <span class="site-state-item-count">151</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
+
+
+
+
+
+
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-  <div class="links-of-blogroll motion-element">
-    <div class="links-of-blogroll-title">
-      <i class="fa fa-fw fa-link"></i>
-      友情链接
-    </div>
-    <ul class="links-of-blogroll-list">
-        <li class="links-of-blogroll-item">
-          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
-        </li>
-    </ul>
-  </div>
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
 
 <div class="copyright">
-  
   &copy; 
   <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
@@ -579,80 +455,27 @@
   <span class="author" itemprop="copyrightHolder">赵联胜</span>
 </div>
 
-        
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
-  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
-<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
-<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
 
 
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
 
   
 
 
 
 
-
-
-  <script src="/blog/js/local-search.js?v=7.4.2"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
 
 </body>
 </html>

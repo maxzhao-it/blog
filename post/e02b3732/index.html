@@ -1,278 +1,256 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.0.0">
-
-<script>
-    (function(){
-        if(''){
-            if (prompt('请输入文章密码') !== ''){
-                alert('密码错误！');
-        if (history.length === 1) {
-            window.opener = null;
-            window.open('', '_self');
-            window.close();
-                } else {
-                    history.back();
-                }
-            }
-        }
-    })();
-</script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg?v=7.4.2">
-  <link rel="mask-icon" href="/blog/uploads/images/logo.png?v=7.4.2" color="#222">
-
-<link rel="stylesheet" href="/blog/css/main.css?v=7.4.2">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
-<script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/blog/',
-    scheme: 'Gemini',
-    version: '7.4.2',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: 'Copy',
-      copy_success: 'Copied',
-      copy_failure: 'Copy failed'
-    },
-    sidebarPadding: 40
-  };
-</script>
 
-  <meta name="description" content="jmap -heap pidjstat oracle官方文档 jstat：虚拟机统计信息监视工具(JVM Statistics Monitoring Tool)说明：监视虚拟机的各种运行状态：类装载、内存、垃圾收集等运行数据。只用于Java进程或Java应用格式：jstat [option] PID [interval] [count]$ jstat -gcutil  2000 10 # 2秒打印">
-<meta name="keywords" content="Java">
-<meta property="og:type" content="article">
-<meta property="og:title" content="JAVA-JVM-JVM-jstat">
-<meta property="og:url" content="https:&#x2F;&#x2F;github.com&#x2F;maxzhao-it&#x2F;blog&#x2F;post&#x2F;e02b3732&#x2F;">
-<meta property="og:site_name" content="maxzhao">
-<meta property="og:description" content="jmap -heap pidjstat oracle官方文档 jstat：虚拟机统计信息监视工具(JVM Statistics Monitoring Tool)说明：监视虚拟机的各种运行状态：类装载、内存、垃圾收集等运行数据。只用于Java进程或Java应用格式：jstat [option] PID [interval] [count]$ jstat -gcutil  2000 10 # 2秒打印">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2022-05-18T07:04:11.488Z">
-<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
 
 <link rel="canonical" href="https://github.com/maxzhao-it/blog/post/e02b3732/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
-  };
-</script>
 
-  <title>JAVA-JVM-JVM-jstat | maxzhao</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/e02b3732/","path":"post/e02b3732/","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | maxzhao</title>
   
-
-
-
 
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
 <link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/blog/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">maxzhao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-        <p class="site-subtitle">不要害怕Exception和Error</p>
   </div>
 
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
 
 
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
+           type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jstat"><span class="nav-number">1.</span> <span class="nav-text">jstat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%99%E6%98%AF-class-%E4%BE%8B%E5%AD%90"><span class="nav-number">1.0.1.</span> <span class="nav-text">这是 class 例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%99%E6%98%AF-gcutil-%E4%BE%8B%E5%AD%90"><span class="nav-number">1.0.2.</span> <span class="nav-text">这是 gcutil 例子</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
-  <div class="back-to-top">
+  <div class="back-to-top" role="button" aria-label="Back to top">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
 
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
 
-          <div class="content">
-            
+    <div class="main-inner post posts-expand">
 
-  <div class="posts-expand">
-      
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/blog/post/e02b3732/">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/e02b3732/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
       <meta itemprop="name" content="赵联胜">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | maxzhao">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          JAVA-JVM-JVM-jstat
+          
         </h1>
 
-        <div class="post-meta">
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-18 15:04:11" itemprop="dateModified" datetime="2022-05-18T15:04:11+08:00">2022-05-18</time>
-              </span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-05-18 15:04:11" itemprop="dateModified" datetime="2022-05-18T15:04:11+08:00">2022-05-18</time>
+    </span>
 
-          
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
+  
+</div>
 
         </div>
       </header>
@@ -281,13 +259,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-        <p>jmap -heap pid</p><h1 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a><code>jstat</code></h1><blockquote>
-<p><a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jstat.html" target="_blank" rel="noopener">oracle官方文档</a></p>
-</blockquote><p>jstat：虚拟机统计信息监视工具(JVM Statistics Monitoring Tool)<br>说明：监视虚拟机的各种运行状态：类装载、内存、垃圾收集等运行数据。只用于Java进程或Java应用<br>格式：jstat [option] PID [interval] [count]<br>$ jstat -gcutil <pid> 2000 10 # 2秒打印一次，打印10次</pid></p><a id="more"></a>
-
-
+        <p>jmap -heap pid</p>
+<h1 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a><code>jstat</code></h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jstat.html">oracle官方文档</a></p>
+</blockquote>
+<p>jstat：虚拟机统计信息监视工具(JVM Statistics Monitoring Tool)<br>说明：监视虚拟机的各种运行状态：类装载、内存、垃圾收集等运行数据。只用于Java进程或Java应用<br>格式：jstat [option] PID [interval] [count]<br>$ jstat -gcutil <pid> 2000 10 # 2秒打印一次，打印10次</p>
 <p>option：<br>-class 查看类装载的信息<br>-gc 查看java堆的状况<br>-gccapacity 查看堆中各个区域的最小容量和最大容量<br>-gcutil 查看堆中各个区域已使用空间占其总空间的百分比<br>-gccause 与-gcutil相同，另外还输出了：导致上一次GC的原因和当前GC的原因<br>-gcnew 查看堆中新生代的状况<br>-gcnewcapacity 查看堆中新生代的最小容量和最大容量<br>-gcold 查看堆中老年代的状况<br>-gcoldcapacity 查看堆中老年代的最小容量和最大容量<br>-gcpermcapacity 查看堆中永久代的最小容量和最大容量<br>-gcmetacapacity 查看元数据空间的当前大小、最大容量和最小容量(jdk1.8)<br>interval：表示查询的间隔时间，单位：毫秒<br>count： 表示查询的次数，如果interval和count都省略，则默认为只查询一次。</p>
 <h3 id="这是-class-例子"><a href="#这是-class-例子" class="headerlink" title="这是 class 例子"></a>这是 <code>class</code> 例子</h3><p>这条命令的意思是查看类加载器统计信息</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -class -h3 -t pid 1000 8</span><br></pre></td></tr></table></figure>
@@ -309,7 +285,7 @@
 <li>Bytes：加载的kB数。</li>
 <li>Unloaded：卸载的类数。</li>
 <li>Bytes：已卸载的Kbytes数。</li>
-<li>Time：执行类加载和卸载操作所花费的时间。 </li>
+<li>Time：执行类加载和卸载操作所花费的时间。</li>
 </ol>
 <h3 id="这是-gcutil-例子"><a href="#这是-gcutil-例子" class="headerlink" title="这是 gcutil 例子"></a>这是 <code>gcutil</code> 例子</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">jstat -gcutil -h3 -t   pid 1000  8</span><br></pre></td></tr></table></figure>
 
@@ -352,12 +328,12 @@
 </ul>
 <p>注：查看 JVM 是否回收垃圾频繁，主要根据 FGC 和 FGCT 来分析。上面的命令</p>
 <p>$ jstat -gcutil 8842 2000 10 该命令对进程 8842 进行监控收集信息，每 2 秒收集一次，供收集 10 次。此时看 FGC 这一列，最新收集的信息排在最上面。用下一行的数字，减去上一行的数字，可得知每2秒内垃圾收集的次数(可换算成1秒的次数)，若是回收垃圾频繁，则需要进一步分析原因。可能的原因是内存泄露、程序中有创建大对象的代码、相关配置设置的阈值较小。再进一步查找问题，可以打印出具体的堆栈信息，通过堆栈定位到具体的代码进行分析。</p>
-<p>相关命令解析：<br>jstat -gc<br>jstat -gcutil<br>jstat -gccause<br>新生代(Young)中的Eden区：E<br>E： Eden区已使用的空间占其总空间的百分比<br>EC：Eden区的容量(Eden Capacity)<br>EU：Eden区已使用的空间(Eden Use)<br>新生代(Young)中的Survivor区：S0 S1<br>老年代(Old)：O<br>永久代(Permanent)：P<br>jdk8中：<br>元数据空间(Metaspace)：M<br>元数据空间中的压缩类空间(Compressed Class Space)：CCS<br>说明：<br>1&gt;jdk8中已经没有永久代了，取而代之的是元空间，元空间占用的是本地内存，不占用虚拟机的内存。<br>2&gt;Metaspace由Klass Metaspace和NoKlass Metaspace两部分组成。<br>3&gt;M表示Metaspace已使用的百分比，CCS表示Klass Metaspace已使用的百分比(CCS=CCSU/CCSC)。<br>4&gt;M的值达到了90%以上，不一定能说明metaspace已经用了很多了，因为内存是慢慢commit的，所以我们的分母是慢慢变大的，不过当我们commit到一定量的时候就不会再增长了。<br>5&gt;根据MC，MU，CCSC，CCSU来判断metaspace的状态更靠谱。(注：可以在jstat -gc 中看到MU)<br>注：S0/S0C/S0U、S1/S1C/S1U、O/OC/OU、P/PC/PU、M/MC/MU、CCS/CCSC/CCSU 与 E/EC/EU类似<br>LGCC：最后一次GC发生的原因<br>GCC： 当前GC发生的原因<br>jstat -gccapacity<br>NGCMN：新生代的最小(初始化)容量<br>NGCMX：新生代的最大容量<br>NGC： 新生代当前的容量<br>ECMX： 新生代中Eden区的最大容量<br>S0CMX、S1CMX：新生代中Survivor区的最大容量<br>OGCMN：老年代的最小(初始化)容量<br>OGCMX：老年代的最大容量<br>OGC： 老年代当前的容量<br>PGCMN：永久代的最小(初始化)容量<br>PGCMX：永久代的最大容量<br>PGC： 永久代当前的容量<br>jdk8中：<br>MCMN: 元数据空间最小容量<br>MCMX： 元数据空间最大容量<br>MC： 当前元数据空间的大小<br>CCSMN： 压缩类空间CCS(即:Klass Metaspace)的最小容量<br>CCSMX： 压缩类空间CCS(即:Klass Metaspace)的最大容量<br>CCSC： 当前压缩类空间CCS(即:Klass Metaspace)的大小<br>jstat -gcnew<br>TT： 老年化阈值。被移动到老年代之前，在新生代空存活的次数<br>MTT：最大老年化阈值。<br>DSS：幸存者区所需空间大小<br>注意：单位是都是KB</p>
+<p>相关命令解析：<br>jstat -gc<br>jstat -gcutil<br>jstat -gccause<br>新生代(Young)中的Eden区：E<br>E： Eden区已使用的空间占其总空间的百分比<br>EC：Eden区的容量(Eden Capacity)<br>EU：Eden区已使用的空间(Eden Use)<br>新生代(Young)中的Survivor区：S0 S1<br>老年代(Old)：O<br>永久代(Permanent)：P<br>jdk8中：<br>元数据空间(Metaspace)：M<br>元数据空间中的压缩类空间(Compressed Class Space)：CCS<br>说明：<br>1&gt;jdk8中已经没有永久代了，取而代之的是元空间，元空间占用的是本地内存，不占用虚拟机的内存。<br>2&gt;Metaspace由Klass Metaspace和NoKlass Metaspace两部分组成。<br>3&gt;M表示Metaspace已使用的百分比，CCS表示Klass Metaspace已使用的百分比(CCS&#x3D;CCSU&#x2F;CCSC)。<br>4&gt;M的值达到了90%以上，不一定能说明metaspace已经用了很多了，因为内存是慢慢commit的，所以我们的分母是慢慢变大的，不过当我们commit到一定量的时候就不会再增长了。<br>5&gt;根据MC，MU，CCSC，CCSU来判断metaspace的状态更靠谱。(注：可以在jstat -gc 中看到MU)<br>注：S0&#x2F;S0C&#x2F;S0U、S1&#x2F;S1C&#x2F;S1U、O&#x2F;OC&#x2F;OU、P&#x2F;PC&#x2F;PU、M&#x2F;MC&#x2F;MU、CCS&#x2F;CCSC&#x2F;CCSU 与 E&#x2F;EC&#x2F;EU类似<br>LGCC：最后一次GC发生的原因<br>GCC： 当前GC发生的原因<br>jstat -gccapacity<br>NGCMN：新生代的最小(初始化)容量<br>NGCMX：新生代的最大容量<br>NGC： 新生代当前的容量<br>ECMX： 新生代中Eden区的最大容量<br>S0CMX、S1CMX：新生代中Survivor区的最大容量<br>OGCMN：老年代的最小(初始化)容量<br>OGCMX：老年代的最大容量<br>OGC： 老年代当前的容量<br>PGCMN：永久代的最小(初始化)容量<br>PGCMX：永久代的最大容量<br>PGC： 永久代当前的容量<br>jdk8中：<br>MCMN: 元数据空间最小容量<br>MCMX： 元数据空间最大容量<br>MC： 当前元数据空间的大小<br>CCSMN： 压缩类空间CCS(即:Klass Metaspace)的最小容量<br>CCSMX： 压缩类空间CCS(即:Klass Metaspace)的最大容量<br>CCSC： 当前压缩类空间CCS(即:Klass Metaspace)的大小<br>jstat -gcnew<br>TT： 老年化阈值。被移动到老年代之前，在新生代空存活的次数<br>MTT：最大老年化阈值。<br>DSS：幸存者区所需空间大小<br>注意：单位是都是KB</p>
 <p>系统异常排查的定位方法</p>
 <p>定位相关进程的堆栈信息</p>
-<p>查看进程的信息<br>$ ps -mp <pid> -o THREAD,tid,time | sort -k2r</pid></p>
+<p>查看进程的信息<br>$ ps -mp <pid> -o THREAD,tid,time | sort -k2r</p>
 <p>该命令是查看某个进程下线程的具体信息，sort参数根据线程占用的cpu比例进行排序</p>
-<p>$ top -Hp <pid></pid></p>
+<p>$ top -Hp <pid></p>
 <p>查看某个进程下面线程的摘要信息，包括线程ID，cpu占用，内存占用，虚拟内存，运行时间等</p>
 <p>以上两个命令，主要查找进程里面消耗CPU最高的线程</p>
 <ol start="2">
@@ -367,15 +343,15 @@
 <ol start="3">
 <li>打印线程(十六进制)的堆栈信息</li>
 </ol>
-<p>$ jstack <pid> | grep <tid> -A 30</tid></pid></p>
-<p><tid> 是第 2 步打印得到的16进制的线程 id ，-A 30 是打印前30行</tid></p>
+<p>$ jstack <pid> | grep <tid> -A 30</p>
+<p><tid> 是第 2 步打印得到的16进制的线程 id ，-A 30 是打印前30行</p>
 <p>另一种比较简单粗暴的方法，查看进程的堆栈情况</p>
-<p>$ jstack <pid> &gt;&gt; jstack.out</pid></p>
+<p>$ jstack <pid> &gt;&gt; jstack.out</p>
 <p>先通过步骤 1 ，查找到消耗CPU最高的进程，将该进程的堆栈信息打印出来，输入到jstack.out 文件</p>
 <p>其它一些辅助命令</p>
-<p>$ jmap -heap <pid></pid></p>
+<p>$ jmap -heap <pid></p>
 <p>显示java堆的摘要信息，打印一个堆的摘要信息，包括使用的GC算法、堆配置信息和各内存区域内存使用信息</p>
-<p>$ jmap -histo[:live] <pid></pid></p>
+<p>$ jmap -histo[:live] <pid></p>
 <p>显示堆中对象的统计信息，其中包括每个Java类、对象数量、内存大小(单位：字节)、完全限定的类名。打印的虚拟机内部的类名称将会带有一个’*’前缀。如果指定了live子选项，则只计算活动的对象。</p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/e02b3732/">https://github.com/maxzhao-it/blog/post/e02b3732/</a> </p>
 
@@ -385,133 +361,39 @@
     
     
 
-      <footer class="post-footer">
+    <footer class="post-footer">
 
         
 
           <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-                <a href="/blog/post/a9539589/" rel="next" title="记录一次OOM排查过程">
+            <div class="post-nav-item">
+                <a href="/blog/post/a9539589/" rel="prev" title="记录一次OOM排查过程">
                   <i class="fa fa-chevron-left"></i> 记录一次OOM排查过程
                 </a>
             </div>
-
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-                <a href="/blog/post/63856b15/" rel="prev" title="RestTemplate设置超时时间">
+            <div class="post-nav-item">
+                <a href="/blog/post/63856b15/" rel="next" title="RestTemplate设置超时时间">
                   RestTemplate设置超时时间 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
-      </footer>
-    
+    </footer>
   </article>
-  
-  
-  
-
-  </div>
-
-
-          </div>
-          
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jstat"><span class="nav-number">1.</span> <span class="nav-text">jstat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#这是-class-例子"><span class="nav-number">1.0.1.</span> <span class="nav-text">这是 class 例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这是-gcutil-例子"><span class="nav-number">1.0.2.</span> <span class="nav-text">这是 gcutil 例子</span></a></li></ol></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <img class="site-author-image" itemprop="image" alt="赵联胜"
-    src="/blog/uploads/images/avatar.jpg">
-  <p class="site-author-name" itemprop="name">赵联胜</p>
-  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
-        
-          <span class="site-state-item-count">272</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
-          
-        <span class="site-state-item-count">127</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
-          
-        <span class="site-state-item-count">151</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
+
+
+
+
+
+
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://gitee.com/zhaoliansheng" title="GitHub &rarr; https://gitee.com/zhaoliansheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/blog/1441439636@qq.com" title="E-Mail &rarr; 1441439636@qq.com"><i class="fa fa-fw fa-envelope"></i></a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-  <div class="links-of-blogroll motion-element">
-    <div class="links-of-blogroll-title">
-      <i class="fa fa-fw fa-link"></i>
-      友情链接
-    </div>
-    <ul class="links-of-blogroll-list">
-        <li class="links-of-blogroll-item">
-          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https://www.jianshu.com/u/e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
-        </li>
-    </ul>
-  </div>
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
 
 <div class="copyright">
-  
   &copy; 
   <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
@@ -520,80 +402,27 @@
   <span class="author" itemprop="copyrightHolder">赵联胜</span>
 </div>
 
-        
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script src="/blog/lib/anime.min.js?v=3.1.0"></script>
-  <script src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/blog/js/utils.js?v=7.4.2"></script><script src="/blog/js/motion.js?v=7.4.2"></script>
-<script src="/blog/js/schemes/pisces.js?v=7.4.2"></script>
-<script src="/blog/js/next-boot.js?v=7.4.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
 
 
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
 
   
 
 
 
 
-
-
-  <script src="/blog/js/local-search.js?v=7.4.2"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
 
 </body>
 </html>
