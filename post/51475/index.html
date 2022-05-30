@@ -150,28 +150,28 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-count">280</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-count">128</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-count">153</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
-        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
       </span>
   </div>
 
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2021-08-23 16:46:30" itemprop="dateModified" datetime="2021-08-23T16:46:30+08:00">2021-08-23</time>
+      <time title="Modified: 2022-05-24 16:10:48" itemprop="dateModified" datetime="2022-05-24T16:10:48+08:00">2022-05-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -275,28 +275,22 @@
         <p>下面介绍的开发环境为 <code>postgresql 10.4</code> ;</p>
 <p>初始操作参考官方文档.</p>
 <h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="1-数据库编码"><a href="#1-数据库编码" class="headerlink" title="1.数据库编码"></a>1.数据库编码</h3><p>默认的编码不是<code> UTF-8</code> 如果有需要</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database encoding <span class="string">&#x27;UTF8&#x27;</span> template <span class="operator">=</span>  owner <span class="keyword">to</span> users;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create</span><br><span class="line">database encoding <span class="string">&#x27;UTF8&#x27;</span> template =  owner to <span class="built_in">users</span>;</span><br></pre></td></tr></table></figure>
 
-
-
-
-
-<h3 id="2-分布列"><a href="#2-分布列" class="headerlink" title="2.分布列"></a>2.分布列</h3><p>MPP 在表结构中, 有一个分布列的概念, 默认为主键, 否为为当前表的第一个字段. </p>
-<p>如果没有主键的表, 可以指定分布列. </p>
-<p>数据存储方式为 行存储. </p>
+<h3 id="2-分布列"><a href="#2-分布列" class="headerlink" title="2.分布列"></a>2.分布列</h3><p>MPP 在表结构中, 有一个分布列的概念, 默认为主键, 否为为当前表的第一个字段.</p>
+<p>如果没有主键的表, 可以指定分布列.</p>
+<p>数据存储方式为 行存储.</p>
 <p>备份的表结构中会有特殊 SQL参数, 不一定能还原到开发环境.</p>
-<p>解决方法: </p>
+<p>解决方法:</p>
 <ol>
 <li>单独备份表结构与数据</li>
 <li>对结构进行修改, 还原表结构</li>
 <li>还原数据</li>
 </ol>
-<h3 id="3-数据存储长度"><a href="#3-数据存储长度" class="headerlink" title="3.数据存储长度"></a>3.数据存储长度</h3><p>在我们开发环境中, <code>varchar(4)</code> 是可以存储 <strong><em>4</em>个汉字</strong>的, 但是在MPP中, 根据官方文档介绍, 只能存<strong><em>1</em>个</strong>汉字. </p>
+<h3 id="3-数据存储长度"><a href="#3-数据存储长度" class="headerlink" title="3.数据存储长度"></a>3.数据存储长度</h3><p>在我们开发环境中, <code>varchar(4)</code> 是可以存储 <strong><em>4</em>个汉字</strong>的, 但是在MPP中, 根据官方文档介绍, 只能存<strong><em>1</em>个</strong>汉字.</p>
 <p>也就是说, 在开发库还原到线上之前, 需要对数据的长度进行一次处理.</p>
-<p>可以根据下面的系统表查询出所需要修改的字段, 进行统一修改:  </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> table_name,column_name,data_type,character_maximum_length <span class="keyword">from</span> infomation_schema.columns </span><br><span class="line"><span class="keyword">where</span> table_schema<span class="operator">=</span><span class="string">&#x27;schema_name&#x27;</span> <span class="keyword">and</span> data_type <span class="keyword">in</span> (<span class="string">&#x27;character&#x27;</span>,<span class="string">&#x27;character varying&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-
+<p>可以根据下面的系统表查询出所需要修改的字段, 进行统一修改:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select table_name, column_name, data_type, character_maximum_length</span><br><span class="line">from infomation_schema.columns</span><br><span class="line"><span class="built_in">where</span> table_schema = <span class="string">&#x27;schema_name&#x27;</span></span><br><span class="line">  and data_type <span class="keyword">in</span> (<span class="string">&#x27;character&#x27;</span>, <span class="string">&#x27;character varying&#x27;</span>);</span><br></pre></td></tr></table></figure>
 
 <h3 id="4-数据类型"><a href="#4-数据类型" class="headerlink" title="4.数据类型"></a>4.数据类型</h3><p>判断条件中的  <code>flag=true</code> 是错误的.</p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/51475/">https://github.com/maxzhao-it/blog/post/51475/</a> </p>

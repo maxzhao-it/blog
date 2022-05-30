@@ -150,28 +150,28 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-count">280</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-count">128</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-count">153</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
-        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
       </span>
   </div>
 
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-05-16 20:43:57" itemprop="dateModified" datetime="2022-05-16T20:43:57+08:00">2022-05-16</time>
+      <time title="Modified: 2022-05-24 15:37:22" itemprop="dateModified" datetime="2022-05-24T15:37:22+08:00">2022-05-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -308,14 +308,21 @@
 <li><code>-XX:PretenureSizeThreshold=3145728 </code> 表示对象大于3145728（3M）时直接进入老年代分配，这里只能以字节作为单位</li>
 <li><code>-XX:MaxTenuringThreshold=1 </code> 表示对象年龄大于1，自动进入老年代，如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代.对于年老代比较多的应用，可以提高效率。<strong>如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间</strong>，增加在年轻代即被回收的概论。</li>
 </ul>
-<h4 id="垃圾回收统计信息"><a href="#垃圾回收统计信息" class="headerlink" title="垃圾回收统计信息"></a>垃圾回收统计信息</h4><ul>
+<h4 id="垃圾回收统计信息"><a href="#垃圾回收统计信息" class="headerlink" title="垃圾回收统计信息"></a>垃圾回收统计信息</h4><p><code>GC</code>日志：</p>
+<ul>
 <li><code>-XX:+PrintGC</code>  表示在控制台上打印出GC信息 <code>[GC 118250K-&gt;113543K(130112K), 0.0094143 secs]</code></li>
 <li><code>-XX:+PrintGCDetails </code> 表示在控制台上打印出GC详细信息 <code>[GC [DefNew: 8614K-&gt;8614K(9088K), 0.0000665 secs][Tenured: 112761K-&gt;10414K(121024K), 0.0433488 secs] 121376K-&gt;10414K(130112K), 0.0436268 secs]</code></li>
+<li><code>-XX:+PrintGCDateStamps </code> 表示在控制台上打印时间戳</li>
 <li><code>-XX:+PrintGCTimeStamps </code> 打印GC停顿耗时 <code>11.851: [GC 98328K-&gt;93620K(130112K), 0.0082960 secs]</code></li>
 <li><code>-XX:+PrintGCApplicationConcurrentTime</code>   打印每次垃圾回收前，程序未中断的执行时间。可与上面混合使用 <code>Application time: 0.5291524 seconds</code></li>
 <li><code>-XX:+PrintGCApplicationStoppedTime</code> 打印垃圾回收期间程序暂停的时间。可与上面混合使用 <code>Total time for which application threads were stopped: 0.0468229 seconds</code></li>
 <li><code>-XX:+PrintHeapAtGC</code>:表示可以看到每次GC前后堆内存布局,打印GC前后的详细堆栈信息</li>
-<li><code>-Xloggc:gc.log</code>:与上面几个配合使用，把相关日志信息记录到文件以便分析。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;`</span><br><span class="line">-Xloggc:gc.log-$current</span><br></pre></td></tr></table></figure></li>
+<li><code>-XX:+PrintTenuringDistribution</code>:打印存活实例年龄信息</li>
+<li><code>-Xloggc:./gclog/gc.log</code>:与上面几个配合使用，把相关日志信息记录到文件以便分析。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;`</span><br><span class="line">-Xloggc:./gclog/gc.log-$&#123;current&#125;</span><br></pre></td></tr></table></figure></li>
+<li><code>-XX:+UseGCLogFileRotation</code>  JVM 一个日志文件达到了20M以后，会生成新的，保留50个历史</li>
+<li><code>-XX:GCLogFileSize=20M</code>  JVM 一个日志文件达到了20M以后，会生成新的，保留50个历史</li>
+<li><code>-XX:NumberOfGCLogFiles=50 </code>  JVM 一个日志文件达到了20M以后，会生成新的，一共保存50个</li>
+<li></li>
 <li><code>-Xnoclassgc</code>  表示关闭JVM对类的垃圾回收</li>
 <li><code>-XX:+DisableExplictGC </code> 禁用显示GC</li>
 <li><code>-XX:+ExplictGCInvokesConcurrent</code>  使用并发方式处理显示GC</li>
@@ -326,11 +333,14 @@
 <li><code>-XX:+PrintTLAB</code>  表示可以看到TLAB的使用情况</li>
 <li><code>-XX:+TraceClassLoading</code> 表示查看类的加载信息   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -XX:+TraceClassLoading FollowClass </span><br></pre></td></tr></table></figure></li>
 <li><code>-XX:+TraceClassUnLoading</code>  表示查看类的卸载信息</li>
-<li><code>-XX:+HeapDumpOnOutOfMemoryError</code>  表示可以让虚拟机在出现内存溢出异常时Dump出当前的堆内存转储快照</li>
-<li><code>-XX:HeapDumpPath=G:\Documents\jvm\</code></li>
 <li><code>-XX:CompileThreshold=1000</code>  表示一个方法被调用1000次之后，会被认为是热点代码，并触发即时编译</li>
 <li><code>-XX:+UseSpining</code>  开启自旋锁</li>
 <li><code>-XX:+PreBlockSpin</code>  更改自旋锁的自旋次数，使用这个参数必须先开启自旋锁。</li>
+</ul>
+<p>异常：</p>
+<ul>
+<li><code>-XX:+HeapDumpOnOutOfMemoryError</code>  表示可以让虚拟机在出现内存溢出异常时Dump出当前的堆内存转储快照</li>
+<li><code>-XX:HeapDumpPath./dump/</code></li>
 </ul>
 <h2 id="回收器选择"><a href="#回收器选择" class="headerlink" title="回收器选择"></a>回收器选择</h2><p><code>JVM</code>给了四种选择：</p>
 <p>串行收集器、并行收集器、并发收集器、<code>G1</code></p>
@@ -412,8 +422,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/post/848e11b6/" rel="prev" title="Redis集群部署">
-                  <i class="fa fa-chevron-left"></i> Redis集群部署
+                <a href="/blog/post/f9aa9996/" rel="prev" title="分析JVM内存溢出的hprof">
+                  <i class="fa fa-chevron-left"></i> 分析JVM内存溢出的hprof
                 </a>
             </div>
             <div class="post-nav-item">

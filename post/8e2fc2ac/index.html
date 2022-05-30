@@ -150,28 +150,28 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">272</span>
+          <span class="site-state-item-count">280</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">127</span>
+        <span class="site-state-item-count">128</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-count">153</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
-        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
       </span>
   </div>
 
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-03-03 09:56:19" itemprop="dateModified" datetime="2022-03-03T09:56:19+08:00">2022-03-03</time>
+      <time title="Modified: 2022-05-24 16:12:24" itemprop="dateModified" datetime="2022-05-24T16:12:24+08:00">2022-05-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -281,7 +281,7 @@
 <p><a target="_blank" rel="noopener" href="https://www.citusdata.com/getting-started/">官方介绍</a></p>
 </blockquote>
 <h2 id="Citus简介"><a href="#Citus简介" class="headerlink" title="Citus简介"></a><strong>Citus</strong>简介</h2><p>Citus以插件的方式扩展到postgresql中，独立于postgresql内核，所以能很快的跟上pg主版本的更新，部署也比较简单，是现在非常流行的分布式方案。Citus在苏宁有大规模应用，微软也提供citus的商业支持。下面是citus的架构：</p>
-<p><img src="/blog/blog/uploads/images/2018042723003371.png" alt="2018042723003371"></p>
+<p><img src="/blog/uploads/images/2018042723003371.png" alt="2018042723003371"></p>
 <p><code>Citus</code><br>节点主要分为协调节点和工作节点，协调节点不存储真实数据，只存储数据分布的元信息，实际的数据被分成若干分片，打散到不同worker节点中，应用连接协调节点，协调节点进行sql解析，生成分布式执行计划，下发到worker节点执行，cn将结果汇总返回客户端。</p>
 <blockquote>
 <p>来自 <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1563023">PostgreSQL的几种分布式架构对比</a></p>
@@ -320,8 +320,6 @@
 
 <h2 id="在Worker节点上执行"><a href="#在Worker节点上执行" class="headerlink" title="在Worker节点上执行"></a>在<code>Worker</code>节点上执行</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;host    all             all             192.168.2.100/32            trust&quot;</span> &gt;&gt; /var/lib/pgsql/10/data/pg_hba.conf</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">systemctl restart postgresql-10</span><br></pre></td></tr></table></figure>
 
-
-
 <h2 id="在主节点上执行"><a href="#在主节点上执行" class="headerlink" title="在主节点上执行"></a>在主节点上执行</h2><h3 id="添加-worker-节点"><a href="#添加-worker-节点" class="headerlink" title="添加 worker 节点"></a>添加 <code>worker</code> 节点</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新版：citus_add_node  旧版：master_add_node</span></span><br><span class="line">sudo -i -u postgres psql -c <span class="string">&quot;SELECT * from master_add_node(&#x27;192.168.2.102&#x27;, 5432);&quot;</span></span><br><span class="line">sudo -i -u postgres psql -c <span class="string">&quot;SELECT * from master_add_node(&#x27;192.168.2.102&#x27;, 5432);&quot;</span></span><br><span class="line">sudo -i -u postgres psql -c <span class="string">&quot;SELECT * from master_add_node(&#x27;192.168.2.103&#x27;, 5432);&quot;</span></span><br><span class="line">sudo -i -u postgres psql -c <span class="string">&quot;SELECT * from master_add_node(&#x27;192.168.2.104&#x27;, 5432);&quot;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="查看节点"><a href="#查看节点" class="headerlink" title="查看节点"></a>查看节点</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新版：citus_get_active_worker_nodes  旧版：master_get_active_worker_nodes</span></span><br><span class="line">sudo -i -u postgres psql -c <span class="string">&quot;SELECT * FROM master_get_active_worker_nodes();&quot;</span></span><br></pre></td></tr></table></figure>
@@ -329,8 +327,6 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   node_name   | node_port</span><br><span class="line">---------------+-----------</span><br><span class="line"> 192.168.2.101 |      5432</span><br><span class="line"> 192.168.2.103 |      5432</span><br><span class="line"> 192.168.2.102 |      5432</span><br><span class="line"> 192.168.2.104 |      5432</span><br></pre></td></tr></table></figure>
 
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -i -u postgres psql</span><br></pre></td></tr></table></figure>
-
-
 
 <p>这个，有点复杂。</p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/8e2fc2ac/">https://github.com/maxzhao-it/blog/post/8e2fc2ac/</a> </p>
