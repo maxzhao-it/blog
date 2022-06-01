@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">280</span>
+          <span class="site-state-item-count">283</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-count">155</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,456 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/15456/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/15456/" class="post-title-link" itemprop="url">Nacos启动配置管理-SpringCloud(1)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-05-24 15:38:14" itemprop="dateModified" datetime="2022-05-24T15:38:14+08:00">2022-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/SpringCloud/" itemprop="url" rel="index"><span itemprop="name">SpringCloud</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/SpringCloud/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/quick-start-spring-cloud.html">Nacos官方文档#启动配置管理</a></p>
+<blockquote>
+<p>时间线——2021-04-19—</p>
+<p><code>Nacos</code> 代码实例中的 <code>nacos-spring-boot-example/pom.xml</code>中的 <code>SpringBoot:2.0.3.RELEASE</code> ，其它 <code>example</code> 中的版本为 <code>2.0.4.RELEASE</code> 有可能会启动报错，改成 <code>2.0.4.RELEASE</code> 。  </p>
+</blockquote>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;latest.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="组件版本关系"><a href="#组件版本关系" class="headerlink" title="组件版本关系"></a>组件版本关系</h4><table>
+<thead>
+<tr>
+<th>Spring Cloud Alibaba Version</th>
+<th>Sentinel Version</th>
+<th>Nacos Version</th>
+<th>RocketMQ Version</th>
+<th>Dubbo Version</th>
+<th>Seata Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2021.1 or 2.2.5.RELEASE or 2.1.4.RELEASE or 2.0.4.RELEASE</td>
+<td>1.8.0</td>
+<td>1.4.1</td>
+<td>4.4.0</td>
+<td>2.7.8</td>
+<td>1.3.0</td>
+</tr>
+</tbody></table>
+<h4 id="毕业版本依赖关系-推荐使用"><a href="#毕业版本依赖关系-推荐使用" class="headerlink" title="毕业版本依赖关系(推荐使用)"></a>毕业版本依赖关系(推荐使用)</h4><table>
+<thead>
+<tr>
+<th>Spring Cloud Version</th>
+<th>Spring Cloud Alibaba Version</th>
+<th>Spring Boot Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Spring Cloud 2020.0</td>
+<td>2021.1</td>
+<td>2.4.2.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Hoxton.SR8</td>
+<td>2.2.5.RELEASE</td>
+<td>2.3.2.RELEASE</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><a href="https://github.com/spring-cloud-incubator/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E">版本说明 Wiki</a></p>
+<p>打不开 <code>github</code> 可以<a href="#dependency_info">点这里</a></p>
+</blockquote>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.cloud.nacos.config.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br><span class="line"><span class="comment"># Nacos 控制台添加配置：</span></span><br><span class="line"><span class="comment"># 在 Nacos Spring Cloud 中，dataId 的完整格式如下：$&#123;prefix&#125;-$&#123;spring.profiles.active&#125;.$&#123;file-extension&#125;</span></span><br><span class="line"><span class="comment"># spring.profiles.active 即为当前环境对应的 profile，当 spring.profiles.active 为空时，对应的连接符 - 也将不存在</span></span><br><span class="line"><span class="comment"># prefix 默认为 spring.application.name 的值，也可以通过配置项 spring.cloud.nacos.config.prefix来配置。</span></span><br><span class="line"><span class="comment"># Data ID：example.properties</span></span><br><span class="line"><span class="comment"># Group：DEFAULT_GROUP</span></span><br><span class="line"><span class="comment"># 配置内容：useLocalCache=true</span></span><br><span class="line"><span class="attr">spring.application.name</span>=<span class="string">example</span></span><br><span class="line"><span class="attr">spring.profiles.active</span>=<span class="string"></span></span><br><span class="line"><span class="comment"># dataId 的 prefix</span></span><br><span class="line"><span class="comment">#spring.cloud.nacos.config.prefix:</span></span><br><span class="line"><span class="comment"># 指定配置的后缀，支持 properties、yaml、yml，默认为 properties</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.file-extension</span>=<span class="string">properties</span></span><br><span class="line"><span class="comment">#spring.cloud.nacos.config.file-extension=yaml</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>通过 <code>Spring Cloud</code> 原生注解 <code>@RefreshScope</code> 实现配置自动更新。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/config&quot;)</span></span><br><span class="line"><span class="meta">@RefreshScope</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConfigController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;useLocalCache:false&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> useLocalCache;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/get&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> useLocalCache;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ol>
+<li><p>首先通过调用 <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/open-api.html">Nacos Open API</a> 向 <code>Nacos Server</code> 发布配置：<code>dataId</code> 为<code>example.properties</code>，内容为<code>useLocalCache=true</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example.properties&amp;group=DEFAULT_GROUP&amp;content=useLocalCache=true&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行 <code>NacosConfigApplication</code>，调用 <code>curl http://localhost:8080/config/get</code>，返回内容是 <code>true</code>。</p>
+</li>
+<li><p>再次调用 <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/open-api.html">Nacos Open API</a> 向 <code>Nacos server</code> 发布配置：<code>dataId</code> 为<code>example.properties</code>，内容为<code>useLocalCache=false</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example.properties&amp;group=DEFAULT_GROUP&amp;content=useLocalCache=false&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再次访问 <code>http://localhost:8080/config/get</code>，此时返回内容为<code>false</code>，说明程序中的<code>useLocalCache</code>值已经被动态更新了。</p>
+</li>
+</ol>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="组件版本关系-1"><a href="#组件版本关系-1" class="headerlink" title="组件版本关系"></a><span id="dependency_info">组件版本关系</span></h3><table>
+<thead>
+<tr>
+<th>Spring Cloud Alibaba Version</th>
+<th>Sentinel Version</th>
+<th>Nacos Version</th>
+<th>RocketMQ Version</th>
+<th>Dubbo Version</th>
+<th>Seata Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2021.1 or 2.2.5.RELEASE or 2.1.4.RELEASE or 2.0.4.RELEASE</td>
+<td>1.8.0</td>
+<td>1.4.1</td>
+<td>4.4.0</td>
+<td>2.7.8</td>
+<td>1.3.0</td>
+</tr>
+<tr>
+<td>2.2.3.RELEASE or 2.1.3.RELEASE or 2.0.3.RELEASE</td>
+<td>1.8.0</td>
+<td>1.3.3</td>
+<td>4.4.0</td>
+<td>2.7.8</td>
+<td>1.3.0</td>
+</tr>
+<tr>
+<td>2.2.1.RELEASE or 2.1.2.RELEASE or 2.0.2.RELEASE</td>
+<td>1.7.1</td>
+<td>1.2.1</td>
+<td>4.4.0</td>
+<td>2.7.6</td>
+<td>1.2.0</td>
+</tr>
+<tr>
+<td>2.2.0.RELEASE</td>
+<td>1.7.1</td>
+<td>1.1.4</td>
+<td>4.4.0</td>
+<td>2.7.4.1</td>
+<td>1.0.0</td>
+</tr>
+<tr>
+<td>2.1.1.RELEASE or 2.0.1.RELEASE or 1.5.1.RELEASE</td>
+<td>1.7.0</td>
+<td>1.1.4</td>
+<td>4.4.0</td>
+<td>2.7.3</td>
+<td>0.9.0</td>
+</tr>
+<tr>
+<td>2.1.0.RELEASE or 2.0.0.RELEASE or 1.5.0.RELEASE</td>
+<td>1.6.3</td>
+<td>1.1.1</td>
+<td>4.4.0</td>
+<td>2.7.3</td>
+<td>0.7.1</td>
+</tr>
+</tbody></table>
+<h3 id="毕业版本依赖关系-推荐使用-1"><a href="#毕业版本依赖关系-推荐使用-1" class="headerlink" title="毕业版本依赖关系(推荐使用)"></a><span id="dependency_info">毕业版本依赖关系(推荐使用)</span></h3><table>
+<thead>
+<tr>
+<th>Spring Cloud Version</th>
+<th>Spring Cloud Alibaba Version</th>
+<th>Spring Boot Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Spring Cloud 2020.0</td>
+<td>2021.1</td>
+<td>2.4.2.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Hoxton.SR8</td>
+<td>2.2.5.RELEASE</td>
+<td>2.3.2.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Greenwich.SR6</td>
+<td>2.1.4.RELEASE</td>
+<td>2.1.13.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Hoxton.SR3</td>
+<td>2.2.1.RELEASE</td>
+<td>2.2.5.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Hoxton.RELEASE</td>
+<td>2.2.0.RELEASE</td>
+<td>2.2.X.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Greenwich</td>
+<td>2.1.2.RELEASE</td>
+<td>2.1.X.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Finchley</td>
+<td>2.0.4.RELEASE(停止维护，建议升级)</td>
+<td>2.0.X.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Edgware</td>
+<td>1.5.1.RELEASE(停止维护，建议升级)</td>
+<td>1.5.X.RELEASE</td>
+</tr>
+</tbody></table>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/15456/">https://github.com/maxzhao-it/blog/post/15456/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/26399/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/26399/" class="post-title-link" itemprop="url">SpringBoot使用Log4j2.md</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-05-24 15:37:22" itemprop="dateModified" datetime="2022-05-24T15:37:22+08:00">2022-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Logger/" itemprop="url" rel="index"><span itemprop="name">Logger</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前 <code>JAVA</code> 中使用最多的三大日志框架:</p>
+<ul>
+<li><code>logback</code> ：<code>SpringBoot</code> 中的默认框架</li>
+<li><code>log4j</code></li>
+<li><code>log4j2</code></li>
+</ul>
+<p>打印日志也面临着消耗性能，导致高并发性能下降。</p>
+<p>优化日志一般也是从更<strong>换性能更高的日志框架</strong>做起。（对于以前的项目来讲，可以从其他日志框架切换到 <code>log4j2</code>，一般来讲，日志的性能会有一部分的提高。）</p>
+<p>然后可以使用异步日志。关掉控制台日志输出等等。</p>
+<h2 id="log4j2-日志"><a href="#log4j2-日志" class="headerlink" title="log4j2 日志"></a><code>log4j2</code> 日志</h2><h3 id="配置-pom-xml"><a href="#配置-pom-xml" class="headerlink" title="配置 pom.xml"></a>配置 <code>pom.xml</code></h3><p>这里要注意， <code>Springboot</code> 原来会默认引入 <code>logback</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-log4j2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--增加识别yaml格式依赖，加上这个才能辨认到log4j2.yml文件 ;spring-boot-starter 中也引入了 snakeyaml--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.dataformat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-dataformat-yaml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="去掉-Springboot-原来的日志"><a href="#去掉-Springboot-原来的日志" class="headerlink" title="去掉 Springboot 原来的日志"></a>去掉 <code>Springboot</code> 原来的日志</h4><p>其它地方引入的 <code>spring-boot-starter-logging</code> 也要去掉。</p>
+<blockquote>
+<p>这里推荐一个 <code>IDEA plugin</code> 叫 <code>Maven Helper</code>.<br>打开 <code>pom.xml</code> 会在左下角有一个 <code>Dependency analyzer</code> 页面，可以搜索目标依赖<br>右键点击需要操作的依赖，可以很方便的 <code>exclude</code></p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-log4j2-yml"><a href="#配置-log4j2-yml" class="headerlink" title="配置 log4j2.yml"></a>配置 <code>log4j2.yml</code></h3><p>下面有简要列出了基础功能</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">  <span class="attr">status:</span> <span class="string">INFO</span></span><br><span class="line">  <span class="attr">Properties:</span> <span class="comment"># 定义全局变量</span></span><br><span class="line">    <span class="attr">Property:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">log.level.console</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">info</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">log.path</span> <span class="comment">#日志存储路径</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">app_log</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">project.name</span> <span class="comment">#日志项目名称</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">boot</span></span><br><span class="line">  <span class="attr">Appenders:</span></span><br><span class="line">    <span class="attr">Console:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">CONSOLE</span></span><br><span class="line">      <span class="attr">target:</span> <span class="string">SYSTEM_OUT</span></span><br><span class="line">      <span class="attr">PatternLayout:</span></span><br><span class="line">        <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%4p %t (%F:%L) - %m%n&quot;</span></span><br><span class="line">    <span class="attr">RollingFile:</span></span><br><span class="line">      <span class="comment"># 输出到文件，超过64MB归档</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ROLLING_FILE</span></span><br><span class="line">        <span class="attr">ignoreExceptions:</span> <span class="literal">false</span></span><br><span class="line">        <span class="attr">fileName:</span> <span class="string">$&#123;log.path&#125;/$&#123;project.name&#125;.log</span></span><br><span class="line">        <span class="attr">filePattern:</span> <span class="string">&quot;$&#123;log.path&#125;/$$&#123;date:yyyy-MM&#125;/$&#123;project.name&#125; -%d&#123;yyyy-MM-dd&#125;-%i.log.gz&quot;</span></span><br><span class="line">        <span class="attr">PatternLayout:</span></span><br><span class="line">          <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%4p %t (%F:%L) - %m%n&quot;</span></span><br><span class="line">        <span class="attr">Policies:</span></span><br><span class="line">          <span class="comment"># 日志大于 64MB 会生成新的日志</span></span><br><span class="line">          <span class="attr">SizeBasedTriggeringPolicy:</span></span><br><span class="line">            <span class="attr">size:</span> <span class="string">&quot;64 MB&quot;</span></span><br><span class="line">        <span class="attr">DefaultRolloverStrategy:</span></span><br><span class="line">          <span class="attr">max:</span> <span class="number">1000</span></span><br><span class="line">  <span class="attr">Loggers:</span></span><br><span class="line">    <span class="attr">Root:</span></span><br><span class="line">      <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">      <span class="attr">AppenderRef:</span></span><br><span class="line">        <span class="comment"># 这里设置的 ref ，在 Logger 中不需要再次设置，Logger 继承了 Root</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">CONSOLE</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">ROLLING_FILE</span></span><br><span class="line">    <span class="attr">Logger:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">boot</span></span><br><span class="line">        <span class="attr">additivity:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">level:</span> <span class="string">DEBUG</span></span><br><span class="line">        <span class="attr">AppenderRef:</span></span><br><span class="line">        <span class="comment"># logger 继承了 root 则这里不需要 `- ref: CONSOLE` 等 root 中已经存在的 `AppenderRef`  否则会造成重复打印</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="#question_reprint_log_reasons">重复打印日志的原因</a></p>
+<h2 id="简单的问题"><a href="#简单的问题" class="headerlink" title="简单的问题"></a>简单的问题</h2><h3 id="重复打印日志"><a href="#重复打印日志" class="headerlink" title="重复打印日志"></a><span id="question_reprint_log_reasons">重复打印日志</span></h3><p><code>Logger</code> 继承了 <code>Root</code>，所以<code>Root</code>中的 <code>AppenderRef</code> 配置，都会被 <code>Logger</code> 继承过去。</p>
+<p>如果不想 <code>Logger</code> 继承了 <code>Root</code>，只需要添加 <code>additivity</code>属性为 <code>false</code>，<code>additivity</code>默认是为 <code>true</code> 的。</p>
+<h3 id="修改颜色"><a href="#修改颜色" class="headerlink" title="修改颜色"></a>修改颜色</h3><p>这里提供一个华丽胡哨的颜色，配置在 <code>SYSTEM_OUT</code> 中。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pattern:</span> <span class="string">&quot;%clr&#123;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;&#125;&#123;faint&#125;:%clr&#123;%-5p&#125; %clr&#123;$&#123;sys:PID&#125;&#125;&#123;magenta&#125; %clr&#123;---&#125;&#123;faint&#125; %clr&#123;[%-32t]&#125;&#123;faint&#125; %clr&#123;%-40.40c&#123;1.&#125; (%F:%L)&#125;&#123;cyan&#125; %clr&#123;:&#125;&#123;faint&#125; %m%n%xwEx&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/26399/">https://github.com/maxzhao-it/blog/post/26399/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/17024/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/17024/" class="post-title-link" itemprop="url">网页版wx有选择的回复消息</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2021-08-26 14:56:58" itemprop="dateModified" datetime="2021-08-26T14:56:58+08:00">2021-08-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/JS/" itemprop="url" rel="index"><span itemprop="name">JS</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> scope = angular.<span class="title function_">element</span>($(<span class="string">&#x27;.btn_send&#x27;</span>)).<span class="title function_">scope</span>();</span><br><span class="line"><span class="keyword">var</span> notNames = [];</span><br><span class="line">scope.$watch(<span class="string">&#x27;chatContent&#x27;</span>, <span class="keyword">function</span> (<span class="params">newValue, oldValue</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (newValue === oldValue) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> msg = newValue[newValue.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">if</span> (msg.<span class="property">MsgType</span> != <span class="number">1</span> || !msg.<span class="property">MMActualContent</span>) &#123;</span><br><span class="line">        <span class="comment">/*当前不为文字时*/</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (msg.<span class="property">MMIsSend</span>) &#123;</span><br><span class="line">        <span class="comment">/*我发送的消息不考虑*/</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;我发送的消息不考虑&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (msg.<span class="property">MMActualContent</span>.<span class="property">length</span> == <span class="number">4</span>) &#123;</span><br><span class="line">        <span class="comment">// $(&#x27;#editArea&#x27;).html(&#x27;当前&#x27; + msg.MMActualContent + &#x27;可能是成语&#x27;);</span></span><br><span class="line">        <span class="comment">// scope.editAreaCtn = &#x27;当前&#x27; + msg.MMActualContent + &#x27;可能是成语&#x27;;</span></span><br><span class="line">        <span class="keyword">var</span> nameStart = msg.<span class="property">MMActualContent</span>.<span class="title function_">substring</span>(<span class="number">3</span>);</span><br><span class="line">        $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">            <span class="comment">// url: &#x27;http://127.0.0.1:8888/chengyu/name_start?nameStart=&#x27; + nameStart + &#x27;&amp;notNames=&#x27; + notNames.join(&#x27;,&#x27;),</span></span><br><span class="line">            <span class="attr">url</span>: <span class="string">&#x27;http://127.0.0.1:8888/chengyu/name?name=&#x27;</span> + msg.<span class="property">MMActualContent</span> + <span class="string">&#x27;&amp;notNames=&#x27;</span> + notNames.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>),</span><br><span class="line">            <span class="attr">success</span>: <span class="function">(<span class="params">resp</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (resp&amp;&amp;resp!=<span class="string">&#x27;null&#x27;</span>) &#123;</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;获取成语成功 =====&gt; &#x27;</span> + resp);</span><br><span class="line">                    scope.<span class="property">editAreaCtn</span> = resp;</span><br><span class="line">                    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                        $(<span class="string">&#x27;.btn_send&#x27;</span>).<span class="title function_">click</span>();</span><br><span class="line">                    &#125;, <span class="number">200</span>)</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;获取成语失败 =====&gt; &#x27;</span> + resp);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;=====custom-======  &quot;</span>, msg.<span class="property">MMActualContent</span>);</span><br><span class="line">&#125;, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//var msg=scope.chatContent[scope.chatContent.length-1];</span></span><br><span class="line"><span class="comment">//msg.MMActualContent</span></span><br></pre></td></tr></table></figure>
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/17024/">https://github.com/maxzhao-it/blog/post/17024/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1007,279 +1457,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/49279/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/49279/" class="post-title-link" itemprop="url">MyBatisPlus代码生成器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-05-24 15:37:21" itemprop="dateModified" datetime="2022-05-24T15:37:21+08:00">2022-05-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/MyBatisPlus/" itemprop="url" rel="index"><span itemprop="name">MyBatisPlus</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一般情况下，在 SpringBoot 中，生成的代码默认在 <code>resources</code> 目录下，<code>Mapper.xml</code> 的路径也是固定的。</p>
-<p>当前路径不建议修改，因为在打包时，<code>Mapper.xml</code> 与 <code>Mapper.class</code> 是在一个文件夹下的。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.core.toolkit.StringPool;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.AutoGenerator;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.InjectionConfig;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.*;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.converts.OracleTypeConvert;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.converts.PostgreSqlTypeConvert;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.po.TableInfo;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.rules.DbColumnType;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代码生成器</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;当前使用 freemarker 引擎需要 pom 依赖&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021-04-08</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CodeGenerator</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 文件存放位置</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;当前为当前项目位置&lt;/p&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PROJECT_PATH</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;user.dir&quot;</span>);</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 包的起始路径</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PACKAGE_PARENT</span> <span class="operator">=</span> <span class="string">&quot;boot&quot;</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 模块名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">MODULE_NAME</span> <span class="operator">=</span> <span class="string">&quot;chats&quot;</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 文件注释下的 auther 名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">AUTHOR</span> <span class="operator">=</span> <span class="string">&quot;maxzhao&quot;</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 表名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] TABLE_NAMES = <span class="string">&quot;chat_group,chat_group_user,chat_history,chat_history_status,chat_session,chat_user,chat_user_grouping,chat_user_grouping_user&quot;</span>.split(<span class="string">&quot;,&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 连接地址</span></span><br><span class="line"><span class="comment">     * oracle = &quot;jdbc:mysql://127.0.0.1:3306/boot?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true&quot;;</span></span><br><span class="line"><span class="comment">     * postgresql = &quot;jdbc:postgresql://127.0.0.1:5432/postgres?charSet=utf8&amp;currentSchema=pg_schema&quot;;</span></span><br><span class="line"><span class="comment">     * mysql8 = &quot;jdbc:oracle:thin:@32.1.6.219:1521/orcl&quot;;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DS_URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://127.0.0.1:3306/boot?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true&quot;</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 驱动</span></span><br><span class="line"><span class="comment">     * oracle = &quot;oracle.jdbc.driver.OracleDriver&quot;;</span></span><br><span class="line"><span class="comment">     * postgresql = &quot;org.postgresql.Driver&quot;;</span></span><br><span class="line"><span class="comment">     * mysql8 = &quot;com.mysql.cj.jdbc.Driver&quot;;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DS_DRIVER_NAME</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.cj.jdbc.Driver&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DS_USERNAME</span> <span class="operator">=</span> <span class="string">&quot;root&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DS_PASSWORD</span> <span class="operator">=</span> <span class="string">&quot;maxzhao&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * PostgreSql 的 schema（其它数据库不需要）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">POSTGRESQL_SCHEMA</span> <span class="operator">=</span> <span class="string">&quot;pg_schema&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * RUN</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        codeGenerate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码生成器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">codeGenerate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">/*代码生成器*/</span></span><br><span class="line">        <span class="type">AutoGenerator</span> <span class="variable">mpg</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AutoGenerator</span>();</span><br><span class="line">        <span class="comment">/*全局配置*/</span></span><br><span class="line">        mpg.setGlobalConfig(getGlobalConfig());</span><br><span class="line">        <span class="comment">/*数据源配置*/</span></span><br><span class="line">        mpg.setDataSource(getDataSourceConfig());</span><br><span class="line">        <span class="comment">/*跟包相关的配置项*/</span></span><br><span class="line">        mpg.setPackageInfo(getPackageConfig());</span><br><span class="line">        <span class="comment">/*自定义配置*/</span></span><br><span class="line">        mpg.setCfg(getInjectionConfig());</span><br><span class="line">        mpg.setTemplate(<span class="keyword">new</span> <span class="title class_">TemplateConfig</span>().setXml(<span class="literal">null</span>));</span><br><span class="line">        <span class="comment">/*策略配置*/</span></span><br><span class="line">        mpg.setStrategy(getStrategyConfig());</span><br><span class="line">        <span class="comment">// 选择 freemarker 引擎需要指定如下加，注意 pom 依赖必须有！</span></span><br><span class="line">        mpg.setTemplateEngine(<span class="keyword">new</span> <span class="title class_">FreemarkerTemplateEngine</span>());</span><br><span class="line">        mpg.execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 全局配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> GlobalConfig <span class="title function_">getGlobalConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">GlobalConfig</span> <span class="variable">gc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GlobalConfig</span>();</span><br><span class="line">        <span class="comment">/*生成文件的输出目录【默认 D 盘根目录】*/</span></span><br><span class="line">        gc.setOutputDir(PROJECT_PATH + File.separator + <span class="string">&quot;src&quot;</span> + File.separator + <span class="string">&quot;main&quot;</span> + File.separator + <span class="string">&quot;java&quot;</span>);</span><br><span class="line">        <span class="comment">/*是否覆盖已有文件*/</span></span><br><span class="line">        gc.setFileOverride(<span class="literal">false</span>);</span><br><span class="line">        <span class="comment">/*是否打开输出目录*/</span></span><br><span class="line">        gc.setOpen(<span class="literal">false</span>);</span><br><span class="line">        gc.setAuthor(AUTHOR);</span><br><span class="line">        gc.setSwagger2(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> gc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据库配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DataSourceConfig <span class="title function_">getDataSourceConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">DataSourceConfig</span> <span class="variable">dsc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DataSourceConfig</span>();</span><br><span class="line">        dsc.setUrl(DS_URL);</span><br><span class="line">        dsc.setDriverName(DS_DRIVER_NAME);</span><br><span class="line">        dsc.setUsername(DS_USERNAME);</span><br><span class="line">        dsc.setPassword(DS_PASSWORD);</span><br><span class="line">        <span class="keyword">if</span> (DS_DRIVER_NAME.contains(<span class="string">&quot;postgresql&quot;</span>)) &#123;</span><br><span class="line">            initPGSqlDataSourceConfig(dsc);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (DS_DRIVER_NAME.contains(<span class="string">&quot;mysql&quot;</span>)) &#123;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (DS_DRIVER_NAME.contains(<span class="string">&quot;oracle&quot;</span>)) &#123;</span><br><span class="line">            initOracleDataSourceConfig(dsc);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dsc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * PostgreSQL数据库连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">initPGSqlDataSourceConfig</span><span class="params">(DataSourceConfig dsc)</span> &#123;</span><br><span class="line">        dsc.setSchemaName(POSTGRESQL_SCHEMA);</span><br><span class="line">        dsc.setTypeConvert(<span class="keyword">new</span> <span class="title class_">PostgreSqlTypeConvert</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ORACLE 数据库连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">initOracleDataSourceConfig</span><span class="params">(DataSourceConfig dsc)</span> &#123;</span><br><span class="line">        dsc.setTypeConvert(<span class="keyword">new</span> <span class="title class_">OracleTypeConvert</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> DbColumnType <span class="title function_">processTypeConvert</span><span class="params">(GlobalConfig globalConfig, String fieldType)</span> &#123;</span><br><span class="line">                <span class="comment">/*可以参考 super.processTypeConvert*/</span></span><br><span class="line">                <span class="keyword">return</span> (DbColumnType) <span class="built_in">super</span>.processTypeConvert(globalConfig, fieldType);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 跟包相关的配置项</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> PackageConfig <span class="title function_">getPackageConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">PackageConfig</span> <span class="variable">pc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PackageConfig</span>();</span><br><span class="line">        <span class="comment">/*父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名*/</span></span><br><span class="line">        pc.setParent(PACKAGE_PARENT);</span><br><span class="line">        <span class="comment">/*父包模块名*/</span></span><br><span class="line">        pc.setModuleName(MODULE_NAME);</span><br><span class="line">        <span class="comment">/*Entity包名*/</span></span><br><span class="line">        pc.setEntity(<span class="string">&quot;model.entity&quot;</span>);</span><br><span class="line">        <span class="comment">/*Controller包名*/</span></span><br><span class="line">        pc.setController(<span class="string">&quot;api&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> pc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 自定义配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> InjectionConfig <span class="title function_">getInjectionConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">InjectionConfig</span> <span class="variable">cfg</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InjectionConfig</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initMap</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="comment">// to do nothing</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        List&lt;FileOutConfig&gt; focList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">/*配置 Mapper.xml的生成位置*/</span></span><br><span class="line">        focList.add(<span class="keyword">new</span> <span class="title class_">FileOutConfig</span>(<span class="string">&quot;/templates/mapper.xml.ftl&quot;</span>) &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> String <span class="title function_">outputFile</span><span class="params">(TableInfo tableInfo)</span> &#123;</span><br><span class="line">                <span class="comment">// 自定义输入文件名称</span></span><br><span class="line">                <span class="keyword">return</span> PROJECT_PATH + File.separator +</span><br><span class="line">                        <span class="string">&quot;src&quot;</span> + File.separator +</span><br><span class="line">                        <span class="string">&quot;main&quot;</span> + File.separator +</span><br><span class="line">                        <span class="string">&quot;resources&quot;</span> + File.separator +</span><br><span class="line">                        PACKAGE_PARENT.replace(<span class="string">&quot;.&quot;</span>, File.separator) +</span><br><span class="line">                        File.separator +</span><br><span class="line">                        MODULE_NAME.replace(<span class="string">&quot;.&quot;</span>, File.separator) +</span><br><span class="line">                        File.separator + <span class="string">&quot;mapper&quot;</span> + File.separator +</span><br><span class="line">                        tableInfo.getEntityName() + <span class="string">&quot;Mapper&quot;</span> + StringPool.DOT_XML;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        cfg.setFileOutConfigList(focList);</span><br><span class="line">        <span class="keyword">return</span> cfg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 策略配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> StrategyConfig <span class="title function_">getStrategyConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">StrategyConfig</span> <span class="variable">strategy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StrategyConfig</span>();</span><br><span class="line">        <span class="comment">/*数据库表映射到实体的命名策略,下划线转驼峰*/</span></span><br><span class="line">        strategy.setNaming(NamingStrategy.underline_to_camel);</span><br><span class="line">        <span class="comment">/*数据库表字段映射到实体的命名策略，未指定按照 naming 执行*/</span></span><br><span class="line">        strategy.setColumnNaming(NamingStrategy.underline_to_camel);</span><br><span class="line">        <span class="comment">/*表前缀*/</span></span><br><span class="line">        strategy.setTablePrefix(<span class="string">&quot;t_&quot;</span>, <span class="string">&quot;sys_&quot;</span>, <span class="string">&quot;p_&quot;</span>);</span><br><span class="line">        <span class="comment">/*字段前缀*/</span></span><br><span class="line">        strategy.setFieldPrefix(<span class="string">&quot;is&quot;</span>, <span class="string">&quot;has&quot;</span>);</span><br><span class="line">        <span class="comment">/*需要包含的表名，允许正则表达式（与exclude二选一配置）*/</span></span><br><span class="line">        strategy.setInclude(TABLE_NAMES);</span><br><span class="line">        <span class="comment">/*实体是否生成 serialVersionUID*/</span></span><br><span class="line">        strategy.setEntitySerialVersionUID(<span class="literal">true</span>);</span><br><span class="line">        <span class="comment">/*【实体】是否为lombok模型（默认 false）*/</span></span><br><span class="line">        strategy.setEntityLombokModel(<span class="literal">true</span>);</span><br><span class="line">        <span class="comment">/*Boolean类型字段是否移除is前缀（默认 false） 比如 : 数据库字段名称 : &#x27;is_xxx&#x27;,类型为 : tinyint.</span></span><br><span class="line"><span class="comment">        在映射实体的时候则会去掉is,在实体类中映射最终结果为 xxx*/</span></span><br><span class="line">        strategy.setEntityBooleanColumnRemoveIsPrefix(<span class="literal">true</span>);</span><br><span class="line">        <span class="comment">/*是否生成实体时，生成字段注解*/</span></span><br><span class="line">        strategy.setEntityTableFieldAnnotationEnable(<span class="literal">true</span>);</span><br><span class="line">        <span class="comment">/*生成 @RestController 控制器*/</span></span><br><span class="line">        strategy.setRestControllerStyle(<span class="literal">true</span>);</span><br><span class="line">        <span class="comment">/*驼峰转连字符*/</span></span><br><span class="line">        strategy.setControllerMappingHyphenStyle(<span class="literal">false</span>);</span><br><span class="line">        <span class="comment">/*是否生成实体时，生成字段注解*/</span></span><br><span class="line">        strategy.setEntityTableFieldAnnotationEnable(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> strategy;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/49279/">https://github.com/maxzhao-it/blog/post/49279/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/47890/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/47890/" class="post-title-link" itemprop="url">MyBatisPlus在@Select中使用Like</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-05-24 15:37:22" itemprop="dateModified" datetime="2022-05-24T15:37:22+08:00">2022-05-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/MyBatisPlus/" itemprop="url" rel="index"><span itemprop="name">MyBatisPlus</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>当自定义@SELECT语句后，直接传wrapper到方法上不行.</p>
-<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>普通用法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@select(“select*from user where name = #&#123;name&#125;”)</span></span><br><span class="line">List <span class="title function_">selectUserByName</span><span class="params">(String name)</span></span><br></pre></td></tr></table></figure>
-
-<p><code>like</code> 用法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Select(“select*from userf where name like CONCAT(’%’,#&#123;s&#125;,’%’)”)</span></span><br><span class="line">        List <span class="title function_">selectLikename</span><span class="params">(String s)</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>concat拼接字符串</p>
-<p>CONCAT(’%’,#{0},’%’)”) 不能直接用 ‘%#{s}%’</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/47890/">https://github.com/maxzhao-it/blog/post/47890/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/26362/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/26362/" class="post-title-link" itemprop="url">MyBatisPlus在@Select中使用构造器Wrapper</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-05-24 15:37:22" itemprop="dateModified" datetime="2022-05-24T15:37:22+08:00">2022-05-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/MyBatisPlus/" itemprop="url" rel="index"><span itemprop="name">MyBatisPlus</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>当自定义@SELECT语句后，直接传wrapper到方法上不行.</p>
-<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>在 <a target="_blank" rel="noopener" href="https://mp.baomidou.com/guide/wrapper.html#%E4%BD%BF%E7%94%A8-wrapper-%E8%87%AA%E5%AE%9A%E4%B9%89sql">MybatisPlus官方文档</a><br>上有一个方法:</p>
-<blockquote>
-<p>注意事项:<br>需要mybatis-plus版本 &gt;&#x3D; 3.0.7 param 参数名要么叫ew,<br>要么加上注解@Param(Constants.WRAPPER) 使用<br>${ew.customSqlSegment} 不支持 Wrapper 内的entity生成where语句</p>
-</blockquote>
-<h3 id="用注解"><a href="#用注解" class="headerlink" title="用注解"></a>用注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Select(&quot;select * from mysql_data $&#123;ew.customSqlSegment&#125;&quot;)</span></span><br><span class="line">List&lt;MysqlData&gt; <span class="title function_">getAll</span><span class="params">(<span class="meta">@Param(Constants.WRAPPER)</span> Wrapper wrapper)</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="用XML"><a href="#用XML" class="headerlink" title="用XML"></a>用XML</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;MysqlData&gt; <span class="title function_">getAll</span><span class="params">(Wrapper ew)</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getAll&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;MysqlData&quot;</span>&gt;</span></span><br><span class="line">    SELECT * FROM mysql_data $&#123;ew.customSqlSegment&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="链式调用-lambda-式"><a href="#链式调用-lambda-式" class="headerlink" title="链式调用 lambda 式"></a>链式调用 lambda 式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 区分:</span></span><br><span class="line"><span class="comment">// 链式调用 普通</span></span><br><span class="line">UpdateChainWrapper&lt;T&gt; <span class="title function_">update</span><span class="params">()</span>;</span><br><span class="line"><span class="comment">// 链式调用 lambda 式。注意：不支持 Kotlin </span></span><br><span class="line">        LambdaUpdateChainWrapper&lt;T&gt; <span class="title function_">lambdaUpdate</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等价示例：</span></span><br><span class="line">        query().eq(<span class="string">&quot;id&quot;</span>,value).one();</span><br><span class="line">        lambdaQuery().eq(Entity::getId,value).one();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等价示例：</span></span><br><span class="line">        update().eq(<span class="string">&quot;id&quot;</span>,value).remove();</span><br><span class="line">        lambdaUpdate().eq(Entity::getId,value).remove();</span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/26362/">https://github.com/maxzhao-it/blog/post/26362/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/blog/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/28/">28</a><a class="extend next" rel="next" href="/blog/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/blog/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/29/">29</a><a class="extend next" rel="next" href="/blog/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>

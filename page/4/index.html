@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">280</span>
+          <span class="site-state-item-count">283</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-count">155</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,398 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/c314b6f9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/c314b6f9/" class="post-title-link" itemprop="url">Maven全局plugin配置传递子pom</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-05-24 15:37:22" itemprop="dateModified" datetime="2022-05-24T15:37:22+08:00">2022-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/Maven/" itemprop="url" rel="index"><span itemprop="name">Maven</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们现在有一个多模块的 <code>maven</code> 项目，项目中模块一般会有一个顶级的 <code>parent</code> ，我们想通过 <code>parent</code> 中配置全局的 <code>version</code>，但一般在 <code>&lt;parent&gt;</code> 标签中配置 <code>$&#123;&#125;</code> 变量是会报错的 。</p>
+<p>所以这里引入一个 <code>flatten-maven-plugin</code></p>
+<p>比如我们的模块结构为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gt-boot-parent</span><br><span class="line">└── gt-base</span><br></pre></td></tr></table></figure>
+
+<h2 id="pom-xml-文件配置"><a href="#pom-xml-文件配置" class="headerlink" title="pom.xml 文件配置"></a><code>pom.xml</code> 文件配置</h2><h3 id="gt-boot-parent的pom-xml-配置"><a href="#gt-boot-parent的pom-xml-配置" class="headerlink" title="gt-boot-parent的pom.xml 配置"></a><code>gt-boot-parent</code>的<code>pom.xml</code> 配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.gt.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gt-boot-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;revision&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>gt-base<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">revision</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">revision</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flatten-maven-plugin.version</span>&gt;</span>1.2.7<span class="tag">&lt;/<span class="name">flatten-maven-plugin.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.mojo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flatten-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;flatten-maven-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">updatePomFile</span>&gt;</span>true<span class="tag">&lt;/<span class="name">updatePomFile</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">flattenMode</span>&gt;</span>resolveCiFriendliesOnly<span class="tag">&lt;/<span class="name">flattenMode</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>process-resources<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten.clean<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="gt-base的pom-xml-配置"><a href="#gt-base的pom-xml-配置" class="headerlink" title="gt-base的pom.xml 配置"></a><code>gt-base</code>的<code>pom.xml</code> 配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gt-boot-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.gt.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;revision&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>&gt;</span>../pom.xml<span class="tag">&lt;/<span class="name">relativePath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gt-base<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;revision&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="flatten-插件带来的好处"><a href="#flatten-插件带来的好处" class="headerlink" title="flatten 插件带来的好处"></a><code>flatten</code> 插件带来的好处</h2><ul>
+<li>只需要修改 <code>parent</code> 的 <code>revision</code> 即可完成整个多个项目的版本修改.</li>
+<li>如果我们项目有 <code>Nexus</code>，那么我们依赖中的 <code>$&#123;&#125;</code>，都会自动改为实际的版本号，并且 <code>dependence.scope</code> 未填写时，自动填写默认的<code>scope </code> <code>compile</code></li>
+<li>如果我们使用 <code>Intellij IDEA</code>，那我们还会享有 <code>view -&gt; tool windows -&gt; maven</code> 窗口的树形结构展示。</li>
+<li>构建特定元素被删除</li>
+<li>默认情况下会删除开发特定的元素</li>
+<li>它仅包含您的工件用户所需的元素</li>
+</ul>
+<blockquote>
+<p>这里就没有考虑 <code>mvn versions:set -DnewVersion=</code> 命令了，当前命令也可以完成一键修改版本号<br><a target="_blank" rel="noopener" href="https://www.mojohaus.org/flatten-maven-plugin/">官方介绍</a><br><a target="_blank" rel="noopener" href="http://www.mojohaus.org/flatten-maven-plugin/examples/example-simple-project.html">官方案例</a></p>
+</blockquote>
+<h2 id="配置案例"><a href="#配置案例" class="headerlink" title="配置案例"></a>配置案例</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.mojohaus.org/flatten-maven-plugin/examples/example-simple-project.html">官方案例</a></p>
+<p>项目中查看预览效果可以直接对比查询 <code>pom.xml</code> 与同目录下的 .<code>.flattened-pom.xml</code></p>
+</blockquote>
+<h2 id="Flatten可选配置"><a href="#Flatten可选配置" class="headerlink" title="Flatten可选配置"></a><code>Flatten</code>可选配置</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.mojo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flatten-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;flatten-maven-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">updatePomFile</span>&gt;</span>true<span class="tag">&lt;/<span class="name">updatePomFile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flattenMode</span>&gt;</span>resolveCiFriendliesOnly<span class="tag">&lt;/<span class="name">flattenMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--指定生命周期--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>process-resources<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten.clean<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="configuration"><a href="#configuration" class="headerlink" title="configuration"></a><code>configuration</code></h3><ul>
+<li><p><code>flattenMode</code> 不做详细解释，一般使用  <code>resolveCiFriendliesOnly</code>，它可以：</p>
+<ol>
+<li><p>自动从<code>parent</code>获取并插入子<code>pom</code>的</p>
+<ul>
+<li><code>Build</code>、<code>CiManagement</code>、<code>Contributors</code>、<code>Dependencies</code>、<code>DependencyManagement</code>、<code>Description</code></li>
+<li><code>Developers</code>、<code>DistributionManagement</code></li>
+<li><code>InceptionYear</code>、<code>IssueManagement</code>、<code>MailingLists</code></li>
+<li><code>Modules</code>、<code>Name</code>、<code>Organization</code> 、<code>PluginManagement</code>、<code>PluginRepositories</code>、<code>Prerequisites</code></li>
+<li><code>Profiles</code>、<code>Properties</code>、<code>Reporting</code>、<code>Repositories</code>、<code>Scm</code>、<code>Url</code></li>
+</ul>
+</li>
+<li><p>会自动处理子 <code>pom</code> 的 <code>Parent</code>、<code>Version</code></p>
+</li>
+<li><p>其它选择</p>
+</li>
+<li><p>|               |                           |                                                              |<br>  | ————- | ————————- | ———————————————————— |<br>| <code>flattenMode</code> | <code>minimum</code>                 | 弃用                                                         |<br>| <code>flattenMode</code> | <code>oss</code>                     | 保留 <code>repositories</code>、 <code>pluginRepositories</code> 外的所有<code>pom</code> 元素 |<br>| <code>flattenMode</code> | <code>ossrh</code>                   | Keeps all {@link FlattenDescriptor optional POM elements} that are required for  <a target="_blank" rel="noopener" href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">OSS  Repository-Hosting</a>. |<br>| <code>flattenMode</code> | <code>bom</code>                     | 像 <code>ossrh</code>,会额外保留 <code>dependencyManagement</code>、<code>Properties</code>   |<br>| <code>flattenMode</code> | <code>defaults</code>                | 删除所有 pom 节点，除了 <code>repositories</code>                       |<br>| <code>flattenMode</code> | <code>clean</code>                   | 删除所有 pom 节点                                            |<br>| <code>flattenMode</code> | <code>fatjar</code>                  | 删除所有 pom 节点 和 dependencies                            |<br>| <code>flattenMode</code> | <code>resolveCiFriendliesOnly</code> | 仅解析 <code>revision</code>、<code>sha1</code>、<code>changelist</code>,                     |</p>
+</li>
+</ol>
+</li>
+<li><p><code>updatePomFile</code> 一般设置为 true</p>
+<ul>
+<li><p><code>true or false</code></p>
+</li>
+<li><pre><code class="java"> /**
+     * The flag to indicate if the generated flattened POM shall be set as POM file to the current project. By default
+     * this is only done for projects with packaging other than &lt;code&gt;pom&lt;/code&gt;. You may want to also do this for
+     * &lt;code&gt;pom&lt;/code&gt; packages projects by setting this parameter to &lt;code&gt;true&lt;/code&gt; or you can use
+     * &lt;code&gt;false&lt;/code&gt; in order to only generate the flattened POM but never set it as POM file. If
+     * &lt;code&gt;flattenMode&lt;/code&gt; is set to bom the default value will be &lt;code&gt;true&lt;/code&gt;.
+     */
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- `pomElements`元素的处理</span><br><span class="line"></span><br><span class="line">    - ```xml</span><br><span class="line">        &lt;pomElement&gt;</span><br><span class="line">            &lt;!-- 以 developers 元素举例--&gt;</span><br><span class="line">            &lt;!--ElementHandling:flatten,expand,resolve,interpolate,keep,remove --&gt; </span><br><span class="line">        	&lt;developers&gt;remove&lt;/developers&gt;</span><br><span class="line">        &lt;/pomElement&gt;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><p><code>flatten</code> 平铺，会删除所有 <code>developers</code></p>
+</li>
+<li><p><code>expand</code> 子 <code>pom.xml</code> 继承第一个 <code>parent</code> 的 <code>developers</code></p>
+</li>
+<li><p><code>resolve</code> 子 <code>pom.xml</code> 继承第一个 <code>parent</code> 的 <code>developers</code></p>
+</li>
+<li><p><code>interpolate</code> 插入</p>
+</li>
+<li><p><code>keep</code> 子 <code>pom.xml</code> 不会继承 <code>parent</code> 的 <code>developers</code></p>
+</li>
+<li><p><code>remove</code> 删除所有 <code>developers</code></p>
+</li>
+</ul>
+</li>
+<li><p>下面一般不配置</p>
+</li>
+<li><p><code>embedBuildProfileDependencies</code></p>
+</li>
+<li><p><code>flattenDependencyMode</code></p>
+</li>
+<li><p><code>flattenedPomFilename</code></p>
+</li>
+<li><p><code>localRepository</code></p>
+</li>
+<li><p><code>mojoExecution</code></p>
+</li>
+<li><p><code>outputDirectory</code></p>
+</li>
+<li><p><code>project</code></p>
+</li>
+<li><p><code>session</code></p>
+</li>
+</ul>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/c314b6f9/">https://github.com/maxzhao-it/blog/post/c314b6f9/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f2d199a5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/f2d199a5/" class="post-title-link" itemprop="url">SpringBoot一键部署脚本</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-05-24 15:37:22" itemprop="dateModified" datetime="2022-05-24T15:37:22+08:00">2022-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/util/" itemprop="url" rel="index"><span itemprop="name">util</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/util/script/" itemprop="url" rel="index"><span itemprop="name">script</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了快速更新，这里编写一个一件部署 <code>SpringBoot jar</code> 项目的脚本。</p>
+<p>脚本使用简单：直接启动</p>
+<p>脚本功能全面：一键完成程序关闭、程序备份、程序启动</p>
+<p>脚本智能识别：全面的提醒，比如：程序未启动、待备份的程序不存在等</p>
+<h2 id="window-server"><a href="#window-server" class="headerlink" title="window server"></a><code>window server</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">rem 关闭命令输出</span><br><span class="line">@echo off</span><br><span class="line">rem 启动jar名称</span><br><span class="line">set projectName=demo.jar</span><br><span class="line">rem 部署目录  </span><br><span class="line">set projectDir=D:\develop\script\bat-update</span><br><span class="line">rem 备份路径</span><br><span class="line">set backupDir=D:\develop\script\bat-update\backup</span><br><span class="line"></span><br><span class="line">@set &quot;Ymd=%date:~,4%%date:~5,2%%date:~8,2%&quot;</span><br><span class="line">rem 年月日 分秒毫秒   没有小时,0-9点，前部默认不补零</span><br><span class="line">@set &quot;nowtime=%DATE:~0,4%%DATE:~5,2%%DATE:~8,2%%TIME:~3,2%%TIME:~6,2%&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;   shutdown start  &#x27;</span><br><span class="line">for /F %%i in (&#x27;jps -mvVl ^| findstr %projectName%&#x27;)do ( set commitid=%%i)</span><br><span class="line">if &quot;%commitid%&quot;==&quot;&quot; (echo &#x27;    程序没有启动&#x27;) else (</span><br><span class="line">taskkill /F /PID %commitid%</span><br><span class="line">IF ERRORLEVEL 0 (echo &#x27;   shutdown success  &#x27;)</span><br><span class="line">IF ERRORLEVEL 1 (echo &#x27;   shutdown fail  &#x27;</span><br><span class="line">pause</span><br><span class="line">)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">echo &#x27;   backup start   &#x27;</span><br><span class="line"></span><br><span class="line">if exist %projectDir%\%projectName%  (</span><br><span class="line">copy %projectDir%\%projectName% %backupDir%\%projectName%-%nowtime%</span><br><span class="line">IF ERRORLEVEL 0 (ECHO  &#x27;   backup success    &#x27;)</span><br><span class="line">IF ERRORLEVEL 1 (</span><br><span class="line">ECHO  &#x27;   backup fail    &#x27;</span><br><span class="line">pause</span><br><span class="line">)</span><br><span class="line">) else (echo &#x27; 没有需要备份的 %projectDir%\%projectName% &#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">copy %projectName% %projectDir%\%projectName% </span><br><span class="line">echo &#x27;   move to project dir  success  &#x27;</span><br><span class="line"></span><br><span class="line">echo &#x27;   jar start   &#x27;</span><br><span class="line">java -jar   %projectDir%\%projectName%</span><br><span class="line">pause</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f2d199a5/">https://github.com/maxzhao-it/blog/post/f2d199a5/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/582c1911/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/582c1911/" class="post-title-link" itemprop="url">SpringBoot升级swagger3</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-05-24 15:36:55" itemprop="dateModified" datetime="2022-05-24T15:36:55+08:00">2022-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/Swagger/" itemprop="url" rel="index"><span itemprop="name">Swagger</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="从-SpringFox-迁移"><a href="#从-SpringFox-迁移" class="headerlink" title="从 SpringFox 迁移"></a>从 <code>SpringFox</code> 迁移</h2><h3 id="依赖替换"><a href="#依赖替换" class="headerlink" title="依赖替换"></a>依赖替换</h3><p>移除所有 <code>swagger2</code> 依赖，添加 <code>springdoc</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springdoc<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springdoc-openapi-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="注解替换"><a href="#注解替换" class="headerlink" title="注解替换"></a>注解替换</h3><p><code>swagger3</code> 注解包是 <code>io.swagger.v3.oas.annotations</code>.</p>
+<ul>
+<li><code>@Api</code> → <code>@Tag</code></li>
+<li><code>@ApiIgnore</code> → <code>@Parameter(hidden = true)</code> or <code>@Operation(hidden = true)</code> or <code>@Hidden</code></li>
+<li><code>@ApiImplicitParam</code> → <code>@Parameter</code></li>
+<li><code>@ApiImplicitParams</code> → <code>@Parameters</code></li>
+<li><code>@ApiModel</code> → <code>@Schema</code></li>
+<li><code>@ApiModelProperty(hidden = true)</code> → <code>@Schema(accessMode = READ_ONLY)</code></li>
+<li><code>@ApiModelProperty</code> → <code>@Schema</code></li>
+<li><code>@ApiOperation(value = &quot;foo&quot;, notes = &quot;bar&quot;)</code> → <code>@Operation(summary = &quot;foo&quot;, description = &quot;bar&quot;)</code></li>
+<li><code>@ApiParam</code> → <code>@Parameter</code></li>
+<li><code>@ApiResponse(code = 404, message = &quot;foo&quot;)</code> → <code>@ApiResponse(responseCode = &quot;404&quot;, description = &quot;foo&quot;)</code></li>
+</ul>
+<h3 id="Java-集成"><a href="#Java-集成" class="headerlink" title="Java 集成"></a><code>Java</code> 集成</h3><p>Before:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">publicApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;org.github.springshop.web.public&quot;</span>))</span><br><span class="line">                .paths(PathSelectors.regex(<span class="string">&quot;/public.*&quot;</span>))</span><br><span class="line">                .build()</span><br><span class="line">                .groupName(<span class="string">&quot;springshop-public&quot;</span>)</span><br><span class="line">                .apiInfo(apiInfo());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">adminApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;org.github.springshop.web.admin&quot;</span>))</span><br><span class="line">                .paths(PathSelectors.regex(<span class="string">&quot;/admin.*&quot;</span>))</span><br><span class="line">                .apis(RequestHandlerSelectors.withMethodAnnotation(Admin.class))</span><br><span class="line">                .build()</span><br><span class="line">                .groupName(<span class="string">&quot;springshop-admin&quot;</span>)</span><br><span class="line">                .apiInfo(apiInfo());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Now:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> GroupedOpenApi <span class="title function_">publicApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> GroupedOpenApi.builder()</span><br><span class="line">                .group(<span class="string">&quot;springshop-public&quot;</span>)</span><br><span class="line">                .pathsToMatch(<span class="string">&quot;/public/**&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> GroupedOpenApi <span class="title function_">adminApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> GroupedOpenApi.builder()</span><br><span class="line">                .group(<span class="string">&quot;springshop-admin&quot;</span>)</span><br><span class="line">                .pathsToMatch(<span class="string">&quot;/admin/**&quot;</span>)</span><br><span class="line">                .addMethodFilter(method -&gt; method.isAnnotationPresent(Admin.class))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 根据接口扫描</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> GroupedOpenApi <span class="title function_">demoApi</span><span class="params">()</span> &#123;</span><br><span class="line">    String[] paths = &#123;<span class="string">&quot;/demo/**&quot;</span>&#125;;</span><br><span class="line">    <span class="keyword">return</span> GroupedOpenApi.builder()</span><br><span class="line">            .group(<span class="string">&quot;demo&quot;</span>)</span><br><span class="line">            .pathsToMatch(paths)</span><br><span class="line">            .build();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 根据parent package 扫描</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> GroupedOpenApi <span class="title function_">maxzhaoApi</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> GroupedOpenApi.builder()</span><br><span class="line">            .group(<span class="string">&quot;maxzhao&quot;</span>)</span><br><span class="line">            .packagesToScan(<span class="string">&quot;com.maxzhao&quot;</span>)</span><br><span class="line">            .build();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If you have <strong>only one</strong> <code>Docket</code> — remove it and instead add properties to your <code>application.properties</code>:</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">springdoc.packagesToScan</span>=<span class="string">package1, package2</span></span><br><span class="line"><span class="attr">springdoc.pathsToMatch</span>=<span class="string">/v1, /api/balance/**</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Add bean of <code>OpenAPI</code> type. See example:</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> OpenAPI <span class="title function_">springOpenAPI</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">OpenAPI</span>()</span><br><span class="line">                .info(<span class="keyword">new</span> <span class="title class_">Info</span>()</span><br><span class="line">                        .title(<span class="string">&quot;Spring Swagger3 API&quot;</span>)</span><br><span class="line">                        .description(<span class="string">&quot;Spring swagger3 sample application&quot;</span>)</span><br><span class="line">                        .version(<span class="string">&quot;v0.0.1&quot;</span>)</span><br><span class="line">                        .contact(<span class="keyword">new</span> <span class="title class_">Contact</span>()</span><br><span class="line">                                .name(<span class="string">&quot;maxzhao&quot;</span>)</span><br><span class="line">                                .url(<span class="string">&quot;https://maxzhao-it.github.io/blog/&quot;</span>)</span><br><span class="line">                                .email(<span class="string">&quot;1441439636@qq.com&quot;</span>))</span><br><span class="line">                        .license(<span class="keyword">new</span> <span class="title class_">License</span>()</span><br><span class="line">                                .name(<span class="string">&quot;Apache 2.0&quot;</span>)</span><br><span class="line">                                .url(<span class="string">&quot;http://springdoc.org&quot;</span>)))</span><br><span class="line">                .externalDocs(<span class="keyword">new</span> <span class="title class_">ExternalDocumentation</span>()</span><br><span class="line">                        .description(<span class="string">&quot;maxzhao Documentation&quot;</span>)</span><br><span class="line">                        .url(<span class="string">&quot;https://maxzhao-it.github.io/blog/&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>If the swagger-ui is served behind a proxy:<ul>
+<li><a target="_blank" rel="noopener" href="https://springdoc.org/index.html#how-can-i-deploy-springdoc-openapi-ui-behind-a-reverse-proxy">how-can-i-deploy-springdoc-openapi-ui-behind-a-reverse-proxy</a></li>
+</ul>
+</li>
+<li>To customise the Swagger UI<ul>
+<li><a target="_blank" rel="noopener" href="https://springdoc.org/index.html#how-can-i-configure-swagger-ui">how-can-i-configure-swagger-ui</a></li>
+</ul>
+</li>
+<li>To hide an operation or a controller from documentation<ul>
+<li><a target="_blank" rel="noopener" href="https://springdoc.org/index.html#how-can-i-hide-an-operation-or-a-controller-from-documentation">how-can-i-hide-an-operation-or-a-controller-from-documentation</a></li>
+</ul>
+</li>
+</ul>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/582c1911/">https://github.com/maxzhao-it/blog/post/582c1911/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -963,266 +1355,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7db5e118/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/7db5e118/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-01-13 16:22:25" itemprop="dateModified" datetime="2022-01-13T16:22:25+08:00">2022-01-13</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7db5e118/">https://github.com/maxzhao-it/blog/post/7db5e118/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7ebd2e5c/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/7ebd2e5c/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-05-24 15:31:12" itemprop="dateModified" datetime="2022-05-24T15:31:12+08:00">2022-05-24</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p> <img src="/blog/uploads/images/JAVA/JDK/java.lang/v2-c06e74c4a9480b343c92c849291ba5f5_720w.jpg" alt="img"></p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7ebd2e5c/">https://github.com/maxzhao-it/blog/post/7ebd2e5c/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/cf860b21/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/cf860b21/" class="post-title-link" itemprop="url">SpringBoot集成liquibase案例</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-05-24 15:36:54" itemprop="dateModified" datetime="2022-05-24T15:36:54+08:00">2022-05-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>项目中版本发布需要做一个版本管理工具，项目使用 <code>SpringBoot</code> 框架。</p>
-<p>目前有两款 <code>liquibase</code> 和 <code>flyway</code>。</p>
-<p><code>flyway</code>不支持并发，也就是集群项目会执行多次，进而否掉。</p>
-<p><code>Liquibase</code> ：</p>
-<ul>
-<li>支持执行锁、回滚；</li>
-<li>支持<code>MySQL</code>, <code>PostgreSQL</code>, <code>Oracle</code>, <code>Sql Server</code>等；</li>
-<li>支持多开发者（每个脚本必须写 <code>author</code> ）；</li>
-<li>多种运行方式：命令行、<code>Spring</code>集成、<code>Maven</code>插件等</li>
-</ul>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://docs.liquibase.com/home.html">官网</a></p>
-</blockquote>
-<p><code>Liquibase</code>文件结构：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">databaseChangeLog</span><br><span class="line">├── createTable </span><br><span class="line">|    ├── column</span><br><span class="line">|    ├── ...</span><br><span class="line">|    └── remarks </span><br><span class="line">├── createView</span><br><span class="line">|    ├── ...</span><br><span class="line">|    └── viewName </span><br><span class="line">├── ...</span><br><span class="line">└── sqlFile </span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Liquibase使用"><a href="#Liquibase使用" class="headerlink" title="Liquibase使用"></a><code>Liquibase</code>使用</h2><h3 id="Maven引入"><a href="#Maven引入" class="headerlink" title="Maven引入"></a><code>Maven</code>引入</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.liquibase<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>liquibase-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p><code>application.yml</code> 文件配置</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">liquibase:</span></span><br><span class="line">    <span class="comment"># 开启(默认true)</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 文件路径</span></span><br><span class="line">    <span class="attr">change-log:</span> <span class="string">classpath:/liquibase/change_log/Init_table.xml</span></span><br><span class="line">    <span class="comment"># 是否先删除数据库模式(默认 false)</span></span><br><span class="line">    <span class="attr">drop-first:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 版本记录表名</span></span><br><span class="line">    <span class="attr">database-change-log-table:</span> <span class="string">DATABASECHANGELOG</span></span><br><span class="line">    <span class="comment"># 版本记录执行锁</span></span><br><span class="line">    <span class="attr">database-change-log-lock-table:</span> <span class="string">DATABASECHANGELOGLOCK</span></span><br></pre></td></tr></table></figure>
-
-<p><code>Init_table.xml</code> 文件配置</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">databaseChangeLog</span></span></span><br><span class="line"><span class="tag">        <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">xmlns</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/dbchangelog&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">changeSet</span> <span class="attr">id</span>=<span class="string">&quot;V0.0.1-20211017-001&quot;</span> <span class="attr">author</span>=<span class="string">&quot;maxzhao&quot;</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">createTable</span> <span class="attr">tableName</span>=<span class="string">&quot;a_demo_user&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;用户表&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">type</span>=<span class="string">&quot;bigint&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;用户主键&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">constraints</span> <span class="attr">nullable</span>=<span class="string">&quot;false&quot;</span> <span class="attr">primaryKey</span>=<span class="string">&quot;true&quot;</span> <span class="attr">primaryKeyName</span>=<span class="string">&quot;pk_a_demo_user_id&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">column</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">type</span>=<span class="string">&quot;varchar(100)&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;用户名&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">constraints</span> <span class="attr">nullable</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">column</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">column</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">type</span>=<span class="string">&quot;varchar(100)&quot;</span> <span class="attr">remarks</span>=<span class="string">&quot;密码&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">constraints</span> <span class="attr">nullable</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">column</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">createTable</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">changeSet</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--&lt;changeSet id=&quot;V0.0.1-20211017-001&quot; author=&quot;maxzhao&quot;&gt;--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- SQL 文件的方式，不推荐，不能兼容不同数据库 --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--&lt;sqlFile path=&quot;test.sql&quot;/&gt;--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--&lt;/changeSet&gt;--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--  加载其它文件  --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--&lt;include file=&quot;&quot;/&gt;--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">databaseChangeLog</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意：</p>
-<ul>
-<li><code>ID</code>是唯一的，是存储数据库中判断 <code>ChangeSet</code> 是否执行的重要依据</li>
-<li><code>SQL</code> 脚本文件不应该包含 <code>schema</code> 名称</li>
-<li>表、字段需要添加 <code>remarks</code> 注释</li>
-<li>已经执行的 <code>changeSet</code> 禁止修改，启动会报错。</li>
-<li>不要随便升级版本，特别是大版本。不同版本的 <code>CHangeSet MD5SUM</code> 算法很可能不一样。</li>
-<li>不要添加业务数据的修改，可能换个项目就不能用了。</li>
-</ul>
-</blockquote>
-<h3 id="生成已存在表结构"><a href="#生成已存在表结构" class="headerlink" title="生成已存在表结构"></a>生成已存在表结构</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">生成表结构</span></span><br><span class="line">liquibase --driver=com.mysql.cj.jdbc.Driver --classpath=mysql-connector-java-8.0.26.jar --changeLogFile=./dbchangelog.xml --url=&quot;jdbc:mysql://localhost:3306/blog&quot; --username=root --password=root generateChangeLog</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">生成表数据</span></span><br><span class="line">liquibase --driver=com.mysql.cj.jdbc.Driver --classpath=mysql-connector-java-8.0.26.jar --changeLogFile=./dbchangelog.xml --url=&quot;jdbc:mysql://localhost:3306/blog&quot; --username=root --password=root --diffTypes=data generateChangeLog</span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/cf860b21/">https://github.com/maxzhao-it/blog/post/cf860b21/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/blog/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/28/">28</a><a class="extend next" rel="next" href="/blog/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/blog/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/29/">29</a><a class="extend next" rel="next" href="/blog/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>
