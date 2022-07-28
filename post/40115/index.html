@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/40115/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/40115/","path":"post/40115/","title":"PostgreSQL基于Citus的分布式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PostgreSQL基于Citus的分布式 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Citus%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Citus简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E4%BA%92"><span class="nav-number">1.1.</span> <span class="nav-text">交互</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Citus-%E6%80%A7%E8%83%BD%E5%8F%82%E8%80%83%EF%BC%88%E6%9D%A5%E8%87%AA%E4%BA%92%E8%81%94%E7%BD%91%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">Citus 性能参考（来自互联网）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF"><span class="nav-number">1.3.</span> <span class="nav-text">推荐的业务场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">1、实时数据分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%A4%9A%E7%A7%9F%E6%88%B7"><span class="nav-number">1.5.</span> <span class="nav-text">2、多租户</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/40115/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PostgreSQL基于Citus的分布式 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PostgreSQL基于Citus的分布式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/PostgreSql/" itemprop="url" rel="index"><span itemprop="name">PostgreSql</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/PostgreSql/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="Citus简介"><a href="#Citus简介" class="headerlink" title="Citus简介"></a><strong>Citus</strong>简介</h2><p>Citus以插件的方式扩展到postgresql中，独立于postgresql内核，所以能很快的跟上pg主版本的更新，部署也比较简单，是现在非常流行的分布式方案。Citus在苏宁有大规模应用，微软也提供citus的商业支持。下面是citus的架构：</p>
+<p><img src="/blog/uploads/images/2018042723003371.png" alt="2018042723003371"></p>
+<p><code>Citus</code><br>节点主要分为协调节点和工作节点，协调节点不存储真实数据，只存储数据分布的元信息，实际的数据被分成若干分片，打散到不同worker节点中，应用连接协调节点，协调节点进行sql解析，生成分布式执行计划，下发到worker节点执行，cn将结果汇总返回客户端。</p>
+<p><code>Citus</code> 的主要架构特点如下：</p>
+<p>①有两种表类型：<strong>参考表</strong>和<strong>分布表</strong>，参考表每个协调节点和worker节点都有一份完整的副本，分布表则会打散分布到不同worker中。</p>
+<p>②可以进行读写分离，如上图cn1为写节点，可以通过再增加多个cn读节点增加集群读的能力，<strong>写cn和读cn之间使用流复制进行元数据同步</strong>。</p>
+<p>③支持MX模式，可以将元数据也存在某些worker节点中，这样使得该worker节点能够直接提供写的能力，以此增加集群写的能力。</p>
+<p>④底层worker节点可以通过流复制搭建副本，保证数据高可用。</p>
+<p>⑤做join时最好的结果是能够将计算下推到worker节点，但是只有在参考表和其他表做join以及两个表的分布方式相同的情况下才能下推到worker计算，否则需要将数据拉到协调节点进行计算。</p>
+<p>⑥整体架构类似mycat的中间件，因为没有全局事务管理，故不能保证数据的实时读一致性，但是性能上相比要好。数据写一致性使用2pc来保证。</p>
+<blockquote>
+<p>来自 <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1563023">PostgreSQL的几种分布式架构对比</a></p>
+</blockquote>
+<p>其它特性：</p>
+<p>● PostgreSQL兼容</p>
+<p>● 水平扩展</p>
+<p>● 实时并发查</p>
+<p>● 快速数据加载</p>
+<p>● 实时增删改查</p>
+<p>● 持分布式事务</p>
+<p>● 支持常用DDL</p>
+<h3 id="交互"><a href="#交互" class="headerlink" title="交互"></a>交互</h3><ol>
+<li>客户端应用访问数据时只和CN节点交互。</li>
+<li>CN收到SQL请求后，生成分布式执行计划，并将各个子任务下发到相应的Worker节点，之后收集Worker的结果，经过处理后返回最终结果给客户端。</li>
+</ol>
+<h3 id="Citus-性能参考（来自互联网）"><a href="#Citus-性能参考（来自互联网）" class="headerlink" title="Citus 性能参考（来自互联网）"></a><code>Citus</code> 性能参考（来自互联网）</h3><p>为了能够直观的了解citus分片表的性能优势，下面在1个CN和8个worker组成citus集群上， 对比普通表和分片表(96分片)的性能差异。</p>
+<p><img src="/blog/uploads/images/7481339-9a00b7b8322ce0d2.png" alt="img"></p>
+<blockquote>
+<p><strong>参考表：</strong>分片表主要解决的是大表的水平扩容问题，对数据量不是特别大又经常需要和分片表Join的维表可以采用一种特殊的分片策略，只分1个片且每个Worker上部署1个副本，这样的表叫做“参考表”。</p>
+</blockquote>
+<h3 id="推荐的业务场景"><a href="#推荐的业务场景" class="headerlink" title="推荐的业务场景"></a>推荐的业务场景</h3><h3 id="1、实时数据分析"><a href="#1、实时数据分析" class="headerlink" title="1、实时数据分析"></a>1、实时数据分析</h3><p>itus不仅支持高速的批量数据加载(20w&#x2F;s)，还支持单条记录的实时增删改查。<br>查询数据时，CN对每一个涉及的分片开一个连接驱动所有相关worker同时工作。并且支持过滤，投影，聚合，join等常见算子的下推，尽可能减少CN的负载。所以，对于count()，sum()<br>这类简单的聚合计算，在128分片时citus可以轻松获得和PostgreSQL单并发相比50倍以上的性能提升。</p>
+<h3 id="2、多租户"><a href="#2、多租户" class="headerlink" title="2、多租户"></a>2、多租户</h3><p>和很多分布式数据库类似，citus对分片表间join的支持存在一定的限制。而多租户场景下每个租户的数据按租户ID分片，业务的SQL也带租户ID。因此这些SQL都可以直接下推到特定的分片上，避免了跨库join和跨库事务。</p>
+<blockquote>
+<p><strong>多租户定义：</strong>多租户技术或称多重租赁技术，简称SaaS，是<strong>一种软件架构技术</strong>，是实现如何在<strong>多用户环境下（此处的多用户一般是面向企业用户）共用相同的系统或程序组件</strong>，并且可<strong>确保各用户间数据的隔离性</strong>。简单讲：在一台服务器上运行单个应用实例，它为多个租户（客户）提供服务。从定义中我们可以理解：多租户是一种架构，目的是为了让多用户环境下使用同一套程序，且保证用户间数据隔离。那么重点就很浅显易懂了，<strong>多租户的重点就是同一套程序下实现多用户数据的隔离</strong>。</p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/40115/">https://github.com/maxzhao-it/blog/post/40115/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/DB/" rel="tag"># DB</a>
+              <a href="/blog/tags/PostgreSql/" rel="tag"># PostgreSql</a>
+              <a href="/blog/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 分布式</a>
+              <a href="/blog/tags/Citus/" rel="tag"># Citus</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/34819/" rel="prev" title="PostgreSQL基于Greenplum的分布式">
+                  <i class="fa fa-chevron-left"></i> PostgreSQL基于Greenplum的分布式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/47598/" rel="next" title="Docker安装Greenplum集群">
+                  Docker安装Greenplum集群 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

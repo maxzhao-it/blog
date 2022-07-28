@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/534f2c3a/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/534f2c3a/","path":"post/534f2c3a/","title":"Nacos+HA高可用VIP集群"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nacos+HA高可用VIP集群 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#VIP%E6%A8%A1%E5%BC%8F%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">2.1.</span> <span class="nav-text">VIP模式架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.2.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Haproxy%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.2.1.</span> <span class="nav-text">Haproxy负载均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Keepalived%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">2.2.2.</span> <span class="nav-text">Keepalived高可用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><span class="nav-number">2.3.</span> <span class="nav-text">服务器部署方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E9%A2%84%E5%A4%87%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">3.1.</span> <span class="nav-text">1、预备环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E4%BB%8E-Github-%E4%B8%8A%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85"><span class="nav-number">3.2.</span> <span class="nav-text">2、从 Github 上下载安装包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81MySQL%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.3.</span> <span class="nav-text">3、MySQL数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E9%85%8D%E7%BD%AE-Nacos-%E7%9A%84-MySQL-%E9%A9%B1%E5%8A%A8"><span class="nav-number">3.4.</span> <span class="nav-text">4、配置 Nacos 的 MySQL 驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81%E5%AE%89%E8%A3%85-HaProxy"><span class="nav-number">3.5.</span> <span class="nav-text">5、安装 HaProxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81%E5%AE%89%E8%A3%85-KeepAlived"><span class="nav-number">3.6.</span> <span class="nav-text">6、安装 KeepAlived</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.6.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-1"><span class="nav-number">3.6.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%90%8E%E7%9A%84%E7%9B%AE%E5%BD%95"><span class="nav-number">3.6.3.</span> <span class="nav-text">安装后的目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6"><span class="nav-number">3.6.4.</span> <span class="nav-text">创建启动文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.6.4.1.</span> <span class="nav-text">查看系统服务</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81Nacos%E9%9B%86%E7%BE%A4%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">1、Nacos集群文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81Nacos-%E7%9A%84application-properties%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">2、Nacos 的application.properties配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81Nacos%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.3.</span> <span class="nav-text">3、Nacos服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E9%85%8D%E7%BD%AE-HaProxy"><span class="nav-number">4.4.</span> <span class="nav-text">4、配置 HaProxy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-1"><span class="nav-number">4.4.1.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AEhaproxy-cfg"><span class="nav-number">4.4.1.1.</span> <span class="nav-text">基本配置haproxy.cfg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE-rsyslog"><span class="nav-number">4.4.1.2.</span> <span class="nav-text">日志配置 rsyslog</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E9%85%8D%E7%BD%AE"><span class="nav-number">4.4.2.</span> <span class="nav-text">检查配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81%E9%85%8D%E7%BD%AEKeepAlived"><span class="nav-number">4.5.</span> <span class="nav-text">5、配置KeepAlived</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9"><span class="nav-number">4.5.1.</span> <span class="nav-text">配置文件修改</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#master-192-168-2-41%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.5.1.1.</span> <span class="nav-text">master 192.168.2.41服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#slave-192-168-2-42"><span class="nav-number">4.5.1.2.</span> <span class="nav-text">slave 192.168.2.42</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE"><span class="nav-number">4.5.1.3.</span> <span class="nav-text">日志配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5%E8%84%9A%E6%9C%AC"><span class="nav-number">4.5.2.</span> <span class="nav-text">健康检查脚本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">5.</span> <span class="nav-text">启动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nacos%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="nav-number">5.1.</span> <span class="nav-text">Nacos基础命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nacos%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-number">5.2.</span> <span class="nav-text">Nacos服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HaProxy%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-number">5.3.</span> <span class="nav-text">HaProxy服务命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-nacos-cluster-cannot-bind-socket-0-0-0-0-8848"><span class="nav-number">5.3.1.</span> <span class="nav-text">问题 nacos_cluster: cannot bind socket [0.0.0.0:8848]</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%AD%96%E7%95%A5"><span class="nav-number">5.3.1.1.</span> <span class="nav-text">设置策略</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Keepalived%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-number">5.4.</span> <span class="nav-text">Keepalived服务命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C"><span class="nav-number">6.0.1.</span> <span class="nav-text">服务注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="nav-number">6.0.2.</span> <span class="nav-text">服务发现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E9%85%8D%E7%BD%AE"><span class="nav-number">6.0.3.</span> <span class="nav-text">发布配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%85%8D%E7%BD%AE"><span class="nav-number">6.0.4.</span> <span class="nav-text">获取配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-HaProxy"><span class="nav-number">6.1.</span> <span class="nav-text">测试 HaProxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-HaProxy-%E4%B8%8B%E7%9A%84Nacos"><span class="nav-number">6.2.</span> <span class="nav-text">测试 HaProxy 下的Nacos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-Keepalived"><span class="nav-number">6.3.</span> <span class="nav-text">测试 Keepalived</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">6.3.1.</span> <span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B"><span class="nav-number">6.3.1.1.</span> <span class="nav-text">查看进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP"><span class="nav-number">6.3.1.2.</span> <span class="nav-text">IP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%B5%8B%E8%AF%95"><span class="nav-number">6.3.1.3.</span> <span class="nav-text">正常测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%97%AD-master-%E5%90%8E%E6%B5%8B%E8%AF%95"><span class="nav-number">6.3.1.4.</span> <span class="nav-text">关闭 master 后测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-Keepalived-VIP%E7%9A%84Nacos"><span class="nav-number">6.4.</span> <span class="nav-text">测试 Keepalived VIP的Nacos</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84"><span class="nav-number">7.</span> <span class="nav-text">附</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nacos-application-properties%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE"><span class="nav-number">7.1.</span> <span class="nav-text">Nacos application.properties详细配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0Grafana-%E7%9A%84Dashboard"><span class="nav-number">7.2.</span> <span class="nav-text">添加Grafana  的Dashboard</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Grafana"><span class="nav-number">7.2.1.</span> <span class="nav-text">Grafana</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#haproxy"><span class="nav-number">7.3.</span> <span class="nav-text">haproxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Keepalived"><span class="nav-number">7.4.</span> <span class="nav-text">Keepalived</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VRRP%E5%AE%9E%E4%BE%8B%E5%AE%9A%E4%B9%89%E5%9D%97"><span class="nav-number">7.4.1.</span> <span class="nav-text">VRRP实例定义块</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/534f2c3a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nacos+HA高可用VIP集群 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nacos+HA高可用VIP集群
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Nacos</code>支持三种部署模式：</p>
+<ul>
+<li>单机模式 - 用于测试和单机试用。</li>
+<li>集群模式 - 用于生产环境，确保高可用。</li>
+<li>多集群模式 - 用于多数据中心场景。</li>
+</ul>
+<p>强烈推荐文档](<a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/quick-start.html)%EF%BC%9A%E5%BE%88%E8%AF%A6%E7%BB%86%E4%BA%86%E3%80%82%E4%BD%86%E6%98%AF%E9%9B%86%E7%BE%A4%E5%8F%AA%E6%8F%8F%E8%BF%B0%E4%BA%86%E7%9B%B4%E8%BF%9E%E6%A8%A1%E5%BC%8F%EF%BC%8C%E4%B8%8D%E9%80%82%E7%94%A8%E5%8F%AF%E6%89%A9%E5%B1%95%60Nacos%60">https://nacos.io/zh-cn/docs/quick-start.html)：很详细了。但是集群只描述了直连模式，不适用可扩展`Nacos`</a> 服务的生产环境。</p>
+<p>这里主要描述一下 <code>VIP</code> 模式以及 <code>VIP</code> 模式的安装、配置。</p>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="VIP模式架构图"><a href="#VIP模式架构图" class="headerlink" title="VIP模式架构图"></a><code>VIP</code>模式架构图</h2><p><img src="/blog/uploads/images/image-20210824165648269.png"></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="Haproxy负载均衡"><a href="#Haproxy负载均衡" class="headerlink" title="Haproxy负载均衡"></a><code>Haproxy</code>负载均衡</h3><p>这里使用 <code>HaProxy</code>实现负载均衡，这里使用两台 <code>HaProxy</code>服务器，能够自动进行故障转移，当前解决方案为 <code>Keepalived</code>。</p>
+<h3 id="Keepalived高可用"><a href="#Keepalived高可用" class="headerlink" title="Keepalived高可用"></a><code>Keepalived</code>高可用</h3><p><code>Keepalived</code>具有高可用、主从热备、秒级切换等特点。<code>KeepAlived</code> 采用 <code>VRRP</code> (<code>Virtual Router Redundancy Protocol</code>，虚拟路由冗余协议)<br>来解决单点失效的问题，它通常由一组一备两个节点组成，同一时间内只有主节点会提供对外服务，并同时提供一个虚拟的 <code>IP</code> 地址 (<code>Virtual Internet Protocol Address</code> ，简称 <code>VIP</code>) 。<br>如果主节点故障，那么备份节点会自动接管 <code>VIP</code> 并成为新的主节点 ，直到原有的主节点恢复。</p>
+<h2 id="服务器部署方案"><a href="#服务器部署方案" class="headerlink" title="服务器部署方案"></a>服务器部署方案</h2><ul>
+<li><code>nacos1</code>：192.168.2.43  </li>
+<li><code>nacos2</code>：192.168.2.44  </li>
+<li><code>nacos3</code>：192.168.2.45  </li>
+<li><code>HaProxy</code>、<code>KeepAlived</code>：192.168.2.41&#x2F;192.168.2.42<ul>
+<li>192.168.2.41 <code>KeepAlived master</code></li>
+<li>192.168.2.42<code>KeepAlived slave</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>关闭防火墙或开放端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br></pre></td></tr></table></figure>
+
+<p>默认已经拥有一台<code>MySQL8+</code>数据库服务。</p>
+<p><a href="../26543">Centos7 RPM安装MYSQL8</a><br><a href="../26542">Centos7 解压安装MYSQL8</a></p>
+</blockquote>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>我这里以我的安装路径为准<code>/opt/soft/</code></p>
+<h2 id="1、预备环境准备"><a href="#1、预备环境准备" class="headerlink" title="1、预备环境准备"></a>1、预备环境准备</h2><p><code>Nacos</code> 依赖 <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/">Java</a><br>环境来运行。如果您是从代码开始构建并运行<code>Nacos</code>，还需要为此配置 <a target="_blank" rel="noopener" href="https://maven.apache.org/index.html">Maven</a>环境，请确保是在以下版本环境中安装使用:</p>
+<ol>
+<li><code>Centos7</code>，支持 Linux&#x2F;Unix&#x2F;Mac&#x2F;Windows，推荐选用 Linux&#x2F;Unix&#x2F;Mac。</li>
+<li><code>64 bit JDK 1.8+</code>：<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">下载</a> &amp; <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/">配置</a>。</li>
+<li><code>Maven 3.2.x+</code>：<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">下载</a> &amp; <a target="_blank" rel="noopener" href="https://maven.apache.org/settings.html">配置</a>，如果不编译<code>Nacos</code>源码，可以不用下载</li>
+<li><code>Nacos 2.0.3</code>： <a href="https://github.com/alibaba/nacos/releases/download/2.0.3/nacos-server-2.0.3.tar.gz">下载</a> &amp; <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/quick-start-spring-cloud.html">配置</a></li>
+</ol>
+<h2 id="2、从-Github-上下载安装包"><a href="#2、从-Github-上下载安装包" class="headerlink" title="2、从 Github 上下载安装包"></a>2、从 <code>Github</code> 上下载安装包</h2><p><code>Releases</code> <a href="https://github.com/alibaba/nacos/releases">地址</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /opt/soft</span><br><span class="line"><span class="built_in">cd</span> /opt/soft/</span><br><span class="line"><span class="comment"># 直接获取 nacos-server-2.0.3</span></span><br><span class="line">wget https://github.com/alibaba/nacos/releases/download/2.0.3/nacos-server-2.0.3.tar.gz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf nacos-server-2.0.3.tar.gz</span><br><span class="line"><span class="built_in">cd</span> nacos/</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、MySQL数据库"><a href="#3、MySQL数据库" class="headerlink" title="3、MySQL数据库"></a>3、<code>MySQL</code>数据库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询 nacos-mysql.sql 脚本文件</span></span><br><span class="line"><span class="built_in">cat</span> /opt/soft/nacos/conf/nacos-mysql.sql </span><br></pre></td></tr></table></figure>
+
+<p>在<code>MySQL</code>中新建数据库并执行当前文件。</p>
+<h2 id="4、配置-Nacos-的-MySQL-驱动"><a href="#4、配置-Nacos-的-MySQL-驱动" class="headerlink" title="4、配置 Nacos 的 MySQL 驱动"></a>4、配置 <code>Nacos</code> 的 <code>MySQL</code> 驱动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /opt/soft/nacos/plugins/mysql/</span><br></pre></td></tr></table></figure>
+
+<p>下载 <a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.26/mysql-connector-java-8.0.26.jar"><code>mysql-connector-java-8.0.26.jar</code></a> 驱动，放入到前目录中。</p>
+<h2 id="5、安装-HaProxy"><a href="#5、安装-HaProxy" class="headerlink" title="5、安装 HaProxy"></a>5、安装 <code>HaProxy</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yum install haproxy -y</span><br><span class="line"><span class="comment"># 查看系统服务</span></span><br><span class="line">systemctl list-unit-files |grep haproxy</span><br><span class="line"><span class="comment"># 服务状态</span></span><br><span class="line">systemctl status haproxy</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">systemctl start haproxy</span><br><span class="line"><span class="comment"># 设置为开机自启</span></span><br><span class="line">systemctl <span class="built_in">enable</span> haproxy</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、安装-KeepAlived"><a href="#6、安装-KeepAlived" class="headerlink" title="6、安装 KeepAlived"></a>6、安装 <code>KeepAlived</code></h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a target="_blank" rel="noopener" href="https://www.keepalived.org/download.html">官方下载地址</a></p>
+<p>这里选择 <code>2.2.2</code>版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /root/tools</span><br><span class="line"><span class="built_in">cd</span> /root/tools/</span><br><span class="line">wget https://www.keepalived.org/software/keepalived-2.2.2.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><blockquote>
+<p> <code>VMware</code> 中注意，需要挂载ISO镜像,参考 <a href="2021/08/03/Linux-Centos-VMWare%E9%85%8D%E7%BD%AECentOS7%E7%BD%91%E7%BB%9C/">VMWare配置CentOS7网络</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum -y install openssl-devel gcc gcc-c++</span><br><span class="line">tar -xvf keepalived-2.2.2.tar.gz</span><br><span class="line"><span class="built_in">cd</span> keepalived-2.2.2</span><br><span class="line">./configure --prefix=/usr/local/keepalived</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="built_in">mkdir</span> /etc/keepalived</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装后的目录"><a href="#安装后的目录" class="headerlink" title="安装后的目录"></a>安装后的目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install tree -y</span><br><span class="line">tree -l /usr/local/keepalived/etc</span><br></pre></td></tr></table></figure>
+
+<p>目录结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/keepalived/etc</span><br><span class="line">├── keepalived</span><br><span class="line">│   ├── keepalived.conf</span><br><span class="line">│   └── samples</span><br><span class="line">│       ├── client.pem</span><br><span class="line">│       ├── dh1024.pem</span><br><span class="line">│       ├── keepalived.conf.conditional_conf</span><br><span class="line">│       ├── ***********************************</span><br><span class="line">│       └── sample_notify_fifo.sh</span><br><span class="line">└── sysconfig</span><br><span class="line">    └── keepalived</span><br></pre></td></tr></table></figure>
+
+<p>目录分别对应配置路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/keepalived/keepalived.conf</span><br><span class="line">/etc/sysconfig/keepalived</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建启动文件"><a href="#创建启动文件" class="headerlink" title="创建启动文件"></a>创建启动文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#将keepalived配置文件拷贝到etc下</span></span><br><span class="line"><span class="built_in">cp</span> /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf</span><br><span class="line"><span class="comment">#将keepalived文件拷贝到etc下，加入网卡配置</span></span><br><span class="line"><span class="built_in">cp</span> /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/keepalived  </span><br><span class="line"><span class="comment">#命令</span></span><br><span class="line"><span class="built_in">ln</span> -s /usr/local/keepalived/sbin/keepalived /usr/sbin</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看系统服务"><a href="#查看系统服务" class="headerlink" title="查看系统服务"></a>查看系统服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl list-unit-files |grep keepalived</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="1、Nacos集群文件"><a href="#1、Nacos集群文件" class="headerlink" title="1、Nacos集群文件"></a>1、<code>Nacos</code>集群文件</h2><p>所有节点都需要当前配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/soft/nacos/conf</span><br><span class="line"><span class="comment"># 拷贝集群配置文件</span></span><br><span class="line"><span class="built_in">cp</span> cluster.conf.example cluster.conf</span><br><span class="line"><span class="comment"># 写入配置</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;192.168.2.43:8848&quot;</span> &gt; /opt/soft/nacos/conf/cluster.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;192.168.2.44:8848&quot;</span> &gt;&gt; /opt/soft/nacos/conf/cluster.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;192.168.2.45:8848&quot;</span> &gt;&gt; /opt/soft/nacos/conf/cluster.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、Nacos-的application-properties配置"><a href="#2、Nacos-的application-properties配置" class="headerlink" title="2、Nacos 的application.properties配置"></a>2、<code>Nacos</code> 的<code>application.properties</code>配置</h2><p>所有节点都需要当前配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/soft/nacos/conf/application.properties</span><br></pre></td></tr></table></figure>
+
+<p>按需编写配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### Default web context path:</span></span><br><span class="line"><span class="attr">server.servlet.contextPath</span>=<span class="string">/nacos</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">8848</span></span><br><span class="line"><span class="comment">#*************** Network Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### If prefer hostname over ip for Nacos server addresses in cluster.conf:</span></span><br><span class="line"><span class="comment"># nacos.inetutils.prefer-hostname-over-ip=false</span></span><br><span class="line"><span class="comment">### Specify local server&#x27;s IP:</span></span><br><span class="line"><span class="comment"># nacos.inetutils.ip-address=</span></span><br><span class="line"><span class="comment">#*************** Config Module Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### If use MySQL as datasource:</span></span><br><span class="line"><span class="attr">spring.datasource.platform</span>=<span class="string">mysql</span></span><br><span class="line"><span class="comment">### Count of DB:</span></span><br><span class="line"><span class="attr">db.num</span>=<span class="string">1</span></span><br><span class="line"><span class="comment">### Connect URL of DB:</span></span><br><span class="line"><span class="attr">db.url.0</span>=<span class="string">jdbc:mysql://192.168.2.1:3306/nacos_db?charset=utf8mb4&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;serverTimezone=GMT%2B8&amp;useUnicode=true&amp;useSSL=false</span></span><br><span class="line"><span class="attr">db.user.0</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">db.password.0</span>=<span class="string">nacos</span></span><br><span class="line"><span class="comment">### Connection pool configuration: hikariCP</span></span><br><span class="line"><span class="attr">db.pool.config.connectionTimeout</span>=<span class="string">30000</span></span><br><span class="line"><span class="attr">db.pool.config.validationTimeout</span>=<span class="string">10000</span></span><br><span class="line"><span class="attr">db.pool.config.maximumPoolSize</span>=<span class="string">20</span></span><br><span class="line"><span class="attr">db.pool.config.minimumIdle</span>=<span class="string">2</span></span><br><span class="line"><span class="comment">### will be removed and replaced by `nacos.naming.clean` properties</span></span><br><span class="line"><span class="attr">nacos.naming.empty-service.auto-clean</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">nacos.naming.empty-service.clean.initial-delay-ms</span>=<span class="string">50000</span></span><br><span class="line"><span class="attr">nacos.naming.empty-service.clean.period-time-ms</span>=<span class="string">30000</span></span><br><span class="line"><span class="comment">### Since 2.0.3</span></span><br><span class="line"><span class="comment">### The expired time for inactive client, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.client.expired.time=180000</span></span><br><span class="line"><span class="comment">#*************** CMDB Module Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### The interval to dump external CMDB in seconds:</span></span><br><span class="line"><span class="attr">nacos.cmdb.dumpTaskInterval</span>=<span class="string">3600</span></span><br><span class="line"><span class="comment">### The interval of polling data change event in seconds:</span></span><br><span class="line"><span class="attr">nacos.cmdb.eventTaskInterval</span>=<span class="string">10</span></span><br><span class="line"><span class="comment">### The interval of loading labels in seconds:</span></span><br><span class="line"><span class="attr">nacos.cmdb.labelTaskInterval</span>=<span class="string">300</span></span><br><span class="line"><span class="comment">### If turn on data loading task:</span></span><br><span class="line"><span class="attr">nacos.cmdb.loadDataAtStart</span>=<span class="string">false</span></span><br><span class="line"><span class="comment"># 激活Prometheus监控采集Exporter</span></span><br><span class="line"><span class="attr">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br><span class="line"><span class="comment">### The auth system to use, currently only &#x27;nacos&#x27; and &#x27;ldap&#x27; is supported:</span></span><br><span class="line"><span class="attr">nacos.core.auth.system.type</span>=<span class="string">nacos</span></span><br><span class="line"><span class="comment">### If turn on auth system:</span></span><br><span class="line"><span class="attr">nacos.core.auth.enabled</span>=<span class="string">false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、Nacos服务"><a href="#3、Nacos服务" class="headerlink" title="3、Nacos服务"></a>3、<code>Nacos</code>服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/soft/nacos.service</span><br></pre></td></tr></table></figure>
+
+<p>写入配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Description</span>=<span class="string">nacos-server</span></span><br><span class="line"><span class="comment"># 在 network 服务后启动</span></span><br><span class="line"><span class="attr">After</span>=<span class="string"></span></span><br><span class="line"></span><br><span class="line"><span class="attr">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=<span class="string">forking</span></span><br><span class="line"><span class="attr">ExecStart</span>=<span class="string">/opt/soft/nacos/bin/startup.sh</span></span><br><span class="line"><span class="attr">ExecStop</span>=<span class="string">/opt/soft/nacos/bin/shutdown.sh</span></span><br><span class="line"><span class="attr">Restart</span>=<span class="string">always</span></span><br><span class="line"><span class="attr">PrivateTmp</span>=<span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=<span class="string">multi-user.target</span></span><br></pre></td></tr></table></figure>
+
+<p>启动服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> nacos.service /usr/lib/systemd/system/</span><br><span class="line"><span class="comment"># 启动 nacos 服务</span></span><br><span class="line">systemctl start nacos</span><br><span class="line"><span class="comment"># 查看服务状态</span></span><br><span class="line">systemctl status nacos.service</span><br><span class="line"><span class="comment"># 设置开机自启</span></span><br><span class="line">systemctl <span class="built_in">enable</span> nacos</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、配置-HaProxy"><a href="#4、配置-HaProxy" class="headerlink" title="4、配置 HaProxy"></a>4、配置 <code>HaProxy</code></h2><h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><h4 id="基本配置haproxy-cfg"><a href="#基本配置haproxy-cfg" class="headerlink" title="基本配置haproxy.cfg"></a>基本配置<code>haproxy.cfg</code></h4><p>参考附录 <code>/etc/haproxy/haproxy.cfg</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/haproxy/haproxy.cfg</span><br></pre></td></tr></table></figure>
+
+<h4 id="日志配置-rsyslog"><a href="#日志配置-rsyslog" class="headerlink" title="日志配置 rsyslog"></a>日志配置 <code>rsyslog</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /var/log/haproxy</span><br><span class="line">vim /etc/rsyslog.conf </span><br><span class="line"><span class="comment">#写入 local2.*                       /var/log/haproxy.log</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="检查配置"><a href="#检查配置" class="headerlink" title="检查配置"></a>检查配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">haproxy -f /etc/haproxy/haproxy.cfg -c</span><br><span class="line"><span class="comment">#Configuration file is valid</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="5、配置KeepAlived"><a href="#5、配置KeepAlived" class="headerlink" title="5、配置KeepAlived"></a>5、配置<code>KeepAlived</code></h2><p><code>Keepalived</code> 启动时，不会检查配置文件的语法。</p>
+<h3 id="配置文件修改"><a href="#配置文件修改" class="headerlink" title="配置文件修改"></a>配置文件修改</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/keepalived/keepalived.conf</span><br></pre></td></tr></table></figure>
+
+<h4 id="master-192-168-2-41服务器"><a href="#master-192-168-2-41服务器" class="headerlink" title="master 192.168.2.41服务器"></a><code>master 192.168.2.41</code>服务器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname host41</span><br><span class="line">vim /etc/keepalived/keepalived.conf</span><br></pre></td></tr></table></figure>
+
+<p>写入配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">global_defs &#123; ## 全局定义块 </span><br><span class="line">   router_id host41 ## 标识本节点的字条串,通常为hostname</span><br><span class="line">&#125;</span><br><span class="line">vrrp_script check_haproxy &#123;</span><br><span class="line">	script &quot;/etc/keepalived/haproxy_chk.sh&quot; #执行脚本位置</span><br><span class="line">	interval 5 ##检查时间间隔</span><br><span class="line">	weight -20  ##如果条件成立则权重减20</span><br><span class="line">&#125;</span><br><span class="line">vrrp_instance VI_1 &#123; #VRRP 实例定义块</span><br><span class="line">    state MASTER  ##主节点为MASTER,备份节点为BACKUP</span><br><span class="line">    interface ens33   ##绑定虚拟ip的网络接口(网卡)</span><br><span class="line">    virtual_router_id 40 ##虚拟路由id号，主备节点相同</span><br><span class="line">    mcast_src_ip 192.168.2.41   ##本机ip地址</span><br><span class="line">    priority 100    ##优先级(0-254)</span><br><span class="line">    advert_int 1    ##组播信息发送间隔，两个节点必须一致,默认1s</span><br><span class="line">    authentication &#123;    ##认证匹配</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.2.49/24	##虚拟ip,可以指定多个</span><br><span class="line">    &#125;</span><br><span class="line">    track_script &#123;</span><br><span class="line">        check_haproxy</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="slave-192-168-2-42"><a href="#slave-192-168-2-42" class="headerlink" title="slave 192.168.2.42"></a><code>slave 192.168.2.42</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname host42</span><br><span class="line">vim /etc/keepalived/keepalived.conf</span><br></pre></td></tr></table></figure>
+
+<p>写入配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">global_defs &#123; ## 全局定义块 </span><br><span class="line">   router_id host42 ## 标识本节点的字条串,通常为hostname</span><br><span class="line">&#125;</span><br><span class="line">vrrp_script check_haproxy &#123;</span><br><span class="line">	script &quot;/etc/keepalived/haproxy_chk.sh&quot; #执行脚本位置</span><br><span class="line">	interval 5 ##检查时间间隔</span><br><span class="line">	weight -20  ##如果条件成立则权重减20</span><br><span class="line">&#125;</span><br><span class="line">vrrp_instance VI_1 &#123; #VRRP 实例定义块</span><br><span class="line">    state MASTER  ##主节点为MASTER,备份节点为BACKUP</span><br><span class="line">    interface ens33   ##绑定虚拟ip的网络接口(网卡)</span><br><span class="line">    virtual_router_id 40 ##虚拟路由id号，主备节点相同</span><br><span class="line">    mcast_src_ip 192.168.2.42   ##本机ip地址</span><br><span class="line">    priority 50    ##优先级(0-254)</span><br><span class="line">    advert_int 1    ##组播信息发送间隔，两个节点必须一致,默认1s</span><br><span class="line">    authentication &#123;    ##认证匹配</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.2.49/24	##虚拟ip,可以指定多个</span><br><span class="line">    &#125;</span><br><span class="line">    track_script &#123;</span><br><span class="line">        check_haproxy</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="日志配置"><a href="#日志配置" class="headerlink" title="日志配置"></a>日志配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysconfig/keepalived</span><br><span class="line"><span class="comment">#写入 KEEPALIVED_OPTIONS=&quot;-D -d -S 0&quot;</span></span><br><span class="line">vim /etc/rsyslog.conf </span><br><span class="line"><span class="comment">#写入 local0.*  /var/log/keepalived.log</span></span><br><span class="line">systemctl restart rsyslog.service</span><br><span class="line">systemctl restart keepalived</span><br></pre></td></tr></table></figure>
+
+<h3 id="健康检查脚本"><a href="#健康检查脚本" class="headerlink" title="健康检查脚本"></a>健康检查脚本</h3><p>健康检查脚本的目的，判断 <code>HaProxy</code> 是否存活，如不存活，则同时关闭 <code>Keepalived</code>，释放资源。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/keepalived/haproxy_chk.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">systemctl status haproxy.service &amp;&gt;/dev/null</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ];<span class="keyword">then</span></span><br><span class="line">    systemctl start haproxy.service &amp;&gt;/dev/null</span><br><span class="line">    <span class="built_in">sleep</span> 5</span><br><span class="line">    systemctl status haproxy.service &amp;&gt;/dev/null</span><br><span class="line">    <span class="keyword">if</span> [ $? -ne 0 ];<span class="keyword">then</span></span><br><span class="line">        systemctl stop keepalived</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 755 /etc/keepalived/haproxy_chk.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h1><h2 id="Nacos基础命令"><a href="#Nacos基础命令" class="headerlink" title="Nacos基础命令"></a><code>Nacos</code>基础命令</h2><p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /opt/soft/nacos/bin/startup.sh</span><br></pre></td></tr></table></figure>
+
+<p>查看当前是否执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -mV |grep nacos</span><br></pre></td></tr></table></figure>
+
+<p>关闭</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /opt/soft/nacos/bin/shutdown.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="Nacos服务命令"><a href="#Nacos服务命令" class="headerlink" title="Nacos服务命令"></a><code>Nacos</code>服务命令</h2><p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start nacos</span><br></pre></td></tr></table></figure>
+
+<p>停止</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop nacos</span><br></pre></td></tr></table></figure>
+
+<h2 id="HaProxy服务命令"><a href="#HaProxy服务命令" class="headerlink" title="HaProxy服务命令"></a><code>HaProxy</code>服务命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重启系统日志</span></span><br><span class="line">systemctl restart rsyslog.service</span><br><span class="line"><span class="comment"># 启动 ha代理</span></span><br><span class="line">systemctl start haproxy</span><br><span class="line"><span class="comment"># 设置为开机自启</span></span><br><span class="line">systemctl <span class="built_in">enable</span> haproxy</span><br><span class="line"><span class="comment"># 重启 ha代理</span></span><br><span class="line">systemctl restart haproxy</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题-nacos-cluster-cannot-bind-socket-0-0-0-0-8848"><a href="#问题-nacos-cluster-cannot-bind-socket-0-0-0-0-8848" class="headerlink" title="问题 nacos_cluster: cannot bind socket [0.0.0.0:8848]"></a>问题 <code>nacos_cluster: cannot bind socket [0.0.0.0:8848]</code></h3><h4 id="设置策略"><a href="#设置策略" class="headerlink" title="设置策略"></a>设置策略</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式一</span></span><br><span class="line">setsebool -P haproxy_connect_any=1</span><br><span class="line"><span class="comment"># 方式二</span></span><br><span class="line">vim   /etc/sysctl.conf</span><br><span class="line"><span class="comment"># 添加 net.ipv4.ip_nonlocal_bind=1</span></span><br><span class="line">sysctl -p</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<p>重新启动就可以了.</p>
+<h2 id="Keepalived服务命令"><a href="#Keepalived服务命令" class="headerlink" title="Keepalived服务命令"></a><code>Keepalived</code>服务命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">useradd  keepalived_script</span><br><span class="line">systemctl start keepalived</span><br><span class="line">systemctl <span class="built_in">enable</span> keepalived</span><br><span class="line">systemctl status keepalived</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><h3 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &#x27;http://127.0.0.1:8848/nacos/v1/ns/instance?serviceName=nacos.naming.serviceName&amp;ip=20.18.7.10&amp;port=8080&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET &#x27;http://127.0.0.1:8848/nacos/v1/ns/instances?serviceName=nacos.naming.serviceName&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="发布配置"><a href="#发布配置" class="headerlink" title="发布配置"></a>发布配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&amp;content=HelloWorld&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取配置"><a href="#获取配置" class="headerlink" title="获取配置"></a>获取配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET &quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-HaProxy"><a href="#测试-HaProxy" class="headerlink" title="测试 HaProxy"></a>测试 <code>HaProxy</code></h2><ul>
+<li><a target="_blank" rel="noopener" href="http://192.168.2.41:8100/stats">192.168.2.41</a></li>
+<li><a target="_blank" rel="noopener" href="http://192.168.2.42:8100/stats">192.168.2.42</a></li>
+</ul>
+<p><img src="/blog/uploads/images/image-20210825135624988.png"></p>
+<h2 id="测试-HaProxy-下的Nacos"><a href="#测试-HaProxy-下的Nacos" class="headerlink" title="测试 HaProxy 下的Nacos"></a>测试 <code>HaProxy</code> 下的<code>Nacos</code></h2><ul>
+<li><a target="_blank" rel="noopener" href="http://192.168.2.41:8848/nacos"><code>192.168.2.41:8848/nacos</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://192.168.2.42:8848/nacos"><code>192.168.2.42:8848/nacos</code></a></li>
+</ul>
+<h2 id="测试-Keepalived"><a href="#测试-Keepalived" class="headerlink" title="测试 Keepalived"></a>测试 <code>Keepalived</code></h2><h3 id=""><a href="#" class="headerlink" title=""></a></h3><h4 id="查看进程"><a href="#查看进程" class="headerlink" title="查看进程"></a>查看进程</h4><p><code>keepalived</code>正常运行后，会启动2个进程，其中一个是父进程，负责监控其子进程。一个是<code>vrrp</code>子进程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep keepalived</span><br></pre></td></tr></table></figure>
+
+<p>查询进程的结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root       2607      1  0 15:35 ?        00:00:00 /usr/local/keepalived/sbin/keepalived -D</span><br><span class="line">root       2608   2607  0 15:35 ?        00:00:00 /usr/local/keepalived/sbin/keepalived -D</span><br></pre></td></tr></table></figure>
+
+<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a><code>IP</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 `host41` 上执行</span></span><br><span class="line">ip a</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<p><img src="/blog/uploads/images/image-20210825140334362.png"></p>
+<p>在 <code>host42</code> 上执行，是没有当前 <code>VIP</code> 的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 `host41` 上执行</span></span><br><span class="line">systemctl stop keepalived</span><br><span class="line"><span class="comment"># 在 `host42` 上执行</span></span><br><span class="line">ip a</span><br></pre></td></tr></table></figure>
+
+<p>这时候会发现 <code>VIP</code> 节点就到了 <code>host42</code></p>
+<p><img src="/blog/uploads/images/image-20210825140425037.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 `host41` 上执行</span></span><br><span class="line">systemctl start keepalived</span><br><span class="line"><span class="comment"># 在 `host41` 上执行</span></span><br><span class="line">ip a</span><br></pre></td></tr></table></figure>
+
+<p>会发现 <code>VIP</code> 节点又回来了，因为 <code>host41</code>的<code>priority</code>比 <code>host42</code>大，所以会抢夺。</p>
+<p>禁用抢夺策略关键字 <code>nopreempt</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    ##**************</span><br><span class="line">    nopreempt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="正常测试"><a href="#正常测试" class="headerlink" title="正常测试"></a>正常测试</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">curl 192.168.2.41</span><br><span class="line"><span class="comment">#this is master</span></span><br><span class="line"><span class="comment">#root@centos7[14:46:07]:~</span></span><br><span class="line">curl 192.168.2.42</span><br><span class="line"><span class="comment">#this is master</span></span><br><span class="line"><span class="comment">#root@centos7[15:03:29]:~</span></span><br><span class="line"><span class="comment">#1.2.3.4.5.6.</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="关闭-master-后测试"><a href="#关闭-master-后测试" class="headerlink" title="关闭 master 后测试"></a>关闭 <code>master</code> 后测试</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># host41 上执行</span></span><br><span class="line">systemctl stop keepalived</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl 192.168.2.41</span><br><span class="line"><span class="comment">#this is slave</span></span><br><span class="line"><span class="comment">#root@centos7[15:03:59]:/etc/keepalived</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-Keepalived-VIP的Nacos"><a href="#测试-Keepalived-VIP的Nacos" class="headerlink" title="测试 Keepalived VIP的Nacos"></a>测试 <code>Keepalived VIP</code>的<code>Nacos</code></h2><ul>
+<li><a target="_blank" rel="noopener" href="http://192.168.2.49:8848/nacos"><code>192.168.2.49:8848/nacos</code></a></li>
+</ul>
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="Nacos-application-properties详细配置"><a href="#Nacos-application-properties详细配置" class="headerlink" title="Nacos application.properties详细配置"></a><code>Nacos application.properties</code>详细配置</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### Default web context path:</span></span><br><span class="line"><span class="attr">server.servlet.contextPath</span>=<span class="string">/nacos</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">8848</span></span><br><span class="line"><span class="comment">#*************** Network Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### If prefer hostname over ip for Nacos server addresses in cluster.conf:</span></span><br><span class="line"><span class="comment"># nacos.inetutils.prefer-hostname-over-ip=false</span></span><br><span class="line"><span class="comment">### Specify local server&#x27;s IP:</span></span><br><span class="line"><span class="comment"># nacos.inetutils.ip-address=</span></span><br><span class="line"><span class="comment">#*************** Config Module Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### If use MySQL as datasource:</span></span><br><span class="line"><span class="attr">spring.datasource.platform</span>=<span class="string">mysql</span></span><br><span class="line"><span class="comment">### Count of DB:</span></span><br><span class="line"><span class="attr">db.num</span>=<span class="string">1</span></span><br><span class="line"><span class="comment">### Connect URL of DB:</span></span><br><span class="line"><span class="attr">db.url.0</span>=<span class="string">jdbc:mysql://192.168.2.1:3306/nacos_db?charset=utf8mb4&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;serverTimezone=GMT%2B8&amp;useUnicode=true&amp;useSSL=false</span></span><br><span class="line"><span class="attr">db.user.0</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">db.password.0</span>=<span class="string">nacos</span></span><br><span class="line"><span class="comment">### Connection pool configuration: hikariCP</span></span><br><span class="line"><span class="attr">db.pool.config.connectionTimeout</span>=<span class="string">30000</span></span><br><span class="line"><span class="attr">db.pool.config.validationTimeout</span>=<span class="string">10000</span></span><br><span class="line"><span class="attr">db.pool.config.maximumPoolSize</span>=<span class="string">20</span></span><br><span class="line"><span class="attr">db.pool.config.minimumIdle</span>=<span class="string">2</span></span><br><span class="line"><span class="comment">#*************** Naming Module Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### Data dispatch task execution period in milliseconds: Will removed on v2.1.X, replace with nacos.core.protocol.distro.data.sync.delayMs</span></span><br><span class="line"><span class="comment"># nacos.naming.distro.taskDispatchPeriod=200</span></span><br><span class="line"><span class="comment">### Data count of batch sync task: Will removed on v2.1.X. Deprecated</span></span><br><span class="line"><span class="comment"># nacos.naming.distro.batchSyncKeyCount=1000</span></span><br><span class="line"><span class="comment">### Retry delay in milliseconds if sync task failed: Will removed on v2.1.X, replace with nacos.core.protocol.distro.data.sync.retryDelayMs</span></span><br><span class="line"><span class="comment"># nacos.naming.distro.syncRetryDelay=5000</span></span><br><span class="line"><span class="comment">### If enable data warmup. If set to false, the server would accept request without local data preparation:</span></span><br><span class="line"><span class="comment"># nacos.naming.data.warmup=true</span></span><br><span class="line"><span class="comment">### If enable the instance auto expiration, kind like of health check of instance:</span></span><br><span class="line"><span class="comment"># nacos.naming.expireInstance=true</span></span><br><span class="line"><span class="comment">### will be removed and replaced by `nacos.naming.clean` properties</span></span><br><span class="line"><span class="attr">nacos.naming.empty-service.auto-clean</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">nacos.naming.empty-service.clean.initial-delay-ms</span>=<span class="string">50000</span></span><br><span class="line"><span class="attr">nacos.naming.empty-service.clean.period-time-ms</span>=<span class="string">30000</span></span><br><span class="line"><span class="comment">### Add in 2.0.0</span></span><br><span class="line"><span class="comment">### The interval to clean empty service, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.clean.empty-service.interval=60000</span></span><br><span class="line"><span class="comment">### The expired time to clean empty service, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.clean.empty-service.expired-time=60000</span></span><br><span class="line"><span class="comment">### The interval to clean expired metadata, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.clean.expired-metadata.interval=5000</span></span><br><span class="line"><span class="comment">### The expired time to clean metadata, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.clean.expired-metadata.expired-time=60000</span></span><br><span class="line"><span class="comment">### The delay time before push task to execute from service changed, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.push.pushTaskDelay=500</span></span><br><span class="line"><span class="comment">### The timeout for push task execute, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.push.pushTaskTimeout=5000</span></span><br><span class="line"><span class="comment">### The delay time for retrying failed push task, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.push.pushTaskRetryDelay=1000</span></span><br><span class="line"><span class="comment">### Since 2.0.3</span></span><br><span class="line"><span class="comment">### The expired time for inactive client, unit: milliseconds.</span></span><br><span class="line"><span class="comment"># nacos.naming.client.expired.time=180000</span></span><br><span class="line"><span class="comment">#*************** CMDB Module Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### The interval to dump external CMDB in seconds:</span></span><br><span class="line"><span class="attr">nacos.cmdb.dumpTaskInterval</span>=<span class="string">3600</span></span><br><span class="line"><span class="comment">### The interval of polling data change event in seconds:</span></span><br><span class="line"><span class="attr">nacos.cmdb.eventTaskInterval</span>=<span class="string">10</span></span><br><span class="line"><span class="comment">### The interval of loading labels in seconds:</span></span><br><span class="line"><span class="attr">nacos.cmdb.labelTaskInterval</span>=<span class="string">300</span></span><br><span class="line"><span class="comment">### If turn on data loading task:</span></span><br><span class="line"><span class="attr">nacos.cmdb.loadDataAtStart</span>=<span class="string">false</span></span><br><span class="line"><span class="comment">#*************** Metrics Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### Metrics for prometheus</span></span><br><span class="line"><span class="comment"># 激活Prometheus监控采集Exporter</span></span><br><span class="line"><span class="attr">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br><span class="line"><span class="comment">### Metrics for elastic search</span></span><br><span class="line"><span class="attr">management.metrics.export.elastic.enabled</span>=<span class="string">false</span></span><br><span class="line"><span class="comment">#management.metrics.export.elastic.host=http://localhost:9200</span></span><br><span class="line"><span class="comment">### Metrics for influx</span></span><br><span class="line"><span class="attr">management.metrics.export.influx.enabled</span>=<span class="string">false</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.db=springboot</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.uri=http://localhost:8086</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.auto-create-db=true</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.consistency=one</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.compressed=true</span></span><br><span class="line"><span class="comment">#*************** Access Log Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### If turn on the access log:</span></span><br><span class="line"><span class="attr">server.tomcat.accesslog.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment">### The access log pattern:</span></span><br><span class="line"><span class="attr">server.tomcat.accesslog.pattern</span>=<span class="string">%h %l %u %t &quot;%r&quot; %s %b %D %&#123;User-Agent&#125;i %&#123;Request-Source&#125;i</span></span><br><span class="line"><span class="comment">### The directory of access log:</span></span><br><span class="line"><span class="attr">server.tomcat.basedir</span>=<span class="string"></span></span><br><span class="line"><span class="comment">#*************** Access Control Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### If enable spring security, this option is deprecated in 1.2.0:</span></span><br><span class="line"><span class="comment">#spring.security.enabled=false</span></span><br><span class="line"><span class="comment">### The ignore urls of auth, is deprecated in 1.2.0:</span></span><br><span class="line"><span class="attr">nacos.security.ignore.urls</span>=<span class="string">/,/error,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.ico,/console-ui/public/**,/v1/auth/**,/v1/console/health/**,/actuator/**,/v1/console/server/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### The auth system to use, currently only &#x27;nacos&#x27; and &#x27;ldap&#x27; is supported:</span></span><br><span class="line"><span class="attr">nacos.core.auth.system.type</span>=<span class="string">nacos</span></span><br><span class="line"><span class="comment">### If turn on auth system:</span></span><br><span class="line"><span class="attr">nacos.core.auth.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### worked when nacos.core.auth.system.type=ldap，&#123;0&#125; is Placeholder,replace login username</span></span><br><span class="line"><span class="comment"># nacos.core.auth.ldap.url=ldap://localhost:389</span></span><br><span class="line"><span class="comment"># nacos.core.auth.ldap.userdn=cn=&#123;0&#125;,ou=user,dc=company,dc=com</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### The token expiration in seconds:</span></span><br><span class="line"><span class="attr">nacos.core.auth.default.token.expire.seconds</span>=<span class="string">18000</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### The default token:</span></span><br><span class="line"><span class="attr">nacos.core.auth.default.token.secret.key</span>=<span class="string">SecretKey012345678901234567890123456789012345678901234567890123456789</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### Turn on/off caching of auth information. By turning on this switch, the update of auth information would have a 15 seconds delay.</span></span><br><span class="line"><span class="attr">nacos.core.auth.caching.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### Since 1.4.1, Turn on/off white auth for user-agent: nacos-server, only for upgrade from old version.</span></span><br><span class="line"><span class="attr">nacos.core.auth.enable.userAgentAuthWhite</span>=<span class="string">false</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### Since 1.4.1, worked when nacos.core.auth.enabled=true and nacos.core.auth.enable.userAgentAuthWhite=false.</span></span><br><span class="line"><span class="comment">### The two properties is the white list for auth and used by identity the request from other server.</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.key</span>=<span class="string">serverIdentity</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.value</span>=<span class="string">security</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">#*************** Istio Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### If turn on the MCP server:</span></span><br><span class="line"><span class="attr">nacos.istio.mcp.server.enabled</span>=<span class="string">false</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">#*************** Core Related Configurations ***************#</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### set the WorkerID manually</span></span><br><span class="line"><span class="comment"># nacos.core.snowflake.worker-id=</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### Member-MetaData</span></span><br><span class="line"><span class="comment"># nacos.core.member.meta.site=</span></span><br><span class="line"><span class="comment"># nacos.core.member.meta.adweight=</span></span><br><span class="line"><span class="comment"># nacos.core.member.meta.weight=</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">### MemberLookup</span></span><br><span class="line"><span class="comment">### Addressing pattern category, If set, the priority is highest</span></span><br><span class="line"><span class="comment"># nacos.core.member.lookup.type=[file,address-server]</span></span><br><span class="line"><span class="comment">## Set the cluster list with a configuration file or command-line argument</span></span><br><span class="line"><span class="comment"># nacos.member.list=192.168.16.101:8847?raft_port=8807,192.168.16.101?raft_port=8808,192.168.16.101:8849?raft_port=8809</span></span><br><span class="line"><span class="comment">## for AddressServerMemberLookup</span></span><br><span class="line"><span class="comment"># Maximum number of retries to query the address server upon initialization</span></span><br><span class="line"><span class="comment"># nacos.core.address-server.retry=5</span></span><br><span class="line"><span class="comment">## Server domain name address of [address-server] mode</span></span><br><span class="line"><span class="comment"># address.server.domain=jmenv.tbsite.net</span></span><br><span class="line"><span class="comment">## Server port of [address-server] mode</span></span><br><span class="line"><span class="comment"># address.server.port=8080</span></span><br><span class="line"><span class="comment">## Request address of [address-server] mode</span></span><br><span class="line"><span class="comment"># address.server.url=/nacos/serverlist</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="添加Grafana-的Dashboard"><a href="#添加Grafana-的Dashboard" class="headerlink" title="添加Grafana  的Dashboard"></a>添加<code>Grafana</code>  的<code>Dashboard</code></h2><p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/monitor-guide.html"><code>Nacos</code> 监控手册</a></p>
+<p>配置<code>application.properties</code>文件，暴露<code>metrics</code>数据</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br></pre></td></tr></table></figure>
+
+<p>访问 <a target="_blank" rel="noopener" href="http://192.168.2.43:8848/nacos/actuator/prometheus"><code>http://192.168.2.43:8848/nacos/actuator/prometheus</code></a></p>
+<h3 id="Grafana"><a href="#Grafana" class="headerlink" title="Grafana"></a><code>Grafana</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-6.2.2-1.x86_64.rpm</span><br><span class="line">sudo systemctl start grafana-server </span><br><span class="line">sudo systemctl <span class="built_in">enable</span> grafana-server </span><br></pre></td></tr></table></figure>
+
+<p>访问地址 <a target="_blank" rel="noopener" href="http://192.168.2.43:3000/">http://192.168.2.43:3000</a></p>
+<p>默认账号密码  <code>admin admin</code></p>
+<h2 id="haproxy"><a href="#haproxy" class="headerlink" title="haproxy"></a><code>haproxy</code></h2><p><code>/etc/haproxy/haproxy.cfg</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#全局配置</span></span><br><span class="line">global</span><br><span class="line">    <span class="comment">#设置日志 local为本地</span></span><br><span class="line">    <span class="built_in">log</span> 127.0.0.1 local2 info</span><br><span class="line">    <span class="comment">#当前工作目录</span></span><br><span class="line">   	<span class="built_in">chroot</span>		/var/lib/haproxy</span><br><span class="line">   	<span class="comment">#pid 文件地址</span></span><br><span class="line">    pidfile     /var/run/haproxy.pid</span><br><span class="line">    <span class="comment">#用户与用户组</span></span><br><span class="line">    user haproxy</span><br><span class="line">    group haproxy</span><br><span class="line">    <span class="comment">#运行进程ID</span></span><br><span class="line">    <span class="comment">#uid 99</span></span><br><span class="line">    <span class="comment">#gid 99</span></span><br><span class="line">    <span class="comment">#守护进程启动</span></span><br><span class="line">    daemon</span><br><span class="line">    <span class="comment">#最大连接数</span></span><br><span class="line">    maxconn 4096</span><br><span class="line">    <span class="comment"># turn on stats unix socket</span></span><br><span class="line">    stats socket /var/lib/haproxy/stats</span><br><span class="line"><span class="comment">#默认配置</span></span><br><span class="line">defaults</span><br><span class="line">    <span class="comment">#应用全局的日志配置</span></span><br><span class="line">    <span class="built_in">log</span> global</span><br><span class="line">    <span class="comment">#默认的模式mode &#123;tcp|http|health&#125;</span></span><br><span class="line">    <span class="comment">#TCP是4层，HTTP是7层，health只返回OK</span></span><br><span class="line">    mode http</span><br><span class="line">    <span class="comment">#日志类别tcplog/httplog</span></span><br><span class="line">    option httplog</span><br><span class="line">    <span class="comment">#不记录健康检查日志信息</span></span><br><span class="line">    option dontlognull</span><br><span class="line">    <span class="comment">#3次失败则认为服务不可用</span></span><br><span class="line">    retries 3</span><br><span class="line">    <span class="comment">#每个进程可用的最大连接数</span></span><br><span class="line">    maxconn 2000</span><br><span class="line">    <span class="comment">#连接超时</span></span><br><span class="line">    <span class="built_in">timeout</span> connect 5s</span><br><span class="line">    <span class="comment">#客户端超时</span></span><br><span class="line">    <span class="built_in">timeout</span> client 120s</span><br><span class="line">    <span class="comment">#服务端超时</span></span><br><span class="line">    <span class="built_in">timeout</span> server 120s</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nacos 集群绑定配置</span></span><br><span class="line">listen nacos_cluster</span><br><span class="line">        <span class="built_in">bind</span> *:8848</span><br><span class="line">        option tcplog</span><br><span class="line">        <span class="comment">#配置TCP模式</span></span><br><span class="line">        mode tcp</span><br><span class="line">        <span class="comment">#轮询算法</span></span><br><span class="line">        balance roundrobin</span><br><span class="line">        <span class="comment">#Nacos集群节点配置,5秒检测一次，2次成功则服务可用，3次失败则服务不可用</span></span><br><span class="line">        server nacos1 192.168.2.43:8848 check inter 2000 rise 2 fall 3 weight 1</span><br><span class="line">        server nacos2 192.168.2.44:8848 check inter 5000 rise 2 fall 3 weight 1</span><br><span class="line">        server nacos3 192.168.2.45:8848 check inter 5000 rise 2 fall 3 weight 1</span><br><span class="line"></span><br><span class="line"><span class="comment">#haproxy监控页面地址</span></span><br><span class="line">listen monitor </span><br><span class="line">        <span class="built_in">bind</span> *:8100</span><br><span class="line">        mode http</span><br><span class="line">        option httplog</span><br><span class="line">        stats <span class="built_in">enable</span></span><br><span class="line">        stats uri /stats</span><br><span class="line">        stats refresh 5s</span><br></pre></td></tr></table></figure>
+
+<h2 id="Keepalived"><a href="#Keepalived" class="headerlink" title="Keepalived"></a><code>Keepalived</code></h2><p><code>/etc/keepalived/keepalived.conf</code></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#全局定义块</span></span><br><span class="line"><span class="attr">global_defs</span> <span class="string">&#123;</span></span><br><span class="line"><span class="comment">## 标识本节点的字条串,通常为hostname</span></span><br><span class="line">   <span class="attr">router_id</span> <span class="string">host6</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"><span class="attr">vrrp_script</span> <span class="string">check_haproxy &#123;</span></span><br><span class="line"><span class="comment">	#执行脚本位置</span></span><br><span class="line">	<span class="attr">script</span> <span class="string">&quot;/etc/keepalived/haproxy_chk.sh&quot;</span></span><br><span class="line"><span class="comment">   	##检查时间间隔</span></span><br><span class="line">	<span class="attr">interval</span> <span class="string">5</span></span><br><span class="line"><span class="comment">	##如果条件成立则权重减20</span></span><br><span class="line">	<span class="attr">weight</span> <span class="string">-20 </span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"><span class="comment">#VRRP 实例定义块</span></span><br><span class="line"><span class="attr">vrrp_instance</span> <span class="string">VI_1 &#123;</span></span><br><span class="line"><span class="comment">	##主节点为MASTER,备份节点为BACKUP</span></span><br><span class="line">    <span class="attr">state</span> <span class="string">MASTER </span></span><br><span class="line"><span class="comment">    ##绑定虚拟ip的网络接口(网卡)</span></span><br><span class="line">    <span class="attr">interface</span> <span class="string">ens33 </span></span><br><span class="line"><span class="comment">    ##虚拟路由id号，主备节点相同</span></span><br><span class="line">    <span class="attr">virtual_router_id</span> <span class="string">80</span></span><br><span class="line"><span class="comment">    ##本机ip地址</span></span><br><span class="line">    <span class="attr">mcast_src_ip</span> <span class="string">192.168.2.6 </span></span><br><span class="line"><span class="comment">    ##优先级(0-254),</span></span><br><span class="line">    <span class="attr">priority</span> <span class="string">100</span></span><br><span class="line"><span class="comment">    ##组播信息发送间隔，两个节点必须一致,默认1s</span></span><br><span class="line">    <span class="attr">advert_int</span> <span class="string">1</span></span><br><span class="line"><span class="comment">    ##认证匹配</span></span><br><span class="line">    <span class="attr">authentication</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="attr">auth_type</span> <span class="string">PASS</span></span><br><span class="line">        <span class="attr">auth_pass</span> <span class="string">1111</span></span><br><span class="line">    <span class="attr">&#125;</span></span><br><span class="line">    <span class="attr">virtual_ipaddress</span> <span class="string">&#123;</span></span><br><span class="line"><span class="comment">    	##虚拟ip,可以指定多个</span></span><br><span class="line">        <span class="attr">192.168.2.49/24</span></span><br><span class="line">    <span class="attr">&#125;</span></span><br><span class="line">    <span class="attr">track_script</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="attr">check_haproxy</span></span><br><span class="line">    <span class="attr">&#125;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="VRRP实例定义块"><a href="#VRRP实例定义块" class="headerlink" title="VRRP实例定义块"></a>VRRP实例定义块</h3><ol>
+<li><strong>vrrp_sync_group</strong>：同步vrrp级，用于确定失败切换（FailOver）包含的路由实例个数。即在有2个负载均衡器的场景，一旦某个负载均衡器失效，需要自动切换到另外一个负载均衡器的实例是哪</li>
+<li><strong>group</strong>：至少要包含一个vrrp实例，vrrp实例名称必须和vrrp_instance定义的一致</li>
+<li><strong>vrrp_instance：vrrp</strong>实例名 1&gt; <strong>state</strong>：实例状态，只有MASTER 和<br>BACKUP两种状态，并且需要全部大写。抢占模式下，其中MASTER为工作状态，BACKUP为备用状态。当MASTER所在的服务器失效时，BACKUP所在的服务会自动把它的状态由BACKUP切换到MASTER状态。当失效的MASTER所在的服务恢复时，BACKUP从MASTER恢复到BACKUP状态。<br>2&gt; <strong>interface</strong>：对外提供服务的网卡接口，即VIP绑定的网卡接口。如：eth0，eth1。当前主流的服务器都有2个或2个以上的接口（分别对应外网和内网），在选择网卡接口时，一定要核实清楚。 3&gt; **<br>mcast_src_ip<strong>：本机IP地址 4&gt; <strong>virtual_router_id</strong>：虚拟路由的ID号，每个节点设置必须一样，可选择IP最后一段使用，相同的 VRID 为一个组，他将决定多播的 MAC 地址。 5&gt; **<br>priority</strong>：节点优先级，取值范围0～254，MASTER要比BACKUP高 6&gt; <strong>advert_int：</strong>MASTER与BACKUP节点间同步检查的时间间隔，单位为秒 7&gt; **<br>lvs_sync_daemon_inteface<strong>：负载均衡器之间的监控接口,类似于 HA HeartBeat 的心跳线。但它的机制优于 Heartbeat，因为它没有“裂脑”这个问题,它是以优先级这个机制来规避这个麻烦的。在 DR<br>模式中，lvs_sync_daemon_inteface与服务接口interface使用同一个网络接口 8&gt; <strong>authentication</strong>：验证类型和验证密码。类型主要有 PASS、AH<br>两种，通常使用PASS类型，据说AH使用时有问题。验证密码为明文，同一vrrp 实例MASTER与BACKUP使用相同的密码才能正常通信。 9&gt; <strong>smtp_alert</strong>：有故障时是否激活邮件通知 10&gt; **<br>nopreempt</strong><br>：禁止抢占服务。默认情况，当MASTER服务挂掉之后，BACKUP自动升级为MASTER并接替它的任务，当MASTER服务恢复后，升级为MASTER的BACKUP服务又自动降为BACKUP，把工作权交给原MASTER。当配置了nopreempt，MASTER从挂掉到恢复，不再将服务抢占过来。<br>11&gt; <strong>virtual_ipaddress</strong>：虚拟IP地址池，可以有多个IP，每个IP占一行，不需要指定子网掩码。注意：这个IP必须与我们的设定的vip保持一致。</li>
+</ol>
+<p>虚拟服务器virtual_server定义块</p>
+<ol>
+<li><ol>
+<li><strong>virtual_server</strong>：定义一个虚拟服务器，这个ip是virtual_ipaddress中定义的其中一个，后面一个空格，然后加上虚拟服务的端口号。 1&gt; delay_loop：健康检查时间间隔，单位：秒 2&gt;<br>lb_algo：负载均衡调度算法，互联网应用常用方式为wlc或rr 3&gt; lb_kind：负载均衡转发规则。包括DR、NAT、TUN 3种，一般使用路由（DR）转发规则。 4&gt;<br>persistence_timeout：http服务会话保持时间，单位：秒 5&gt; protocol：转发协议，分为TCP和UDP两种</li>
+<li><strong>real_server</strong>：真实服务器IP和端口，可以定义多个 1&gt; weight：负载权重，值越大，转发的优先级越高 2&gt; notify_down：服务停止后执行的脚本 3&gt; TCP_CHECK：服务有效性检测 *<br>connect_port：服务连接端口 * connect_timeout：服务连接超时时长，单位：秒 * nb_get_retry：服务连接失败重试次数 * delay_before_retry：重试连接间隔，单位：秒</li>
+</ol>
+</li>
+</ol>
+<p>配置日志文件</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/534f2c3a/">https://github.com/maxzhao-it/blog/post/534f2c3a/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/HaProxy/" rel="tag"># HaProxy</a>
+              <a href="/blog/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag"># 中间件</a>
+              <a href="/blog/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag"># 微服务</a>
+              <a href="/blog/tags/Nacos/" rel="tag"># Nacos</a>
+              <a href="/blog/tags/KeepAlived/" rel="tag"># KeepAlived</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/9556/" rel="prev" title="Linux免密登录">
+                  <i class="fa fa-chevron-left"></i> Linux免密登录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/f34de611/" rel="next" title="MySQL8主备">
+                  MySQL8主备 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

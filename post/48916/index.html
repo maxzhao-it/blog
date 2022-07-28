@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/48916/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/48916/","path":"post/48916/","title":"ElasticSearch高可用集群部署"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ElasticSearch高可用集群部署 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">一、介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">集群基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES-%E9%AB%98%E5%B9%B6%E5%8F%91"><span class="nav-number">1.2.</span> <span class="nav-text">ES 高并发</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">二、准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84"><span class="nav-number">2.0.1.</span> <span class="nav-text">集群架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%B9%E6%A1%88"><span class="nav-number">2.0.2.</span> <span class="nav-text">部署服务器方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81ES-%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">三、ES 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">解压安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B"><span class="nav-number">3.1.2.</span> <span class="nav-text">解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7"><span class="nav-number">3.1.3.</span> <span class="nav-text">添加用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0-Centos-%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.4.</span> <span class="nav-text">新 Centos 系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#max-file"><span class="nav-number">3.1.4.1.</span> <span class="nav-text">max file</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#virtual-memory"><span class="nav-number">3.1.4.2.</span> <span class="nav-text">virtual memory </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.5.</span> <span class="nav-text">核心配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ElasticSearch"><span class="nav-number">3.1.5.1.</span> <span class="nav-text">ElasticSearch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Kibana"><span class="nav-number">3.1.5.2.</span> <span class="nav-text">Kibana</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">3.1.6.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE"><span class="nav-number">3.1.7.</span> <span class="nav-text">访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8"><span class="nav-number">3.1.8.</span> <span class="nav-text">后台启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.1.9.</span> <span class="nav-text">停止服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">启动方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E8%BF%9B%E7%A8%8BID"><span class="nav-number">3.2.1.</span> <span class="nav-text">指定进程ID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.2.</span> <span class="nav-text">外部化配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.3.</span> <span class="nav-text">环境变量配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">4.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">4.1.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#host8"><span class="nav-number">4.1.1.</span> <span class="nav-text">host8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host9"><span class="nav-number">4.1.2.</span> <span class="nav-text">host9</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host10"><span class="nav-number">4.1.3.</span> <span class="nav-text">host10</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B"><span class="nav-number">4.2.</span> <span class="nav-text">查看</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E5%81%A5%E5%BA%B7%E7%8A%B6%E6%80%81"><span class="nav-number">4.2.1.</span> <span class="nav-text">查看集群健康状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9"><span class="nav-number">4.2.2.</span> <span class="nav-text">查看集群节点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84"><span class="nav-number">5.</span> <span class="nav-text">附</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#elasticsearch-yml"><span class="nav-number">5.1.</span> <span class="nav-text">elasticsearch.yml</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#host8-1"><span class="nav-number">5.1.1.</span> <span class="nav-text">host8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host9-1"><span class="nav-number">5.1.2.</span> <span class="nav-text">host9</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host10-1"><span class="nav-number">5.1.3.</span> <span class="nav-text">host10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kibana-yml"><span class="nav-number">5.1.4.</span> <span class="nav-text">kibana.yml</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/48916/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ElasticSearch高可用集群部署 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ElasticSearch高可用集群部署
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/ElasticSearch/" itemprop="url" rel="index"><span itemprop="name">ElasticSearch</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h1><h2 id="集群基本概念"><a href="#集群基本概念" class="headerlink" title="集群基本概念"></a>集群基本概念</h2><ul>
+<li><code>Cluster</code> 代表一个集群</li>
+<li><code>Shards</code> 代表索引分片，分布在不同节点上，构成分部署搜索。分片数量在创建索引时指定，不能修改。</li>
+<li><code>Replicas</code> 副本，提高系统的容错性，提高查询效率。ES 会自动对请求进行负载均衡。</li>
+<li><code>Recovery</code>数据重新分布，ES 在节点加入或退出时，会根据机器的负载对索引分片进行重新分配，挂掉的节点重新启动时也会进行数据恢复。</li>
+</ul>
+<h2 id="ES-高并发"><a href="#ES-高并发" class="headerlink" title="ES 高并发"></a>ES 高并发</h2><p>ES是一个分布式全文检索框架，隐藏了复杂的处理机制，内部使用 分片机制、集群发现、分片负载均衡请求路由。</p>
+<ul>
+<li><code>Shards </code>实现了分布式检索。</li>
+<li><code>Replicas</code> 实现了负载均衡与容错恢复。</li>
+</ul>
+<p>附上<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/elasticsearch-intro.html">官网地址</a></p>
+<h1 id="二、准备"><a href="#二、准备" class="headerlink" title="二、准备"></a>二、准备</h1><h3 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h3><p><img src="/blog/uploads/images/image-20210811191113204.png"></p>
+<h3 id="部署服务器方案"><a href="#部署服务器方案" class="headerlink" title="部署服务器方案"></a>部署服务器方案</h3><p>使用 <code>HaProxy</code> 负载</p>
+<p><code>cluster.name: my-cluster</code></p>
+<ol>
+<li><code>ELK8：192.168.2.8 es-node1</code></li>
+<li><code>ELK9：192.168.2.9 es-node2</code></li>
+<li><code>ELK10：192.168.2.10 es-node3</code></li>
+</ol>
+<h1 id="三、ES-安装"><a href="#三、ES-安装" class="headerlink" title="三、ES 安装"></a>三、<code>ES</code> 安装</h1><h2 id="解压安装"><a href="#解压安装" class="headerlink" title="解压安装"></a>解压安装</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a target="_blank" rel="noopener" href="https://www.elastic.co/downloads/elasticsearch">下载地址</a> <code>or</code> <a target="_blank" rel="noopener" href="https://www.elastic.co/start">ES start</a></p>
+<p>下载 <a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.14.0-linux-x86_64.tar.gz"><code>elasticsearch-7.14.0-linux-x86_64.tar.gz</code></a> 、 <a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/kibana/kibana-7.14.0-linux-x86_64.tar.gz"><code>kibana-7.14.0-linux-x86_64.tar.gz</code></a></p>
+<h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf elasticsearch-7.14.0-linux-x86_64.tar.gz</span><br><span class="line"><span class="built_in">mv</span> elasticsearch-7.14.0 /opt/elasticsearch-7.14.0</span><br><span class="line">tar -zxvf kibana-7.14.0-linux-x86_64.tar.gz </span><br><span class="line"><span class="built_in">mv</span> kibana-7.14.0-linux-x86_64 /opt/kibana-7.14.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加账号</span></span><br><span class="line">useradd es</span><br><span class="line"><span class="comment"># 修改密码</span></span><br><span class="line">passwd es</span><br><span class="line"><span class="comment"># 把用户加入到 root 组</span></span><br><span class="line">usermod -aG root es</span><br><span class="line"><span class="comment"># 加入到 sudo 中</span></span><br><span class="line">sudo vim /etc/sudoers</span><br><span class="line"><span class="comment"># 添加一行：   es      ALL=(ALL)       ALL</span></span><br><span class="line">su es</span><br><span class="line">sudo <span class="built_in">chown</span> es  ./</span><br></pre></td></tr></table></figure>
+
+<h3 id="新-Centos-系统配置"><a href="#新-Centos-系统配置" class="headerlink" title="新 Centos 系统配置"></a>新 <code>Centos</code> 系统配置</h3><h4 id="max-file"><a href="#max-file" class="headerlink" title="max file"></a><code>max file</code></h4><p>修改 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<p>添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 65536</span><br><span class="line">* soft <span class="built_in">nproc</span> 65536</span><br><span class="line">* hard <span class="built_in">nproc</span> 65536</span><br></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">source</span> /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="virtual-memory"><a href="#virtual-memory" class="headerlink" title="virtual memory "></a><code>virtual memory </code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/sysctl.conf</span><br><span class="line"><span class="comment"># 添加 一行 vm.max_map_count=655360</span></span><br><span class="line"><span class="comment"># 重新加载参数</span></span><br><span class="line">sudo sysctl -p</span><br></pre></td></tr></table></figure>
+
+<h3 id="核心配置"><a href="#核心配置" class="headerlink" title="核心配置"></a>核心配置</h3><h4 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a><code>ElasticSearch</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/elasticsearch-7.14.0/config/elasticsearch.yml</span><br></pre></td></tr></table></figure>
+
+<p>修改为</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 集群名称，在集群中不能重复，默认为  elasticsearch</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-cluster</span></span><br><span class="line"><span class="comment"># 集群节点描述</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">es-node8</span></span><br><span class="line"><span class="comment"># data数据保存路径，默认为 elasticsearch/data</span></span><br><span class="line"><span class="comment">#path.data: /path/to/data</span></span><br><span class="line"><span class="comment"># 日志数据保存路径，默认为 elasticsearch/logs</span></span><br><span class="line"><span class="comment">#path.logs: /path/to/logs</span></span><br><span class="line"><span class="comment"># 绑定地址，所有人都可以访问</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="comment"># 绑定端口，用于外部通讯（9300端口：Tcp协议，ES集群之间的通讯）</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="comment"># 集群的节点，单机就写上面的节点名称</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;es-node8&quot;</span>,<span class="string">&quot;es-node9&quot;</span>,<span class="string">&quot;es-node10&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<h4 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a><code>Kibana</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/kibana-7.14.0/config/kibana.yml</span><br></pre></td></tr></table></figure>
+
+<p>修改</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 端口</span></span><br><span class="line"><span class="attr">server.port:</span> <span class="number">5601</span></span><br><span class="line"><span class="comment"># 本机IP</span></span><br><span class="line"><span class="attr">server.host:</span> <span class="string">&quot;192.168.2.2&quot;</span></span><br><span class="line"><span class="comment"># 请求最大负载大小</span></span><br><span class="line"><span class="comment">#server.maxPayload: 1048576</span></span><br><span class="line"><span class="comment"># 服务名称</span></span><br><span class="line"><span class="attr">server.name:</span> <span class="string">&quot;kibana-host2&quot;</span></span><br><span class="line"><span class="comment">#  Elasticsearch instances.</span></span><br><span class="line"><span class="attr">elasticsearch.hosts:</span> [<span class="string">&quot;http://192.168.2.2:9200&quot;</span>]</span><br><span class="line"><span class="comment"># 如果你的Elasticsearch受基本身份验证的保护，这些设置将提供Kibana服务器在启动时用于维护Kibana索引的用户名和密码。Kibana的用户仍然需要通过Elasticsearch进行身份验证，Elasticsearch是通过Kibana服务器代理的。</span></span><br><span class="line"><span class="attr">elasticsearch.username:</span> <span class="string">&quot;maxzhao&quot;</span></span><br><span class="line"><span class="attr">elasticsearch.password:</span> <span class="string">&quot;maxzhao&quot;</span></span><br><span class="line"><span class="attr">xpack.security.sessionTimeout:</span> <span class="number">600000</span></span><br><span class="line"><span class="comment"># 随机数长度大于32 https://www.elastic.co/guide/en/kibana/current/reporting-settings-kb.html</span></span><br><span class="line"><span class="attr">xpack.reporting.encryptionKey:</span> <span class="string">&quot;11112222333344445555666677778888&quot;</span> </span><br><span class="line"><span class="comment"># https://www.elastic.co/guide/en/kibana/6.x/using-kibana-with-security.html</span></span><br><span class="line"><span class="attr">xpack.security.encryptionKey:</span> <span class="string">&quot;11112222333344445555666677778888&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> g+xwr /var</span><br><span class="line"><span class="built_in">mkdir</span> /var/data/</span><br><span class="line"><span class="built_in">mkdir</span> /var/log/</span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">./elasticsearch-7.14.0/bin/elasticsearch</span><br><span class="line">./kibana-7.14.0/bin/kibana</span><br></pre></td></tr></table></figure>
+
+<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><ol>
+<li>访问<code>ES</code> <a target="_blank" rel="noopener" href="http://127.0.0.1:9200/">http://127.0.0.1:9200/</a></li>
+<li>访问<code>kibana</code>  <a target="_blank" rel="noopener" href="http://localhost:5601/">http://localhost:5601</a></li>
+</ol>
+<h3 id="后台启动"><a href="#后台启动" class="headerlink" title="后台启动"></a>后台启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/opt/elasticsearch-7.14.0/bin/elasticsearch -d</span><br><span class="line">/opt/kibana-7.14.0/bin/kibana -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="停止服务"><a href="#停止服务" class="headerlink" title="停止服务"></a>停止服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep elasticsearch</span><br><span class="line">ps -ef|grep kibana</span><br><span class="line"><span class="built_in">kill</span> -9  xxx</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="启动方式"><a href="#启动方式" class="headerlink" title="启动方式"></a>启动方式</h2><h3 id="指定进程ID"><a href="#指定进程ID" class="headerlink" title="指定进程ID"></a>指定进程<code>ID</code></h3><p>进程<code>ID</code>写在文件中，方便关闭</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/opt/elasticsearch-7.14.0/bin/elasticsearch -d -p pid</span><br><span class="line">pkill -F pid</span><br></pre></td></tr></table></figure>
+
+<h3 id="外部化配置"><a href="#外部化配置" class="headerlink" title="外部化配置"></a>外部化配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/elasticsearch-7.14.0/bin/elasticsearch -d -Ecluster.name=my_cluster -Enode.name=node_1</span><br></pre></td></tr></table></figure>
+
+<h3 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HOSTNAME=<span class="string">&quot;host1,host2&quot;</span></span><br><span class="line">vim /opt/elasticsearch-7.14.0/config/elasticsearch.yml</span><br></pre></td></tr></table></figure>
+
+<p>写入</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">node.name:</span>    <span class="string">$&#123;HOSTNAME&#125;</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="string">$&#123;ES_NETWORK_HOST&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h1><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="host8"><a href="#host8" class="headerlink" title="host8"></a><code>host8</code></h3><h3 id="host9"><a href="#host9" class="headerlink" title="host9"></a><code>host9</code></h3><h3 id="host10"><a href="#host10" class="headerlink" title="host10"></a><code>host10</code></h3><h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><h3 id="查看集群健康状态"><a href="#查看集群健康状态" class="headerlink" title="查看集群健康状态"></a>查看集群健康状态</h3><p><a target="_blank" rel="noopener" href="http://192.168.2.8:9200/_cat/health">http://192.168.2.8:9200/_cat&#x2F;health</a>&#96;</p>
+<h3 id="查看集群节点"><a href="#查看集群节点" class="headerlink" title="查看集群节点"></a>查看集群节点</h3><p><a target="_blank" rel="noopener" href="http://192.168.2.8:9200/_cat/nodes?pretty">http://192.168.2.8:9200/_cat&#x2F;nodes?pretty</a></p>
+<p>其中 <code>*</code> 代表为 <code>master</code> 节点</p>
+<p><img src="/blog/uploads/images/image-20210811195908212.png"></p>
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="elasticsearch-yml"><a href="#elasticsearch-yml" class="headerlink" title="elasticsearch.yml"></a><code>elasticsearch.yml</code></h2><h3 id="host8-1"><a href="#host8-1" class="headerlink" title="host8"></a><code>host8</code></h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://www.elastic.co/guide/en/elasticsearch/reference/index.html</span></span><br><span class="line"><span class="comment"># 集群名称，在集群中不能重复，默认为  elasticsearch</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-cluster</span></span><br><span class="line"><span class="comment"># 集群节点描述</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">es-node8</span></span><br><span class="line"><span class="comment"># 集群角色，默认如下</span></span><br><span class="line"><span class="comment"># node.roles: [&quot;master&quot;,&quot;data&quot;,&quot;data_content&quot;,&quot;data_hot&quot;,&quot;data_warm&quot;,&quot;data_cold&quot;,&quot;data_frozen&quot;,&quot;ingest&quot;,&quot;ml&quot;,&quot;remote_cluster_client&quot;,&quot;transform&quot;]</span></span><br><span class="line"><span class="comment"># Add custom attributes to the node:</span></span><br><span class="line"><span class="comment">#node.attr.rack: r1</span></span><br><span class="line"><span class="comment"># data数据保存路径，默认为 elasticsearch/data</span></span><br><span class="line"><span class="comment">#path.data: /path/to/data</span></span><br><span class="line"><span class="attr">path:</span> </span><br><span class="line">  <span class="attr">data:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch2</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch3</span></span><br><span class="line"><span class="comment"># 日志数据保存路径，默认为 elasticsearch/logs</span></span><br><span class="line"><span class="comment">#path.logs: /path/to/logs</span></span><br><span class="line">  <span class="attr">logs:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch2</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch3</span></span><br><span class="line"><span class="comment"># 绑定地址，所有人都可以访问</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.8</span></span><br><span class="line"><span class="comment"># 绑定端口，用于外部通讯（9300端口：Tcp协议，ES集群之间的通讯）</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="comment"># 集群发现</span></span><br><span class="line"><span class="comment"># The default list of hosts is [&quot;127.0.0.1&quot;, &quot;[::1]&quot;]</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> [<span class="string">&quot;192.168.2.9&quot;</span>, <span class="string">&quot;192.168.2.10:9300&quot;</span>]</span><br><span class="line"><span class="comment"># 集群的节点，单机就写上面的节点名称,从当前节点中投票选出主节点</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;es-node8&quot;</span>,<span class="string">&quot;es-node9&quot;</span>,<span class="string">&quot;es-node10&quot;</span>]</span><br><span class="line"><span class="comment">#bootstrap.memory_lock: true </span></span><br><span class="line"><span class="comment"># 删除索引时要求显式名称:</span></span><br><span class="line"><span class="comment">#action.destructive_requires_name: true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="host9-1"><a href="#host9-1" class="headerlink" title="host9"></a><code>host9</code></h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://www.elastic.co/guide/en/elasticsearch/reference/index.html</span></span><br><span class="line"><span class="comment"># 集群名称，在集群中不能重复，默认为  elasticsearch</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-cluster</span></span><br><span class="line"><span class="comment"># 集群节点描述</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">es-node9</span></span><br><span class="line"><span class="comment"># 集群角色，默认如下</span></span><br><span class="line"><span class="comment"># node.roles: [&quot;master&quot;,&quot;data&quot;,&quot;data_content&quot;,&quot;data_hot&quot;,&quot;data_warm&quot;,&quot;data_cold&quot;,&quot;data_frozen&quot;,&quot;ingest&quot;,&quot;ml&quot;,&quot;remote_cluster_client&quot;,&quot;transform&quot;]</span></span><br><span class="line"><span class="comment"># Add custom attributes to the node:</span></span><br><span class="line"><span class="comment">#node.attr.rack: r1</span></span><br><span class="line"><span class="comment"># data数据保存路径，默认为 elasticsearch/data</span></span><br><span class="line"><span class="comment">#path.data: /path/to/data</span></span><br><span class="line"><span class="attr">path:</span></span><br><span class="line">  <span class="attr">data:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch2</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch3</span></span><br><span class="line"><span class="comment"># 日志数据保存路径，默认为 elasticsearch/logs</span></span><br><span class="line"><span class="comment">#path.logs: /path/to/logs</span></span><br><span class="line">  <span class="attr">logs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch2</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch3</span></span><br><span class="line"><span class="comment"># 绑定地址，所有人都可以访问</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.9</span></span><br><span class="line"><span class="comment"># 绑定端口，用于外部通讯（9300端口：Tcp协议，ES集群之间的通讯）</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="comment"># 集群发现</span></span><br><span class="line"><span class="comment"># The default list of hosts is [&quot;127.0.0.1&quot;, &quot;[::1]&quot;]</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> [<span class="string">&quot;192.168.2.8&quot;</span>, <span class="string">&quot;192.168.2.10:9300&quot;</span>]</span><br><span class="line"><span class="comment"># 集群的节点，单机就写上面的节点名称,从当前节点中投票选出主节点</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;es-node8&quot;</span>,<span class="string">&quot;es-node9&quot;</span>,<span class="string">&quot;es-node10&quot;</span>]</span><br><span class="line"><span class="comment">#bootstrap.memory_lock: true </span></span><br><span class="line"><span class="comment"># 删除索引时要求显式名称:</span></span><br><span class="line"><span class="comment">#action.destructive_requires_name: true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="host10-1"><a href="#host10-1" class="headerlink" title="host10"></a><code>host10</code></h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://www.elastic.co/guide/en/elasticsearch/reference/index.html</span></span><br><span class="line"><span class="comment"># 集群名称，在集群中不能重复，默认为  elasticsearch</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-cluster</span></span><br><span class="line"><span class="comment"># 集群节点描述</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">es-node10</span></span><br><span class="line"><span class="comment"># 集群角色，默认如下</span></span><br><span class="line"><span class="comment"># node.roles: [&quot;master&quot;,&quot;data&quot;,&quot;data_content&quot;,&quot;data_hot&quot;,&quot;data_warm&quot;,&quot;data_cold&quot;,&quot;data_frozen&quot;,&quot;ingest&quot;,&quot;ml&quot;,&quot;remote_cluster_client&quot;,&quot;transform&quot;]</span></span><br><span class="line"><span class="comment"># Add custom attributes to the node:</span></span><br><span class="line"><span class="comment">#node.attr.rack: r1</span></span><br><span class="line"><span class="comment"># data数据保存路径，默认为 elasticsearch/data</span></span><br><span class="line"><span class="comment">#path.data: /path/to/data</span></span><br><span class="line"><span class="attr">path:</span></span><br><span class="line">  <span class="attr">data:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch2</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/data/elasticsearch3</span></span><br><span class="line"><span class="comment"># 日志数据保存路径，默认为 elasticsearch/logs</span></span><br><span class="line"><span class="comment">#path.logs: /path/to/logs</span></span><br><span class="line">  <span class="attr">logs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch2</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/elasticsearch3</span></span><br><span class="line"><span class="comment"># 绑定地址，所有人都可以访问</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.10</span></span><br><span class="line"><span class="comment"># 绑定端口，用于外部通讯（9300端口：Tcp协议，ES集群之间的通讯）</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="comment"># 集群发现</span></span><br><span class="line"><span class="comment"># The default list of hosts is [&quot;127.0.0.1&quot;, &quot;[::1]&quot;]</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> [<span class="string">&quot;192.168.2.9&quot;</span>, <span class="string">&quot;192.168.2.8:9300&quot;</span>]</span><br><span class="line"><span class="comment"># 集群的节点，单机就写上面的节点名称,从当前节点中投票选出主节点</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;es-node8&quot;</span>,<span class="string">&quot;es-node9&quot;</span>,<span class="string">&quot;es-node10&quot;</span>]</span><br><span class="line"><span class="comment">#bootstrap.memory_lock: true </span></span><br><span class="line"><span class="comment"># 删除索引时要求显式名称:</span></span><br><span class="line"><span class="comment">#action.destructive_requires_name: true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="kibana-yml"><a href="#kibana-yml" class="headerlink" title="kibana.yml"></a><code>kibana.yml</code></h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 端口</span></span><br><span class="line"><span class="attr">server.port:</span> <span class="number">5601</span></span><br><span class="line"><span class="comment"># 本机IP</span></span><br><span class="line"><span class="attr">server.host:</span> <span class="string">&quot;192.168.2.2&quot;</span></span><br><span class="line"><span class="comment">#代理下指定一个路径挂载Kibana。</span></span><br><span class="line"><span class="comment">#使用服务器。rewriteBasePath的设置告诉Kibana是否应该删除basePath</span></span><br><span class="line"><span class="comment">#此设置不能以斜杠结束。</span></span><br><span class="line"><span class="comment">#server.basePath: &quot;&quot;</span></span><br><span class="line"><span class="comment"># 重写前缀为 server.basePath，默认为true.</span></span><br><span class="line"><span class="comment">#server.rewriteBasePath: false</span></span><br><span class="line"><span class="comment"># Specifies the public URL at which Kibana is available for end users. If</span></span><br><span class="line"><span class="comment"># `server.basePath` is configured this URL should end with the same basePath.</span></span><br><span class="line"><span class="comment">#server.publicBaseUrl: &quot;&quot;</span></span><br><span class="line"><span class="comment"># 请求最大负载大小</span></span><br><span class="line"><span class="comment">#server.maxPayload: 1048576</span></span><br><span class="line"><span class="comment"># 服务名称</span></span><br><span class="line"><span class="comment">#server.name: &quot;your-hostname&quot;</span></span><br><span class="line"><span class="comment">#  Elasticsearch instances.</span></span><br><span class="line"><span class="attr">elasticsearch.hosts:</span> [<span class="string">&quot;http://192.168.2.2:9200&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Kibana使用Elasticsearch中的索引来存储已保存的搜索、可视化和仪表盘。Kibana创建一个新的索引，如果这个索引还不存在的话。</span></span><br><span class="line"><span class="comment">#kibana.index: &quot;.kibana&quot;</span></span><br><span class="line"><span class="comment"># 要加载的默认应用程序。</span></span><br><span class="line"><span class="comment">#kibana.defaultAppId: &quot;home&quot;</span></span><br><span class="line"><span class="comment"># 如果你的Elasticsearch受基本身份验证的保护，这些设置将提供Kibana服务器在启动时用于维护Kibana索引的用户名和密码。Kibana的用户仍然需要通过Elasticsearch进行身份验证，Elasticsearch是通过Kibana服务器代理的。</span></span><br><span class="line"><span class="attr">elasticsearch.username:</span> <span class="string">&quot;maxzhao&quot;</span></span><br><span class="line"><span class="attr">elasticsearch.password:</span> <span class="string">&quot;maxzhao&quot;</span></span><br><span class="line"><span class="attr">xpack.security.sessionTimeout:</span> <span class="number">600000</span></span><br><span class="line"><span class="comment"># 随机数长度大于32 https://www.elastic.co/guide/en/kibana/current/reporting-settings-kb.html</span></span><br><span class="line"><span class="attr">xpack.reporting.encryptionKey:</span> <span class="string">&quot;11112222333344445555666677778888&quot;</span> </span><br><span class="line"><span class="comment"># https://www.elastic.co/guide/en/kibana/6.x/using-kibana-with-security.html</span></span><br><span class="line"><span class="attr">xpack.security.encryptionKey:</span> <span class="string">&quot;11112222333344445555666677778888&quot;</span></span><br><span class="line"><span class="comment"># 分别启用SSL和pem格式的SSL证书和SSL密钥文件的路径。</span></span><br><span class="line"><span class="comment"># 这些设置启用了从Kibana服务器向浏览器发送请求的SSL。</span></span><br><span class="line"><span class="comment">#server.ssl.enabled: false</span></span><br><span class="line"><span class="comment">#server.ssl.certificate: /path/to/your/server.crt</span></span><br><span class="line"><span class="comment">#server.ssl.key: /path/to/your/server.key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Optional settings that provide the paths to the PEM-format SSL certificate and key files.</span></span><br><span class="line"><span class="comment"># These files are used to verify the identity of Kibana to Elasticsearch and are required when</span></span><br><span class="line"><span class="comment"># xpack.security.http.ssl.client_authentication in Elasticsearch is set to required.</span></span><br><span class="line"><span class="comment">#elasticsearch.ssl.certificate: /path/to/your/client.crt</span></span><br><span class="line"><span class="comment">#elasticsearch.ssl.key: /path/to/your/client.key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Optional setting that enables you to specify a path to the PEM file for the certificate</span></span><br><span class="line"><span class="comment"># authority for your Elasticsearch instance.</span></span><br><span class="line"><span class="comment">#elasticsearch.ssl.certificateAuthorities: [ &quot;/path/to/your/CA.pem&quot; ]</span></span><br><span class="line"><span class="comment"># To disregard the validity of SSL certificates, change this setting&#x27;s value to &#x27;none&#x27;.</span></span><br><span class="line"><span class="comment">#elasticsearch.ssl.verificationMode: full</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Time in milliseconds to wait for Elasticsearch to respond to pings. Defaults to the value of</span></span><br><span class="line"><span class="comment"># the elasticsearch.requestTimeout setting.</span></span><br><span class="line"><span class="comment">#elasticsearch.pingTimeout: 1500</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Time in milliseconds to wait for responses from the back end or Elasticsearch. This value</span></span><br><span class="line"><span class="comment"># must be a positive integer.</span></span><br><span class="line"><span class="comment">#elasticsearch.requestTimeout: 30000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># List of Kibana client-side headers to send to Elasticsearch. To send *no* client-side</span></span><br><span class="line"><span class="comment"># headers, set this value to [] (an empty list).</span></span><br><span class="line"><span class="comment">#elasticsearch.requestHeadersWhitelist: [ authorization ]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Header names and values that are sent to Elasticsearch. Any custom headers cannot be overwritten</span></span><br><span class="line"><span class="comment"># by client-side headers, regardless of the elasticsearch.requestHeadersWhitelist configuration.</span></span><br><span class="line"><span class="comment">#elasticsearch.customHeaders: &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Time in milliseconds for Elasticsearch to wait for responses from shards. Set to 0 to disable.</span></span><br><span class="line"><span class="comment">#elasticsearch.shardTimeout: 30000</span></span><br><span class="line"><span class="comment"># List of Kibana client-side headers to send to Elasticsearch. To send *no* client-side</span></span><br><span class="line"><span class="comment"># headers, set this value to [] (an empty list).</span></span><br><span class="line"><span class="comment">#elasticsearch.requestHeadersWhitelist: [ authorization ]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Header names and values that are sent to Elasticsearch. Any custom headers cannot be overwritten</span></span><br><span class="line"><span class="comment"># by client-side headers, regardless of the elasticsearch.requestHeadersWhitelist configuration.</span></span><br><span class="line"><span class="comment">#elasticsearch.customHeaders: &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Time in milliseconds for Elasticsearch to wait for responses from shards. Set to 0 to disable.</span></span><br><span class="line"><span class="comment">#elasticsearch.shardTimeout: 30000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Logs queries sent to Elasticsearch. Requires logging.verbose set to true.</span></span><br><span class="line"><span class="comment">#elasticsearch.logQueries: false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Specifies the path where Kibana creates the process ID file.</span></span><br><span class="line"><span class="comment">#pid.file: /run/kibana/kibana.pid</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Enables you to specify a file where Kibana stores log output.</span></span><br><span class="line"><span class="comment">#logging.dest: stdout</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the value of this setting to true to suppress all logging output.</span></span><br><span class="line"><span class="comment">#logging.silent: false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the value of this setting to true to suppress all logging output other than error messages.</span></span><br><span class="line"><span class="comment">#logging.quiet: false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the value of this setting to true to log all events, including system usage information</span></span><br><span class="line"><span class="comment"># and all requests.</span></span><br><span class="line"><span class="comment">#logging.verbose: false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the interval in milliseconds to sample system and process performance</span></span><br><span class="line"><span class="comment"># metrics. Minimum is 100ms. Defaults to 5000.</span></span><br><span class="line"><span class="comment">#ops.interval: 5000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Specifies locale to be used for all localizable strings, dates and number formats.</span></span><br><span class="line"><span class="comment"># Supported languages are the following: English - en , by default , Chinese - zh-CN .</span></span><br><span class="line"><span class="comment">#i18n.locale: &quot;en&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/48916/">https://github.com/maxzhao-it/blog/post/48916/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/ELK/" rel="tag"># ELK</a>
+              <a href="/blog/tags/ElasticSearch/" rel="tag"># ElasticSearch</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/9074/" rel="prev" title="Logstash部署">
+                  <i class="fa fa-chevron-left"></i> Logstash部署
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/23131/" rel="next" title="HanLP自定义分词">
+                  HanLP自定义分词 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

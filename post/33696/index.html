@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/33696/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/33696/","path":"post/33696/","title":"SpringBoot校验(validation)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SpringBoot校验(validation) | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%83%E7%BC%96%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">元编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E6%A0%A1%E9%AA%8C"><span class="nav-number">2.2.</span> <span class="nav-text">简单的校验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Model%E4%B8%AD"><span class="nav-number">2.2.1.</span> <span class="nav-text">Model中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Controller%E4%B8%AD"><span class="nav-number">2.2.2.</span> <span class="nav-text">Controller中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%91%E5%AE%9A%E5%A4%9A%E4%B8%AA%E6%A0%A1%E9%AA%8C%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.2.3.</span> <span class="nav-text">绑定多个校验对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E5%88%86%E6%A0%87%E7%AD%BE"><span class="nav-number">3.</span> <span class="nav-text">部分标签</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bean-Validation-%E4%B8%AD%E5%86%85%E7%BD%AE%E7%9A%84-constraint"><span class="nav-number">3.1.</span> <span class="nav-text">Bean Validation 中内置的 constraint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hibernate-Validator-%E9%99%84%E5%8A%A0%E7%9A%84-constraint"><span class="nav-number">3.2.</span> <span class="nav-text">Hibernate Validator 附加的 constraint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E6%98%93%E8%AE%B0%E9%94%99%E7%9A%84"><span class="nav-number">3.3.</span> <span class="nav-text">容易记错的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#resource-%E4%B8%8B%E6%96%B0%E5%BB%BA%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">resource 下新建错误信息配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hibernate%E7%9A%84%E6%A0%A1%E9%AA%8C%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">hibernate的校验模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%99%AE%E9%80%9A%E6%A8%A1%E5%BC%8F%EF%BC%88%E9%BB%98%E8%AE%A4%E6%98%AF%E8%BF%99%E4%B8%AA%E6%A8%A1%E5%BC%8F%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">1、普通模式（默认是这个模式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%BF%AB%E9%80%9F%E5%A4%B1%E8%B4%A5%E8%BF%94%E5%9B%9E%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.2.</span> <span class="nav-text">2、快速失败返回模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E9%AA%8C%E8%AF%81%E6%A8%A1%E5%BC%8F%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F"><span class="nav-number">5.3.</span> <span class="nav-text">两种验证模式配置方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%88%E5%8F%82%E8%80%83%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%EF%BC%89"><span class="nav-number">5.4.</span> <span class="nav-text">（参考官方文档）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81Model"><span class="nav-number">5.5.</span> <span class="nav-text">手动验证Model</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%A0%A1%E9%AA%8C-%E5%8C%BA%E5%88%86%E6%96%B0%E5%A2%9E%E5%92%8C%E4%BF%AE%E6%94%B9%E7%9A%84%E8%A7%84%E5%88%99"><span class="nav-number">6.</span> <span class="nav-text">分组校验(区分新增和修改的规则)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="nav-number">6.1.</span> <span class="nav-text">简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">6.1.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Model%E4%B8%AD-1"><span class="nav-number">6.1.2.</span> <span class="nav-text">Model中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Controller%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-number">6.1.3.</span> <span class="nav-text">Controller中使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E4%BD%BF%E7%94%A8"><span class="nav-number">6.1.4.</span> <span class="nav-text">普通使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%BA%8F%E5%88%97"><span class="nav-number">6.2.</span> <span class="nav-text">组序列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Controller%E4%B8%AD%E4%BD%BF%E7%94%A8-1"><span class="nav-number">6.2.1.</span> <span class="nav-text">Controller中使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E4%BD%BF%E7%94%A8-1"><span class="nav-number">6.2.2.</span> <span class="nav-text">普通使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%AA%8C%E8%AF%81"><span class="nav-number">7.</span> <span class="nav-text">自定义验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Model%E4%B8%AD-2"><span class="nav-number">7.1.</span> <span class="nav-text">Model中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#validator-%E9%85%8D%E7%BD%AE"><span class="nav-number">7.2.</span> <span class="nav-text">validator 配置</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/33696/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SpringBoot校验(validation) | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot校验(validation)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/validation/" itemprop="url" rel="index"><span itemprop="name">validation</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="元编程"><a href="#元编程" class="headerlink" title="元编程"></a>元编程</h2><p>一个健壮的系统都要对外部提交的数据进行完整性、合法性的校验。</p>
+<p>校验是我们程序开发中必不可少的过程。</p>
+<p>即使开发一个不面对最终用户的工具包，也需要对传入的数据进行缜密的校验来防止引发底层难以追踪的问题。</p>
+<p>后端参数校验最简单的做法是直接在业务方法里面进行判断，当判断成功之后再继续往下执行。但这样带给我们的是代码的耦合，冗余。当我们多个地方需要校验时，我们就需要在每一个地方调用校验程序,导致代码很冗余，且不美观。</p>
+<p>不使用<em>Bean Validation</em>校验数据的代码基本都是靠大量的 <code>if-else</code>.所以我这里学习使用了 <strong>注解</strong>方式实现数据校验.</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>SpringBoot 中的 <code>bean validation</code> 是集成了<code>hibernate-validator</code>和<code> tomcat-embed-el</code></p>
+<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="简单的校验"><a href="#简单的校验" class="headerlink" title="简单的校验"></a>简单的校验</h3><p>@Valid：常见用在方法，类中字段上进行校验</p>
+<p>@Validated：是spring提供的对@Valid的封装，常见用在方法上进行校验:用在类型、方法和方法参数上。但不能用于成员属性（field）</p>
+<p>BindingResult：是验证是否错误</p>
+<h4 id="Model中"><a href="#Model中" class="headerlink" title="Model中"></a>Model中</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Range(max = 150, min = 1, message = &quot;年龄范围应该在1-150内。&quot;)</span></span><br><span class="line"><span class="keyword">private</span> Integer age;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Controller中"><a href="#Controller中" class="headerlink" title="Controller中"></a>Controller中</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;save&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">v1</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Valid</span> AppUser appUser,BindingResult result)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">            <span class="keyword">for</span> (ObjectError error : result.getAllErrors()) &#123;</span><br><span class="line">                System.out.println(error.getDefaultMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="绑定多个校验对象"><a href="#绑定多个校验对象" class="headerlink" title="绑定多个校验对象"></a>绑定多个校验对象</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;save&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">v1</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Valid</span> AppUser appUser,BindingResult result,<span class="meta">@RequestBody</span> <span class="meta">@Valid</span> AppUser appUser2,BindingResult result2)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">            <span class="keyword">for</span> (ObjectError error : result.getAllErrors()) &#123;</span><br><span class="line">                System.out.println(error.getDefaultMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="部分标签"><a href="#部分标签" class="headerlink" title="部分标签"></a>部分标签</h2><h3 id="Bean-Validation-中内置的-constraint"><a href="#Bean-Validation-中内置的-constraint" class="headerlink" title="Bean Validation 中内置的 constraint"></a><strong>Bean Validation 中内置的 constraint</strong></h3><table>
+<thead>
+<tr>
+<th align="left">注解</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">@Valid</td>
+<td align="left">被注释的元素是一个对象，需要检查此对象的所有字段值</td>
+</tr>
+<tr>
+<td align="left">@Null</td>
+<td align="left">被注释的元素必须为 null</td>
+</tr>
+<tr>
+<td align="left">@NotNull</td>
+<td align="left">被注释的元素必须不为 null</td>
+</tr>
+<tr>
+<td align="left">@AssertTrue</td>
+<td align="left">被注释的元素必须为 true</td>
+</tr>
+<tr>
+<td align="left">@AssertFalse</td>
+<td align="left">被注释的元素必须为 false</td>
+</tr>
+<tr>
+<td align="left">@Min(value)</td>
+<td align="left">被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
+</tr>
+<tr>
+<td align="left">@Max(value)</td>
+<td align="left">被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
+</tr>
+<tr>
+<td align="left">@DecimalMin(value)</td>
+<td align="left">被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
+</tr>
+<tr>
+<td align="left">@DecimalMax(value)</td>
+<td align="left">被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
+</tr>
+<tr>
+<td align="left">@Size(max, min)</td>
+<td align="left">被注释的元素的大小必须在指定的范围内</td>
+</tr>
+<tr>
+<td align="left">@Digits (integer, fraction)</td>
+<td align="left">被注释的元素必须是一个数字，其值必须在可接受的范围内</td>
+</tr>
+<tr>
+<td align="left">@Past</td>
+<td align="left">被注释的元素必须是一个过去的日期</td>
+</tr>
+<tr>
+<td align="left">@Future</td>
+<td align="left">被注释的元素必须是一个将来的日期</td>
+</tr>
+<tr>
+<td align="left">@Pattern(value)</td>
+<td align="left">被注释的元素必须符合指定的正则表达式</td>
+</tr>
+</tbody></table>
+<h3 id="Hibernate-Validator-附加的-constraint"><a href="#Hibernate-Validator-附加的-constraint" class="headerlink" title="Hibernate Validator 附加的 constraint"></a><strong>Hibernate Validator 附加的 constraint</strong></h3><table>
+<thead>
+<tr>
+<th align="left">注解</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">@Email</td>
+<td align="left">被注释的元素必须是电子邮箱地址</td>
+</tr>
+<tr>
+<td align="left">@Length(min&#x3D;, max&#x3D;)</td>
+<td align="left">被注释的字符串的大小必须在指定的范围内</td>
+</tr>
+<tr>
+<td align="left">@NotEmpty</td>
+<td align="left">被注释的字符串的必须非空</td>
+</tr>
+<tr>
+<td align="left">@Range(min&#x3D;, max&#x3D;)</td>
+<td align="left">被注释的元素必须在合适的范围内</td>
+</tr>
+<tr>
+<td align="left">@NotBlank</td>
+<td align="left">被注释的字符串的必须非空</td>
+</tr>
+<tr>
+<td align="left">@URL(protocol&#x3D;,host&#x3D;,    port&#x3D;,regexp&#x3D;, flags&#x3D;)</td>
+<td align="left">被注释的字符串必须是一个有效的url</td>
+</tr>
+</tbody></table>
+<p><a target="_blank" rel="noopener" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/">官方详细</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/oldboyooxx/p/9710585.html">中文详细</a></p>
+<h3 id="容易记错的"><a href="#容易记错的" class="headerlink" title="容易记错的"></a>容易记错的</h3><p>@NotNull           任何对象的value不能为null</p>
+<p>@NotEmpty       集合对象的元素不为0，即集合不为空，也可以用于字符串不为null</p>
+<p>@NotBlank        只能用于字符串不为null，并且字符串trim()以后length要大于0</p>
+<h2 id="resource-下新建错误信息配置文件"><a href="#resource-下新建错误信息配置文件" class="headerlink" title="resource 下新建错误信息配置文件"></a>resource 下新建错误信息配置文件</h2><p>在resource 目录下新建提示信息配置文件 <code>ValidationMessages.properties</code></p>
+<p>文件中的格式为<code>message=ASCII</code>.</p>
+<p>中文的ascii码</p>
+<h2 id="hibernate的校验模式"><a href="#hibernate的校验模式" class="headerlink" title="hibernate的校验模式"></a>hibernate的校验模式</h2><h3 id="1、普通模式（默认是这个模式）"><a href="#1、普通模式（默认是这个模式）" class="headerlink" title="1、普通模式（默认是这个模式）"></a>1、普通模式（默认是这个模式）</h3><p>　　普通模式(会校验完所有的属性，然后返回所有的验证失败信息)</p>
+<h3 id="2、快速失败返回模式"><a href="#2、快速失败返回模式" class="headerlink" title="2、快速失败返回模式"></a>2、快速失败返回模式</h3><p>　　快速失败返回模式(只要有一个验证失败，则返回)</p>
+<h3 id="两种验证模式配置方式"><a href="#两种验证模式配置方式" class="headerlink" title="两种验证模式配置方式"></a>两种验证模式配置方式</h3><h3 id="（参考官方文档）"><a href="#（参考官方文档）" class="headerlink" title="（参考官方文档）"></a>（<a target="_blank" rel="noopener" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-provider-specific-settings">参考官方文档</a>）</h3><p>failFast：true  快速失败返回模式    false 普通模式</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidatorConfiguration</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Validator <span class="title function_">validator</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ValidatorFactory</span> <span class="variable">validatorFactory</span> <span class="operator">=</span> Validation</span><br><span class="line">        .byProvider( HibernateValidator.class )        </span><br><span class="line">            .configure()        </span><br><span class="line">            .failFast( <span class="literal">true</span> )        </span><br><span class="line">            .buildValidatorFactory();</span><br><span class="line">        <span class="type">Validator</span> <span class="variable">validator</span> <span class="operator">=</span> validatorFactory.getValidator();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>和 （hibernate.validator.fail_fast：true  快速失败返回模式    false 普通模式）</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidatorConfiguration</span> &#123;</span><br><span class="line">       <span class="meta">@Bean</span></span><br><span class="line">       <span class="keyword">public</span> Validator <span class="title function_">validator</span><span class="params">()</span> &#123;</span><br><span class="line">           <span class="type">ValidatorFactory</span> <span class="variable">validatorFactory</span> <span class="operator">=</span> Validation.byProvider(HibernateValidator.class)</span><br><span class="line">                   .configure()</span><br><span class="line">                   .addProperty(<span class="string">&quot;hibernate.validator.fail_fast&quot;</span>, <span class="string">&quot;true&quot;</span>)</span><br><span class="line">                   .buildValidatorFactory();</span><br><span class="line">           <span class="type">Validator</span> <span class="variable">validator</span> <span class="operator">=</span> validatorFactory.getValidator();</span><br><span class="line">        <span class="keyword">return</span> validator;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="手动验证Model"><a href="#手动验证Model" class="headerlink" title="手动验证Model"></a>手动验证Model</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AppUser appUser=<span class="keyword">new</span> <span class="title class_">AppUser</span>();</span><br><span class="line">Set&lt;ConstraintViolation&lt;AppUser&gt;&gt; violationSet = validator.validate(appUser);</span><br><span class="line">   <span class="keyword">for</span> (ConstraintViolation&lt;AppUser&gt; model : violationSet) &#123;</span><br><span class="line">        System.out.println(model.getMessage());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="分组校验-区分新增和修改的规则"><a href="#分组校验-区分新增和修改的规则" class="headerlink" title="分组校验(区分新增和修改的规则)"></a>分组校验(区分新增和修改的规则)</h2><h3 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h3><h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><p>新增用户信息和修改用户信息所需要验证的字段是不同的.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">AppUserVaildC</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">AppUserVaildU</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Model中-1"><a href="#Model中-1" class="headerlink" title="Model中"></a>Model中</h4><p>Default 是默认分组.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Range(min = 0,max = 100,message = &quot;年龄必须在[0,100]&quot;,groups=&#123;Default.class&#125;)</span></span><br><span class="line">    <span class="comment">/**年龄*/</span></span><br><span class="line"><span class="keyword">private</span> Integer age;</span><br><span class="line"><span class="meta">@Range(min = 0,max = 2,message = &quot;性别必须在[0,2]&quot;,groups = &#123;AppUserVaildC.class&#125;)</span></span><br><span class="line">    <span class="comment">/**性别 0：未知；1：男；2：女*/</span></span><br><span class="line"><span class="keyword">private</span> Integer sex;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Controller中使用"><a href="#Controller中使用" class="headerlink" title="Controller中使用"></a>Controller中使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;save&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">v1</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Validated(&#123;AppUserVaildC.class, AppUserVaildU.class&#125;)</span> AppUser appUser,BindingResult result)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">            <span class="keyword">for</span> (ObjectError error : result.getAllErrors()) &#123;</span><br><span class="line">                System.out.println(error.getDefaultMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="普通使用"><a href="#普通使用" class="headerlink" title="普通使用"></a>普通使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AppUser appUser=<span class="keyword">new</span> <span class="title class_">AppUser</span>();</span><br><span class="line">Set&lt;ConstraintViolation&lt;AppUser&gt;&gt; violationSet = validator.validate(appUser,AppUserVaildC,AppUserVaildU);</span><br><span class="line">   <span class="keyword">for</span> (ConstraintViolation&lt;AppUser&gt; model : violationSet) &#123;</span><br><span class="line">        System.out.println(model.getMessage());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="组序列"><a href="#组序列" class="headerlink" title="组序列"></a>组序列</h3><p>除了按组指定是否验证之外，还可以指定组的验证顺序，前面组验证不通过的，后面组不进行验证</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GroupSequence(&#123;AppUserVaildC.class, AppUserVaildU.class, Default.class&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">GroupOrder</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Controller中使用-1"><a href="#Controller中使用-1" class="headerlink" title="Controller中使用"></a>Controller中使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;save&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">v1</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Validated(&#123;GroupOrder.class&#125;)</span> AppUser appUser,BindingResult result)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">            <span class="keyword">for</span> (ObjectError error : result.getAllErrors()) &#123;</span><br><span class="line">                System.out.println(error.getDefaultMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="普通使用-1"><a href="#普通使用-1" class="headerlink" title="普通使用"></a>普通使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AppUser appUser=<span class="keyword">new</span> <span class="title class_">AppUser</span>();</span><br><span class="line">Set&lt;ConstraintViolation&lt;AppUser&gt;&gt; violationSet = validator.validate(appUser,GroupOrder);</span><br><span class="line">   <span class="keyword">for</span> (ConstraintViolation&lt;AppUser&gt; model : violationSet) &#123;</span><br><span class="line">        System.out.println(model.getMessage());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义验证"><a href="#自定义验证" class="headerlink" title="自定义验证"></a>自定义验证</h2><p>下面是一个自定义大小写的验证</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">CaseMode</span> &#123;</span><br><span class="line">    UPPER,</span><br><span class="line">    LOWER;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Target( &#123; ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE &#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Constraint(validatedBy = CheckCaseValidator.class)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> CheckCase &#123;</span><br><span class="line">    String <span class="title function_">message</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt;[] groups() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    Class&lt;? <span class="keyword">extends</span> <span class="title class_">Payload</span>&gt;[] payload() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    CaseMode <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CheckCaseValidator</span> <span class="keyword">implements</span> <span class="title class_">ConstraintValidator</span>&lt;CheckCase, String&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> CaseMode caseMode;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">(CheckCase checkCase)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.caseMode = checkCase.value();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isValid</span><span class="params">(String s, ConstraintValidatorContext constraintValidatorContext)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (s == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (caseMode == CaseMode.UPPER) &#123;</span><br><span class="line">            <span class="keyword">return</span> s.equals(s.toUpperCase());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> s.equals(s.toLowerCase());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Model中-2"><a href="#Model中-2" class="headerlink" title="Model中"></a>Model中</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Range(value = CaseMode.LOWER ,message = &quot;年必须是小写&quot;,groups=&#123;Default.class&#125;)</span></span><br><span class="line">    <span class="comment">/**年龄*/</span></span><br><span class="line"><span class="keyword">private</span> String loginName;</span><br><span class="line"><span class="meta">@Range(min = 0,max = 2,message = &quot;性别必须在[0,2]&quot;,groups = &#123;AppUserVaildC.class&#125;)</span></span><br><span class="line">    <span class="comment">/**性别 0：未知；1：男；2：女*/</span></span><br><span class="line"><span class="keyword">private</span> Integer sex;</span><br></pre></td></tr></table></figure>
+
+<h3 id="validator-配置"><a href="#validator-配置" class="headerlink" title="validator 配置"></a>validator 配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Validator <span class="title function_">validator</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">ValidatorFactory</span> <span class="variable">validatorFactory</span> <span class="operator">=</span> Validation.byProvider( HibernateValidator.class )</span><br><span class="line">            .configure()</span><br><span class="line">            .addProperty( <span class="string">&quot;hibernate.validator.fail_fast&quot;</span>, <span class="string">&quot;true&quot;</span> )</span><br><span class="line">            .buildValidatorFactory();</span><br><span class="line">    <span class="type">Validator</span> <span class="variable">validator</span> <span class="operator">=</span> validatorFactory.getValidator();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> validator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<blockquote>
+<p>本文地址:  <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ce35092e89d2">SpringBoot校验(validation)</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/33696/">https://github.com/maxzhao-it/blog/post/33696/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/blog/tags/Hibernate/" rel="tag"># Hibernate</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/17748/" rel="prev" title="JAVA的LocalDateTime与时间格式化与序列化、反序列化">
+                  <i class="fa fa-chevron-left"></i> JAVA的LocalDateTime与时间格式化与序列化、反序列化
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/25441/" rel="next" title="ArchLinux编程环境和其它环境安装">
+                  ArchLinux编程环境和其它环境安装 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

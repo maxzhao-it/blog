@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/58641/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/58641/","path":"post/58641/","title":"Centos安装Greenplum集群"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Centos安装Greenplum集群 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">二、准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#greenplum%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">2.1.1.</span> <span class="nav-text">greenplum架构图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><span class="nav-number">2.2.</span> <span class="nav-text">部署方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85-Greenplum"><span class="nav-number">3.</span> <span class="nav-text">三、安装 Greenplum</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Centos"><span class="nav-number">3.1.</span> <span class="nav-text">配置 Centos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDGreenplum%E5%AE%89%E8%A3%85%E5%8C%85"><span class="nav-number">3.2.</span> <span class="nav-text">下载Greenplum安装包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Greenplum"><span class="nav-number">3.3.</span> <span class="nav-text">安装Greenplum</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rpm-%E5%AE%89%E8%A3%85"><span class="nav-number">3.3.1.</span> <span class="nav-text">Rpm 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85-ZIP"><span class="nav-number">3.3.2.</span> <span class="nav-text">解压安装(ZIP)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%8A%82%E7%82%B9"><span class="nav-number">3.3.3.</span> <span class="nav-text">批量操作节点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.3.3.1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95"><span class="nav-number">3.3.3.2.</span> <span class="nav-text">免密登录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8F%91-master%E7%9A%84-rsa-key"><span class="nav-number">3.3.3.3.</span> <span class="nav-text">分发 master的 rsa key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86"><span class="nav-number">3.3.3.4.</span> <span class="nav-text">批量处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8F%91%E5%AE%89%E8%A3%85%E5%8C%85%E5%88%B0%E6%AF%8F%E4%B8%AA%E5%AD%90%E8%8A%82%E7%82%B9"><span class="nav-number">3.3.4.</span> <span class="nav-text">分发安装包到每个子节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AE%89%E8%A3%85%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.3.5.</span> <span class="nav-text">初始化安装数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%85%E7%A9%BA%E9%87%8D%E6%9D%A5"><span class="nav-number">3.3.5.1.</span> <span class="nav-text">清空重来</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">四、配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">附：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85"><span class="nav-number">5.1.</span> <span class="nav-text">1、虚拟机安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="nav-number">5.1.1.</span> <span class="nav-text">虚拟机网络配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BD%91%E7%BB%9C"><span class="nav-number">5.1.2.</span> <span class="nav-text">虚拟机系统网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BACD%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.1.3.</span> <span class="nav-text">虚拟机CD设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81Centos%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-number">5.2.</span> <span class="nav-text">2、Centos系统配置 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90"><span class="nav-number">5.2.1.</span> <span class="nav-text">源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E9%94%99-RPM-GPG-KEY-EPEL-7"><span class="nav-number">5.2.1.1.</span> <span class="nav-text">报错 RPM-GPG-KEY-EPEL-7</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BD%E5%86%85"><span class="nav-number">5.2.1.2.</span> <span class="nav-text">国内</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">5.2.2.</span> <span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#max-file"><span class="nav-number">5.2.3.</span> <span class="nav-text">max file</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E5%AD%97%E4%BD%93"><span class="nav-number">5.2.4.</span> <span class="nav-text">中文字体</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F1"><span class="nav-number">5.2.4.1.</span> <span class="nav-text">方式1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F2"><span class="nav-number">5.2.4.2.</span> <span class="nav-text">方式2</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-number">5.2.5.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C"><span class="nav-number">5.2.5.1.</span> <span class="nav-text">查看网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E7%BD%91%E7%BB%9C"><span class="nav-number">5.2.5.2.</span> <span class="nav-text">编辑网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E7%BD%91%E7%95%A5"><span class="nav-number">5.2.5.3.</span> <span class="nav-text">重启网略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C"><span class="nav-number">5.2.5.4.</span> <span class="nav-text">测试网络</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEhostname"><span class="nav-number">5.2.6.</span> <span class="nav-text">设置hostname</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%85%B3%E9%97%AD%E8%84%9A%E6%9C%AC"><span class="nav-number">5.3.</span> <span class="nav-text">3、关闭脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81gpinitsystem%E5%91%BD%E4%BB%A4"><span class="nav-number">5.4.</span> <span class="nav-text">4、gpinitsystem命令</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/58641/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Centos安装Greenplum集群 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Centos安装Greenplum集群
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/PostgreSql/" itemprop="url" rel="index"><span itemprop="name">PostgreSql</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/PostgreSql/Greenplum/" itemprop="url" rel="index"><span itemprop="name">Greenplum</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/PostgreSql/Greenplum/%E9%9B%86%E7%BE%A4/" itemprop="url" rel="index"><span itemprop="name">集群</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>Pivotal Greenplum Database是一个建立在开源PostgreSQL上的MPP(大规模并行处理)数据库。系统由主节点、备节点和段节点组成。</p>
+<p>所有数据驻留在段节点上，目录信息存储在主节点中。段节点运行一个或多个段，这些段是修改后的PostgreSQL数据库实例，并被分配一个内容标识符。</p>
+<p>对于每个表，根据用户在DDL语句中指定的分布列键，将数据划分到段节点中。</p>
+<p>对于每个段内容标识符，都有一个不在同一物理主机上运行的主段和镜像段。</p>
+<p>当一个SQL查询进入主节点时，它将被解析、优化并分发到所有段以执行查询计划，并返回请求的数据或将查询结果插入数据库表。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://gp-docs-cn.github.io/docs/best_practices/sysconfig.html">官方最佳实践</a></p>
+</blockquote>
+<h1 id="二、准备"><a href="#二、准备" class="headerlink" title="二、准备"></a>二、准备</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><code>Master</code>节点存储全局系统元数据信息，不存储真实数据。数据通过<code>hash</code>分布到不同的<code>segment</code>中，<code>master</code>作为<code>sql</code>的全局入口，负责在<code>segment</code>中分配工作负载，整合处理结果，返回客户端。</p>
+<p><code>Greenplum</code>架构特点如下：</p>
+<ul>
+<li><code>master</code>节点可以做主备，<code>segment</code>节点也有镜像保证高可用，<code>segment</code>主备尽量混布到不同服务器上。</li>
+<li>支持行列混合存储引擎，同时支持外部表。</li>
+<li>在<code>join</code>时也涉及到数据跨节点重分布的问题，这也是<code>share nothing</code>数据库不可避免的问题。</li>
+<li>高速内部<code>interconnect</code>网络，实现数据<code>join</code>时的高速移动和汇总。</li>
+<li>高效的数据并行加载。</li>
+</ul>
+<h3 id="greenplum架构图"><a href="#greenplum架构图" class="headerlink" title="greenplum架构图"></a><code>greenplum</code>架构图</h3><p><img src="/blog/uploads/images/image-20210817111727116.png"></p>
+<h2 id="部署方案"><a href="#部署方案" class="headerlink" title="部署方案"></a>部署方案</h2><ul>
+<li><code>gp-master：192.168.2.21 master</code> 节点</li>
+<li><code>gp-master2：192.168.2.22</code></li>
+<li><code>gp-master3：192.168.2.23</code></li>
+<li><code>gp-master4：192.168.2.24</code></li>
+</ul>
+<p>具体部署请参考附录中的<a href="%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85">虚拟机安装</a>、<a href="%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><code>Centos</code>系统配置</a></p>
+<h1 id="三、安装-Greenplum"><a href="#三、安装-Greenplum" class="headerlink" title="三、安装 Greenplum"></a>三、安装 <code>Greenplum</code></h1><h2 id="配置-Centos"><a href="#配置-Centos" class="headerlink" title="配置 Centos"></a>配置 <code>Centos</code></h2><ul>
+<li><code>host</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh root@192.168.2.21 <span class="string">&quot;hostnamectl set-hostname host21;echo -e \&quot;192.168.2.21  host21 dw1\\n192.168.2.22  host22 dw2\\n192.168.2.23  host23 dw3\\n192.168.2.24  host24 dw4\&quot; &gt;&gt; /etc/hosts;&quot;</span></span><br><span class="line">ssh root@192.168.2.22 <span class="string">&quot;hostnamectl set-hostname host22;echo -e \&quot;192.168.2.21  host21 dw1\\n192.168.2.22  host22 dw2\\n192.168.2.23  host23 dw3\\n192.168.2.24  host24 dw4\&quot; &gt;&gt; /etc/hosts;&quot;</span></span><br><span class="line">ssh root@192.168.2.23 <span class="string">&quot;hostnamectl set-hostname host23;echo -e \&quot;192.168.2.21  host21 dw1\\n192.168.2.22  host22 dw2\\n192.168.2.23  host23 dw3\\n192.168.2.24  host24 dw4\&quot; &gt;&gt; /etc/hosts;&quot;</span></span><br><span class="line">ssh root@192.168.2.24 <span class="string">&quot;hostnamectl set-hostname host24;echo -e \&quot;192.168.2.21  host21 dw1\\n192.168.2.22  host22 dw2\\n192.168.2.23  host23 dw3\\n192.168.2.24  host24 dw4\&quot; &gt;&gt; /etc/hosts;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装相关的依赖包</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y net-tools <span class="built_in">which</span> openssh-clients openssh-server less zip unzip iproute</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动 <code>ssh</code></li>
+</ul>
+<p><code>Centos</code> 中默认已经启动 <code>ssh</code>，为了方便各节点之间的互连，创建相关的认证key。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 所有节点都要执行</span></span><br><span class="line">ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key</span><br><span class="line">ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key</span><br><span class="line">ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key</span><br><span class="line">/usr/sbin/sshd</span><br></pre></td></tr></table></figure>
+
+<p>同时修改所有节点里面的<code>/etc/sysconfig/network</code>文件，保持与主机名一致</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line"><span class="built_in">cat</span> /etc/sysconfig/network</span><br><span class="line"><span class="comment"># 不存在,则写入</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;NETWORKING=yes&quot;</span> &gt;&gt; /etc/sysconfig/network</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;HOSTNAME=mdw&quot;</span> &gt;&gt; /etc/sysconfig/network</span><br><span class="line"><span class="comment"># 存在,则修改</span></span><br><span class="line">vi /etc/sysconfig/network</span><br><span class="line">NETWORKING=<span class="built_in">yes</span></span><br><span class="line">HOSTNAME=mdw</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建<code>Greenplum</code>的用户和用户组</li>
+</ul>
+<p>为了方便安装<code>Greenplum</code>集群，且使<code>Greenplum</code>自带的<code>python</code>不与系统的<code>python</code>版本相冲突，在每个节点中创建<code>Greenplum</code>的用户和用户组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 所有部署服务器节点都做这个操作</span></span><br><span class="line">groupadd -g 530 gpadmin</span><br><span class="line">useradd -g 530 -u 530 -m -d /home/gpadmin -s /bin/bash gpadmin</span><br><span class="line"><span class="built_in">chown</span> -R gpadmin:gpadmin /home/gpadmin</span><br><span class="line"><span class="comment"># 这里可能会提示 bash: passwd: command not found</span></span><br><span class="line">passwd gpadmin</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;gpadmin ALL=(ALL)       ALL&quot;</span> &gt;&gt; /etc/sudoers</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改每个节点上的文件打开数量限制</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/security/limits.conf</span><br><span class="line"><span class="comment"># 不存在,则写入, 存在,则用 vi 修改</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;soft nofile 65536&quot;</span> &gt;&gt; /etc/security/limits.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hard nofile 65536&quot;</span> &gt;&gt; /etc/security/limits.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;soft nproc 131072&quot;</span> &gt;&gt; /etc/security/limits.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hard nproc 131072&quot;</span> &gt;&gt; /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="下载Greenplum安装包"><a href="#下载Greenplum安装包" class="headerlink" title="下载Greenplum安装包"></a>下载<code>Greenplum</code>安装包</h2><p>到<code>greenplum</code>的官网上，下载<a target="_blank" rel="noopener" href="https://network.pivotal.io/products/pivotal-gpdb">Greenplum安装包</a><br>或<a href="https://github.com/greenplum-db/gpdb/releases">GitHub下载</a>，点开<code>Greenplum Database Server</code>，根据自己的操作系统下载安装包，我下载当前最新的<code>open-source-greenplum-db-6.17.2-rhel7-x86_64.rpm</code>，将其拷到<code>master</code>节点的<code>/home/gpadmin</code>目录中</p>
+<blockquote>
+<p>版本快速链接: <a href="https://github.com/greenplum-db/gpdb/releases/download/6.17.2/open-source-greenplum-db-6.17.2-rhel7-x86_64.rpm"><code>open-source-greenplum-db-6.17.2-rhel7-x86_64.rpm</code></a></p>
+</blockquote>
+<h2 id="安装Greenplum"><a href="#安装Greenplum" class="headerlink" title="安装Greenplum"></a>安装<code>Greenplum</code></h2><p>切换到<code>gpadmin</code>用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su gpadmin</span><br><span class="line"><span class="built_in">cd</span> ~/</span><br></pre></td></tr></table></figure>
+
+<h3 id="Rpm-安装"><a href="#Rpm-安装" class="headerlink" title="Rpm 安装"></a><code>Rpm</code> 安装</h3><ul>
+<li>传递文件到<code>Centos</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scp D:\tools\linux\open-source-greenplum-db-6.17.2-rhel7-x86_64.rpm root@192.168.2.21:/home/gpadmin/</span><br><span class="line"><span class="comment"># 直接在 Centos中下载</span></span><br><span class="line">wget https://github.com/greenplum-db/gpdb/releases/download/6.17.2/open-source-greenplum-db-6.17.2-rhel7-x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum localinstall /home/gpadmin/open-source-greenplum-db-6.17.2-rhel7-x86_64.rpm -y</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看安装地址</span></span><br><span class="line">whereis greenplum-db</span><br><span class="line"><span class="comment"># greenplum-db: /usr/local/greenplum-db</span></span><br><span class="line"><span class="built_in">ls</span> -l /usr/local/greenplum-db </span><br><span class="line"><span class="comment"># lrwxrwxrwx. 1 root root 30 8月  17 23:43 /usr/local/greenplum-db -&gt; /usr/local/greenplum-db-6.17.2</span></span><br><span class="line"><span class="comment"># 安装目录权限</span></span><br><span class="line"><span class="built_in">chown</span> -R gpadmin:gpadmin /usr/local/greenplum-db*</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>gpssh-exkeys</code> 报错问题:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/bin</span><br><span class="line"><span class="built_in">mv</span> python python.bak</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="解压安装-ZIP"><a href="#解压安装-ZIP" class="headerlink" title="解压安装(ZIP)"></a>解压安装(ZIP)</h3><p>解压下载后的zip文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip greenplum-db-6.17.2-rhel7-x86_64.zip</span><br></pre></td></tr></table></figure>
+
+<p>执行安装文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./greenplum-db-6.17.2-rhel7-x86_64.bin</span><br></pre></td></tr></table></figure>
+
+<p>安装期间需要配置安装目录，输入<code>/home/gpadmin/greenplum-db-6.17.2</code></p>
+<h3 id="批量操作节点"><a href="#批量操作节点" class="headerlink" title="批量操作节点"></a>批量操作节点</h3><h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>为了方便安装集群，<code>Greenplum</code>提供了批量操作节点的命令，通过指定配置文件使用批处理命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在主节点 host21 配置</span></span><br><span class="line"><span class="built_in">cd</span> ~/ ;<span class="built_in">mkdir</span> conf</span><br><span class="line"><span class="built_in">echo</span> dw1 &gt; ./conf/hostlist</span><br><span class="line"><span class="built_in">echo</span> dw2 &gt;&gt; ./conf/hostlist</span><br><span class="line"><span class="built_in">echo</span> dw3 &gt;&gt; ./conf/hostlist</span><br><span class="line"><span class="built_in">echo</span> dw4 &gt;&gt; ./conf/hostlist</span><br><span class="line"><span class="comment"># 批量处理服务器列表</span></span><br><span class="line"><span class="built_in">cat</span> ./conf/hostlist</span><br><span class="line">ssh dw2  <span class="comment"># 连接后 exit</span></span><br><span class="line">ssh dw3  <span class="comment"># 连接后 exit</span></span><br><span class="line">ssh dw4  <span class="comment"># 连接后 exit</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> dw2 &gt; ./conf/seg_hosts </span><br><span class="line"><span class="built_in">echo</span> dw3 &gt;&gt; ./conf/seg_hosts </span><br><span class="line"><span class="built_in">echo</span> dw4 &gt;&gt; ./conf/seg_hosts </span><br><span class="line"><span class="comment"># 批量处理服务器列表</span></span><br><span class="line"><span class="built_in">cat</span> ./conf/seg_hosts</span><br></pre></td></tr></table></figure>
+
+<p><code>/usr/local/greenplum-db/greenplum_path.sh</code>中保存了运行<code>greenplum</code>的一些环境变量，包括<code>GPHOME</code>、<code>PYTHONHOME</code>等。</p>
+<h4 id="免密登录"><a href="#免密登录" class="headerlink" title="免密登录"></a>免密登录</h4><ol>
+<li>客户端生成公私钥</li>
+<li>上传公钥到服务器<ol>
+<li><code>id_rsa</code> （私钥）</li>
+<li><code>id_rsa.pub</code> (公钥)</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># host21 执行，一直回车 </span></span><br><span class="line">ssh-keygen -t ecdsa </span><br><span class="line"><span class="comment"># ssh-keygen -t rsa -C &quot;email@domain.com&quot; -f filename</span></span><br><span class="line"><span class="comment"># 分发到服务器</span></span><br><span class="line">ssh-copy-id -i ~/.ssh/id_ecdsa.pub gpadmin@192.168.2.21</span><br><span class="line">ssh-copy-id -i ~/.ssh/id_ecdsa.pub gpadmin@192.168.2.22</span><br><span class="line">ssh-copy-id -i ~/.ssh/id_ecdsa.pub gpadmin@192.168.2.23</span><br><span class="line">ssh-copy-id -i ~/.ssh/id_ecdsa.pub gpadmin@192.168.2.24</span><br><span class="line"><span class="comment"># 或者拷贝到服务器</span></span><br><span class="line">scp ~/.ssh/id_ecdsa.pub gpadmin@192.168.2.22:/home/gpadmin/.ssh/id_ecdsa_21.pub</span><br><span class="line">scp ~/.ssh/id_ecdsa.pub gpadmin@192.168.2.23:/home/gpadmin/.ssh/id_ecdsa_21.pub</span><br><span class="line">scp ~/.ssh/id_ecdsa.pub gpadmin@192.168.2.24:/home/gpadmin/.ssh/id_ecdsa_21.pub</span><br><span class="line"><span class="comment"># 添加到免密登录：host22 执行</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ecdsa_21.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"><span class="comment"># 添加到免密登录：host23 执行</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ecdsa_21.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"><span class="comment"># 添加到免密登录：host24 执行</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ecdsa_21.pub &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">su gpadmin</span><br><span class="line">sudo <span class="built_in">chmod</span> 600 ~/.ssh/*</span><br><span class="line">sudo <span class="built_in">chmod</span> 700 ~/.ssh</span><br><span class="line">sudo <span class="built_in">chmod</span> 775 ~/</span><br><span class="line">sudo <span class="built_in">cp</span> ~/.ssh/authorized_keys /root/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>配置服务器的秘钥验证</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 设置ssh在接收登录请求之前是否检查用户家目录和rhosts文件的权限和所有权。这通常是必要的，因为新手经常会把自己的目录和文件设成任何人都有写权限。)</span><br><span class="line">StrictModes no</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">PubkeyAuthentication yes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@dw2</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="分发-master的-rsa-key"><a href="#分发-master的-rsa-key" class="headerlink" title="分发 master的 rsa key"></a>分发 <code>master</code>的 <code>rsa key</code></h4><p>在<code>gpadmin</code>账号下设置环境变量，并将master节点的<code>key</code> 交换到各个<code>segment</code>节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压安装 source /home/gpadmin/greenplum-db/greenplum_path.sh </span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="built_in">source</span> /usr/local/greenplum-db/greenplum_path.sh </span><br><span class="line">gpssh-exkeys -f /home/gpadmin/conf/hostlist</span><br><span class="line">[STEP 1 of 5] create <span class="built_in">local</span> ID and authorize on <span class="built_in">local</span> host</span><br><span class="line">[STEP 2 of 5] keyscan all hosts and update known_hosts file</span><br><span class="line">[STEP 3 of 5] authorize current user on remote hosts</span><br><span class="line">  ... send to mdw</span><br><span class="line">  ... send to sdw1</span><br><span class="line">  ***</span><br><span class="line">  *** Enter password <span class="keyword">for</span> sdw1: </span><br><span class="line">  ... send to sdw2</span><br><span class="line">  ... send to sdw3</span><br><span class="line"></span><br><span class="line">[STEP 4 of 5] determine common authentication file content</span><br><span class="line"></span><br><span class="line">[STEP 5 of 5] copy authentication files to all remote hosts</span><br><span class="line">  ... finished key exchange with mdw</span><br><span class="line">  ... finished key exchange with sdw1</span><br><span class="line">  ... finished key exchange with sdw2</span><br><span class="line">  ... finished key exchange with sdw3</span><br><span class="line"></span><br><span class="line">[INFO** completed successfully</span><br></pre></td></tr></table></figure>
+
+<h4 id="批量处理"><a href="#批量处理" class="headerlink" title="批量处理"></a>批量处理</h4><p>后续就可以使用一些命令执行批量操作</p>
+<p><strong>注意</strong>：使用<code>gpssh-exkeys</code>命令时一定要使用<code>gpadmin</code>用户，因为会在<code>/home/gpadmin/.ssh</code>中生成<code>ssh</code>的免密码登录秘钥，如果使用其它账号登录，则会在其它账号下生成密钥，在<code>gpadmin</code><br>账号下就无法使用<code>gpssh</code>的批处理命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">gpssh -f /home/gpadmin/conf/hostlist</span><br><span class="line">=&gt; <span class="built_in">pwd</span></span><br><span class="line">[dw1] /home/gpadmin</span><br><span class="line">[dw2] /home/gpadmin</span><br><span class="line">[dw3] /home/gpadmin</span><br><span class="line">[dw4] /home/gpadmin</span><br><span class="line">=&gt; <span class="built_in">ls</span></span><br><span class="line">[dw1] /home/gpadmin/conf/</span><br><span class="line">[dw2] </span><br><span class="line">[dw3] </span><br><span class="line">[dw4] </span><br><span class="line">=&gt; <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="分发安装包到每个子节点"><a href="#分发安装包到每个子节点" class="headerlink" title="分发安装包到每个子节点"></a>分发安装包到每个子节点</h3><p>打包master节点上的安装包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -czf gp.tar.gz greenplum-db-6.17.2</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>gpscp</code>命令将这个文件复制到每个子节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpscp -f /home/gpadmin/conf/seg_hosts gp.tar.gz =:/home/gpadmin</span><br></pre></td></tr></table></figure>
+
+<p>批量解压，并创建软链接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gpssh -f /home/gpadmin/conf/seg_hosts</span><br><span class="line">=&gt; tar -zxf gp.tar.gz</span><br><span class="line">[dw2]</span><br><span class="line">[dw3]</span><br><span class="line">[dw4]</span><br><span class="line">=&gt; <span class="built_in">ln</span> -s greenplum-db-6.17.2 greenplum-db</span><br><span class="line">[dw2]</span><br><span class="line">[dw3]</span><br><span class="line">[dw4]</span><br></pre></td></tr></table></figure>
+
+<p>这样就完成了所有子节点数据库的安装</p>
+<h3 id="初始化安装数据库"><a href="#初始化安装数据库" class="headerlink" title="初始化安装数据库"></a>初始化安装数据库</h3><ul>
+<li>批量创建数据目录</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">gpssh -f /home/gpadmin/conf/hostlist</span><br><span class="line">=&gt; <span class="built_in">mkdir</span> gpdata</span><br><span class="line">[dw1]</span><br><span class="line">[dw2]</span><br><span class="line">[dw3]</span><br><span class="line">[dw4]</span><br><span class="line">=&gt; <span class="built_in">cd</span> gpdata</span><br><span class="line">[dw1]</span><br><span class="line">[dw2]</span><br><span class="line">[dw3]</span><br><span class="line">[dw4]</span><br><span class="line">=&gt; <span class="built_in">mkdir</span> gpmaster gpdatap1 gpdatap2 gpdatam1 gpdatam2</span><br><span class="line">[dw1]</span><br><span class="line">[dw2]</span><br><span class="line">[dw3]</span><br><span class="line">[dw4]</span><br><span class="line">=&gt; <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在master节点上修改<code>.bash_profile</code>配置环境变量，并发送给其他子节点，确保这些环境变量生效</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#.bash_profile </span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;source /user/local/greenplum-db/greenplum_path.sh&quot;</span> &gt;&gt; ~/.bash_profile</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export MASTER_DATA_DIRECTORY=/home/gpadmin/gpdata/gpmaster/gpseg-1&quot;</span> &gt;&gt; ~/.bash_profile</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PGPORT=2345&quot;</span> &gt;&gt; ~/.bash_profile</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PGDATABASE=testDB&quot;</span> &gt;&gt; ~/.bash_profile</span><br><span class="line"><span class="built_in">source</span> .bash_profile</span><br><span class="line">gpscp -f /home/gpadmin/conf/seg_hosts /home/gpadmin/.bash_profile =:/home/gpadmin/</span><br><span class="line"><span class="comment"># dw2、dw3、dw4 执行</span></span><br><span class="line"><span class="built_in">source</span> .bash_profile</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化配置文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /home/gpadmin/conf/gpinitsystem_config</span><br></pre></td></tr></table></figure>
+
+<p>填写配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ARRAY_NAME</span>=<span class="string">\&quot;Greenplum\&quot;</span></span><br><span class="line"><span class="attr">MACHINE_LIST_FILE</span>=<span class="string">/home/gpadmin/conf/seg_hosts</span></span><br><span class="line"><span class="comment"># Segment 的名称前缀</span></span><br><span class="line"><span class="attr">SEG_PREFIX</span>=<span class="string">gpseg</span></span><br><span class="line"><span class="comment"># Primary Segment 起始的端口号</span></span><br><span class="line"><span class="attr">PORT_BASE</span>=<span class="string">33000</span></span><br><span class="line"><span class="comment"># 指定 Primary Segment 的数据目录</span></span><br><span class="line"><span class="attr">declare</span> <span class="string">-a DATA_DIRECTORY=(/home/gpadmin/gpdata/gpdatap1 /home/gpadmin/gpdata/gpdatap2)</span></span><br><span class="line"><span class="comment"># Master 所在机器的 Hostname</span></span><br><span class="line"><span class="attr">MASTER_HOSTNAME</span>=<span class="string">dw1</span></span><br><span class="line"><span class="comment"># 指定 Master 的数据目录</span></span><br><span class="line"><span class="attr">MASTER_DIRECTORY</span>=<span class="string">/home/gpadmin/gpdata/gpmaster</span></span><br><span class="line"><span class="comment"># Master 的端口 </span></span><br><span class="line"><span class="attr">MASTER_PORT</span>=<span class="string">5432</span></span><br><span class="line"><span class="comment"># 指定Bash的版本</span></span><br><span class="line"><span class="attr">TRUSTED_SHELL</span>=<span class="string">/usr/bin/ssh</span></span><br><span class="line"><span class="comment"># Mirror Segment起始的端口号</span></span><br><span class="line"><span class="attr">MIRROR_PORT_BASE</span>=<span class="string">43000</span></span><br><span class="line"><span class="comment"># Primary Segment 主备同步的起始端口号</span></span><br><span class="line"><span class="attr">REPLICATION_PORT_BASE</span>=<span class="string">34000</span></span><br><span class="line"><span class="comment"># Mirror Segment 主备同步的起始端口号</span></span><br><span class="line"><span class="attr">MIRROR_REPLICATION_PORT_BASE</span>=<span class="string">44000</span></span><br><span class="line"><span class="comment"># Mirror Segment 的数据目录</span></span><br><span class="line"><span class="attr">declare</span> <span class="string">-a MIRROR_DATA_DIRECTORY=(/home/gpadmin/gpdata/gpdatam1 /home/gpadmin/gpdata/gpdatam2)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化数据库</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpinitsystem -c /home/gpadmin/conf/gpinitsystem_config -s host24 -e 1</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>-s dw4</code>是指配置<code>master</code>的<code>standby</code>节点，然后按照提示步骤就能完成安装了</p>
+<p>如果<code>gpinitsystem</code>不成功，在<code>master</code>节点的<code>/home/gpadmin/gpAdminLogs</code>目录下<code>gpinitsystem_*.log</code>文件中查看日志信息，找出原因进行修改，然后再重新执行<code>gpinitsystem</code>进行初始化安装。</p>
+<h4 id="清空重来"><a href="#清空重来" class="headerlink" title="清空重来"></a>清空重来</h4><p>所有的服务器执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭查询到的进程</span></span><br><span class="line">ps ax  |grep greenplum |grep -v grep |awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span></span><br><span class="line"><span class="comment"># 删除锁定文件</span></span><br><span class="line">sudo <span class="built_in">rm</span> -f /tmp/.s.PGSQL*</span><br><span class="line"><span class="built_in">rm</span> -rf /home/gpadmin/gpdata/gpdatam1/*</span><br><span class="line"><span class="built_in">rm</span> -rf /home/gpadmin/gpdata/gpdatam2/*</span><br><span class="line"><span class="built_in">rm</span> -rf /home/gpadmin/gpdata/gpdatap1/*</span><br><span class="line"><span class="built_in">rm</span> -rf /home/gpadmin/gpdata/gpdatap2/*</span><br><span class="line"><span class="built_in">rm</span> -rf /home/gpadmin/gpdata/gpmaster/*</span><br><span class="line"><span class="built_in">rm</span> -rf /home/gpadmin/gpdata/gpAdminLogs/*</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="四、配置"><a href="#四、配置" class="headerlink" title="四、配置"></a>四、配置</h1><p>鬼鬼，有点复杂，待续</p>
+<h1 id="附："><a href="#附：" class="headerlink" title="附："></a>附：</h1><h2 id="1、虚拟机安装"><a href="#1、虚拟机安装" class="headerlink" title="1、虚拟机安装"></a>1、虚拟机安装<span id="虚拟机安装"></span></h2><h3 id="虚拟机网络配置"><a href="#虚拟机网络配置" class="headerlink" title="虚拟机网络配置"></a>虚拟机网络配置</h3><p><img src="/blog/uploads/images/image-20210804230736483.png"></p>
+<h3 id="虚拟机系统网络"><a href="#虚拟机系统网络" class="headerlink" title="虚拟机系统网络"></a>虚拟机系统网络</h3><p><img src="/blog/uploads/images/image-20210804230858014.png"></p>
+<h3 id="虚拟机CD设置"><a href="#虚拟机CD设置" class="headerlink" title="虚拟机CD设置"></a>虚拟机CD设置</h3><p><img src="/blog/uploads/images/image-20210804230914122.png"></p>
+<h2 id="2、Centos系统配置"><a href="#2、Centos系统配置" class="headerlink" title="2、Centos系统配置 "></a>2、<code>Centos</code>系统配置 <span id="`Centos`系统配置"></span></h2><h3 id="源"><a href="#源" class="headerlink" title="源"></a>源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak</span><br><span class="line">vim /etc/yum.repos.d/CentOS-Base.repo </span><br></pre></td></tr></table></figure>
+
+<p>详情请看附</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 清空缓存</span></span><br><span class="line">yum clean all</span><br><span class="line"><span class="comment"># 更新源</span></span><br><span class="line">yum repolist</span><br><span class="line"><span class="comment"># 安装基础依赖</span></span><br><span class="line">yum -y install epel-release</span><br><span class="line"></span><br><span class="line">sed -e <span class="string">&#x27;s!^metalink=!#metalink=!g&#x27;</span> \</span><br><span class="line">    -e <span class="string">&#x27;s!^#baseurl=!baseurl=!g&#x27;</span> \</span><br><span class="line">    -e <span class="string">&#x27;s!//download\.fedoraproject\.org/pub!//mirrors.tuna.tsinghua.edu.cn!g&#x27;</span> \</span><br><span class="line">    -e <span class="string">&#x27;s!http://mirrors\.tuna!https://mirrors.tuna!g&#x27;</span> \</span><br><span class="line">    -i /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel-testing.repo</span><br><span class="line">    </span><br><span class="line">rpm -ivh https://mirrors.tuna.tsinghua.edu.cn/epel/6/x86_64/epel-release-6-8.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h4 id="报错-RPM-GPG-KEY-EPEL-7"><a href="#报错-RPM-GPG-KEY-EPEL-7" class="headerlink" title="报错 RPM-GPG-KEY-EPEL-7"></a>报错 <code>RPM-GPG-KEY-EPEL-7</code></h4><p>先设置 <code>CentOS-Base.repo </code> 中的 <code>gpgcheck=0</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/pki/rpm-gpg</span><br><span class="line">wget https://archive.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7</span><br></pre></td></tr></table></figure>
+
+<h4 id="国内"><a href="#国内" class="headerlink" title="国内"></a>国内</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -e <span class="string">&#x27;s|^mirrorlist=|#mirrorlist=|g&#x27;</span> \</span><br><span class="line">         -e <span class="string">&#x27;s|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.tuna.tsinghua.edu.cn|g&#x27;</span> \</span><br><span class="line">         -i.bak \</span><br><span class="line">         /etc/yum.repos.d/CentOS-*.repo</span><br><span class="line">         </span><br><span class="line">sudo yum clean all</span><br><span class="line">sudo yum makecache</span><br><span class="line">sudo yum -y update</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line"><span class="comment"># 关闭服务</span></span><br><span class="line">systemctl stop firewalld</span><br><span class="line"><span class="comment"># 关闭自启服务</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line"><span class="comment"># 开放端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=80/tcp --add-port=3306/tcp --permanent</span><br><span class="line"><span class="comment"># 重新载入</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">firewall-cmd --zone=public --query-port=80/tcp </span><br><span class="line"><span class="comment"># 查看全部</span></span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line">firewall-cmd --zone=public --remove-port=80/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+<h3 id="max-file"><a href="#max-file" class="headerlink" title="max file"></a><code>max file</code></h3><p>修改 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<p>添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 65536</span><br><span class="line">* soft <span class="built_in">nproc</span> 65536</span><br><span class="line">* hard <span class="built_in">nproc</span> 65536</span><br></pre></td></tr></table></figure>
+
+<p>或者直接执行添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;* soft nofile 65536\\n* hard nofile 65536\\n* soft nproc 65536\\n* hard nproc 65536&quot;</span> &gt;&gt;/etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">source</span> /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="中文字体"><a href="#中文字体" class="headerlink" title="中文字体"></a>中文字体</h3><h4 id="方式1"><a href="#方式1" class="headerlink" title="方式1"></a>方式1</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install fonts-chinese</span><br><span class="line">yum -y install fonts-ISO8859</span><br><span class="line">fc-cache  -fv</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h4 id="方式2"><a href="#方式2" class="headerlink" title="方式2"></a>方式2</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install fontconfig</span><br><span class="line"><span class="built_in">mkdir</span> chinses</span><br><span class="line"><span class="built_in">chmod</span> -R 755 /usr/share/fonts/chinses/</span><br><span class="line">vim /etc/fonts/fonts.conf</span><br></pre></td></tr></table></figure>
+
+<p>在  <code>&lt;dir prefix=&quot;xdg&quot;&gt;fonts&lt;/dir&gt;</code> 这一行下面插入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">dir</span>&gt;/usr/share/fonts/chinses&lt;/dir&gt; </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拷贝本地字体</span></span><br><span class="line">fc-cache</span><br></pre></td></tr></table></figure>
+
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>需要安装 <code>net-tools</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install net-tools</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看网络"><a href="#查看网络" class="headerlink" title="查看网络"></a>查看网络</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210803165838404.png"></p>
+<p>我这里的网络魏 <code>ens33</code></p>
+<p><img src="/blog/uploads/images/image-20210803172320318.png"></p>
+<h4 id="编辑网络"><a href="#编辑网络" class="headerlink" title="编辑网络"></a>编辑网络</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysconfig/network-scripts/ifcfg-ens33</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210803172846279.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">BOOTPROTO=static        #开机协议，有dhcp及static；</span><br><span class="line">ONBOOT=yes              #设置为开机启动；</span><br><span class="line">DNS1=114.114.114.114    #这个是国内的DNS地址，是固定的；</span><br><span class="line">IPADDR=192.168.2.2      #你想要设置的固定IP，理论上192.168.2.2-255之间都可以，请自行验证；</span><br><span class="line">NETMASK=255.255.255.0   #子网掩码，不需要修改；</span><br><span class="line">GATEWAY=192.168.2.254     #网关，这里应该和你“2.配置虚拟机的NAT模式具体地址参数”中的（2）选择VMnet8--取消勾选使用本地DHCP--设置子网IP--网关IP设置 一样才行。</span><br></pre></td></tr></table></figure>
+
+<h4 id="重启网略"><a href="#重启网略" class="headerlink" title="重启网略"></a>重启网略</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试网络"><a href="#测试网络" class="headerlink" title="测试网络"></a>测试网络</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping www.baidu.com</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置hostname"><a href="#设置hostname" class="headerlink" title="设置hostname"></a>设置<code>hostname</code></h3><p>默认<code>hostname</code> 为 <code>localhost</code>，所以这里做区分</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@192.168.2.3 <span class="string">&quot;hostnamectl set-hostname host3;echo -e \&quot;192.168.2.3  host3\\n192.168.2.4  host4\\n192.168.2.5  host5\\n192.168.2.6  host6\\n192.168.2.7  host7\&quot; &gt;&gt; /etc/hosts;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、关闭脚本"><a href="#3、关闭脚本" class="headerlink" title="3、关闭脚本"></a>3、关闭脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">greenplum</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4、gpinitsystem命令"><a href="#4、gpinitsystem命令" class="headerlink" title="4、gpinitsystem命令"></a>4、<code>gpinitsystem</code>命令</h2><table>
+<thead>
+<tr>
+<th>-a</th>
+<th>不提示用户确认</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>- b &lt; parallel_processes &gt;</td>
+<td>要并行创建的段的数量。如果不指定,<br/><br/>该实用程序一次将启动4个并行进程。</td>
+</tr>
+<tr>
+<td>- c &lt; gpinitsystem_config &gt;</td>
+<td>必需的。配置文件的完整路径和文件名，其中<br/><br/>包含要配置和初始化的所有已定义参数<br/><br/>新的Greenplum系统。请参阅下面的初始化配置文件格式。</td>
+</tr>
+<tr>
+<td>- d</td>
+<td>设置日志输出级别为调试。</td>
+</tr>
+<tr>
+<td>- h &lt; hostfile_gpinitsystem &gt;</td>
+<td>可选的。包含主机的文件的完整路径和文件名<br/><br/>段主机的地址。如果没有在命令行中指定，<br/><br/>您可以使用MACHINE_LIST_FILE参数指定主机文件<br/><br/>在gpinitsystem_config文件中。</td>
+</tr>
+<tr>
+<td>Sets the default locale used by Greenplum Database.</td>
+<td>可选的。输入配置文件的完整路径和文件名，<br/><br/>定义Greenplum数据库成员和段使用<br/><br/>QD_PRIMARY_ARRAY和PRIMARY_ARRAY参数。输入配置<br/><br/>文件通常是通过使用gpinitsystem和-O<br/><br/>output_configuration_file选项。您必须提供-c<br/><br/>或-I input_configuration_file . cluster_configuration_file选项<br/><br/>gpinitsystem选项。</td>
+</tr>
+<tr>
+<td>-l <logfile_directory></td>
+<td>要写入日志文件的目录。默认为~ &#x2F; gpAdminLogs。</td>
+</tr>
+<tr>
+<td>–max_connections&#x3D;<number> |-m <number></td>
+<td>设置主服务器允许的最大客户端连接数。<br/><br/>默认为25。</td>
+</tr>
+<tr>
+<td>- s</td>
+<td>可选的。如果您希望配置备份主主机，请指定<br/><br/>使用此选项的主机名。必须使用Greenplum Database软件<br/><br/>已在此主机上安装和配置。</td>
+</tr>
+<tr>
+<td><code>-e &lt;password&gt;</code></td>
+<td>password to set for Greenplum superuser in database [default su_password]</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<pre><code>  -a, don&#39;t ask to confirm instance creation [default:- ask]
+  -D, set log output to debug level, shows all function calls
+  -l, logfile_directory [optional]
+      Alternative logfile directory
+  -q, quiet mode, do not log progress to screen [default:- verbose output to screen]
+
+  Configuration options:
+  -b, shared_buffers per instance [default 128000kB]
+      Specify either the number of database I/O buffers (without suffix) or the
+      amount of memory to use for buffers (with suffix &#39;kB&#39;, &#39;MB&#39; or &#39;GB&#39;).
+      Applies to master and all segments.
+  -B, &lt;number&gt; run this batch of create segment processes in parallel [default 60]
+  -c, gp_config_file [mandatory]
+      Supplies all Greenplum configuration information required by this utility.
+      Full description of all parameters contained within the example file
+      supplied with this distribution.
+      Also see gpinitsystem_INSTRUCTIONS file for greater detail on
+      the operation and configuration of this script
+  -e, , 
+  -S, standby_datadir [optional]
+  -h, gp_hostlist_file [optional]
+      Contains a list of all segment instance hostnames required to participate in
+      the new Greenplum instance. Normally set in gp_config_file.
+  -I, &lt;input_configuration_file&gt;
+      The full path and filename of an input configuration file, which defines the
+      Greenplum Database members and segments using the QD_PRIMARY_ARRAY and
+      PRIMARY_ARRAY parameters. The input configuration file is typically created by
+      using gpinitsystem with the -O &lt;output_configuration_file&gt; option. You must
+      provide either the -c &lt;cluster_configuration_file&gt; option or the -I
+      &lt;input_configuration_file&gt; option to gpinitsystem.
+  -m, maximum number of connections for master instance [default 250]
+  -n, &lt;locale&gt;, setting for locale to be set when database initialized [default en_US.utf8]
+  -O, &lt;output_configuration_file&gt;
+      When used with the -O option, gpinitsystem does not create a new Greenplum
+      Database cluster but instead writes the supplied cluster configuration
+      information to the specified output_configuration_file. This file defines
+      Greenplum Database members and segments using the QD_PRIMARY_ARRAY and
+      PRIMARY_ARRAY parameters, and can be later used with -I
+      &lt;input_configuration_file&gt; to initialize a new cluster.
+  -p, postgresql_conf_gp_additions [optional]
+      List of additional PostgreSQL parameters to be applied to each Master/Segment
+      postgresql.conf file during Greenplum database initialization.
+  -P, standby_port [optional]
+  -s, standby_hostname [optional]
+
+  Return codes:
+</code></pre>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/58641/">https://github.com/maxzhao-it/blog/post/58641/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/DB/" rel="tag"># DB</a>
+              <a href="/blog/tags/PostgreSql/" rel="tag"># PostgreSql</a>
+              <a href="/blog/tags/Centos/" rel="tag"># Centos</a>
+              <a href="/blog/tags/%E9%9B%86%E7%BE%A4/" rel="tag"># 集群</a>
+              <a href="/blog/tags/Greenplum/" rel="tag"># Greenplum</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/11485/" rel="prev" title="Docker指定容器IP">
+                  <i class="fa fa-chevron-left"></i> Docker指定容器IP
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/34094/" rel="next" title="Docker迁移镜像">
+                  Docker迁移镜像 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

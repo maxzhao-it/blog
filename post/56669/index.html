@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/56669/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/56669/","path":"post/56669/","title":"SpringBoot的配置文件及获取配置信息"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SpringBoot的配置文件及获取配置信息 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#application-properties%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">application.properties基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.1.</span> <span class="nav-text">应用配置文件位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88-properties%E6%88%96-yml%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">应用配置文件（.properties或.yml）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#application-properties%E5%85%B6%E5%AE%83%E7%94%A8%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">application.properties其它用法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B1%9E%E6%80%A7%E5%8A%A0%E8%BD%BD"><span class="nav-number">2.1.</span> <span class="nav-text">自定义属性加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#List%E3%80%81Map-%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.1.</span> <span class="nav-text">List、Map 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%AE%BE%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">通过命令行设置属性值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E4%BB%A3%E7%A0%81%E8%AE%BE%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="nav-number">2.3.</span> <span class="nav-text">通过代码设置属性值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">2.4.</span> <span class="nav-text">多环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E7%9A%84%E5%8F%A6%E4%B8%80%E7%A7%8D%E6%96%B9%E5%BC%8Fpom-xml"><span class="nav-number">2.4.0.1.</span> <span class="nav-text">多环境配置的另一种方式pom.xml</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.5.</span> <span class="nav-text">随机数的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E9%97%B4%E7%9A%84%E5%BC%95%E7%94%A8"><span class="nav-number">2.6.</span> <span class="nav-text">参数间的引用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%B1%9E%E6%80%A7%E5%8D%A0%E4%BD%8D%E7%AC%A6%E8%BF%98%E8%83%BD%E7%BC%A9%E7%9F%AD%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0"><span class="nav-number">2.6.1.</span> <span class="nav-text">通过属性占位符还能缩短命令参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7"><span class="nav-number">2.7.</span> <span class="nav-text">Java系统属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#devtools-%E9%85%8D%E7%BD%AE"><span class="nav-number">2.7.0.1.</span> <span class="nav-text">devtools 配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL8-%E9%85%8D%E7%BD%AE"><span class="nav-number">2.7.1.</span> <span class="nav-text">MySQL8 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis"><span class="nav-number">2.7.2.</span> <span class="nav-text">Redis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E9%99%90%E5%88%B6%E9%85%8D%E7%BD%AE"><span class="nav-number">2.8.</span> <span class="nav-text">上传文件大小限制配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jackson%E6%97%B6%E5%8C%BA%E9%85%8D%E7%BD%AE"><span class="nav-number">2.9.</span> <span class="nav-text">jackson时区配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97"><span class="nav-number">2.10.</span> <span class="nav-text">日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ"><span class="nav-number">2.11.</span> <span class="nav-text">RabbitMQ</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/56669/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SpringBoot的配置文件及获取配置信息 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot的配置文件及获取配置信息
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="application-properties基本使用"><a href="#application-properties基本使用" class="headerlink" title="application.properties基本使用"></a><code>application.properties</code>基本使用</h1><p><code>application.properties</code>的使用，主要用来配置数据库连接、日志相关配置等。</p>
+<h2 id="应用配置文件位置"><a href="#应用配置文件位置" class="headerlink" title="应用配置文件位置"></a>应用配置文件位置</h2><blockquote>
+<ul>
+<li><code>spring</code>会从<code>classpath</code>下的<code>/config</code>目录或者<code>classpath</code>的根目录查找<code>application.properties</code>或<code>application.yml</code>。</li>
+<li><code>/config</code>优先于<code>classpath</code>根目录</li>
+<li><code>@PropertySource</code>这个注解可以指定具体的属性配置文件，优先级比较低。</li>
+<li><code>相同优先级位置</code>同时有<code>application.properties</code>和<code>application.yml</code>，那么<code>application.yml</code>里面的属性就会覆盖<code>application.properties</code>里的属性。</li>
+</ul>
+</blockquote>
+<h2 id="应用配置文件（-properties或-yml）"><a href="#应用配置文件（-properties或-yml）" class="headerlink" title="应用配置文件（.properties或.yml）"></a>应用配置文件（.properties或.yml）</h2><p>在配置文件中直接写：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name</span>=<span class="string">MaxZhao</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>.yml格式的配置文件如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">MaxZhao</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">servlet:</span></span><br><span class="line">  <span class="attr">context-path:</span> <span class="string">/gtboot</span></span><br></pre></td></tr></table></figure>
+
+<p>当有前缀的情况下，使用<code>.yml</code>格式的配置文件更简单。详情请查看<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.1.0.RELEASE/reference/html/boot-features-external-config.html#boot-features-external-config-yaml">*<br>这里*</a><br><strong>注意</strong>：使用<code>.yml</code>时，属性名的值和冒号中间必须有空格，如<code>name: MaxZhao</code>正确，<code>name:MaxZhao</code>就是错的。</p>
+<hr>
+<h1 id="application-properties其它用法"><a href="#application-properties其它用法" class="headerlink" title="application.properties其它用法"></a><code>application.properties</code>其它用法</h1><h2 id="自定义属性加载"><a href="#自定义属性加载" class="headerlink" title="自定义属性加载"></a>自定义属性加载</h2><p>通常我们需要配置文件来定义一些自己的属性，比如：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">my.name</span>=<span class="string">MaxZhao</span></span><br><span class="line"><span class="attr">my.sex</span>=<span class="string">1</span></span><br></pre></td></tr></table></figure>
+
+<p>在代码中我们可以这样引用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyInfoProperties</span> &#123;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;my.name&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;my.title&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String sex;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略getter和setter</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或者</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;my&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyInfoProperties</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String sex;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略getter和setter</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后其它类中引用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyInfoPropertiesDemo</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MyInfoProperties myInfoProperties;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="List、Map-配置"><a href="#List、Map-配置" class="headerlink" title="List、Map 配置"></a>List、Map 配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;my&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyInfoProperties</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String sex;</span><br><span class="line">    <span class="keyword">private</span> MyInfoProperties info;</span><br><span class="line">    <span class="keyword">private</span> List&lt;MyInfoProperties&gt; infos;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; names;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; names2;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, MyInfoProperties&gt; infoMap;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, String&gt; nameMap;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, String&gt; nameMap2;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, String&gt; nameMap3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面展示一下 <code>yml</code> 配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">my:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">MaxZhao</span></span><br><span class="line">  <span class="attr">sex:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">info:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">用户1</span></span><br><span class="line">    <span class="attr">sex:</span> <span class="string">男</span></span><br><span class="line">  <span class="attr">info2:</span> &#123; <span class="attr">name:</span> <span class="string">用户1</span>, <span class="attr">sex:</span> <span class="string">男</span> &#125;</span><br><span class="line">  <span class="attr">infos:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">用户1</span></span><br><span class="line">      <span class="attr">sex:</span> <span class="string">男</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">用户2</span></span><br><span class="line">      <span class="attr">sex:</span> <span class="string">女</span></span><br><span class="line">  <span class="attr">names:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">用户1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">用户2</span></span><br><span class="line">  <span class="attr">names2:</span> <span class="string">用户1,用户2</span></span><br><span class="line">  <span class="attr">infoMap:</span></span><br><span class="line">    <span class="string">用户1:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">用户1</span></span><br><span class="line">      <span class="attr">ex:</span> <span class="string">男</span></span><br><span class="line">    <span class="string">用户2:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">用户2</span></span><br><span class="line">      <span class="attr">ex:</span> <span class="string">女</span></span><br><span class="line">  <span class="attr">nameMap:</span></span><br><span class="line">    <span class="string">用户1:</span> <span class="string">男</span></span><br><span class="line">    <span class="string">用户2:</span> <span class="string">女</span></span><br><span class="line">  <span class="string">nameMap2[用户1]:</span> <span class="string">男</span></span><br><span class="line">  <span class="string">nameMap2[用户2]:</span> <span class="string">女</span></span><br><span class="line">  <span class="attr">nameMap3:</span> &#123; <span class="string">用户1:</span> <span class="string">男</span>,<span class="string">用户2:</span> <span class="string">女</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="通过命令行设置属性值"><a href="#通过命令行设置属性值" class="headerlink" title="通过命令行设置属性值"></a>通过命令行设置属性值</h2><p><code>java -jar xxx.jar --server.port=8888</code>，这三通过使用—server.port属性来设置xxx.jar应用的端口为8888。<br><code>jjava -jar xxx.jar --server.port=8888</code>j命令，等价于我们在application.properties中添加属性<code>server.port=8888</code>。</p>
+<p>可以用<code>SpringApplication.setAddCommandLineProperties(false)</code>禁用命令行设置属性值。</p>
+<h2 id="通过代码设置属性值"><a href="#通过代码设置属性值" class="headerlink" title="通过代码设置属性值"></a>通过代码设置属性值</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyInfoPropertiesDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SpringApplication</span> <span class="variable">application</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringApplication</span>(Application.class);</span><br><span class="line">        Map&lt;String, Object&gt; defaultMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, Object&gt;();</span><br><span class="line">        defaultMap.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;MaxZhao&quot;</span>);</span><br><span class="line"><span class="comment">//还可以是Properties对象</span></span><br><span class="line">        application.setDefaultProperties(defaultMap);</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="多环境配置"><a href="#多环境配置" class="headerlink" title="多环境配置"></a>多环境配置</h2><p>通常同一套程序会被应用和安装到几个不同的环境，比如：开发、测试、生产等。其中每个环境的数据库地址、服务器端口等等配置都会不同。 在Spring<br>Boot中多环境配置文件名需要满足application-{profile}.properties的格式，其中{profile}对应你的环境标识，比如：</p>
+<blockquote>
+<ul>
+<li>application-dev.properties：开发环境</li>
+<li>application-test.properties：测试环境</li>
+<li>application-prod.properties：生产环境</li>
+</ul>
+</blockquote>
+<p>至于哪个具体的配置文件会被加载，需要在 <code>application.properties </code>文件中通过 <code>spring.profiles.active</code>属性来设置，其值对应 <code>&#123;profile&#125;</code>值。</p>
+<p>如：spring.profiles.active&#x3D;test就会加载application-test.properties配置文件内容<br>可以用命令行执行<code>java -jar xxx.jar --spring.profiles.active=test </code></p>
+<p>按照上面的实验，可以如下总结多环境的配置思路：</p>
+<p><code>application.properties</code>中配置通用内容，并设置<code>spring.profiles.active=dev</code>，以开发环境为默认配置。<br>application-{profile}.properties中配置各个环境不同的内容。 通过命令行方式去激活不同环境的配置。</p>
+<h4 id="多环境配置的另一种方式pom-xml"><a href="#多环境配置的另一种方式pom-xml" class="headerlink" title="多环境配置的另一种方式pom.xml"></a>多环境配置的另一种方式<code>pom.xml</code></h4><p>在<code>application.yml</code>中配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="comment">#    获取 pom文件的内容,需要加引号，单双引号都可以</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">&#x27;@spring.active@&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>在<code>pom.xml</code>中配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">spring.active</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">spring.active</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后在<code>maven</code>的<code>Profiles</code>中选择<code>dev</code>，运行就可以了，这样就能很好的区分开发环境和上线环境。</p>
+<h2 id="随机数的使用"><a href="#随机数的使用" class="headerlink" title="随机数的使用"></a>随机数的使用</h2><p>在<code>application.properties</code>中：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 随机字符串</span></span><br><span class="line"><span class="attr">random.value</span>=<span class="string">$&#123;random.value&#125;</span></span><br><span class="line"><span class="comment"># 随机int</span></span><br><span class="line"><span class="attr">random.number</span>=<span class="string">$&#123;random.int&#125;</span></span><br><span class="line"><span class="comment"># 随机long</span></span><br><span class="line"><span class="attr">random.bignumber</span>=<span class="string">$&#123;random.long&#125;</span></span><br><span class="line"><span class="comment"># 10以内的随机数</span></span><br><span class="line"><span class="attr">random.test1</span>=<span class="string">$&#123;random.int(10)&#125;</span></span><br><span class="line"><span class="comment"># 10-20的随机数</span></span><br><span class="line"><span class="attr">random.test2</span>=<span class="string">$&#123;random.int[10,20]&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="参数间的引用"><a href="#参数间的引用" class="headerlink" title="参数间的引用"></a>参数间的引用</h2><p>在<code>application.properties</code>中：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">my.name</span>=<span class="string">MaxZhao</span></span><br><span class="line"><span class="attr">my.sex</span>=<span class="string">1</span></span><br><span class="line"><span class="attr">my.des</span>=<span class="string">My name is $&#123;MaxZhao&#125;.</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="通过属性占位符还能缩短命令参数"><a href="#通过属性占位符还能缩短命令参数" class="headerlink" title="通过属性占位符还能缩短命令参数"></a>通过属性占位符还能缩短命令参数</h3><p>例如修改web默认端口需要使用<code>--server.port=9090</code>方式，如果在配置中写上：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.port=$&#123;port:8080&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么就可以使用更短的<code>--port=9090</code>，当不提供该参数的时候使用默认值<code>8080</code>。</p>
+<h2 id="Java系统属性"><a href="#Java系统属性" class="headerlink" title="Java系统属性"></a>Java系统属性</h2><p>注意Java系统属性位置<code>java -Dname=&quot;MaxZhao&quot; -jar xxx.jar</code>，可以配置的属性都是一样的，优先级不同。</p>
+<p>例如<code>java -Dname=&quot;MaxZhao&quot; -jar xxx.jar --name=&quot;Spring!&quot;</code>中<code>name</code>值为<code>Spring</code>!</p>
+<p>属性名匹配规则 例如有如下配置对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;person&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConnectionSettings</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>firstName可以使用的属性名如下：</p>
+<blockquote>
+<ul>
+<li>person.firstName，标准的驼峰式命名</li>
+<li>person.first-name，虚线（-）分割方式，推荐在.properties和.yml配置文件中使用</li>
+<li>PERSON_FIRST_NAME，大写下划线形式，建议在系统环境变量中使用</li>
+</ul>
+</blockquote>
+<h4 id="devtools-配置"><a href="#devtools-配置" class="headerlink" title="devtools 配置"></a>devtools 配置</h4><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.devtools.restart.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 设置重启目录</span></span><br><span class="line"><span class="attr">spring.devtools.restart.additional-paths</span>=<span class="string">src/main/java</span></span><br><span class="line"><span class="comment"># 排除不需要重启的目录，默认值在spring-boot-devtools/2.1.2.RELEASE/spring-boot-devtools-2.1.2.RELEASE-sources.jar!/org/springframework/boot/devtools/autoconfigure/DevToolsProperties.java</span></span><br><span class="line"><span class="comment">#spring.devtools.restart.exclude=</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="MySQL8-配置"><a href="#MySQL8-配置" class="headerlink" title="MySQL8 配置"></a>MySQL8 配置</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.datasource.driverClassName</span>=<span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line"><span class="attr">spring.datasource.url</span>=<span class="string">jdbc:mysql://127.0.0.1:3306/maxzhao_ittest?charset=utf8mb4&amp;useSSL=false</span></span><br><span class="line"><span class="attr">spring.datasource.username</span>=<span class="string">maxzhao</span></span><br><span class="line"><span class="attr">spring.datasource.password</span>=<span class="string">maxzhao</span></span><br><span class="line"><span class="comment">#com.mysql.cj.PerConnectionLRUFactory</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Redis 数据库索引</span></span><br><span class="line"><span class="attr">spring.redis.host</span>=<span class="string">127.0.0.1</span></span><br><span class="line"><span class="attr">spring.redis.port</span>=<span class="string">6379</span></span><br><span class="line"><span class="attr">spring.redis.password</span>=<span class="string">maxzhao</span></span><br><span class="line"><span class="comment"># 连接池最大连接数</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-active</span>=<span class="string">1000</span></span><br><span class="line"><span class="comment"># 连接池最大阻塞等待时间，负值没有限制</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-wait</span>=<span class="string">-1</span></span><br><span class="line"><span class="comment"># 连接池中最大空闲连接</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-idle</span>=<span class="string">10</span></span><br><span class="line"><span class="comment"># 连接池中的最小空闲连接</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.min-idle</span>=<span class="string">2</span></span><br><span class="line"><span class="comment"># 超时时间 毫秒</span></span><br><span class="line"><span class="attr">spring.redis.timeout</span>=<span class="string">1000</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="上传文件大小限制配置"><a href="#上传文件大小限制配置" class="headerlink" title="上传文件大小限制配置"></a>上传文件大小限制配置</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">maxzhao</span></span><br><span class="line">  <span class="attr">servlet:</span></span><br><span class="line">  <span class="attr">multipart:</span></span><br><span class="line">    <span class="attr">max-file-size:</span> <span class="string">100MB</span> <span class="comment"># MB一定要大写</span></span><br><span class="line">    <span class="attr">max-request-size:</span> <span class="string">100MB</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="jackson时区配置"><a href="#jackson时区配置" class="headerlink" title="jackson时区配置"></a>jackson时区配置</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">maxzhao</span></span><br><span class="line">  <span class="attr">jackson:</span></span><br><span class="line">    <span class="attr">date-format:</span> <span class="string">yyyy-MM-dd</span></span><br><span class="line">    <span class="attr">time-zone:</span> <span class="string">GMT+8</span></span><br><span class="line"><span class="comment"># 方法2 在pojo上添加JonFormat</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="attr">config:</span> <span class="string">classpath:log-boot.xml</span></span><br><span class="line">  <span class="attr">level:</span></span><br><span class="line">    <span class="comment">#    全部路径  TARCE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL</span></span><br><span class="line">    <span class="attr">root:</span> <span class="string">info</span></span><br><span class="line">  <span class="comment">#    指定包</span></span><br><span class="line">  <span class="attr">com:</span></span><br><span class="line">    <span class="attr">jackie:</span></span><br><span class="line">      <span class="attr">springbootdemo:</span></span><br><span class="line">        <span class="attr">config:</span> <span class="string">debug</span></span><br><span class="line"><span class="comment">#  file:</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">5672</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">guest</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">guest</span></span><br><span class="line">    <span class="comment">#支持发布确认</span></span><br><span class="line">    <span class="attr">publisher-confirms:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment">#支持发布返回</span></span><br><span class="line">    <span class="attr">publisher-returns:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 默认 /</span></span><br><span class="line">    <span class="attr">virtual-host:</span> <span class="string">vhost</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="comment">#采用手动应答</span></span><br><span class="line">        <span class="attr">acknowledge-mode:</span> <span class="string">manual</span></span><br><span class="line">        <span class="comment">#指定最小的消费者数量</span></span><br><span class="line">        <span class="attr">concurrency:</span> <span class="number">1</span></span><br><span class="line">        <span class="comment">#指定最大的消费者数量</span></span><br><span class="line">        <span class="attr">max-concurrency:</span> <span class="number">1</span></span><br><span class="line">        <span class="attr">retry:</span></span><br><span class="line">          <span class="comment">#是否支持重试</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span> </span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8bb40afa2e8c">SpringBoot的配置文件及获取配置信息</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/56669/">https://github.com/maxzhao-it/blog/post/56669/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/47805/" rel="prev" title="Webpack系统配置">
+                  <i class="fa fa-chevron-left"></i> Webpack系统配置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/50708/" rel="next" title="SpringBoot2.X 简介">
+                  SpringBoot2.X 简介 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

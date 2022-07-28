@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/ebede6dg/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/ebede6dg/","path":"post/ebede6dg/","title":"生成CA证书（K8S)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>生成CA证书（K8S) | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3%E8%AF%81%E4%B9%A6"><span class="nav-number">1.1.</span> <span class="nav-text">了解证书</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CA"><span class="nav-number">2.</span> <span class="nav-text">CA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%97%B6%E9%97%B4"><span class="nav-number">2.1.</span> <span class="nav-text">配置时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cfssl-%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E5%90%8D-TLS-%E8%AF%81%E4%B9%A6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">cfssl 生成自签名 TLS 证书的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E5%90%8D-root-CA-%E8%AF%81%E4%B9%A6"><span class="nav-number">2.2.1.</span> <span class="nav-text">生成自签名 root CA 证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A7%81%E9%92%A5%E7%94%9F%E6%88%90%E6%9C%AC%E5%9C%B0%E9%A2%81%E5%8F%91%E7%9A%84%E8%AF%81%E4%B9%A6%EF%BC%88etcd%EF%BC%89"><span class="nav-number">2.2.2.</span> <span class="nav-text">使用私钥生成本地颁发的证书（etcd）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E4%BB%BB%E8%87%AA%E7%AD%BE%E5%90%8D%E7%9A%84-CA-%E8%AF%81%E4%B9%A6"><span class="nav-number">2.2.3.</span> <span class="nav-text">信任自签名的 CA 证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E4%B9%8B%E5%90%8E"><span class="nav-number">2.2.4.</span> <span class="nav-text">生成之后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ca-cert-hash"><span class="nav-number">2.2.5.</span> <span class="nav-text">ca-cert-hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#base64"><span class="nav-number">2.2.6.</span> <span class="nav-text">base64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K8S-%E4%B8%AD"><span class="nav-number">2.2.7.</span> <span class="nav-text">K8S 中</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8-K8S-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89CA"><span class="nav-number">3.</span> <span class="nav-text">在 K8S 中使用自定义CA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E7%94%A8%E6%88%B7%E5%B8%90%E6%88%B7%E9%85%8D%E7%BD%AE%E8%AF%81%E4%B9%A6"><span class="nav-number">3.1.</span> <span class="nav-text">为用户帐户配置证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D%E8%AF%81%E4%B9%A6"><span class="nav-number">3.2.</span> <span class="nav-text">修复证书</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/ebede6dg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="生成CA证书（K8S) | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          生成CA证书（K8S)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/K8S/" itemprop="url" rel="index"><span itemprop="name">K8S</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="了解证书"><a href="#了解证书" class="headerlink" title="了解证书"></a>了解证书</h2><p><code>k8s</code> 的证书都在 <code>/etc/kubernetes/pki</code> 下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">├── apiserver.crt  apiserver 证书</span><br><span class="line">├── apiserver.key  apiserver 证书</span><br><span class="line">├── apiserver-kubelet-client.crt</span><br><span class="line">├── apiserver-kubelet-client.key</span><br><span class="line">├── apiserver-etcd-client.crt apiserver访问etcd的证书</span><br><span class="line">├── apiserver-etcd-client.key apiserver访问etcd的证书</span><br><span class="line">├── ca.crt 根证书</span><br><span class="line">├── ca.key 根证书</span><br><span class="line">├── etcd</span><br><span class="line">│   ├── etcd-ca.crt</span><br><span class="line">│   ├── healthcheck-client.crt pod中Liveness探针客户端证书</span><br><span class="line">│   ├── healthcheck-client.key pod中Liveness探针客户端证书</span><br><span class="line">│   ├── etcd.crt  节点通信证书</span><br><span class="line">│   └── etcd.key</span><br><span class="line">├── front-proxy-ca.crt 代理根证书</span><br><span class="line">├── front-proxy-ca.key</span><br><span class="line">├── front-proxy-client.crt 代理根证书签发的客户端证书</span><br><span class="line">├── front-proxy-client.key</span><br><span class="line">├── sa.key</span><br><span class="line">└── sa.pub</span><br></pre></td></tr></table></figure>
+
+<p>非对称加密会生成一个密钥对，如上面的<code>sa.key sa.pub</code>就是密钥对，公钥用于加密私钥用于解密。</p>
+<p><code>kubelet</code> 与 <code>apiserver</code> 会互相访问，所有他们都有证书。</p>
+<p><code>kubelet</code>变化频繁，一般只需要指定 <code>ca</code> 根证书。</p>
+<p><code>apiserver</code>变化不频繁，所以在创建集群时，分配好用作 <code>kube-apiserver</code> 的<code>IP</code>或主机名&#x2F;域名</p>
+<p>但是由于部署在<code>node</code>节点上的<code>kubelet</code>会因为集群规模的变化而频繁变化, 而无法预知<code>node</code>的所有<code>IP</code>信息, 所以<code>kubelet</code>上一般不会明确指定服务端证书,<br>而是只指定ca根证书, 让<code>kubelet</code>根据本地主机信息自动生成服务端证书并保存到配置的<code>cert-dir</code>文件夹中</p>
+<p>代理根证书：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">front-proxy-ca.crt</span><br><span class="line">front-proxy-ca.key</span><br></pre></td></tr></table></figure>
+
+<p>由代理根证书签发的客户端证书：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">front-proxy-client.crt</span><br><span class="line">front-proxy-client.key</span><br></pre></td></tr></table></figure>
+
+<p>比如使用<code>kubectl proxy</code>代理访问时，<code>kube-apiserver</code>使用这个证书来验证客户端证书是否是自己签发的证书。</p>
+<p>我这里有</p>
+<ul>
+<li><code>192.168.2.158 master-158</code></li>
+<li><code>192.168.2.159 master-159</code></li>
+<li><code>192.168.2.160 master-160</code></li>
+<li><code>192.168.2.161 node-161</code></li>
+</ul>
+<h1 id="CA"><a href="#CA" class="headerlink" title="CA"></a><code>CA</code></h1><h2 id="配置时间"><a href="#配置时间" class="headerlink" title="配置时间"></a>配置时间</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install  ntpdate -y </span><br><span class="line">ntpdate time1.aliyun.com</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="cfssl-生成自签名-TLS-证书的方法"><a href="#cfssl-生成自签名-TLS-证书的方法" class="headerlink" title="cfssl 生成自签名 TLS 证书的方法"></a><code>cfssl</code> 生成自签名 <code>TLS</code> 证书的方法</h2><p>在 <code>host158</code>上执行</p>
+<h3 id="生成自签名-root-CA-证书"><a href="#生成自签名-root-CA-证书" class="headerlink" title="生成自签名 root CA 证书"></a>生成自签名 <code>root CA</code> 证书</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#rm -f /opt/cfssl* </span></span><br><span class="line"><span class="built_in">rm</span> -rf /opt/certs </span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/certs </span><br><span class="line"><span class="built_in">cd</span>  /opt/certs </span><br><span class="line">curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl_1.6.1_linux_amd64  -o /usr/local/bin/cfssl</span><br><span class="line"><span class="built_in">chmod</span> +x /usr/local/bin/cfssl</span><br><span class="line">curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssljson_1.6.1_linux_amd64 -o /usr/local/bin/cfssljson</span><br><span class="line"><span class="built_in">chmod</span> +x /usr/local/bin/cfssljson</span><br><span class="line">curl -L https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssl-certinfo_1.5.0_linux_amd64 -o /usr/local/bin/cfssl-certinfo</span><br><span class="line"><span class="built_in">chmod</span> +x /usr/local/bin/cfssl-certinfo</span><br><span class="line"><span class="comment"># 查看版本</span></span><br><span class="line">/usr/local/bin/cfssl version</span><br><span class="line">/usr/local/bin/cfssljson -h</span><br></pre></td></tr></table></figure>
+
+<p>生成</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建根证书签名请求文件</span></span><br><span class="line"><span class="built_in">cat</span> &gt; /opt/certs/ca-csr.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;key&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;algo&quot;: &quot;rsa&quot;,</span></span><br><span class="line"><span class="string">    &quot;size&quot;: 2048</span></span><br><span class="line"><span class="string">  &#125;,</span></span><br><span class="line"><span class="string">  &quot;names&quot;: [</span></span><br><span class="line"><span class="string">    &#123;</span></span><br><span class="line"><span class="string">      &quot;O&quot;: &quot;maxzhao-ca&quot;,</span></span><br><span class="line"><span class="string">      &quot;OU&quot;: &quot;etcd Security&quot;,</span></span><br><span class="line"><span class="string">      &quot;L&quot;: &quot;NanJing&quot;,</span></span><br><span class="line"><span class="string">      &quot;ST&quot;: &quot;Jiang Su&quot;,</span></span><br><span class="line"><span class="string">      &quot;C&quot;: &quot;CN&quot;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;CN&quot;: &quot;maxzhao&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># CN：Common Name：kube-apiserver 从证书中提取该字段作为请求的用户名 (User Name)，</span></span><br><span class="line"><span class="comment"># O：Organization：kube-apiserver 从证书中提取该字段作为请求用户所属的组 (Group)；</span></span><br><span class="line"><span class="comment"># kube-apiserver 将提取的 User、Group 作为 RBAC 授权的用户标识； </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 证书配置文件</span></span><br><span class="line"><span class="built_in">cat</span> &gt; /opt/certs/ca-config.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;signing&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;default&quot;: &#123;</span></span><br><span class="line"><span class="string">        &quot;usages&quot;: [</span></span><br><span class="line"><span class="string">          &quot;signing&quot;,</span></span><br><span class="line"><span class="string">          &quot;key encipherment&quot;,</span></span><br><span class="line"><span class="string">          &quot;server auth&quot;,</span></span><br><span class="line"><span class="string">          &quot;client auth&quot;</span></span><br><span class="line"><span class="string">        ],</span></span><br><span class="line"><span class="string">        &quot;expiry&quot;: &quot;175200h&quot;</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    &quot;profiles&quot;: &#123;</span></span><br><span class="line"><span class="string">      &quot;kubernetes&quot;: &#123;</span></span><br><span class="line"><span class="string">        &quot;usages&quot;: [</span></span><br><span class="line"><span class="string">          &quot;signing&quot;,</span></span><br><span class="line"><span class="string">          &quot;key encipherment&quot;,</span></span><br><span class="line"><span class="string">          &quot;server auth&quot;,</span></span><br><span class="line"><span class="string">          &quot;client auth&quot;</span></span><br><span class="line"><span class="string">        ],</span></span><br><span class="line"><span class="string">        &quot;expiry&quot;: &quot;175200h&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &quot;etcd&quot;: &#123;</span></span><br><span class="line"><span class="string">        &quot;usages&quot;: [</span></span><br><span class="line"><span class="string">          &quot;signing&quot;,</span></span><br><span class="line"><span class="string">          &quot;key encipherment&quot;,</span></span><br><span class="line"><span class="string">          &quot;server auth&quot;,</span></span><br><span class="line"><span class="string">          &quot;client auth&quot;</span></span><br><span class="line"><span class="string">        ],</span></span><br><span class="line"><span class="string">        &quot;expiry&quot;: &quot;175200h&quot;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># signing：表示该证书可用于签名其它证书（生成的 ca.pem 证书中 CA=TRUE）；</span></span><br><span class="line"><span class="comment"># server auth：表示 client 可以用该该证书对 server 提供的证书进行验证；</span></span><br><span class="line"><span class="comment"># client auth：表示 server 可以用该该证书对 client 提供的证书进行验证；</span></span><br><span class="line"><span class="comment"># &quot;expiry&quot;: &quot;175200h&quot; 有效期20年</span></span><br></pre></td></tr></table></figure>
+
+<p>生成<code>ca</code> 证书和私钥</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成</span></span><br><span class="line">cfssl gencert --initca /opt/certs/ca-csr.json | cfssljson --bare /opt/certs/ca</span><br><span class="line"></span><br><span class="line"><span class="comment"># verify</span></span><br><span class="line">openssl x509 -<span class="keyword">in</span> /opt/certs/ca.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CSR configuration</span></span><br><span class="line">/opt/certs/ca-csr.json</span><br><span class="line"><span class="comment"># CSR 双向认证</span></span><br><span class="line">/opt/certs/ca.csr</span><br><span class="line"><span class="comment"># self-signed root CA public key  其它文档里会叫 ca.crt</span></span><br><span class="line">/opt/certs/ca.pem</span><br><span class="line"><span class="comment"># self-signed root CA private key</span></span><br><span class="line">/opt/certs/ca-key.pem</span><br><span class="line"><span class="comment">#  证书配置文件 for other TLS assets</span></span><br><span class="line">/opt/certs/ca-config.json</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用私钥生成本地颁发的证书（etcd）"><a href="#使用私钥生成本地颁发的证书（etcd）" class="headerlink" title="使用私钥生成本地颁发的证书（etcd）"></a>使用私钥生成本地颁发的证书（<code>etcd</code>）</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># peer </span></span><br><span class="line"><span class="built_in">cat</span> &gt; /opt/certs/etcd-158-ca-csr.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;key&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;algo&quot;: &quot;rsa&quot;,</span></span><br><span class="line"><span class="string">    &quot;size&quot;: 2048</span></span><br><span class="line"><span class="string">  &#125;,</span></span><br><span class="line"><span class="string">  &quot;names&quot;: [</span></span><br><span class="line"><span class="string">    &#123;</span></span><br><span class="line"><span class="string">      &quot;O&quot;: &quot;maxzhao-ca&quot;,</span></span><br><span class="line"><span class="string">      &quot;OU&quot;: &quot;etcd Security&quot;,</span></span><br><span class="line"><span class="string">      &quot;L&quot;: &quot;NanJing&quot;,</span></span><br><span class="line"><span class="string">      &quot;ST&quot;: &quot;Jiang Su&quot;,</span></span><br><span class="line"><span class="string">      &quot;C&quot;: &quot;CN&quot;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;CN&quot;: &quot;etcd-158&quot;,</span></span><br><span class="line"><span class="string">  &quot;hosts&quot;: [</span></span><br><span class="line"><span class="string">    &quot;127.0.0.1&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.158&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.159&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.160&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.161&quot;,</span></span><br><span class="line"><span class="string">    &quot;10.96.0.1&quot;,</span></span><br><span class="line"><span class="string">    &quot;10.244.0.1&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default.svc&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default.svc.cluster&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default.svc.cluster.local&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default.svc.cluster.158&quot;</span></span><br><span class="line"><span class="string">  ]</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># 生成etcd用的证书文件 peer</span></span><br><span class="line">cfssl gencert \</span><br><span class="line">  --ca /opt/certs/ca.pem \</span><br><span class="line">  --ca-key /opt/certs/ca-key.pem \</span><br><span class="line">  --config /opt/certs/ca-config.json \</span><br><span class="line">  -profile=etcd \</span><br><span class="line">  /opt/certs/etcd-158-ca-csr.json | cfssljson --bare /opt/certs/etcd-158</span><br><span class="line"><span class="comment">#   --profile=k8s-server-client  表示客户端与服务端要双向通讯</span></span><br><span class="line"><span class="comment"># verify</span></span><br><span class="line">openssl x509 -<span class="keyword">in</span> /opt/certs/etcd-158.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<h3 id="信任自签名的-CA-证书"><a href="#信任自签名的-CA-证书" class="headerlink" title="信任自签名的 CA 证书"></a>信任自签名的 <code>CA</code> 证书</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install -y ca-certificates</span><br><span class="line"><span class="built_in">cp</span> /opt/certs/etcd/ca.pem /etc/pki/ca-trust/source/anchors/maxzhao-ca.crt</span><br><span class="line">update-ca-trust</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="生成之后"><a href="#生成之后" class="headerlink" title="生成之后"></a>生成之后</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传输到每一个节点</span></span><br><span class="line"><span class="built_in">rm</span> -rf /etc/certs/etcd</span><br><span class="line"><span class="built_in">mkdir</span> -p /etc/certs/etcd</span><br><span class="line">\<span class="built_in">cp</span> /opt/certs/ca.pem /etc/certs/etcd/ca.pem</span><br><span class="line">\<span class="built_in">cp</span> /opt/certs/etcd-158-key.pem /etc/certs/etcd/etcd-158-key.pem</span><br><span class="line">\<span class="built_in">cp</span> /opt/certs/etcd-158.pem /etc/certs/etcd/etcd-158.pem</span><br><span class="line"><span class="comment"># 拷贝 ca.pem, etcd-158.pem, etcd-158-key.pem</span></span><br><span class="line">ssh root@192.168.2.159 <span class="string">&quot;mkdir -p /etc/certs/etcd&quot;</span></span><br><span class="line">ssh root@192.168.2.160 <span class="string">&quot;mkdir -p /etc/certs/etcd&quot;</span></span><br><span class="line">ssh root@192.168.2.161 <span class="string">&quot;mkdir -p /etc/certs/etcd&quot;</span></span><br><span class="line">scp -r /etc/certs/etcd/* root@192.168.2.159:/etc/certs/etcd/</span><br><span class="line">scp -r /etc/certs/etcd/* root@192.168.2.160:/etc/certs/etcd/</span><br><span class="line">scp -r /etc/certs/etcd/* root@192.168.2.161:/etc/certs/etcd/</span><br></pre></td></tr></table></figure>
+
+<h3 id="ca-cert-hash"><a href="#ca-cert-hash" class="headerlink" title="ca-cert-hash"></a><code>ca-cert-hash</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#默认证书 /etc/kubernetes/pki/ca.crt</span></span><br><span class="line">openssl x509 -pubkey -<span class="keyword">in</span> /etc/certs/etcd/ca.pem | openssl rsa -pubin -outform der 2&gt;/dev/null | openssl dgst -sha256 -hex | sed <span class="string">&#x27;s/^.* //&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="base64"><a href="#base64" class="headerlink" title="base64"></a><code>base64</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/certs/etcd/ca.pem | <span class="built_in">base64</span> -w 0</span><br></pre></td></tr></table></figure>
+
+<h3 id="K8S-中"><a href="#K8S-中" class="headerlink" title="K8S 中"></a><code>K8S</code> 中</h3><p>当前 <code>ca base64 值</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/kubernetes/ca.pem | base64 -w 0</span><br></pre></td></tr></table></figure>
+<p>会在各个配置中，<br>比如： </p>
+<ul>
+<li><code>.kube/config</code></li>
+<li><code>/etc/kubernetes/kubelet.conf</code></li>
+<li><code>/var/lib/kubelet/config.yaml</code></li>
+</ul>
+<h1 id="在-K8S-中使用自定义CA"><a href="#在-K8S-中使用自定义CA" class="headerlink" title="在 K8S 中使用自定义CA"></a>在 <code>K8S</code> 中使用自定义<code>CA</code></h1><p><code>kubernetes verion=1.24.1</code></p>
+<h2 id="为用户帐户配置证书"><a href="#为用户帐户配置证书" class="headerlink" title="为用户帐户配置证书"></a>为用户帐户配置证书</h2><p>你必须手动配置以下管理员帐户和服务帐户</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>凭据名称</th>
+<th>默认 CN</th>
+<th>O (位于 Subject 中)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>admin.conf</td>
+<td>default-admin</td>
+<td>kubernetes-admin</td>
+<td>system:masters</td>
+</tr>
+<tr>
+<td>kubelet.conf</td>
+<td>default-auth</td>
+<td>system:node:<code>&lt;nodeName&gt;</code> （参阅注释）</td>
+<td>system:nodes</td>
+</tr>
+<tr>
+<td>controller-manager.conf</td>
+<td>default-controller-manager</td>
+<td>system:kube-controller-manager</td>
+<td></td>
+</tr>
+<tr>
+<td>scheduler.conf</td>
+<td>default-scheduler</td>
+<td>system:kube-scheduler</td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">KUBECONFIG=/etc/kubernetes/admin.conf </span><br><span class="line"><span class="comment">#配置集群的管理员</span></span><br><span class="line">kubectl config set-cluster default-cluster --server=https://192.168.2.159:6443 --certificate-authority /etc/certs/etcd/ca.pem --embed-certs</span><br><span class="line">kubectl config set-cluster default-cluster --server=https://192.168.2.160:6443 --certificate-authority /etc/certs/etcd/ca.pem --embed-certs</span><br><span class="line">kubectl config set-cluster default-cluster --server=https://192.168.2.161:6443 --certificate-authority /etc/certs/etcd/ca.pem --embed-certs</span><br><span class="line"><span class="comment">#	集群中的每个节点都需要一份</span></span><br><span class="line">kubectl config set-credentials &lt;credential-name&gt; --client-key &lt;path-to-key&gt;.pem --client-certificate &lt;path-to-cert&gt;.pem --embed-certs</span><br><span class="line"><span class="comment">#必需添加到 manifests/kube-controller-manager.yaml 清单中</span></span><br><span class="line">kubectl config set-context default-system --cluster default-cluster --user &lt;credential-name&gt;</span><br><span class="line"><span class="comment"># 必需添加到 manifests/kube-scheduler.yaml 清单中</span></span><br><span class="line">kubectl config use-context default-system</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/setup/best-practices/certificates/"><code>PKI</code> 证书和要求</a></p>
+</blockquote>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/etc/kubernetes/admin.conf</span><br><span class="line">/etc/kubernetes/kubelet.conf</span><br><span class="line">/etc/kubernetes/controller-manager.conf</span><br><span class="line">/etc/kubernetes/scheduler.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="修复证书"><a href="#修复证书" class="headerlink" title="修复证书"></a>修复证书</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># root 用户执行</span></span><br><span class="line"><span class="built_in">rm</span> -f /etc/kubernetes/pki/apiserver.crt</span><br><span class="line"><span class="built_in">rm</span> -f /etc/kubernetes/pki/apiserver.key</span><br><span class="line"><span class="built_in">rm</span> -f /etc/kubernetes/pki/apiserver-kubelet-client.crt</span><br><span class="line"><span class="built_in">rm</span> -f /etc/kubernetes/pki/apiserver-kubelet-client.key</span><br><span class="line"><span class="built_in">rm</span> -f /etc/kubernetes/pki/apiserver.*</span><br><span class="line"><span class="comment"># 如果两个文件都已存在，则 kubeadm 将跳过生成步骤，使用现有文件。</span></span><br><span class="line">kubeadm init phase certs apiserver  --config=kubeadm-config-init.yaml </span><br><span class="line">kubeadm init phase certs apiserver-kubelet-client  --config=kubeadm-config-init.yaml</span><br><span class="line">kubectl get pods -A -o wide</span><br><span class="line">kubectl delete pod -n kube-system kube-apiserver-master-158</span><br><span class="line">kubectl delete pod -n kube-system kube-apiserver-master-159</span><br><span class="line">kubectl delete pod -n kube-system kube-apiserver-master-160</span><br><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/"><code>kubeadm init phase</code></a></p>
+<p>[<code>[Invalid x509 certificate for kubernetes master](https://stackoverflow.com/questions/46360361/invalid-x509-certificate-for-kubernetes-master)</code>](</p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/ebede6dg/">https://github.com/maxzhao-it/blog/post/ebede6dg/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/blog/tags/CentOS/" rel="tag"># CentOS</a>
+              <a href="/blog/tags/K8S/" rel="tag"># K8S</a>
+              <a href="/blog/tags/CA/" rel="tag"># CA</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/93d07d99/" rel="prev" title="Firewalld开放端口">
+                  <i class="fa fa-chevron-left"></i> Firewalld开放端口
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/72c978ad/" rel="next" title="CentOS安装K8S-Rancher">
+                  CentOS安装K8S-Rancher <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

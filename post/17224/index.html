@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/17224/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/17224/","path":"post/17224/","title":"SpringBoot Jpa 我已知的两种分页多条件的查询方式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SpringBoot Jpa 我已知的两种分页多条件的查询方式 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%A8%E7%BB%93%E6%9E%84%E5%BE%97%E8%A1%A8%E7%8E%B0%E4%B8%80%E4%B8%8B%E5%90%A7"><span class="nav-number">2.</span> <span class="nav-text">表结构得表现一下吧</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JPA-%E7%9A%84-repo-%E6%93%8D%E4%BD%9C%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">JPA 的 repo 操作类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">测试代码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F%E4%BA%8C%E7%9A%84%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F%EF%BC%88%E5%8D%95%E8%A1%A8%E5%A4%9A%E6%9D%A1%E4%BB%B6%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">查询方式二的第二种查询方式（单表多条件）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F%E4%BA%8C%E7%9A%84%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F%EF%BC%88%E5%A4%9A%E8%A1%A8%E3%80%81%E5%A4%9A%E6%9D%A1%E4%BB%B6%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">查询方式二的第二种查询方式（多表、多条件）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E6%8E%A8%E8%8D%90%E4%B8%8A%E9%9D%A2%E8%BF%99%E7%A7%8D%E7%94%A8%E6%B3%95%EF%BC%8C%E8%BF%99%E4%B9%88%E7%94%A8%E8%AE%A9%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A2%9C%E9%9D%A2%E4%BD%95%E5%AD%98%EF%BC%9F"><span class="nav-number">4.2.1.</span> <span class="nav-text">不推荐上面这种用法，这么用让微服务颜面何存？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">附录：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93SQL%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">数据库SQL：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#specification%E7%9A%84in%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.2.</span> <span class="nav-text">specification的in语句</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E6%96%B9%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">其它方式</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/17224/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SpringBoot Jpa 我已知的两种分页多条件的查询方式 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot Jpa 我已知的两种分页多条件的查询方式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/JPA/" itemprop="url" rel="index"><span itemprop="name">JPA</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>对于 SpringBoot 自带的 Spring JPA 方式的分页多条件查询，  目前我只掌握了两种，一种貌似还不支持条件的嵌套，下面就开始说明。</p>
+<h1 id="表结构得表现一下吧"><a href="#表结构得表现一下吧" class="headerlink" title="表结构得表现一下吧"></a>表结构得表现一下吧</h1><p>SQL太长了，放到最后。</p>
+<h1 id="JPA-的-repo-操作类"><a href="#JPA-的-repo-操作类" class="headerlink" title="JPA 的 repo 操作类"></a>JPA 的 repo 操作类</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JpaSpecificationExecutor 这是为了实现第二种查询方式</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-05-06</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Repository(value = &quot;appTableRepository&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">AppTableRepository</span> <span class="keyword">extends</span> <span class="title class_">JpaRepository</span>&lt;AppTable, String&gt;, JpaSpecificationExecutor&lt;AppTable&gt; &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h1><p>备注：把<code> application.*</code>的文件拷贝到 <code>test</code>目录的 <code>resources</code>下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-06-06</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="comment">// BasicApplication 是启动类</span></span><br><span class="line"><span class="meta">@SpringBootTest(classes = BasicApplication.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppColumnServiceTest</span> &#123;</span><br><span class="line">    <span class="comment">// 如果没有日志可以删掉</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(AppTablesRepositoryTest.class);</span><br><span class="line">    <span class="meta">@Resource(name = &quot;appTableRepository&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> AppTableRepository appTableRepository;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">startInit</span><span class="params">()</span> &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;---------------- &#123;&#125; -------------------&quot;</span>, <span class="string">&quot;AppColumnServiceTest&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@After</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">endDestory</span><span class="params">()</span> &#123;    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listTableTest</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//Sort.Direction是个枚举有ASC(升序)和DESC(降序)</span></span><br><span class="line">        Sort.<span class="type">Direction</span> <span class="variable">sort</span> <span class="operator">=</span> Sort.Direction.ASC;</span><br><span class="line">        <span class="comment">//PageRequest继承于AbstractPageRequest并且实现了Pageable</span></span><br><span class="line">        <span class="comment">//获取PageRequest对象 index:页码 从0开始  size每页容量 sort排序方式 &quot;tab_name&quot;-&gt;properties 以谁为准排序</span></span><br><span class="line">        <span class="comment">// 这里的tabName是实体的属性，不是数据库字段的名称</span></span><br><span class="line">        <span class="type">Pageable</span> <span class="variable">pageable</span> <span class="operator">=</span> PageRequest.of(<span class="number">0</span>, <span class="number">5</span>, sort, <span class="string">&quot;tabName&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//region 查询条件设置方式一：</span></span><br><span class="line">        <span class="comment">//要匹配的实例对象</span></span><br><span class="line">        <span class="type">AppTable</span> <span class="variable">appTable</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AppTable</span>();</span><br><span class="line">        appTable.setTabName(<span class="string">&quot;app_&quot;</span>);</span><br><span class="line">        <span class="comment">//定义匹配规则 匹配&quot;vendorId&quot;这个属性 exact 精准匹配</span></span><br><span class="line">        <span class="comment">// 这里的tabName是实体的属性，不是数据库字段的名称</span></span><br><span class="line">        <span class="type">ExampleMatcher</span> <span class="variable">exampleMatcher</span> <span class="operator">=</span> ExampleMatcher</span><br><span class="line">                .matching()</span><br><span class="line">                .withMatcher(<span class="string">&quot;tabName&quot;</span>, ExampleMatcher.GenericPropertyMatchers.contains());</span><br><span class="line">        Example&lt;AppTable&gt; example = Example.of(appTable, exampleMatcher);</span><br><span class="line">        <span class="comment">//下面加断点，查询结果集</span></span><br><span class="line">        Page&lt;AppTable&gt; page = appTableRepository.findAll(example, pageable);</span><br><span class="line">        <span class="comment">//获取总页数</span></span><br><span class="line">        page.getTotalPages();</span><br><span class="line">        <span class="comment">//获取总元素个数</span></span><br><span class="line">        page.getTotalElements();</span><br><span class="line">        <span class="comment">//获取该分页的列表</span></span><br><span class="line">        page.getContent();</span><br><span class="line">        page.getSize();</span><br><span class="line">        <span class="comment">//endregion</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//查询条件设置方式二：</span></span><br><span class="line">        Specification&lt;AppTable&gt; specification = (Specification&lt;AppTable&gt;) (root, query, criteriaBuilder) -&gt; &#123;</span><br><span class="line">            <span class="comment">// 这里的tabName是实体的属性，不是数据库字段的名称</span></span><br><span class="line">            Path&lt;String&gt; name = root.get(<span class="string">&quot;tabName&quot;</span>);</span><br><span class="line">			<span class="comment">//Path&lt;String&gt; alias = root.get(&quot;alias&quot;);</span></span><br><span class="line">            <span class="comment">//查询条件1</span></span><br><span class="line">            <span class="type">Predicate</span> <span class="variable">p1</span> <span class="operator">=</span> criteriaBuilder.like(name, <span class="string">&quot;%&quot;</span> + <span class="string">&quot;app_&quot;</span> + <span class="string">&quot;%&quot;</span>);</span><br><span class="line">            <span class="comment">//查询条件2</span></span><br><span class="line">		<span class="comment">//Predicate p2 = criteriaBuilder.lt(alias param.getAge());</span></span><br><span class="line">            <span class="comment">//查询条件1和2的关系</span></span><br><span class="line">		<span class="comment">//Predicate p = criteriaBuilder.and(p1, p2);</span></span><br><span class="line">            <span class="keyword">return</span> p1;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="comment">//下面加断点，查询结果集</span></span><br><span class="line">        Page&lt;AppTable&gt; page2 = appTableRepository.findAll(specification,pageable);</span><br><span class="line">        <span class="comment">//endregion</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码中需要加断点的地方数据是一样的，如果不一样，设置了排序规则就没有如果。</p>
+<p>上面注释也写的很清楚了，这两种查询方式第一种应该是没有嵌套查询的（我没有翻到源码，网上也搜不到案例），第二种也不麻烦，就多继承一个接口，可以实现嵌套查询。</p>
+<h2 id="查询方式二的第二种查询方式（单表多条件）"><a href="#查询方式二的第二种查询方式（单表多条件）" class="headerlink" title="查询方式二的第二种查询方式（单表多条件）"></a>查询方式二的第二种查询方式（单表多条件）</h2><p>（网上找的案例，不记得地址了，我也只是 <code>cp</code>了这部分代码，上面的测试一下，这个就懂了 ）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Root&lt;User&gt; root, CriteriaQuery&lt;?&gt; criteriaQuery, CriteriaBuilder cb</span></span><br><span class="line">List&lt;Predicate&gt; predicates = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">if</span> (user.getUserId() != <span class="literal">null</span> &amp;&amp; !user.getUserId().equals(<span class="string">&quot;&quot;</span>)) &#123;</span><br><span class="line">	predicates.add(cb.like(root.get(<span class="string">&quot;userId&quot;</span>).as(String.class), <span class="string">&quot;%&quot;</span> + user.getUserId() + <span class="string">&quot;%&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (user.getUserName() != <span class="literal">null</span> &amp;&amp; !user.getUserName().equals(<span class="string">&quot;&quot;</span>)) &#123;</span><br><span class="line">	predicates.add(cb.like(root.get(<span class="string">&quot;userName&quot;</span>).as(String.class), <span class="string">&quot;%&quot;</span> + user.getUserName() + <span class="string">&quot;%&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (user.getGender() != <span class="literal">null</span> &amp;&amp; !user.getGender().equals(<span class="string">&quot;&quot;</span>)) &#123;</span><br><span class="line">	predicates.add(cb.like(root.get(<span class="string">&quot;gender&quot;</span>).as(String.class), <span class="string">&quot;%&quot;</span> + user.getGender() + <span class="string">&quot;%&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (user.getAge() != <span class="literal">null</span> &amp;&amp; !user.getAge().equals(<span class="string">&quot;&quot;</span>)) &#123;</span><br><span class="line">	predicates.add(cb.like(root.get(<span class="string">&quot;age&quot;</span>).as(String.class), <span class="string">&quot;%&quot;</span> + user.getAge() + <span class="string">&quot;%&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line">Predicate[] pre = <span class="keyword">new</span> <span class="title class_">Predicate</span>[predicates.size()];</span><br><span class="line">criteriaQuery.where(predicates.toArray(pre));</span><br><span class="line"><span class="keyword">return</span> cb.and(predicates.toArray(pre));</span><br></pre></td></tr></table></figure>
+
+<h2 id="查询方式二的第二种查询方式（多表、多条件）"><a href="#查询方式二的第二种查询方式（多表、多条件）" class="headerlink" title="查询方式二的第二种查询方式（多表、多条件）"></a>查询方式二的第二种查询方式（多表、多条件）</h2><p>备注：<strong>记得设置 <code>@ManyToOne</code>或者  <code>@OneToMany</code>之类的外键关联哦</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// (Root&lt;User&gt; root, CriteriaQuery&lt;?&gt; criteriaQuery, CriteriaBuilder cb)</span></span><br><span class="line">List&lt;Predicate&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">                <span class="comment">//根据userId 查询user</span></span><br><span class="line"><span class="keyword">if</span> (StringUtils.isNotBlank(params.getUserId())) &#123;</span><br><span class="line">	list.add(cb.equal(root.get(<span class="string">&quot;userId&quot;</span>).as(String.class), params.getUserId()));</span><br><span class="line">&#125;</span><br><span class="line">                <span class="comment">//根据userName 模糊查询user</span></span><br><span class="line"><span class="keyword">if</span> (StringUtils.isNotBlank(params.getUserName())) &#123;</span><br><span class="line"> 	list.add(cb.like(root.get(<span class="string">&quot;userName&quot;</span>).as(String.class), <span class="string">&quot;%&quot;</span> + params.getUserName() + <span class="string">&quot;%&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line">                <span class="comment">//根据gender 查询user</span></span><br><span class="line"><span class="keyword">if</span> (StringUtils.isNotBlank(params.getGender())) &#123;</span><br><span class="line"> 	list.add(cb.equal(root.get(<span class="string">&quot;gender&quot;</span>).as(String.class), params.getGender()));</span><br><span class="line">&#125;</span><br><span class="line">                <span class="comment">//根据age&gt;? 查询user</span></span><br><span class="line"><span class="keyword">if</span> (StringUtils.isNotBlank(params.getAge())) &#123;</span><br><span class="line"> 	list.add(cb.gt(root.get(<span class="string">&quot;age&quot;</span>).as(Integer.class), Integer.valueOf(params.getAge())));</span><br><span class="line">&#125;</span><br><span class="line">                <span class="comment">//根据gradeName 查询user</span></span><br><span class="line"><span class="keyword">if</span> (StringUtils.isNotBlank(params.getGradeName())) &#123;</span><br><span class="line">	Join&lt;Grade, User&gt; join = root.join(<span class="string">&quot;grade&quot;</span>, JoinType.LEFT);</span><br><span class="line">	list.add(cb.equal(join.get(<span class="string">&quot;gradeName&quot;</span>), params.getGradeName()));</span><br><span class="line">&#125;</span><br><span class="line">                <span class="comment">//根据schoolName 查询user</span></span><br><span class="line"><span class="keyword">if</span> (StringUtils.isNotBlank(params.getSchoolName())) &#123;</span><br><span class="line">	Join&lt;School, User&gt; join = root.join(<span class="string">&quot;grade&quot;</span>, JoinType.LEFT);</span><br><span class="line">	list.add(cb.equal(join.get(<span class="string">&quot;school&quot;</span>).get(<span class="string">&quot;schoolName&quot;</span>), params.getSchoolName()));</span><br><span class="line">&#125;</span><br><span class="line">Predicate[] pre = <span class="keyword">new</span> <span class="title class_">Predicate</span>[list.size()];</span><br><span class="line">criteriaQuery.where(list.toArray(pre));</span><br><span class="line"><span class="keyword">return</span> cb.and(list.toArray(pre));</span><br></pre></td></tr></table></figure>
+
+<h3 id="不推荐上面这种用法，这么用让微服务颜面何存？"><a href="#不推荐上面这种用法，这么用让微服务颜面何存？" class="headerlink" title="不推荐上面这种用法，这么用让微服务颜面何存？"></a>不推荐上面这种用法，这么用让<strong>微服务</strong>颜面何存？</h3><h1 id="附录："><a href="#附录：" class="headerlink" title="附录："></a>附录：</h1><h2 id="数据库SQL："><a href="#数据库SQL：" class="headerlink" title="数据库SQL："></a>数据库SQL：</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">-- MySql</span><br><span class="line">create table app_table</span><br><span class="line">(</span><br><span class="line">    tab_name     varchar(255) not null comment <span class="string">&#x27;表名主键&#x27;</span></span><br><span class="line">        primary key,</span><br><span class="line">    <span class="built_in">alias</span>        varchar(255) null comment <span class="string">&#x27;别名&#x27;</span>,</span><br><span class="line">    can_del_data int          null comment <span class="string">&#x27;是否可以清除数据0否1是&#x27;</span>,</span><br><span class="line">    id_cols      varchar(255) null comment <span class="string">&#x27;主键列名&#x27;</span>,</span><br><span class="line">    remark       varchar(255) null comment <span class="string">&#x27;备注&#x27;</span>,</span><br><span class="line">    tab_type     int          null comment <span class="string">&#x27;物理表类型(app 1应用级;cf_ 2配置级;bn 3 业务级;tmp 4临时;5其它数据表)&#x27;</span></span><br><span class="line">)comment <span class="string">&#x27;应用表信息&#x27;</span> charset = utf8;</span><br><span class="line">-- 数据</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_area&#x27;</span>, <span class="string">&#x27;地区编码表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;地区编码表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_column&#x27;</span>, <span class="string">&#x27;应用表字段信息&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;应用表字段信息&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_dept&#x27;</span>, <span class="string">&#x27;部门管理&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;部门管理&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_dict&#x27;</span>, <span class="string">&#x27;应用字典表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;应用字典表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_dict_value&#x27;</span>, <span class="string">&#x27;应用字典属性表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;应用字典属性表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_log&#x27;</span>, <span class="string">&#x27;系统日志&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;系统日志&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_menu&#x27;</span>, <span class="string">&#x27;菜单表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;菜单表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_role&#x27;</span>, <span class="string">&#x27;角色表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;角色表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_role_group&#x27;</span>, <span class="string">&#x27;角色组表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;角色组表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_role_group_link&#x27;</span>, <span class="string">&#x27;角色与角色组表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;角色与角色组表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_role_menu&#x27;</span>, <span class="string">&#x27;角色菜单表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;角色菜单表&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_table&#x27;</span>, <span class="string">&#x27;应用表信息&#x27;</span>, 0, <span class="string">&#x27;tab_name&#x27;</span>, <span class="string">&#x27;应用表信息&#x27;</span>, 1);</span><br><span class="line">INSERT INTO app_table (tab_name, <span class="built_in">alias</span>, can_del_data, id_cols, remark, tab_type) VALUES (<span class="string">&#x27;app_user&#x27;</span>, <span class="string">&#x27;用户表&#x27;</span>, 0, <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;用户表&#x27;</span>, 1);</span><br><span class="line"></span><br><span class="line">create table app_column</span><br><span class="line">(</span><br><span class="line">    <span class="built_in">id</span>             varchar(255)  not null comment <span class="string">&#x27;主键&#x27;</span></span><br><span class="line">        primary key,</span><br><span class="line">    <span class="built_in">alias</span>          varchar(255)  null comment <span class="string">&#x27;别名&#x27;</span>,</span><br><span class="line">    app_dict_id    bigint        null comment <span class="string">&#x27;绑定字典主键&#x27;</span>,</span><br><span class="line">    char_length    int           null comment <span class="string">&#x27;内容长度&#x27;</span>,</span><br><span class="line">    col_default    varchar(255)  null comment <span class="string">&#x27;默认值&#x27;</span>,</span><br><span class="line">    col_name       varchar(255)  null comment <span class="string">&#x27;字段名&#x27;</span>,</span><br><span class="line">    col_type       varchar(255)  null comment <span class="string">&#x27;字段类型(用于与使用控件相关)&#x27;</span>,</span><br><span class="line">    col_type_alias varchar(255)  null comment <span class="string">&#x27;字段类型描述&#x27;</span>,</span><br><span class="line">    is_null        int default 1 null comment <span class="string">&#x27;是否允许空(1 是 0 否)&#x27;</span>,</span><br><span class="line">    remark         varchar(255)  null comment <span class="string">&#x27;备注&#x27;</span>,</span><br><span class="line">    scale          int           null comment <span class="string">&#x27;精度&#x27;</span>,</span><br><span class="line">    tab_name       varchar(255)  null comment <span class="string">&#x27;表名&#x27;</span>,</span><br><span class="line">    time_format    varchar(255)  null comment <span class="string">&#x27;时间格式&#x27;</span></span><br><span class="line">)comment <span class="string">&#x27;应用表字段信息&#x27;</span> charset = utf8;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="specification的in语句"><a href="#specification的in语句" class="headerlink" title="specification的in语句"></a><code>specification</code>的<code>in</code>语句</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Path&lt;String&gt; path = root.get(<span class="string">&quot;tabName&quot;</span>);</span><br><span class="line">CriteriaBuilder.In&lt;String&gt; in = criteriaBuilder.in(path);</span><br><span class="line">in.value(<span class="string">&quot;app_table&quot;</span>);</span><br><span class="line">in.value(<span class="string">&quot;app_column&quot;</span>);</span><br><span class="line">criteriaBuilder.and(in);</span><br><span class="line"><span class="keyword">return</span> criteriaBuilder.and(p1, in);</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="其它方式"><a href="#其它方式" class="headerlink" title="其它方式"></a>其它方式</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">   <span class="meta">@PersistenceContext</span></span><br><span class="line">   <span class="keyword">private</span> EntityManager entityManager;</span><br><span class="line"><span class="comment">// 查询</span></span><br><span class="line">entityManager.find(AppTable.class, id);</span><br><span class="line"><span class="comment">// 查询列表</span></span><br><span class="line">entityManager.createQuery(hql).getResultList();</span><br><span class="line"><span class="comment">// 查询列表数量,有参数</span></span><br><span class="line">entityManager.createQuery(hql)</span><br><span class="line">               .setParameter(<span class="number">0</span>, tabName)</span><br><span class="line">               .setParameter(<span class="number">1</span>, alias).getResultList().size();</span><br><span class="line"><span class="comment">// 	更新</span></span><br><span class="line"><span class="type">AppTable</span> <span class="variable">appTable</span> <span class="operator">=</span> entityManager.find(AppTable.class, id);</span><br><span class="line">appTable.setTabName(<span class="string">&quot;X&quot;</span>);</span><br><span class="line">   entityManager.flush();</span><br><span class="line"><span class="comment">// 删除</span></span><br><span class="line">entityManager.remove(entityManager.find(AppTable.class, id));</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1d8bd6425edc">Spring Boot Jpa 我已知的两种分页多查询条件的查询方式</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/17224/">https://github.com/maxzhao-it/blog/post/17224/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/blog/tags/JPA/" rel="tag"># JPA</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/3728/" rel="prev" title="SpringBoot整合Redis与Cache实现简单的缓存场景">
+                  <i class="fa fa-chevron-left"></i> SpringBoot整合Redis与Cache实现简单的缓存场景
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/6375/" rel="next" title="SpringBoot中@Cache同类调用不生效切换AspectJ">
+                  SpringBoot中@Cache同类调用不生效切换AspectJ <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

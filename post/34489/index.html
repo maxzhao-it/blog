@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/34489/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/34489/","path":"post/34489/","title":"KafkaConnect导入导出数据"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>KafkaConnect导入导出数据 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Kafka-Connect-%E5%AF%BC%E5%85%A5-x2F-%E5%AF%BC%E5%87%BA-%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">一、Kafka Connect 导入&#x2F;导出 数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-Connect%E5%8A%9F%E8%83%BD%E5%8C%85%E6%8B%AC"><span class="nav-number">1.1.</span> <span class="nav-text">Kafka Connect功能包括:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%BF%90%E8%A1%8C-Kafka-Connect"><span class="nav-number">2.</span> <span class="nav-text">二、运行 Kafka Connect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">单例配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%93%8D%E4%BD%9C"><span class="nav-number">2.2.</span> <span class="nav-text">控制台操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81MySql-%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">三、MySql 操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">四、详细配置</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/34489/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="KafkaConnect导入导出数据 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KafkaConnect导入导出数据
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/kafka/" itemprop="url" rel="index"><span itemprop="name">kafka</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="一、Kafka-Connect-导入-x2F-导出-数据"><a href="#一、Kafka-Connect-导入-x2F-导出-数据" class="headerlink" title="一、Kafka Connect 导入&#x2F;导出 数据"></a>一、Kafka Connect 导入&#x2F;导出 数据</h2><p>从控制台写入和写回数据是一个方便的开始，但你可能想要从其他来源导入或导出数据到其他系统。对于大多数系统，可以使用<code>kafka Connect</code>，而不需要编写自定义集成代码。</p>
+<p><code>Kafka Connect</code>是导入和导出数据的一个工具。是一个在 <code>kafka</code>与其他系统之间的可扩展和可靠的流数据工具。它使得快速定义连接器变得非常简单，这些连接器可以将大量数据移入和移出<code>Kafka</code>。<code>Kafka Connect</code><br>可以摄取整个数据库或者从你所有的应用服务器上收集指标到Kafka主题中，使数据可以用于低延迟的流处理。导出作业可以将数据从<code>Kafka</code>主题交付到二级存储和查询系统，或者交付到批处理系统以进行离线分析。</p>
+<h3 id="Kafka-Connect功能包括"><a href="#Kafka-Connect功能包括" class="headerlink" title="Kafka Connect功能包括:"></a>Kafka Connect功能包括:</h3><ul>
+<li>Kafka Connect是Kafka连接器的通用框架——Kafka Connect标准化了其他数据系统与Kafka的集成，简化了连接器的开发、部署和管理</li>
+<li>分布式和独立模式——向上扩展到支持整个组织的大型集中管理服务，或者向下扩展到开发、测试和小型生产部署</li>
+<li>通过一个易于使用的REST API向Kafka Connect集群提交和管理连接器</li>
+<li>自动偏移量管理——Kafka Connect可以自动管理偏移量提交过程，所以连接器开发人员不需要担心连接器开发中这个容易出错的部分</li>
+<li>Kafka Connect建立在现有的组管理协议上。可以添加更多的worker来扩展Kafka Connect集群。</li>
+<li>流&#x2F;批处理集成-利用Kafka现有的功能，Kafka Connect是一个理想的解决方案桥接流和批处理数据系统</li>
+</ul>
+<p>一些概念</p>
+<ul>
+<li><p><code>kafka connector</code>:是<code>kafka connect</code>的关键组成部分，它是一个逻辑上的job,用于在kafka和其他系统之间拷贝数据,比如：从上游系统拷贝数据到kafka,或者从kafka拷贝数据到下游系统</p>
+</li>
+<li><p>Tasks:每个<code>kafka connector</code>可以初始化一组task进行数据的拷贝</p>
+</li>
+<li><p>Workers:逻辑上包含<code>kafka connector</code>和tasks用来调度执行具体任务的进程,具体执行时分为standalone模式和distributed模式</p>
+</li>
+</ul>
+<p>​</p>
+<p>下面介绍配置、运行和管理Kafka Connect。</p>
+<h2 id="二、运行-Kafka-Connect"><a href="#二、运行-Kafka-Connect" class="headerlink" title="二、运行 Kafka Connect"></a>二、运行 Kafka Connect</h2><p>Kafka Connect目前支持两种执行模式:单机(单进程)和分布式。</p>
+<p>在独立模式下，所有工作都在单个进程中执行。这种配置更容易设置和开始，可能在只有一个worker有意义的情况下有用(例如收集日志文件)，但它没有从Kafka Connect的一些特性中受益，比如容错。可以使用如下命令启动独立进程:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/connect-standalone.sh config/connect-standalone.properties connector1.properties [connector2.properties ...]</span><br></pre></td></tr></table></figure>
+
+<h3 id="单例配置"><a href="#单例配置" class="headerlink" title="单例配置"></a>单例配置</h3><p>配置文件在 <code>config/connect-standalone.properties</code></p>
+<p>首先是Kafka Connect处理的配置，包含常见的配置，例如要连接的Kafka broker和数据的序列化格式。其余的配置文件都指定了要创建的连接器。包括连接器唯一名称，和要实例化的连接器类。以及连接器所需的任何其他配置。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 连接器的唯一名称。再次尝试注册相同名称将会失败。</span></span><br><span class="line"><span class="attr">nname</span></span><br><span class="line"><span class="comment"># kafka 服务器地址</span></span><br><span class="line"><span class="attr">bootstrap.servers</span>=<span class="string">localhost:9092</span></span><br><span class="line"><span class="comment"># 唯一的字符串，用于标识此worker所属的Connect集群组。</span></span><br><span class="line"><span class="comment"># group.id=</span></span><br><span class="line"><span class="comment"># 用于在Kafka连接格式和写入Kafka的序列化格式之间转换的转换器类。</span></span><br><span class="line"><span class="comment"># 控制了从Kafka写入或读取的消息中的键的格式，并且由于它独立于连接器，它允许任何连接器使用任何序列化格式。常见的格式包括JSON和Avro。</span></span><br><span class="line"><span class="attr">key.converter</span>=<span class="string">org.apache.kafka.connect.json.JsonConverter</span></span><br><span class="line"><span class="comment"># 控制了写入或从Kafka读取的消息中的值的格式，并且由于它独立于连接器，它允许任何连接器使用任何序列化格式。常见的格式包括JSON和Avro。</span></span><br><span class="line"><span class="attr">value.converter</span>=<span class="string">org.apache.kafka.connect.json.JsonConverter</span></span><br><span class="line"><span class="comment"># Converter-specific settings can be passed in by prefixing the Converter&#x27;s setting with the converter we want to apply</span></span><br><span class="line"><span class="comment"># it to</span></span><br><span class="line"><span class="attr">key.converter.schemas.enable</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">value.converter.schemas.enable</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 用逗号分隔的主题列表，用作此连接器的输入的话题</span></span><br><span class="line"><span class="comment"># topics</span></span><br><span class="line"><span class="comment"># 主题的Java正则表达式，用作此连接器的输入对于任何其他选项，您应该查阅连接器的文档。</span></span><br><span class="line"><span class="comment"># topics.regex=</span></span><br><span class="line"><span class="comment"># kafka topic仓库配置,需要手动创建主题，以确保正确配置 default connect-configs</span></span><br><span class="line"><span class="comment"># config.storage.topic</span></span><br><span class="line"><span class="attr">offset.storage.file.filename</span>=<span class="string">/tmp/connect.offsets</span></span><br><span class="line"><span class="comment"># Flush much faster than normal, which is useful for testing/debugging</span></span><br><span class="line"><span class="attr">offset.flush.interval.ms</span>=<span class="string">10000</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="控制台操作"><a href="#控制台操作" class="headerlink" title="控制台操作"></a>控制台操作</h3><p>在这个快速入门里，我们将看到如何运行<code>Kafka Connect</code>用简单的连接器从文件导入数据到Kafka主题，再从<code>Kafka</code>主题导出数据到文件。</p>
+<p>首先，我们首先创建一些种子数据用来测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;foo\nbar&quot;</span> &gt; test.txt</span><br></pre></td></tr></table></figure>
+
+<p>接下来，我们开始2个连接器运行在独立的模式，这意味着它们运行在一个单一的，本地的，专用的进程。我们提供3个配置文件作为参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties</span><br><span class="line"><span class="comment"># 这是分布式的命令，暂时不考虑</span></span><br><span class="line">bin/connect-distributed.sh config/connect-distributed.properties</span><br></pre></td></tr></table></figure>
+
+<p>这些包含在Kafka中的示例配置文件使用之前启动的默认本地群集配置，并创建两个连接器： 第一个是源连接器，用于从输入文件读取行，并将其输入到 Kafka topic。 第二个是接收器连接器，它从Kafka<br>topic中读取消息，并在输出文件中生成一行。</p>
+<p>在启动过程中，你会看到一些日志消息，包括一些连接器正在实例化的指示。 一旦Kafka Connect进程启动，源连接器就开始从<code>test.txt</code>读取行并且 将它们生产到主题<code>connect-test</code><br>中，同时接收器连接器也开始从主题<code>connect-test</code>中读取消息， 并将它们写入文件<code>test.sink.txt</code>中。我们可以通过检查输出文件的内容来验证数据是否已通过整个pipeline进行交付：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">more test.sink.txt</span><br></pre></td></tr></table></figure>
+
+<p>出现结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">foo</span><br><span class="line">bar</span><br></pre></td></tr></table></figure>
+
+<p>请注意，数据存储在Kafka topic<code>connect-test</code>中，因此我们也可以运行一个console consumer（控制台消费者）来查看 topic 中的数据（或使用custom<br>consumer（自定义消费者）代码进行处理）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic connect-test --from-beginning</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;schema&quot;</span>:&#123;<span class="string">&quot;type&quot;</span>:<span class="string">&quot;string&quot;</span>,<span class="string">&quot;optional&quot;</span>:<span class="literal">false</span>&#125;,<span class="string">&quot;payload&quot;</span>:<span class="string">&quot;foo&quot;</span>&#125;</span><br><span class="line">&#123;<span class="string">&quot;schema&quot;</span>:&#123;<span class="string">&quot;type&quot;</span>:<span class="string">&quot;string&quot;</span>,<span class="string">&quot;optional&quot;</span>:<span class="literal">false</span>&#125;,<span class="string">&quot;payload&quot;</span>:<span class="string">&quot;bar&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>连接器一直在处理数据，所以我们可以将数据添加到文件中，并看到它在pipeline 中移动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 追加一行数据</span></span><br><span class="line"><span class="built_in">echo</span> Another line &gt;&gt; test.txt</span><br></pre></td></tr></table></figure>
+
+<p>应该可以看到这一行出现在控制台用户输出和接收器文件中。</p>
+<h2 id="三、MySql-操作"><a href="#三、MySql-操作" class="headerlink" title="三、MySql 操作"></a>三、<code>MySql</code> 操作</h2><p><a target="_blank" rel="noopener" href="https://www.pianshen.com/article/3877182847/">https://www.pianshen.com/article/3877182847/</a></p>
+<h2 id="四、详细配置"><a href="#四、详细配置" class="headerlink" title="四、详细配置"></a>四、详细配置</h2><table>
+<thead>
+<tr>
+<th>NAME</th>
+<th>DESCRIPTION</th>
+<th>TYPE</th>
+<th>DEFAULT</th>
+<th>VALID VALUES</th>
+<th>IMPORTANCE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>config.storage.topic</td>
+<td>kafka topic仓库配置</td>
+<td>string</td>
+<td></td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>group.id</td>
+<td>唯一的字符串，用于标识此worker所属的Connect集群组。</td>
+<td>string</td>
+<td></td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>key.converter</td>
+<td>用于Kafka Connect和写入到Kafka的序列化消息的之间格式转换的转换器类。 这可以控制写入或从kafka读取的消息中的键的格式，并且由于这与连接器无关，因此它允许任何连接器使用任何序列化格式。 常见格式的示例包括JSON和Avro。</td>
+<td>class</td>
+<td></td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>offset.storage.topic</td>
+<td>连接器的offset存储到哪个topic中</td>
+<td>string</td>
+<td></td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>status.storage.topic</td>
+<td>追踪连接器和任务状态存储到哪个topic中</td>
+<td>string</td>
+<td></td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>value.converter</td>
+<td>用于Kafka Connect格式和写入Kafka的序列化格式之间转换的转换器类。 控制了写入或从Kafka读取的消息中的值的格式，并且由于这与连接器无关，因此它允许任何连接器使用任何序列化格式。 常见格式的示例包括JSON和Avro。</td>
+<td>class</td>
+<td></td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>internal.key.converter</td>
+<td>用于在Kafka Connect格式和写入Kafka的序列化格式之间转换的转换器类。 这可以控制写入或从Kafka读取的消息中的key的格式，并且由于这与连接器无关，因此它允许任何连接器使用任何序列化格式。 常见格式的示例包括JSON和Avro。 此设置用于控制框架内部使用的记账数据的格式，例如配置和偏移量，因此用户可以使用运行各种Converter实现。</td>
+<td>class</td>
+<td></td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>internal.value.converter</td>
+<td>用于在Kafka Connect格式和写入Kafka的序列化格式之间转换的转换器类。 这控制了写入或从Kafka读取的消息中的值的格式，并且由于这与连接器无关，因此它允许任何连接器使用任何序列化格式。 常见格式的示例包括JSON和Avro。 此设置用于控制框架内部使用的记账数据的格式，例如配置和偏移量，因此用户可以使用运行各种Converter实现。</td>
+<td>class</td>
+<td></td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>bootstrap.servers</td>
+<td>用于建立与Kafka集群的初始连接的主机&#x2F;端口列表。此列表用来发现完整服务器集的初始主机。 该列表的格式应为host1：port1，host2：port2，….由于这些服务器仅用于初始连接以发现完整的集群成员资格（可能会动态更改），因此,不需要包含完整的服务器（尽管如此，你需要多配置几个，以防止配置的宕机）。</td>
+<td>list</td>
+<td>localhost:9092</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>heartbeat.interval.ms</td>
+<td>心跳间隔时间。心跳用于确保会话保持活动，并在新成员加入或离开组时进行重新平衡。 该值必须设置为低于session.timeout.ms，但通常应设置为不高于该值的1&#x2F;3。</td>
+<td>int</td>
+<td>3000</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>rebalance.timeout.ms</td>
+<td>限制所有组中消费者的任务处理数据和提交offset所需的时间。如果超时，那么woker将从组中删除，这也将导致offset提交失败。</td>
+<td>int</td>
+<td>60000</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>session.timeout.ms</td>
+<td>用于察觉worker故障的超时时间。worker定时发送心跳以表明自己是活着的。如果broker在会话超时时间到期之前没有接收到心跳，那么broker将从分组中移除该worker，并启动重新平衡。注意，该值必须在<code>group.min.session.timeout.ms</code>和<code>group.max.session.timeout.ms</code>范围内。</td>
+<td>int</td>
+<td>10000</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>ssl.key.password</td>
+<td>密钥存储文件中私钥的密码。 这对于客户端是可选的。</td>
+<td>password</td>
+<td>null</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>ssl.keystore.location</td>
+<td>密钥存储文件的位置。 这对于客户端是可选的，可以用于客户端的双向身份验证。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>ssl.keystore.password</td>
+<td>密钥存储文件的存储密码。 客户端是可选的，只有配置了ssl.keystore.location才需要。</td>
+<td>password</td>
+<td>null</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>ssl.truststore.location</td>
+<td>信任存储文件的位置。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>ssl.truststore.password</td>
+<td>信任存储文件的密码。</td>
+<td>password</td>
+<td>null</td>
+<td></td>
+<td>high</td>
+</tr>
+<tr>
+<td>connections.max.idle.ms</td>
+<td>多少毫秒之后关闭空闲的连接。</td>
+<td>long</td>
+<td>540000</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>receive.buffer.bytes</td>
+<td>读取数据时使用的TCP接收缓冲区（SO_RCVBUF）的大小。 如果值为-1，则将使用OS默认值。</td>
+<td>int</td>
+<td>32768</td>
+<td>[0,…]</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>request.timeout.ms</td>
+<td>配置控制客户端等待请求响应的最长时间。 如果在超时之前未收到响应，客户端将在必要时重新发送请求，如果重试耗尽，则该请求将失败。</td>
+<td>int</td>
+<td>40000</td>
+<td>[0,…]</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>sasl.jaas.config</td>
+<td>用于JAAS配置文件的SASL连接的JAAS登录上下文参数格式。<a target="_blank" rel="noopener" href="https://blog.csdn.net/zqqcometo/article/details/85089475#http://docs.oracle.com/javase/8/docs/technotes/guides/security/jgss/tutorials/LoginConfigFile.html">这里</a>描述了JAAS配置文件的格式。该值的格式为：’ (&#x3D;)*;’</td>
+<td>password</td>
+<td>null</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>sasl.kerberos.service.name</td>
+<td>Kafka运行的Kerberos principal名称。 可以在Kafka的JAAS配置或Kafka的配置中定义。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>sasl.mechanism</td>
+<td>用户客户端连接的SASL机制。可以提供者任何安全机制。 GSSAPI是默认机制。</td>
+<td>string</td>
+<td>GSSAPI</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>security.protocol</td>
+<td>用于和broker通讯的策略。有效的值有：PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL。</td>
+<td></td>
+<td>string</td>
+<td>PLAINTEXT</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>send.buffer.bytes</td>
+<td>发送数据时使用TCP发送缓冲区（SO_SNDBUF）的大小。如果值为-1，则将使用OS默认。</td>
+<td>int</td>
+<td>131072</td>
+<td>[-1,…]</td>
+<td>medium</td>
+</tr>
+<tr>
+<td>ssl.enabled.protocols</td>
+<td>启用SSL连接的协议列表。</td>
+<td>list</td>
+<td>TLSv1.2,TLSv1 .1,TLSv1</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>ssl.keystore.type</td>
+<td>密钥存储文件的文件格式。 对于客户端是可选的。</td>
+<td>string</td>
+<td>JKS</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>ssl.protocol</td>
+<td>用于生成SSLContext的SSL协议。 默认设置是TLS，这对大多数情况都是适用的。 最新的JVM中的允许值为TLS，TLSv1.1和TLSv1.2。 旧的JVM可能支持SSL，SSLv2和SSLv3，但由于已知的安全漏洞，不建议使用SSL。</td>
+<td>string</td>
+<td>TLS</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>ssl.provider</td>
+<td>用于SSL连接的安全提供程序的名称。 默认值是JVM的默认安全提供程序。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>ssl.truststore.type</td>
+<td>信任存储文件的文件格式。</td>
+<td>string</td>
+<td>JKS</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>worker.sync.timeout.ms</td>
+<td>当worker与其他worker不同步并需要重新同步配置时，需等待一段时间才能离开组，然后才能重新加入。</td>
+<td>int</td>
+<td>3000</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>worker.unsync.backoff.ms</td>
+<td>当worker与其他worker不同步，并且无法在worker.sync.timeout.ms 期间追赶上，在重新连接之前，退出Connect集群的时间。</td>
+<td>int</td>
+<td>300000</td>
+<td></td>
+<td>medium</td>
+</tr>
+<tr>
+<td>access.control.allow.methods</td>
+<td>通过设置Access-Control-Allow-Methods标头来设置跨源请求支持的方法。 Access-Control-Allow-Methods标头的默认值允许GET，POST和HEAD的跨源请求。</td>
+<td>string</td>
+<td>“”</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>access.control.allow.origin</td>
+<td>将Access-Control-Allow-Origin标头设置为REST API请求。要启用跨源访问，请将其设置为应该允许访问API的应用程序的域，或者 *” 以允许从任何的<code>域</code>。 默认值只允许从REST API的域访问。</td>
+<td>string</td>
+<td>“”</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>client.id</td>
+<td>在发出请求时传递给服务器的id字符串。这样做的目的是通过允许逻辑应用程序名称包含在请求消息中，来跟踪请求来源。而不仅仅是ip&#x2F;port</td>
+<td>string</td>
+<td>“”</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>config.storage.replication.factor</td>
+<td>当创建配置仓库topic时的副本数</td>
+<td>short</td>
+<td>3</td>
+<td>[1,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>metadata.max.age.ms</td>
+<td>在没有任何分区leader改变，主动地发现新的broker或分区的时间。</td>
+<td>long</td>
+<td>300000</td>
+<td>[0,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>metric.reporters</td>
+<td>A list of classes to use as metrics reporters. Implementing the MetricReporter interface allows plugging in classes that will be notified of new metric creation. The JmxReporter is always included to register JMX statistics.</td>
+<td>list</td>
+<td>“”</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>metrics.num.samples</td>
+<td>保留计算metrics的样本数（译者不清楚是做什么的）</td>
+<td>int</td>
+<td>2</td>
+<td>[1,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>metrics.sample.window.ms</td>
+<td>The window of time a metrics sample is computed over.</td>
+<td>long</td>
+<td>30000</td>
+<td>[0,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>offset.flush.interval.ms</td>
+<td>尝试提交任务偏移量的间隔。</td>
+<td>long</td>
+<td>60000</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>offset.flush.timeout.ms</td>
+<td>在取消进程并恢复要在之后尝试提交的offset数据之前，等待消息刷新并分配要提交到offset仓库的offset数据的最大毫秒数。</td>
+<td>long</td>
+<td>5000</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>offset.storage.partitions</td>
+<td>创建offset仓库topic的分区数</td>
+<td>int</td>
+<td>25</td>
+<td>[1,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>offset.storage.replication.factor</td>
+<td>创建offset仓库topic的副本数</td>
+<td>short</td>
+<td>3</td>
+<td>[1,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>plugin.path</td>
+<td>包含插件(连接器,转换器,转换)逗号(,)分隔的路径列表。该列表应包含顶级目录，其中包括以下任何组合：a）包含jars与插件及其依赖关系的目录 b）具有插件及其依赖项的uber-jars c）包含插件类的包目录结构的目录及其依赖关系,注意配置：将遵循符号链接来发现依赖关系或插件。 示例：plugin.path&#x3D;&#x2F;usr&#x2F;local&#x2F;share&#x2F;java,&#x2F;usr&#x2F;local&#x2F;share&#x2F;kafka&#x2F;plugins,&#x2F;opt&#x2F;connectors</td>
+<td>list</td>
+<td>null</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>reconnect.backoff.max.ms</td>
+<td>无法连接broker时等待的最大时间（毫秒）。如果设置，则每个host的将会持续的增加，直到达到最大值。计算增加后，再增加20％的随机抖动，以避免高频的反复连接。</td>
+<td>long</td>
+<td>1000</td>
+<td>[0,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>reconnect.backoff.ms</td>
+<td>尝试重新连接到主机之前等待的时间。 避免了高频率反复的连接主机。 这种机制适用于消费者向broker发送的所有请求。</td>
+<td>long</td>
+<td>50</td>
+<td>[0,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>rest.advertised.host.name</td>
+<td>如果设置，其他wokers将通过这个hostname进行连接。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>rest.advertised.port</td>
+<td>如果设置，其他的worker将通过这个端口进行连接。</td>
+<td>int</td>
+<td>null</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>rest.host.name</td>
+<td>REST API的主机名。 如果设置，它将只绑定到这个接口。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>rest.port</td>
+<td>用于监听REST API的端口</td>
+<td>int</td>
+<td>8083</td>
+<td>low</td>
+<td></td>
+</tr>
+<tr>
+<td>retry.backoff.ms</td>
+<td>失败请求重新尝试之前的等待时间，避免了在某些故障的情况下，频繁的重复发送请求。</td>
+<td>long</td>
+<td>100</td>
+<td>[0,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>sasl.kerberos.kinit.cmd</td>
+<td>Kerberos kinit命令路径.</td>
+<td>string</td>
+<td>&#x2F;usr&#x2F;bin&#x2F;kinit</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>sasl.kerberos.min.time.before.relogin</td>
+<td>尝试refresh之间登录线程的休眠时间.</td>
+<td>long</td>
+<td>60000</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>sasl.kerberos.ticket.renew.jitter</td>
+<td>添加到更新时间的随机抖动百分比。</td>
+<td>double</td>
+<td>0.05</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>sasl.kerberos.ticket.renew.window.factor</td>
+<td>登录线程将休眠，直到从上次刷新ticket到期，此时将尝试续订ticket。</td>
+<td>double</td>
+<td>0.8</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>ssl.cipher.suites</td>
+<td>密码套件列表。用于TLS或SSL网络协议协商网络连接的安全设置的认证，加密，MAC和密钥交换算法的命名组合。 默认情况下，支持所有可用的密码套件。</td>
+<td>list</td>
+<td>null</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>ssl.endpoint.identification.algorithm</td>
+<td>末端识别算法使用服务器证书验证服务器主机名。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>ssl.keymanager.algorithm</td>
+<td>用于SSL连接的key管理工厂的算法，默认值是Java虚拟机配置的密钥管理工厂算法。</td>
+<td>string</td>
+<td>SunX509</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>ssl.secure.random.implementation</td>
+<td>用于SSL加密操作的SecureRandom PRNG实现。</td>
+<td>string</td>
+<td>null</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>ssl.trustmanager.algorithm</td>
+<td>用于SSL连接的信任管理仓库算法。默认值是Java虚拟机配置的信任管理器工厂算法。</td>
+<td>string</td>
+<td>PKIX</td>
+<td></td>
+<td>low</td>
+</tr>
+<tr>
+<td>status.storage.partitions</td>
+<td>用于创建状态仓库topic的分区数</td>
+<td>int</td>
+<td>5</td>
+<td>[1,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>status.storage.replication.factor</td>
+<td>用于创建状态仓库topic的副本数</td>
+<td>short</td>
+<td>3</td>
+<td>[1,…]</td>
+<td>low</td>
+</tr>
+<tr>
+<td>task.shutdown.graceful.timeout.ms</td>
+<td>等待任务正常关闭的时间，这是总时间，不是每个任务，所有任务触发关闭，然后依次等待。</td>
+<td>long</td>
+<td>5000</td>
+<td></td>
+<td>low</td>
+</tr>
+</tbody></table>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/34489/">https://github.com/maxzhao-it/blog/post/34489/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/MQ/" rel="tag"># MQ</a>
+              <a href="/blog/tags/kafka/" rel="tag"># kafka</a>
+              <a href="/blog/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag"># 中间件</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/23026/" rel="prev" title="Linux删除文件之后恢复（ext3grep）">
+                  <i class="fa fa-chevron-left"></i> Linux删除文件之后恢复（ext3grep）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/4175/" rel="next" title="Kafka安装配置">
+                  Kafka安装配置 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

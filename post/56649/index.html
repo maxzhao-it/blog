@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/56649/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/56649/","path":"post/56649/","title":"Nacos连接MySql8"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nacos连接MySql8 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%88%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">二、配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E5%BD%93%E5%89%8D%E6%9C%8D%E5%8A%A1%E5%99%A8-Docker-ip"><span class="nav-number">2.1.</span> <span class="nav-text">指定当前服务器 Docker ip</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-docker-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.1.0.1.</span> <span class="nav-text">查看 docker 网络模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84-bridge-%E7%BD%91%E7%BB%9C"><span class="nav-number">2.1.0.2.</span> <span class="nav-text">创建新的 bridge 网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF"><span class="nav-number">2.1.0.3.</span> <span class="nav-text">查看网络信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8%E5%B9%B6%E6%8C%87%E5%AE%9AIP"><span class="nav-number">2.1.0.4.</span> <span class="nav-text">创建容器并指定IP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-compose%E6%8C%87%E5%AE%9AIP"><span class="nav-number">2.1.0.5.</span> <span class="nav-text">docker-compose指定IP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E7%BD%91%E8%B7%AF%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.1.0.6.</span> <span class="nav-text">删除网路模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-yml%E6%96%B9%E5%BC%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">docker-compose.yml方式配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84"><span class="nav-number">3.</span> <span class="nav-text">附</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nacos-standlone-mysql-env"><span class="nav-number">3.1.</span> <span class="nav-text">nacos-standlone-mysql.env</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#custom-properties"><span class="nav-number">3.2.</span> <span class="nav-text">custom.properties</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">附：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E4%B8%8B%E7%9A%84-nacos-%E5%B1%9E%E6%80%A7%E9%85%8D%E7%BD%AE%E5%88%97%E8%A1%A8"><span class="nav-number">4.1.</span> <span class="nav-text">docker下的 nacos  属性配置列表</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/56649/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nacos连接MySql8 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nacos连接MySql8
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p><code>Nacos</code> 使用<code>MySql8</code>存储数据。</p>
+<p>这里会描述 <code>Docker</code> 中的 <code>Nacos</code> 服务配置，服务器直接部署配置比较简单。</p>
+<h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><ul>
+<li><code>Nacos2.0.3</code></li>
+<li><code>MySql8</code></li>
+</ul>
+<h1 id="二、配置"><a href="#二、配置" class="headerlink" title="二、配置"></a>二、配置</h1><h2 id="指定当前服务器-Docker-ip"><a href="#指定当前服务器-Docker-ip" class="headerlink" title="指定当前服务器 Docker ip"></a>指定当前服务器 <code>Docker ip</code></h2><h4 id="查看-docker-网络模式"><a href="#查看-docker-网络模式" class="headerlink" title="查看 docker 网络模式"></a>查看 <code>docker</code> 网络模式</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210814154138938.png"></p>
+<h4 id="创建新的-bridge-网络"><a href="#创建新的-bridge-网络" class="headerlink" title="创建新的 bridge 网络"></a>创建新的 <code>bridge</code> 网络</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create --driver bridge --subnet=172.2.2.0/16 --gateway=172.2.1.1 mynet</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看网络信息"><a href="#查看网络信息" class="headerlink" title="查看网络信息"></a>查看网络信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network inspect mynet</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建容器并指定IP"><a href="#创建容器并指定IP" class="headerlink" title="创建容器并指定IP"></a>创建容器并指定<code>IP</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -e TZ=<span class="string">&quot;Asia/Shanghai&quot;</span> --privileged -itd  --name redis-demo --network=mynet --ip 172.2.12.1 redis /usr/sbin/init</span><br></pre></td></tr></table></figure>
+
+<h4 id="docker-compose指定IP"><a href="#docker-compose指定IP" class="headerlink" title="docker-compose指定IP"></a><code>docker-compose</code>指定<code>IP</code></h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;2&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">   <span class="attr">image:</span> <span class="string">nginx:1.13.12</span></span><br><span class="line">   <span class="attr">container_name:</span> <span class="string">nginx</span></span><br><span class="line">   <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">   <span class="attr">tty:</span> <span class="literal">true</span></span><br><span class="line">   <span class="attr">networks:</span></span><br><span class="line">     <span class="attr">extnetwork:</span></span><br><span class="line">      <span class="attr">ipv4_address:</span> <span class="number">172.2</span><span class="number">.12</span><span class="number">.3</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="comment"># 自定义的网络名称</span></span><br><span class="line">  <span class="attr">extnetwork:</span></span><br><span class="line">   <span class="attr">ipam:</span></span><br><span class="line">     <span class="attr">config:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">subnet:</span> <span class="number">172.2</span><span class="number">.12</span><span class="number">.0</span><span class="string">/16</span></span><br><span class="line">      <span class="attr">gateway:</span> <span class="number">172.2</span><span class="number">.1</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="删除网路模式"><a href="#删除网路模式" class="headerlink" title="删除网路模式"></a>删除网路模式</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network <span class="built_in">rm</span> mynet</span><br></pre></td></tr></table></figure>
+
+<h2 id="docker-compose-yml方式配置"><a href="#docker-compose-yml方式配置" class="headerlink" title="docker-compose.yml方式配置"></a><code>docker-compose.yml</code>方式配置</h2><p><code>/plugins/mysql/</code>目录下放的是 <code>/plugins/mysql/mysql-connector-java-8.0.21.jar</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.9&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nacos:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nacos/nacos-server:2.0.3</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nacos-standalone-mysql</span></span><br><span class="line">    <span class="attr">env_file:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./env/nacos-standlone-mysql.env</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./standalone-logs/:/home/nacos/logs</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./init.d/custom.properties:/home/nacos/init.d/custom.properties</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./plugins/mysql/:/home/nacos/plugins/mysql/</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8848:8848&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9848:9848&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;9555:9555&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="attr">mynet:</span></span><br><span class="line">        <span class="attr">ipv4_address:</span> <span class="number">172.2</span><span class="number">.2</span><span class="number">.2</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">mynet:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><a href="https://github.com/alibaba/nacos/blob/develop/distribution/conf/nacos-mysql.sql"><code>Nacos</code>的<code>MySql</code>数据库脚本</a></p>
+</blockquote>
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="nacos-standlone-mysql-env"><a href="#nacos-standlone-mysql-env" class="headerlink" title="nacos-standlone-mysql.env"></a><code>nacos-standlone-mysql.env</code></h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">PREFER_HOST_MODE</span>=<span class="string">hostname</span></span><br><span class="line"><span class="attr">MODE</span>=<span class="string">standalone</span></span><br><span class="line"><span class="comment"># 项目地址</span></span><br><span class="line"><span class="attr">SERVER_SERVLET_CONTEXTPATH</span>=<span class="string">/nacos</span></span><br><span class="line"><span class="comment"># 端口</span></span><br><span class="line"><span class="attr">NACOS_APPLICATION_PORT</span>=<span class="string">8848</span></span><br><span class="line"><span class="attr">MYSQL_DATABASE_NUM</span>=<span class="string">1</span></span><br><span class="line"><span class="attr">SPRING_DATASOURCE_PLATFORM</span>=<span class="string">mysql</span></span><br><span class="line"><span class="comment"># 本机的IP 地址</span></span><br><span class="line"><span class="attr">MYSQL_SERVICE_HOST</span>=<span class="string">192.168.2.1</span></span><br><span class="line"><span class="attr">MYSQL_SERVICE_DB_NAME</span>=<span class="string">nacos_db</span></span><br><span class="line"><span class="attr">MYSQL_SERVICE_PORT</span>=<span class="string">3306</span></span><br><span class="line"><span class="attr">MYSQL_SERVICE_USER</span>=<span class="string">nacos</span></span><br><span class="line"><span class="attr">MYSQL_SERVICE_PASSWORD</span>=<span class="string">nacos</span></span><br><span class="line"><span class="comment">#MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useSSL=false</span></span><br><span class="line"><span class="attr">MYSQL_SERVICE_DB_PARAM</span>=<span class="string">charset=utf8mb4&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;serverTimezone=GMT%2B8&amp;useUnicode=true&amp;useSSL=false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="custom-properties"><a href="#custom-properties" class="headerlink" title="custom.properties"></a><code>custom.properties</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#spring.security.enabled=false</span></span><br><span class="line"><span class="comment">#management.security=false</span></span><br><span class="line"><span class="comment">#security.basic.enabled=false</span></span><br><span class="line"><span class="comment">#nacos.security.ignore.urls=/**</span></span><br><span class="line"><span class="comment">#management.metrics.export.elastic.host=http://localhost:9200</span></span><br><span class="line"><span class="comment"># metrics for prometheus</span></span><br><span class="line">management.endpoints.web.exposure.include=*</span><br><span class="line"></span><br><span class="line"><span class="comment"># metrics for elastic search</span></span><br><span class="line"><span class="comment">#management.metrics.export.elastic.enabled=false</span></span><br><span class="line"><span class="comment">#management.metrics.export.elastic.host=http://localhost:9200</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># metrics for influx</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.enabled=false</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.db=springboot</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.uri=http://localhost:8086</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.auto-create-db=true</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.consistency=one</span></span><br><span class="line"><span class="comment">#management.metrics.export.influx.compressed=true</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="附："><a href="#附：" class="headerlink" title="附："></a>附：</h1><h2 id="docker下的-nacos-属性配置列表"><a href="#docker下的-nacos-属性配置列表" class="headerlink" title="docker下的 nacos  属性配置列表"></a><code>docker</code>下的 <code>nacos</code>  属性配置列表</h2><table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>描述</th>
+<th>选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MODE</td>
+<td>系统启动方式: 集群&#x2F;单机</td>
+<td>cluster&#x2F;standalone默认 <strong>cluster</strong></td>
+</tr>
+<tr>
+<td>NACOS_SERVERS</td>
+<td>集群地址</td>
+<td>p1:port1空格ip2:port2 空格ip3:port3</td>
+</tr>
+<tr>
+<td>PREFER_HOST_MODE</td>
+<td>支持IP还是域名模式</td>
+<td>hostname&#x2F;ip 默认 <strong>ip</strong></td>
+</tr>
+<tr>
+<td>NACOS_SERVER_PORT</td>
+<td>Nacos 运行端口</td>
+<td>默认 <strong>8848</strong></td>
+</tr>
+<tr>
+<td>NACOS_SERVER_IP</td>
+<td>多网卡模式下可以指定IP</td>
+<td></td>
+</tr>
+<tr>
+<td>SPRING_DATASOURCE_PLATFORM</td>
+<td>单机模式下支持MYSQL数据库</td>
+<td>mysql &#x2F; 空 默认:空</td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_HOST</td>
+<td>数据库  连接地址</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_PORT</td>
+<td>数据库端口</td>
+<td>默认 : <strong>3306</strong></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_DB_NAME</td>
+<td>数据库库名</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_USER</td>
+<td>数据库用户名</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_PASSWORD</td>
+<td>数据库用户密码</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_DB_PARAM</td>
+<td>数据库连接参数</td>
+<td>default : <strong>characterEncoding&#x3D;utf8&amp;connectTimeout&#x3D;1000&amp;socketTimeout&#x3D;3000&amp;autoReconnect&#x3D;true&amp;useSSL&#x3D;false</strong></td>
+</tr>
+<tr>
+<td>MYSQL_DATABASE_NUM</td>
+<td>It indicates the number of database</td>
+<td>默认 :<strong>1</strong></td>
+</tr>
+<tr>
+<td>JVM_XMS</td>
+<td>-Xms</td>
+<td>默认 :1g</td>
+</tr>
+<tr>
+<td>JVM_XMX</td>
+<td>-Xmx</td>
+<td>默认 :1g</td>
+</tr>
+<tr>
+<td>JVM_XMN</td>
+<td>-Xmn</td>
+<td>默认 :512m</td>
+</tr>
+<tr>
+<td>JVM_MS</td>
+<td>-XX:MetaspaceSize</td>
+<td>默认 :128m</td>
+</tr>
+<tr>
+<td>JVM_MMS</td>
+<td>-XX:MaxMetaspaceSize</td>
+<td>默认 :320m</td>
+</tr>
+<tr>
+<td>NACOS_DEBUG</td>
+<td>是否开启远程DEBUG</td>
+<td>y&#x2F;n 默认 :n</td>
+</tr>
+<tr>
+<td>TOMCAT_ACCESSLOG_ENABLED</td>
+<td>server.tomcat.accesslog.enabled</td>
+<td>默认 :false</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_SYSTEM_TYPE</td>
+<td>权限系统类型选择,目前只支持nacos类型</td>
+<td>默认 :nacos</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_ENABLE</td>
+<td>是否开启权限系统</td>
+<td>默认 :false</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_TOKEN_EXPIRE_SECONDS</td>
+<td>token 失效时间</td>
+<td>默认 :18000</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_TOKEN</td>
+<td>token</td>
+<td>默认 :SecretKey012345678901234567890123456789012345678901234567890123456789</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_CACHE_ENABLE</td>
+<td>权限缓存开关 ,开启后权限缓存的更新默认有15秒的延迟</td>
+<td>默认 : false</td>
+</tr>
+<tr>
+<td>MEMBER_LIST</td>
+<td>通过环境变量的方式设置集群地址</td>
+<td>例子:192.168.16.101:8847?raft_port&#x3D;8807,192.168.16.101?raft_port&#x3D;8808,192.168.16.101:8849?raft_port&#x3D;8809</td>
+</tr>
+<tr>
+<td>EMBEDDED_STORAGE</td>
+<td>是否开启集群嵌入式存储模式</td>
+<td><code>embedded</code>  默认 : none</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_CACHE_ENABLE</td>
+<td>nacos.core.auth.caching.enabled</td>
+<td>default : false</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_USER_AGENT_AUTH_WHITE_ENABLE</td>
+<td>nacos.core.auth.enable.userAgentAuthWhite</td>
+<td>default : false</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_IDENTITY_KEY</td>
+<td>nacos.core.auth.server.identity.key</td>
+<td>default : serverIdentity</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_IDENTITY_VALUE</td>
+<td>nacos.core.auth.server.identity.value</td>
+<td>default : security</td>
+</tr>
+<tr>
+<td>NACOS_SECURITY_IGNORE_URLS</td>
+<td>nacos.security.ignore.urls</td>
+<td>default : <code>/,/error,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.ico,/console-fe/public/**,/v1/auth/**,/v1/console/health/**,/actuator/**,/v1/console/server/**</code></td>
+</tr>
+</tbody></table>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/56649/">https://github.com/maxzhao-it/blog/post/56649/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/blog/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag"># 微服务</a>
+              <a href="/blog/tags/Nacos/" rel="tag"># Nacos</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/1864/" rel="prev" title="ES使用HanLP分词">
+                  <i class="fa fa-chevron-left"></i> ES使用HanLP分词
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/729b6d7f/" rel="next" title="Docker安装Sentinel">
+                  Docker安装Sentinel <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

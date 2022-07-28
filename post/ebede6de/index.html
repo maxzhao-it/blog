@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/ebede6de/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/ebede6de/","path":"post/ebede6de/","title":"安装etcd集群(含CA)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>安装etcd集群(含CA) | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#etcd-%E9%9B%86%E7%BE%A4%E6%8C%87%E5%8D%97"><span class="nav-number">2.</span> <span class="nav-text">etcd 集群指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CA"><span class="nav-number">2.1.</span> <span class="nav-text">CA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">配置时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cfssl-%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E5%90%8D-TLS-%E8%AF%81%E4%B9%A6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">cfssl 生成自签名 TLS 证书的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E5%90%8D-root-CA-%E8%AF%81%E4%B9%A6"><span class="nav-number">2.3.1.</span> <span class="nav-text">生成自签名 root CA 证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A7%81%E9%92%A5%E7%94%9F%E6%88%90%E6%9C%AC%E5%9C%B0%E9%A2%81%E5%8F%91%E7%9A%84%E8%AF%81%E4%B9%A6"><span class="nav-number">2.3.2.</span> <span class="nav-text">使用私钥生成本地颁发的证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E4%B9%8B%E5%90%8E"><span class="nav-number">2.3.3.</span> <span class="nav-text">生成之后</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84"><span class="nav-number">2.4.</span> <span class="nav-text">创建用户和组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">2.5.</span> <span class="nav-text">运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#host158"><span class="nav-number">2.5.1.</span> <span class="nav-text">host158</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host159"><span class="nav-number">2.5.2.</span> <span class="nav-text">host159</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host160"><span class="nav-number">2.5.3.</span> <span class="nav-text">host160</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%A1%E9%AA%8C%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="nav-number">2.5.4.</span> <span class="nav-text">校验运行状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.6.</span> <span class="nav-text">配置服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#host158-1"><span class="nav-number">2.6.1.</span> <span class="nav-text">host158</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host159-1"><span class="nav-number">2.6.2.</span> <span class="nav-text">host159</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#host160-1"><span class="nav-number">2.6.3.</span> <span class="nav-text">host160</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%A1%E9%AA%8C%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81-1"><span class="nav-number">2.6.4.</span> <span class="nav-text">校验运行状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%88%90%E5%91%98"><span class="nav-number">2.6.5.</span> <span class="nav-text">查看成员</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="nav-number">2.7.</span> <span class="nav-text">创建用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE"><span class="nav-number">2.8.</span> <span class="nav-text">访问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-key-value"><span class="nav-number">2.8.1.</span> <span class="nav-text">添加 key-value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%89%8D%E7%BC%80%E8%8E%B7%E5%8F%96%E5%AF%86%E9%92%A5"><span class="nav-number">2.8.2.</span> <span class="nav-text">通过前缀获取密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%B8%AD%E5%A4%9A%E6%AC%A1%E5%86%99%E5%85%A5"><span class="nav-number">2.8.3.</span> <span class="nav-text">事务中多次写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-keys"><span class="nav-number">2.8.4.</span> <span class="nav-text">查看 keys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-lease"><span class="nav-number">2.8.5.</span> <span class="nav-text">创建 lease</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-locks"><span class="nav-number">2.8.6.</span> <span class="nav-text">创建 locks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#etcd%E9%9B%86%E7%BE%A4%E4%B8%AD%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8Cleader%E9%80%89%E4%B8%BE"><span class="nav-number">2.8.7.</span> <span class="nav-text">etcd集群中如何进行leader选举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%A1%E9%AA%8C%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81-2"><span class="nav-number">2.8.8.</span> <span class="nav-text">校验运行状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.8.9.</span> <span class="nav-text">保存数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%92%8C%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9"><span class="nav-number">2.8.10.</span> <span class="nav-text">添加和删除节点</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/ebede6de/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="安装etcd集群(含CA) | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          安装etcd集群(含CA)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/K8S/" itemprop="url" rel="index"><span itemprop="name">K8S</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>etcd 是一个开源的分布式键值存储，用于分布式系统最关键的数据。<br>它通过将数据复制到多台机器来分布，因此对于单点故障具有很高的可用性。<br>使用 Raft 共识算法，etcd 优雅地处理网络分区和机器故障，甚至是领导者故障。<br>etcd 被广泛应用于生产环境：CoreOS、Kubernetes、YouTube Doorman 等。</p>
+<p>我这里有</p>
+<ul>
+<li><code>192.168.2.158 etcd-158</code></li>
+<li><code>192.168.2.159 etcd-159</code></li>
+<li><code>192.168.2.160 etcd-160</code></li>
+</ul>
+<h1 id="etcd-集群指南"><a href="#etcd-集群指南" class="headerlink" title="etcd 集群指南"></a><code>etcd</code> 集群指南</h1><h2 id="CA"><a href="#CA" class="headerlink" title="CA"></a><code>CA</code></h2><p><a href="./ebede6dg">生成<code>CA</code></a></p>
+<h2 id="配置时间"><a href="#配置时间" class="headerlink" title="配置时间"></a>配置时间</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install  ntpdate -y </span><br><span class="line">ntpdate time1.aliyun.com</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><a href="https://github.com/etcd-io/etcd/blob/release-3.4/Documentation/op-guide/clustering.md#static"><code>etcd GitHub</code>地址</a></p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f ~/etcd-v3.5.4-linux-amd64.tar.gz</span><br><span class="line"><span class="built_in">rm</span> -rf /opt/etcd  &amp;&amp; <span class="built_in">mkdir</span> -p /opt/etcd</span><br><span class="line">curl -L https://github.com/etcd-io/etcd/releases/download/v3.5.4/etcd-v3.5.4-linux-amd64.tar.gz  -o ~/etcd-v3.5.4-linux-amd64.tar.gz</span><br><span class="line">tar xzvf ~/etcd-v3.5.4-linux-amd64.tar.gz -C /opt/etcd --strip-components=1</span><br><span class="line"><span class="comment"># rm -f ~/etcd-v3.5.4-linux-amd64.tar.gz</span></span><br><span class="line">/opt/etcd/etcd --version</span><br><span class="line">/opt/etcd/etcdctl version</span><br><span class="line">/opt/etcd/etcdutl version</span><br><span class="line"><span class="comment"># 将 etcd 二进制文件传到 3个master 节点</span></span><br><span class="line">scp /opt/etcd/etcd root@192.168.2.158:/usr/local/bin/</span><br><span class="line">scp /usr/local/bin/etcd root@192.168.2.159:/usr/local/bin/</span><br><span class="line">scp /usr/local/bin/etcd root@192.168.2.160:/usr/local/bin/</span><br><span class="line">scp /usr/local/bin/etcd root@192.168.2.161:/usr/local/bin/</span><br><span class="line">scp /opt/etcd/etcdctl root@192.168.2.158:/usr/local/bin/</span><br><span class="line">scp /usr/local/bin/etcdctl root@192.168.2.159:/usr/local/bin/</span><br><span class="line">scp /usr/local/bin/etcdctl root@192.168.2.160:/usr/local/bin/</span><br><span class="line">scp /usr/local/bin/etcdctl root@192.168.2.161:/usr/local/bin/</span><br><span class="line"><span class="comment"># start a local etcd server</span></span><br><span class="line"><span class="comment">#/opt/etcd/etcd</span></span><br><span class="line"><span class="comment"># write,read to etcd</span></span><br><span class="line"><span class="comment">#/opt/etcd/etcdctl --endpoints=localhost:2379 put foo bar</span></span><br><span class="line"><span class="comment">#/opt/etcd/etcdctl --endpoints=localhost:2379 get foo</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://play.etcd.io/install"><code>etcd example</code> 配置页面</a></p>
+</blockquote>
+<h2 id="cfssl-生成自签名-TLS-证书的方法"><a href="#cfssl-生成自签名-TLS-证书的方法" class="headerlink" title="cfssl 生成自签名 TLS 证书的方法"></a>cfssl 生成自签名 TLS 证书的方法</h2><p>在 <code>host158</code>上执行</p>
+<h3 id="生成自签名-root-CA-证书"><a href="#生成自签名-root-CA-证书" class="headerlink" title="生成自签名 root CA 证书"></a>生成自签名 <code>root CA</code> 证书</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#rm -f /opt/cfssl* </span></span><br><span class="line"><span class="built_in">rm</span> -rf /opt/certs </span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/certs </span><br><span class="line"><span class="built_in">cd</span>  /opt/certs </span><br><span class="line">curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl_1.6.1_linux_amd64  -o /usr/local/bin/cfssl</span><br><span class="line"><span class="built_in">chmod</span> +x /usr/local/bin/cfssl</span><br><span class="line">curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssljson_1.6.1_linux_amd64 -o /usr/local/bin/cfssljson</span><br><span class="line"><span class="built_in">chmod</span> +x /usr/local/bin/cfssljson</span><br><span class="line">curl -L https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssl-certinfo_1.5.0_linux_amd64 -o /usr/local/bin/cfssl-certinfo</span><br><span class="line"><span class="built_in">chmod</span> +x /usr/local/bin/cfssl-certinfo</span><br><span class="line"><span class="comment"># 查看版本</span></span><br><span class="line">/usr/local/bin/cfssl version</span><br><span class="line">/usr/local/bin/cfssljson -h</span><br></pre></td></tr></table></figure>
+
+<p>生成</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建根证书签名请求文件</span></span><br><span class="line"><span class="built_in">cat</span> &gt; /opt/certs/ca-csr.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;key&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;algo&quot;: &quot;rsa&quot;,</span></span><br><span class="line"><span class="string">    &quot;size&quot;: 2048</span></span><br><span class="line"><span class="string">  &#125;,</span></span><br><span class="line"><span class="string">  &quot;names&quot;: [</span></span><br><span class="line"><span class="string">    &#123;</span></span><br><span class="line"><span class="string">      &quot;O&quot;: &quot;maxzhao-ca&quot;,</span></span><br><span class="line"><span class="string">      &quot;OU&quot;: &quot;etcd Security&quot;,</span></span><br><span class="line"><span class="string">      &quot;L&quot;: &quot;NanJing&quot;,</span></span><br><span class="line"><span class="string">      &quot;ST&quot;: &quot;Jiang Su&quot;,</span></span><br><span class="line"><span class="string">      &quot;C&quot;: &quot;CN&quot;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;CN&quot;: &quot;maxzhao&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># CN：Common Name：kube-apiserver 从证书中提取该字段作为请求的用户名 (User Name)，</span></span><br><span class="line"><span class="comment"># O：Organization：kube-apiserver 从证书中提取该字段作为请求用户所属的组 (Group)；</span></span><br><span class="line"><span class="comment"># kube-apiserver 将提取的 User、Group 作为 RBAC 授权的用户标识； </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 证书配置文件</span></span><br><span class="line"><span class="built_in">cat</span> &gt; /opt/certs/ca-config.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;signing&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;default&quot;: &#123;</span></span><br><span class="line"><span class="string">        &quot;usages&quot;: [</span></span><br><span class="line"><span class="string">          &quot;signing&quot;,</span></span><br><span class="line"><span class="string">          &quot;key encipherment&quot;,</span></span><br><span class="line"><span class="string">          &quot;server auth&quot;,</span></span><br><span class="line"><span class="string">          &quot;client auth&quot;</span></span><br><span class="line"><span class="string">        ],</span></span><br><span class="line"><span class="string">        &quot;expiry&quot;: &quot;175200h&quot;</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    &quot;profiles&quot;: &#123;</span></span><br><span class="line"><span class="string">      &quot;kubernetes&quot;: &#123;</span></span><br><span class="line"><span class="string">        &quot;usages&quot;: [</span></span><br><span class="line"><span class="string">          &quot;signing&quot;,</span></span><br><span class="line"><span class="string">          &quot;key encipherment&quot;,</span></span><br><span class="line"><span class="string">          &quot;server auth&quot;,</span></span><br><span class="line"><span class="string">          &quot;client auth&quot;</span></span><br><span class="line"><span class="string">        ],</span></span><br><span class="line"><span class="string">        &quot;expiry&quot;: &quot;175200h&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &quot;etcd&quot;: &#123;</span></span><br><span class="line"><span class="string">        &quot;usages&quot;: [</span></span><br><span class="line"><span class="string">          &quot;signing&quot;,</span></span><br><span class="line"><span class="string">          &quot;key encipherment&quot;,</span></span><br><span class="line"><span class="string">          &quot;server auth&quot;,</span></span><br><span class="line"><span class="string">          &quot;client auth&quot;</span></span><br><span class="line"><span class="string">        ],</span></span><br><span class="line"><span class="string">        &quot;expiry&quot;: &quot;175200h&quot;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># signing：表示该证书可用于签名其它证书（生成的 ca.pem 证书中 CA=TRUE）；</span></span><br><span class="line"><span class="comment"># server auth：表示 client 可以用该该证书对 server 提供的证书进行验证；</span></span><br><span class="line"><span class="comment"># client auth：表示 server 可以用该该证书对 client 提供的证书进行验证；</span></span><br><span class="line"><span class="comment"># &quot;expiry&quot;: &quot;175200h&quot; 有效期20年</span></span><br></pre></td></tr></table></figure>
+
+<p>生成<code>ca</code> 证书和私钥</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成</span></span><br><span class="line">cfssl gencert --initca /opt/certs/ca-csr.json | cfssljson --bare /opt/certs/ca</span><br><span class="line"></span><br><span class="line"><span class="comment"># verify</span></span><br><span class="line">openssl x509 -<span class="keyword">in</span> /opt/certs/ca.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CSR configuration</span></span><br><span class="line">/opt/certs/ca-csr.json</span><br><span class="line"><span class="comment"># CSR 双向认证</span></span><br><span class="line">/opt/certs/ca.csr</span><br><span class="line"><span class="comment"># self-signed root CA public key  其它文档里会叫 ca.crt</span></span><br><span class="line">/opt/certs/ca.pem</span><br><span class="line"><span class="comment"># self-signed root CA private key</span></span><br><span class="line">/opt/certs/ca-key.pem</span><br><span class="line"><span class="comment">#  证书配置文件 for other TLS assets</span></span><br><span class="line">/opt/certs/ca-config.json</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用私钥生成本地颁发的证书"><a href="#使用私钥生成本地颁发的证书" class="headerlink" title="使用私钥生成本地颁发的证书"></a>使用私钥生成本地颁发的证书</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># peer </span></span><br><span class="line"><span class="built_in">cat</span> &gt; /opt/certs/etcd-158-ca-csr.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;key&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;algo&quot;: &quot;rsa&quot;,</span></span><br><span class="line"><span class="string">    &quot;size&quot;: 2048</span></span><br><span class="line"><span class="string">  &#125;,</span></span><br><span class="line"><span class="string">  &quot;names&quot;: [</span></span><br><span class="line"><span class="string">    &#123;</span></span><br><span class="line"><span class="string">      &quot;O&quot;: &quot;maxzhao-ca&quot;,</span></span><br><span class="line"><span class="string">      &quot;OU&quot;: &quot;etcd Security&quot;,</span></span><br><span class="line"><span class="string">      &quot;L&quot;: &quot;NanJing&quot;,</span></span><br><span class="line"><span class="string">      &quot;ST&quot;: &quot;Jiang Su&quot;,</span></span><br><span class="line"><span class="string">      &quot;C&quot;: &quot;CN&quot;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;CN&quot;: &quot;etcd-158&quot;,</span></span><br><span class="line"><span class="string">  &quot;hosts&quot;: [</span></span><br><span class="line"><span class="string">    &quot;127.0.0.1&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.158&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.159&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.160&quot;,</span></span><br><span class="line"><span class="string">    &quot;192.168.2.161&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default.svc&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default.svc.cluster&quot;,</span></span><br><span class="line"><span class="string">    &quot;kubernetes.default.svc.cluster.local&quot;</span></span><br><span class="line"><span class="string">  ]</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># 生成etcd用的证书文件 peer</span></span><br><span class="line">cfssl gencert \</span><br><span class="line">  --ca /opt/certs/ca.pem \</span><br><span class="line">  --ca-key /opt/certs/ca-key.pem \</span><br><span class="line">  --config /opt/certs/ca-config.json \</span><br><span class="line">  -profile=etcd \</span><br><span class="line">  /opt/certs/etcd-158-ca-csr.json | cfssljson --bare /opt/certs/etcd-158</span><br><span class="line"><span class="comment">#   --profile=k8s-server-client  表示客户端与服务端要双向通讯</span></span><br><span class="line"><span class="comment"># verify</span></span><br><span class="line">openssl x509 -<span class="keyword">in</span> /opt/certs/etcd-158.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成之后"><a href="#生成之后" class="headerlink" title="生成之后"></a>生成之后</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 传输到每一个节点</span></span><br><span class="line"><span class="built_in">rm</span> -rf /etc/certs/etcd</span><br><span class="line"><span class="built_in">mkdir</span> -p /etc/certs/etcd</span><br><span class="line">\<span class="built_in">cp</span> /opt/certs/ca.pem /etc/certs/etcd/ca.pem</span><br><span class="line">\<span class="built_in">cp</span> /opt/certs/etcd-158-key.pem /etc/certs/etcd/etcd-158-key.pem</span><br><span class="line">\<span class="built_in">cp</span> /opt/certs/etcd-158.pem /etc/certs/etcd/etcd-158.pem</span><br><span class="line"><span class="comment"># 拷贝 ca.pem, etcd-158.pem, etcd-158-key.pem</span></span><br><span class="line">ssh root@192.168.2.159 <span class="string">&quot;mkdir -p /etc/certs/etcd&quot;</span></span><br><span class="line">ssh root@192.168.2.160 <span class="string">&quot;mkdir -p /etc/certs/etcd&quot;</span></span><br><span class="line">ssh root@192.168.2.161 <span class="string">&quot;mkdir -p /etc/certs/etcd&quot;</span></span><br><span class="line">scp -r /etc/certs/etcd/* root@192.168.2.159:/etc/certs/etcd/</span><br><span class="line">scp -r /etc/certs/etcd/* root@192.168.2.160:/etc/certs/etcd/</span><br><span class="line">scp -r /etc/certs/etcd/* root@192.168.2.161:/etc/certs/etcd/</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建用户和组"><a href="#创建用户和组" class="headerlink" title="创建用户和组"></a>创建用户和组</h2><p>在 <code>host158</code>上执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">groupadd etcd &amp;&amp; useradd -g etcd etcd &amp;&amp; <span class="built_in">echo</span> <span class="string">&#x27;1&#x27;</span> | passwd --stdin etcd</span><br><span class="line">ssh root@192.168.2.159 <span class="string">&quot;groupadd etcd &amp;&amp; useradd -g etcd etcd &amp;&amp; echo &#x27;1&#x27; | passwd --stdin etcd&quot;</span></span><br><span class="line">ssh root@192.168.2.160 <span class="string">&quot;groupadd etcd &amp;&amp; useradd -g etcd etcd &amp;&amp; echo &#x27;1&#x27; | passwd --stdin etcd&quot;</span>  </span><br></pre></td></tr></table></figure>
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><h3 id="host158"><a href="#host158" class="headerlink" title="host158"></a><code>host158</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /opt/etcd/etcd-158</span><br><span class="line"><span class="built_in">mkdir</span> /opt/etcd/etcd-158</span><br><span class="line">/usr/local/bin/etcd --name etcd-158 \</span><br><span class="line">  --data-dir /opt/etcd/etcd_data-158 \</span><br><span class="line">  <span class="comment"># 对外提供服务的地址，通常为本机节点。使用域名无效</span></span><br><span class="line">  --listen-client-urls https://192.168.2.158:2379 \</span><br><span class="line">  <span class="comment"># 节点成员客户端url列表，对外公告此节点客户端监听地址，可以使用域名</span></span><br><span class="line">  --advertise-client-urls https://192.168.2.158:2379 \</span><br><span class="line">  <span class="comment"># 和其它成员节点间通信地址，每个节点不同，必须使用IP，使用域名无效</span></span><br><span class="line">  --listen-peer-urls https://192.168.2.158:2380 \</span><br><span class="line">  <span class="comment"># 节点监听地址，并会通告集群其它节点</span></span><br><span class="line">  --initial-advertise-peer-urls https://192.168.2.158:2380 \</span><br><span class="line">  <span class="comment"># 集群中所有节点信息，格式为：节点名称+监听的本地端口</span></span><br><span class="line">  --initial-cluster etcd-158=https://192.168.2.158:2380,etcd-159=https://192.168.2.159:2380,etcd-160=https://192.168.2.160:2380 \</span><br><span class="line">  --initial-cluster-token etcd-k8s-158 \</span><br><span class="line">  --initial-cluster-state new \</span><br><span class="line">  --client-cert-auth \</span><br><span class="line">  --trusted-ca-file /etc/certs/etcd/ca.pem \</span><br><span class="line">  --cert-file /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --key-file /etc/certs/etcd/etcd-158-key.pem \</span><br><span class="line">  --peer-client-cert-auth \</span><br><span class="line">  --peer-trusted-ca-file /etc/certs/etcd/ca.pem \</span><br><span class="line">  --peer-cert-file /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --peer-key-file /etc/certs/etcd/etcd-158-key.pem</span><br></pre></td></tr></table></figure>
+
+<h3 id="host159"><a href="#host159" class="headerlink" title="host159"></a><code>host159</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /opt/etcd/etcd-159</span><br><span class="line"><span class="built_in">mkdir</span> /opt/etcd/etcd-159</span><br><span class="line">/opt/etcd/etcd --name etcd-159 \</span><br><span class="line">  --data-dir /opt/etcd/etcd_data-159 \</span><br><span class="line">  --listen-client-urls https://192.168.2.159:2379 \</span><br><span class="line">  --advertise-client-urls https://192.168.2.159:2379 \</span><br><span class="line">  --listen-peer-urls https://192.168.2.159:2380 \</span><br><span class="line">  --initial-advertise-peer-urls https://192.168.2.159:2380 \</span><br><span class="line">  --initial-cluster etcd-158=https://192.168.2.158:2380,etcd-159=https://192.168.2.159:2380,etcd-160=https://192.168.2.160:2380 \</span><br><span class="line">  --initial-cluster-token etcd-k8s-158 \</span><br><span class="line">  --initial-cluster-state new \</span><br><span class="line">  --client-cert-auth \</span><br><span class="line">  --trusted-ca-file /etc/certs/etcd/ca.pem \</span><br><span class="line">  --cert-file /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --key-file /etc/certs/etcd/etcd-158-key.pem \</span><br><span class="line">  --peer-client-cert-auth \</span><br><span class="line">  --peer-trusted-ca-file /etc/certs/etcd/ca.pem \</span><br><span class="line">  --peer-cert-file /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --peer-key-file /etc/certs/etcd/etcd-158-key.pem</span><br></pre></td></tr></table></figure>
+
+<h3 id="host160"><a href="#host160" class="headerlink" title="host160"></a><code>host160</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /opt/etcd/etcd-160</span><br><span class="line"><span class="built_in">mkdir</span> /opt/etcd/etcd-160</span><br><span class="line">/opt/etcd/etcd --name etcd-160 \</span><br><span class="line">  --data-dir /opt/etcd/etcd_data-160 \</span><br><span class="line">  --listen-client-urls https://192.168.2.160:2379 \</span><br><span class="line">  --advertise-client-urls https://192.168.2.160:2379 \</span><br><span class="line">  --listen-peer-urls https://192.168.2.160:2380 \</span><br><span class="line">  --initial-advertise-peer-urls https://192.168.2.160:2380 \</span><br><span class="line">  --initial-cluster etcd-158=https://192.168.2.158:2380,etcd-159=https://192.168.2.159:2380,etcd-160=https://192.168.2.160:2380 \</span><br><span class="line">  --initial-cluster-token etcd-k8s-158 \</span><br><span class="line">  --initial-cluster-state new \</span><br><span class="line">  --client-cert-auth \</span><br><span class="line">  --trusted-ca-file /etc/certs/etcd/ca.pem \</span><br><span class="line">  --cert-file /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --key-file /etc/certs/etcd/etcd-158-key.pem \</span><br><span class="line">  --peer-client-cert-auth \</span><br><span class="line">  --peer-trusted-ca-file /etc/certs/etcd/ca.pem \</span><br><span class="line">  --peer-cert-file /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --peer-key-file /etc/certs/etcd/etcd-158-key.pem</span><br></pre></td></tr></table></figure>
+
+<h3 id="校验运行状态"><a href="#校验运行状态" class="headerlink" title="校验运行状态"></a>校验运行状态</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ETCDCTL_API=3 /opt/etcd/etcdctl \</span><br><span class="line">  --endpoints 192.168.2.158:2379,192.168.2.159:2379,192.168.2.160:2379 \</span><br><span class="line">  --cacert /etc/certs/etcd/ca.pem \</span><br><span class="line">  --cert /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --key /etc/certs/etcd/etcd-158-key.pem \</span><br><span class="line">  endpoint health</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置服务"><a href="#配置服务" class="headerlink" title="配置服务"></a>配置服务</h2><blockquote>
+<p>注意：三个节点配置结束后，服务才会启动成功</p>
+</blockquote>
+<h3 id="host158-1"><a href="#host158-1" class="headerlink" title="host158"></a><code>host158</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /opt/etcd/etcd</span><br><span class="line"><span class="built_in">mkdir</span> /opt/etcd/etcd</span><br><span class="line"><span class="built_in">cat</span> &gt; /etc/systemd/system/etcd.service &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">[Unit]</span></span><br><span class="line"><span class="string">Description=etcd</span></span><br><span class="line"><span class="string">Documentation=https://github.com/coreos/etcd</span></span><br><span class="line"><span class="string">Conflicts=etcd.service</span></span><br><span class="line"><span class="string">Conflicts=etcd2.service</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[Service]</span></span><br><span class="line"><span class="string">Type=notify</span></span><br><span class="line"><span class="string">Restart=always</span></span><br><span class="line"><span class="string">RestartSec=5s</span></span><br><span class="line"><span class="string">LimitNOFILE=40000</span></span><br><span class="line"><span class="string">TimeoutStartSec=0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">ExecStart=/usr/local/bin/etcd --name etcd-158 \</span></span><br><span class="line"><span class="string">  --data-dir /opt/etcd/etcd_data \</span></span><br><span class="line"><span class="string">  --listen-client-urls https://192.168.2.158:2379 \</span></span><br><span class="line"><span class="string">  --advertise-client-urls https://192.168.2.158:2379 \</span></span><br><span class="line"><span class="string">  --listen-peer-urls https://192.168.2.158:2380 \</span></span><br><span class="line"><span class="string">  --initial-advertise-peer-urls https://192.168.2.158:2380 \</span></span><br><span class="line"><span class="string">  --initial-cluster etcd-158=https://192.168.2.158:2380,etcd-159=https://192.168.2.159:2380,etcd-160=https://192.168.2.160:2380 \</span></span><br><span class="line"><span class="string">  --initial-cluster-token etcd-k8s-158 \</span></span><br><span class="line"><span class="string">  --initial-cluster-state new \</span></span><br><span class="line"><span class="string">  --client-cert-auth \</span></span><br><span class="line"><span class="string">  --trusted-ca-file /etc/certs/etcd/ca.pem \</span></span><br><span class="line"><span class="string">  --cert-file /etc/certs/etcd/etcd-158.pem \</span></span><br><span class="line"><span class="string">  --key-file /etc/certs/etcd/etcd-158-key.pem \</span></span><br><span class="line"><span class="string">  --peer-client-cert-auth \</span></span><br><span class="line"><span class="string">  --peer-trusted-ca-file /etc/certs/etcd/ca.pem \</span></span><br><span class="line"><span class="string">  --peer-cert-file /etc/certs/etcd/etcd-158.pem \</span></span><br><span class="line"><span class="string">  --peer-key-file /etc/certs/etcd/etcd-158-key.pem</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[Install]</span></span><br><span class="line"><span class="string">WantedBy=multi-user.target</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># to start service</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line"><span class="comment">#sudo systemctl cat etcd.service</span></span><br><span class="line">sudo systemctl <span class="built_in">enable</span> etcd.service</span><br><span class="line">sudo systemctl start etcd.service</span><br><span class="line">sudo systemctl status etcd.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="host159-1"><a href="#host159-1" class="headerlink" title="host159"></a><code>host159</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /opt/etcd/etcd</span><br><span class="line"><span class="built_in">mkdir</span> /opt/etcd/etcd</span><br><span class="line"><span class="built_in">cat</span> &gt; /etc/systemd/system/etcd.service &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">[Unit]</span></span><br><span class="line"><span class="string">Description=etcd</span></span><br><span class="line"><span class="string">Documentation=https://github.com/coreos/etcd</span></span><br><span class="line"><span class="string">Conflicts=etcd.service</span></span><br><span class="line"><span class="string">Conflicts=etcd2.service</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[Service]</span></span><br><span class="line"><span class="string">Type=notify</span></span><br><span class="line"><span class="string">Restart=always</span></span><br><span class="line"><span class="string">RestartSec=5s</span></span><br><span class="line"><span class="string">LimitNOFILE=40000</span></span><br><span class="line"><span class="string">TimeoutStartSec=0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">ExecStart=/usr/local/bin/etcd --name etcd-159 \</span></span><br><span class="line"><span class="string">  --data-dir /opt/etcd/etcd_data \</span></span><br><span class="line"><span class="string">  --listen-client-urls https://192.168.2.159:2379 \</span></span><br><span class="line"><span class="string">  --advertise-client-urls https://192.168.2.159:2379 \</span></span><br><span class="line"><span class="string">  --listen-peer-urls https://192.168.2.159:2380 \</span></span><br><span class="line"><span class="string">  --initial-advertise-peer-urls https://192.168.2.159:2380 \</span></span><br><span class="line"><span class="string">  --initial-cluster etcd-158=https://192.168.2.158:2380,etcd-159=https://192.168.2.159:2380,etcd-160=https://192.168.2.160:2380 \</span></span><br><span class="line"><span class="string">  --initial-cluster-token etcd-k8s-158 \</span></span><br><span class="line"><span class="string">  --initial-cluster-state new \</span></span><br><span class="line"><span class="string">  --client-cert-auth \</span></span><br><span class="line"><span class="string">  --trusted-ca-file /etc/certs/etcd/ca.pem \</span></span><br><span class="line"><span class="string">  --cert-file /etc/certs/etcd/etcd-158.pem \</span></span><br><span class="line"><span class="string">  --key-file /etc/certs/etcd/etcd-158-key.pem \</span></span><br><span class="line"><span class="string">  --peer-client-cert-auth \</span></span><br><span class="line"><span class="string">  --peer-trusted-ca-file /etc/certs/etcd/ca.pem \</span></span><br><span class="line"><span class="string">  --peer-cert-file /etc/certs/etcd/etcd-158.pem \</span></span><br><span class="line"><span class="string">  --peer-key-file /etc/certs/etcd/etcd-158-key.pem</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[Install]</span></span><br><span class="line"><span class="string">WantedBy=multi-user.target</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># to start service</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line"><span class="comment">#sudo systemctl cat etcd.service</span></span><br><span class="line">sudo systemctl <span class="built_in">enable</span> etcd.service</span><br><span class="line">sudo systemctl start etcd.service</span><br><span class="line">sudo systemctl status etcd.service</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="host160-1"><a href="#host160-1" class="headerlink" title="host160"></a><code>host160</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /opt/etcd/etcd</span><br><span class="line"><span class="built_in">mkdir</span> /opt/etcd/etcd</span><br><span class="line"><span class="built_in">cat</span> &gt; /etc/systemd/system/etcd.service &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">[Unit]</span></span><br><span class="line"><span class="string">Description=etcd</span></span><br><span class="line"><span class="string">Documentation=https://github.com/coreos/etcd</span></span><br><span class="line"><span class="string">Conflicts=etcd.service</span></span><br><span class="line"><span class="string">Conflicts=etcd2.service</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[Service]</span></span><br><span class="line"><span class="string">Type=notify</span></span><br><span class="line"><span class="string">Restart=always</span></span><br><span class="line"><span class="string">RestartSec=5s</span></span><br><span class="line"><span class="string">LimitNOFILE=40000</span></span><br><span class="line"><span class="string">TimeoutStartSec=0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">ExecStart=/usr/local/bin/etcd --name etcd-160 \</span></span><br><span class="line"><span class="string">  --data-dir /opt/etcd/etcd_data \</span></span><br><span class="line"><span class="string">  --listen-client-urls https://192.168.2.160:2379 \</span></span><br><span class="line"><span class="string">  --advertise-client-urls https://192.168.2.160:2379 \</span></span><br><span class="line"><span class="string">  --listen-peer-urls https://192.168.2.160:2380 \</span></span><br><span class="line"><span class="string">  --initial-advertise-peer-urls https://192.168.2.160:2380 \</span></span><br><span class="line"><span class="string">  --initial-cluster etcd-158=https://192.168.2.158:2380,etcd-159=https://192.168.2.159:2380,etcd-160=https://192.168.2.160:2380 \</span></span><br><span class="line"><span class="string">  --initial-cluster-token etcd-k8s-158 \</span></span><br><span class="line"><span class="string">  --initial-cluster-state new \</span></span><br><span class="line"><span class="string">  --client-cert-auth \</span></span><br><span class="line"><span class="string">  --trusted-ca-file /etc/certs/etcd/ca.pem \</span></span><br><span class="line"><span class="string">  --cert-file /etc/certs/etcd/etcd-158.pem \</span></span><br><span class="line"><span class="string">  --key-file /etc/certs/etcd/etcd-158-key.pem \</span></span><br><span class="line"><span class="string">  --peer-client-cert-auth \</span></span><br><span class="line"><span class="string">  --peer-trusted-ca-file /etc/certs/etcd/ca.pem \</span></span><br><span class="line"><span class="string">  --peer-cert-file /etc/certs/etcd/etcd-158.pem \</span></span><br><span class="line"><span class="string">  --peer-key-file /etc/certs/etcd/etcd-158-key.pem</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[Install]</span></span><br><span class="line"><span class="string">WantedBy=multi-user.target</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># to start service</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line"><span class="comment">#sudo systemctl cat etcd.service</span></span><br><span class="line">sudo systemctl <span class="built_in">enable</span> etcd.service</span><br><span class="line">sudo systemctl start etcd.service</span><br><span class="line">sudo systemctl status etcd.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="校验运行状态-1"><a href="#校验运行状态-1" class="headerlink" title="校验运行状态"></a>校验运行状态</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to get logs from service</span></span><br><span class="line">sudo systemctl status etcd.service -l --no-pager</span><br><span class="line">sudo journalctl -u etcd.service -l --no-pager|less</span><br><span class="line">sudo journalctl -f -u etcd.service</span><br><span class="line">sudo journalctl -xe  -u etcd.service</span><br><span class="line"><span class="comment"># to stop service</span></span><br><span class="line">sudo systemctl stop etcd.service</span><br><span class="line">sudo systemctl <span class="built_in">disable</span> etcd.service</span><br><span class="line"></span><br><span class="line">ETCDCTL_API=3 /opt/etcd/etcdctl \</span><br><span class="line">  --endpoints 192.168.2.158:2379,192.168.2.159:2379,192.168.2.160:2379 \</span><br><span class="line">  --cacert /etc/certs/etcd/ca.pem \</span><br><span class="line">  --cert /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --key /etc/certs/etcd/etcd-158-key.pem \</span><br><span class="line">  endpoint health</span><br></pre></td></tr></table></figure>
+
+<p><img src="D:/develop/code/blog_code/source/_posts/Docker/image-20220529234008606.png" alt="image-20220529234008606"></p>
+<h3 id="查看成员"><a href="#查看成员" class="headerlink" title="查看成员"></a>查看成员</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ENDPOINTS=192.168.2.158:2379,192.168.2.159:2379,192.168.2.160:2379</span><br><span class="line">ETCD_AUTH=<span class="string">&#x27;--cacert /etc/certs/etcd/ca.pem --cert /etc/certs/etcd/etcd-158.pem --key /etc/certs/etcd/etcd-158-key.pem &#x27;</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> member list </span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> member list</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line">ENDPOINTS=192.168.2.158:2379,192.168.2.159:2379,192.168.2.160:2379</span><br><span class="line">ETCD_AUTH=<span class="string">&#x27;--cacert /etc/certs/etcd/ca.pem --cert /etc/certs/etcd/etcd-158.pem --key /etc/certs/etcd/etcd-158-key.pem &#x27;</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> role add root</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> role get root</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> user add root</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> user grant-role root root</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> user get root</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> auth <span class="built_in">enable</span></span><br><span class="line"><span class="comment"># 错误的</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> user list</span><br><span class="line"><span class="comment"># 正确的</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 user list</span><br><span class="line"></span><br><span class="line"><span class="comment"># now all client requests go through auth</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 put foo bar</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 get foo</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 --write-out=<span class="string">&quot;json&quot;</span> get foo</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 put foo1 bar</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 put foo2 bar</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 get fo --prefix</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 del foo1 --prefix</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 get foo</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 get foo1</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --user=root:1 auth <span class="built_in">disable</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><blockquote>
+<p>注意：需要添加 </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line">ENDPOINTS=192.168.2.158:2379,192.168.2.159:2379,192.168.2.160:2379</span><br><span class="line">  --endpoints <span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span></span><br><span class="line">  --cacert /etc/certs/etcd/ca.pem \</span><br><span class="line">  --cert /etc/certs/etcd/etcd-158.pem \</span><br><span class="line">  --key /etc/certs/etcd/etcd-158-key.pem \</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="添加-key-value"><a href="#添加-key-value" class="headerlink" title="添加 key-value"></a>添加 <code>key-value</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line">ENDPOINTS=192.168.2.158:2379,192.168.2.159:2379,192.168.2.160:2379</span><br><span class="line"></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> put foo <span class="string">&quot;Hello World!&quot;</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> get foo</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> --write-out=<span class="string">&quot;json&quot;</span> get foo</span><br></pre></td></tr></table></figure>
+
+<h3 id="通过前缀获取密钥"><a href="#通过前缀获取密钥" class="headerlink" title="通过前缀获取密钥"></a>通过前缀获取密钥</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put web1 value1</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put web2 value2</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put web3 value3</span><br><span class="line"></span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; get web --prefix</span><br></pre></td></tr></table></figure>
+
+<h3 id="事务中多次写入"><a href="#事务中多次写入" class="headerlink" title="事务中多次写入"></a>事务中多次写入</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put user1 bad</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; txn --interactive</span><br><span class="line"></span><br><span class="line">compares:</span><br><span class="line">value(&quot;user1&quot;) = &quot;bad&quot;</span><br><span class="line"></span><br><span class="line">success requests (get, put, delete):</span><br><span class="line">del user1</span><br><span class="line"></span><br><span class="line">failure requests (get, put, delete):</span><br><span class="line">put user1 good</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看-keys"><a href="#查看-keys" class="headerlink" title="查看 keys"></a>查看 <code>keys</code></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; watch stock1</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put stock1 1000</span><br><span class="line"></span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; watch stock --prefix</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put stock1 10</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put stock2 20</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建-lease"><a href="#创建-lease" class="headerlink" title="创建 lease"></a>创建 <code>lease</code></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; lease grant 300</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">lease 2be7547fbc6a5afa granted with TTL(300s)</span></span><br><span class="line"></span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; put sample value --lease=2be7547fbc6a5afa</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; get sample</span><br><span class="line"></span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; lease keep-alive 2be7547fbc6a5afa</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; lease revoke 2be7547fbc6a5afa</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">or after 300 seconds</span></span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; get sample</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建-locks"><a href="#创建-locks" class="headerlink" title="创建 locks"></a>创建 <code>locks</code></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; lock mutex1</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">another client with the same name blocks</span></span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; lock mutex1</span><br></pre></td></tr></table></figure>
+
+<h3 id="etcd集群中如何进行leader选举"><a href="#etcd集群中如何进行leader选举" class="headerlink" title="etcd集群中如何进行leader选举"></a><code>etcd</code>集群中如何进行<code>leader</code>选举</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; elect one p1</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">another client with the same name blocks</span></span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; elect one p2</span><br></pre></td></tr></table></figure>
+
+<h3 id="校验运行状态-2"><a href="#校验运行状态-2" class="headerlink" title="校验运行状态"></a>校验运行状态</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> endpoint health</span><br><span class="line">etcdctl --write-out=table --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> endpoint status</span><br></pre></td></tr></table></figure>
+
+<h3 id="保存数据库"><a href="#保存数据库" class="headerlink" title="保存数据库"></a>保存数据库</h3><p>Snapshot can only be requested from one etcd node, so <code>--endpoints</code> flag should contain only one endpoint.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ENDPOINTS=192.168.2.158:2379</span><br><span class="line">etcdctl --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; snapshot save my.db</span><br><span class="line"></span><br><span class="line">Snapshot saved at my.db</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --write-out=table --endpoints=$&#123;ENDPOINTS&#125; $&#123;ETCD_AUTH&#125; snapshot status my.db</span><br><span class="line"></span><br><span class="line">+---------+----------+------------+------------+</span><br><span class="line">|  HASH   | REVISION | TOTAL KEYS | TOTAL SIZE |</span><br><span class="line">+---------+----------+------------+------------+</span><br><span class="line">| c55e8b8 |        9 |         13 | 25 kB      |</span><br><span class="line">+---------+----------+------------+------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加和删除节点"><a href="#添加和删除节点" class="headerlink" title="添加和删除节点"></a>添加和删除节点</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line">ENDPOINTS=192.168.2.158:2379,192.168.2.159:2379,192.168.2.160:2379</span><br><span class="line"><span class="comment"># get member ID</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> member list</span><br><span class="line"></span><br><span class="line"><span class="comment"># remove the member</span></span><br><span class="line">MEMBER_ID=278c654c9a6dfd3b</span><br><span class="line">etcdctl --endpoints=--endpoints=<span class="variable">$&#123;ENDPOINTS&#125;</span> <span class="variable">$&#123;ETCD_AUTH&#125;</span> \</span><br><span class="line">	member remove <span class="variable">$&#123;MEMBER_ID&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># add a new member (node 4)</span></span><br><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line"><span class="comment"># new member</span></span><br><span class="line">etcdctl --endpoints=192.168.2.158:2379,192.168.2.159:2379  \</span><br><span class="line">	member add etcd-161 \</span><br><span class="line">	--peer-urls=http://192.168.2.161:2380</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/ebede6de/">https://github.com/maxzhao-it/blog/post/ebede6de/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/blog/tags/CentOS/" rel="tag"># CentOS</a>
+              <a href="/blog/tags/K8S/" rel="tag"># K8S</a>
+              <a href="/blog/tags/CA/" rel="tag"># CA</a>
+              <a href="/blog/tags/etcd/" rel="tag"># etcd</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/cdb1e23a/" rel="prev" title="Kubeadm安装K8S-Containerd">
+                  <i class="fa fa-chevron-left"></i> Kubeadm安装K8S-Containerd
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/848ae74e/" rel="next" title="SM4加解密（JAVA）">
+                  SM4加解密（JAVA） <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

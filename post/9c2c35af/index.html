@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/9c2c35af/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/9c2c35af/","path":"post/9c2c35af/","title":"CentOS安装K8S-Kuboard"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CentOS安装K8S-Kuboard | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kuboard%E5%AE%89%E8%A3%85%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">Kuboard安装方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Kuboard-Spray"><span class="nav-number">2.1.</span> <span class="nav-text">安装Kuboard-Spray</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">2.1.1.</span> <span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-number">2.1.2.</span> <span class="nav-text">加载镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E8%B5%84%E6%BA%90"><span class="nav-number">2.2.</span> <span class="nav-text">加载资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E5%88%92%E9%9B%86%E7%BE%A4"><span class="nav-number">2.3.</span> <span class="nav-text">规划集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">2.3.1.</span> <span class="nav-text">配置镜像源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.2.</span> <span class="nav-text">全局配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.3.</span> <span class="nav-text">节点配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.4.</span> <span class="nav-text">开始安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E9%9B%86%E7%BE%A4"><span class="nav-number">2.4.</span> <span class="nav-text">访问集群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85k8s%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">安装k8s管理工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">3.1.</span> <span class="nav-text">数据持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-StorageClass"><span class="nav-number">3.1.1.</span> <span class="nav-text">查看 StorageClass </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-StorageClass"><span class="nav-number">3.1.2.</span> <span class="nav-text">创建 StorageClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE-StorageClass%E4%B8%BA%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="nav-number">3.1.3.</span> <span class="nav-text">设置 StorageClass为默认值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deploy-use-yaml-manifests"><span class="nav-number">3.1.4.</span> <span class="nav-text">deploy use yaml manifests</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">4.</span> <span class="nav-text">重启虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Worker%E8%8A%82%E7%82%B9%E4%B8%8D%E8%83%BD"><span class="nav-number">4.1.</span> <span class="nav-text">Worker节点不能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%B8%E5%A4%9APod%E4%B8%80%E7%9B%B4Crash%E6%88%96%E4%B8%8D%E8%83%BD%E6%AD%A3%E5%B8%B8%E8%AE%BF%E9%97%AE"><span class="nav-number">4.2.</span> <span class="nav-text">许多Pod一直Crash或不能正常访问</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99-1"><span class="nav-number">5.1.</span> <span class="nav-text">关闭防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E9%95%9C%E5%83%8F"><span class="nav-number">5.1.1.</span> <span class="nav-text">Docker镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-k8s-%E9%95%9C%E5%83%8F"><span class="nav-number">5.1.2.</span> <span class="nav-text">配置 k8s 镜像</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E9%9B%86%E7%BE%A4"><span class="nav-number">6.</span> <span class="nav-text">卸载集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9"><span class="nav-number">6.0.1.</span> <span class="nav-text">删除节点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">7.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CentOS7%E9%95%9C%E5%83%8F"><span class="nav-number">7.1.</span> <span class="nav-text">CentOS7镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker"><span class="nav-number">7.1.1.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91"><span class="nav-number">7.1.2.</span> <span class="nav-text">使用阿里云</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F"><span class="nav-number">7.2.</span> <span class="nav-text">Docker镜像加速</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E4%BF%AE%E6%94%B9"><span class="nav-number">7.2.1.</span> <span class="nav-text">手动修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spray%E5%AE%89%E8%A3%85%E5%90%8E%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC"><span class="nav-number">7.2.2.</span> <span class="nav-text">Spray安装后使用脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%BF%AE%E6%94%B9%E7%BB%93%E6%9E%9C"><span class="nav-number">7.2.3.</span> <span class="nav-text">查看修改结果</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/9c2c35af/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CentOS安装K8S-Kuboard | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS安装K8S-Kuboard
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/K8S/" itemprop="url" rel="index"><span itemprop="name">K8S</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><a href="./21945">安装好<code>docker</code></a></p>
+<p><code>dashborad</code> 没有成功</p>
+<p>我这里有</p>
+<ul>
+<li><code>192.168.2.150 master</code></li>
+<li><code>192.168.2.151 node</code></li>
+<li><code>192.168.2.152 node</code></li>
+</ul>
+<p><img src="/blog/uploads/images/Docker/asjkdjalkdjlasjdlkajl.png"></p>
+<p><img src="/blog/uploads/images/Docker/watermark,type__center-16532245302993.png" alt="Node节点"></p>
+<h1 id="Kuboard安装方式"><a href="#Kuboard安装方式" class="headerlink" title="Kuboard安装方式"></a><a target="_blank" rel="noopener" href="https://kuboard.cn/install/install-k8s.html#kuboard-spray"><code>Kuboard</code>安装方式</a></h1><p>这里只做记录：<a target="_blank" rel="noopener" href="https://kuboard.cn/install/install-k8s.html#%E5%8A%A0%E8%BD%BD%E7%A6%BB%E7%BA%BF%E8%B5%84%E6%BA%90%E5%8C%85">点击参考官方文档</a></p>
+<p>这里需要：</p>
+<ul>
+<li><code>192.168.2.150 k8s master</code></li>
+<li><code>192.168.2.151 k8s node</code></li>
+<li><code>192.168.2.152 k8s node</code></li>
+<li><code>192.168.2.251 Docker</code> 安装 <code>Kuboard-Spray</code> ，<code>k8s</code>不能安装这台设备上</li>
+</ul>
+<blockquote>
+<p>注意：如果是虚拟机，必须是固定<code>IP</code></p>
+<ul>
+<li><code>kubelet</code>  节点通信</li>
+<li><code>kubectl</code>  集群管理工具</li>
+</ul>
+</blockquote>
+<h2 id="安装Kuboard-Spray"><a href="#安装Kuboard-Spray" class="headerlink" title="安装Kuboard-Spray"></a>安装<code>Kuboard-Spray</code></h2><h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop firewalld</span><br><span class="line">sudo systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line"><span class="comment"># 关闭selinux</span></span><br><span class="line">setenforce 0</span><br></pre></td></tr></table></figure>
+
+<h3 id="加载镜像"><a href="#加载镜像" class="headerlink" title="加载镜像"></a>加载镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --privileged \</span><br><span class="line">  --restart=unless-stopped \</span><br><span class="line">  --name=kuboard-spray \</span><br><span class="line">  -p 80:80/tcp \</span><br><span class="line">  -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">  -v ~/kuboard-spray-data:/data \</span><br><span class="line">  swr.cn-east-2.myhuaweicloud.com/kuboard/kuboard-spray:latest-amd64</span><br><span class="line">  <span class="comment"># 如果抓不到这个镜像，可以尝试一下这个备用地址：</span></span><br><span class="line">  <span class="comment"># eipwork/kuboard-spray:latest-amd64</span></span><br></pre></td></tr></table></figure>
+
+<p><code>http://192.168.2.251</code>，输入用户名 <code>admin</code>，默认密码 <code>Kuboard123</code>，即可登录 <code>Kuboard-Spray</code> 界面</p>
+<h2 id="加载资源"><a href="#加载资源" class="headerlink" title="加载资源"></a>加载资源</h2><p> <code>系统设置</code> –&gt; <code>资源包管理</code> 界面，找到最新版本（需要的版本点击导入），点击标题中的加载xxx操作。</p>
+<p>离线导入请参考<a target="_blank" rel="noopener" href="https://kuboard.cn/install/install-k8s.html#%E5%8A%A0%E8%BD%BD%E7%A6%BB%E7%BA%BF%E8%B5%84%E6%BA%90%E5%8C%85">官方文档</a></p>
+<h2 id="规划集群"><a href="#规划集群" class="headerlink" title="规划集群"></a>规划集群</h2><p><code>集群管理</code> 界面，点击 <code>添加集群安装计划</code> 按钮，填写集群名称和资源包：</p>
+<p><img src="/blog/uploads/images/Docker/image-20220522203628018.png" alt="image-20220522203628018"></p>
+<p>注意事项</p>
+<ul>
+<li><p>最少的节点数量是 1 个；</p>
+</li>
+<li><p><code>ETCD</code> 节点、控制节点的总数量必须为奇数；</p>
+</li>
+<li><p>在 <code>全局设置</code> 标签页，可以设置节点的通用连接参数，例如所有的节点都使用相同的 ssh 端口、用户名、密码，则共同的参数只在此处设置即可；</p>
+</li>
+<li><p>在节点标签页，如果该节点的角色包含 <code>etcd</code> 则必须填写 <code>ETCD 成员名称</code> 这个字段；</p>
+</li>
+<li><p>如果您 <code>KuboardSpray</code> 所在节点不能直接访问到 <code>Kubernetes</code> 集群的节点，您可以设置跳板机参数，使 <code>KuboardSpray</code> 可以通过 ssh 访问集群节点。</p>
+</li>
+<li><p>集群安装过程中，除了已经导入的资源包以外，还需要使用 yum 或 apt 指令安装一些系统软件，例如 <code>curl, rsync, ipvadm, ipset, ethtool</code> 等，此时要用到操作系统的 apt 软件源或者 yum 软件源。<strong>全局设置</strong>标签页中，可以引导您完成 apt &#x2F; yum 软件源的设置，您可以：</p>
+<ul>
+<li>使用节点操作系统已经事先配置的 apt &#x2F; yum 源，或者</li>
+<li>在安装过程中自动配置节点的操作系统使用指定的软件源</li>
+</ul>
+</li>
+<li><p>如果您使用 docker 作为集群的容器引擎，还需要在<strong>全局设置</strong>标签页指定安装 docker 用的 apt &#x2F; yum 源。</p>
+<blockquote>
+<p>如果您使用 containerd 作为容器引擎，则无需配置 docker 的 apt &#x2F; yum 源，containerd 的安装包已经包含在 KuboardSpray 离线资源包中。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="配置镜像源"><a href="#配置镜像源" class="headerlink" title="配置镜像源"></a>配置镜像源</h3><p>只有一个 <code>aliyun</code>的<code>CentOS</code>源的路径是新的，其它在添加时都能找到。</p>
+<p><strong>强烈建议配在操作系统里。镜像源使用操作系统默认<a href="#repo">参考配置</a></strong></p>
+<blockquote>
+<p><strong>注意：虚拟机需要挂载<code>ISO</code>镜像</strong>  <code>mount /dev/cdrom /mnt/cdrom</code></p>
+<p>否则可能会报错</p>
+<p><img src="/blog/uploads/images/Docker/image-20220522212745114.png" alt="image-20220522212745114"></p>
+</blockquote>
+<p><img src="/blog/uploads/images/Docker/image-20220522205725154.png" alt="image-20220522205725154"></p>
+<h3 id="全局配置"><a href="#全局配置" class="headerlink" title="全局配置"></a>全局配置</h3><p>建议默认配置，镜像源使用操作系统默认<a href="#repo">参考配置</a></p>
+<h3 id="节点配置"><a href="#节点配置" class="headerlink" title="节点配置"></a>节点配置</h3><p><img src="/blog/uploads/images/Docker/image-20220522210928019.png" alt="image-20220522210928019"></p>
+<h3 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h3><p>点击<strong>保存</strong>，然后点击<strong>安装&#x2F;设置集群</strong></p>
+<p><img src="/blog/uploads/images/Docker/image-20220522214914299.png" alt="image-20220522214914299"></p>
+<h2 id="访问集群"><a href="#访问集群" class="headerlink" title="访问集群"></a>访问集群</h2><p>界面给出了三种方式可以访问 <code>kubernetes</code> 集群：</p>
+<ul>
+<li>在集群主节点上执行 <code>kubectl</code> 命令</li>
+<li>获取集群的 <code>.kubeconfig</code> 文件</li>
+<li>将集群导入到 <code>kuboard</code>管理界面</li>
+</ul>
+<p><img src="/blog/uploads/images/Docker/image-20220522215445220.png" alt="image-20220522215445220"></p>
+<p>也可以安装 <code>portainer.io</code></p>
+<h1 id="安装k8s管理工具"><a href="#安装k8s管理工具" class="headerlink" title="安装k8s管理工具"></a>安装<code>k8s</code>管理工具</h1><p>这里使用：<a target="_blank" rel="noopener" href="https://docs.portainer.io/start/install/server/kubernetes/baremetal"><code>poerainer</code></a></p>
+<p>安装在 <code>192.168.2.150</code></p>
+<h2 id="数据持久化"><a href="#数据持久化" class="headerlink" title="数据持久化"></a>数据持久化</h2><h3 id="查看-StorageClass"><a href="#查看-StorageClass" class="headerlink" title="查看 StorageClass "></a>查看 <code>StorageClass </code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get sc</span><br></pre></td></tr></table></figure>
+
+<p>如果是 <code>No resources found</code> 则需要创建一个。</p>
+<h3 id="创建-StorageClass"><a href="#创建-StorageClass" class="headerlink" title="创建 StorageClass"></a>创建 <code>StorageClass</code></h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/huwh_/article/details/96016423">https://blog.csdn.net/huwh_&#x2F;article&#x2F;details&#x2F;96016423</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/storage/storage-classes/">https://kubernetes.io/docs/concepts/storage/storage-classes/</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.portainer.io/start/install/server/kubernetes/baremetal">https://docs.portainer.io/start/install/server/kubernetes/baremetal</a></p>
+</blockquote>
+<h3 id="设置-StorageClass为默认值"><a href="#设置-StorageClass为默认值" class="headerlink" title="设置 StorageClass为默认值"></a>设置 <code>StorageClass</code>为默认值</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl patch storageclass maxzhao-cluster-storage-class -p <span class="string">&#x27;&#123;&quot;metadata&quot;: &#123;&quot;annotations&quot;:&#123;&quot;storageclass.kubernetes.io/is-default-class&quot;:&quot;true&quot;&#125;&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="deploy-use-yaml-manifests"><a href="#deploy-use-yaml-manifests" class="headerlink" title="deploy use yaml manifests"></a><code>deploy use yaml manifests</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 社区版</span></span><br><span class="line">kubectl apply -n portainer -f https://downloads.portainer.io/ce2-13/portainer.yaml</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">kubectl patch deployments -n portainer portainer -p <span class="string">&#x27;&#123;&quot;spec&quot;: &#123;&quot;template&quot;: &#123;&quot;spec&quot;: &#123;&quot;nodeSelector&quot;: &#123;&quot;kubernetes.io/master-150&quot;: &quot;&#x27;</span>$(kubectl get pods -n portainer -o jsonpath=<span class="string">&#x27;&#123; ..nodeName &#125;&#x27;</span>)<span class="string">&#x27;&quot;&#125;&#125;&#125;&#125;&#125;&#x27;</span> || (<span class="built_in">echo</span> Failed to identify current node of portainer pod; <span class="built_in">exit</span> 1)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也可以使用 <code>portainer</code> 的 <code>helm</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">helm repo add portainer https://portainer.github.io/k8s/</span><br><span class="line">helm repo update</span><br><span class="line"><span class="comment"># 社区版</span></span><br><span class="line">helm install --create-namespace -n portainer portainer portainer/portainer --<span class="built_in">set</span> tls.force=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://localhost:30779/">https://localhost:30779/</a> or <a target="_blank" rel="noopener" href="http://localhost:30777/">http://localhost:30777/</a></p>
+<h1 id="重启虚拟机"><a href="#重启虚拟机" class="headerlink" title="重启虚拟机"></a>重启虚拟机</h1><p>请参考<a target="_blank" rel="noopener" href="https://kuboard.cn/install/k8s-restart.html#worker%E8%8A%82%E7%82%B9%E4%B8%8D%E8%83%BD%E5%90%AF%E5%8A%A8"><code>Kuboard</code>中的介绍</a></p>
+<h2 id="Worker节点不能"><a href="#Worker节点不能" class="headerlink" title="Worker节点不能"></a><code>Worker</code>节点不能</h2><p>可能是<code>IP</code>变化引起的，需要固定<code>IP</code>后重装集群。</p>
+<h2 id="许多Pod一直Crash或不能正常访问"><a href="#许多Pod一直Crash或不能正常访问" class="headerlink" title="许多Pod一直Crash或不能正常访问"></a>许多Pod一直<code>Crash</code>或不能正常访问</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces</span><br></pre></td></tr></table></figure>
+
+<p>重启后会发现许多 <code>Pod</code> 不在 <code>Running</code> 状态，此时，请使用如下命令删除这些状态不正常的 <code>Pod</code>。通常，您的 <code>Pod</code> 如果是使用 <code>Deployment</code>、StatefulSet 等控制器创建的，<code>kubernetes</code> 将创建新的 <code>Pod</code> 作为替代，重新启动的 <code>Pod</code> 通常能够正常工作。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod &lt;pod-name&gt; -n &lt;pod-namespece&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h1><h2 id="关闭防火墙-1"><a href="#关闭防火墙-1" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop firewalld</span><br><span class="line">sudo systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line"><span class="comment"># 关闭selinux</span></span><br><span class="line">setenforce 0</span><br><span class="line"><span class="comment"># 永久</span></span><br><span class="line">sed -i <span class="string">&#x27;s/enforcing/disabled/&#x27;</span> /etc/selinux/config  </span><br><span class="line"><span class="comment"># 关闭swap（k8s禁止虚拟内存以提高性能）</span></span><br><span class="line">swapoff -a </span><br><span class="line"><span class="comment">#永久</span></span><br><span class="line">sed -ri <span class="string">&#x27;s/.*swap.*/#&amp;/&#x27;</span> /etc/fstab </span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker镜像"><a href="#Docker镜像" class="headerlink" title="Docker镜像"></a><code>Docker</code>镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/docker/daemon.json</span><br></pre></td></tr></table></figure>
+
+<p>改为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;https://aj2rgad5.mirror.aliyuncs.com&quot;</span><span class="punctuation">,</span><span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dns&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;8.8.8.8&quot;</span><span class="punctuation">,</span> <span class="string">&quot;8.8.4.4&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;exec-opts&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;native.cgroupdriver=systemd&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>远程访问：<code>&quot;hosts&quot;: [&quot;unix:///var/run/docker.sock&quot;, &quot;tcp://127.0.0.1:2375&quot;]</code></p>
+<h3 id="配置-k8s-镜像"><a href="#配置-k8s-镜像" class="headerlink" title="配置 k8s 镜像"></a>配置 <code>k8s</code> 镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/yum.repos.d/kubernetes.repo</span><br></pre></td></tr></table></figure>
+
+<p>写入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br></pre></td></tr></table></figure>
+
+<p>刷新</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 由于官网未开放同步方式, 可能会有索引gpg检查失败的情况</span></span><br><span class="line"><span class="comment"># sudo yum clean all &amp;&amp; sudo yum makecache</span></span><br></pre></td></tr></table></figure>
+
+<p>华为云镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://repo.huaweicloud.com/kubernetes/yum/repos/kubernetes-el7-$basearch</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=https://repo.huaweicloud.com/kubernetes/yum/doc/yum-key.gpg</span><br><span class="line">https://repo.huaweicloud.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br></pre></td></tr></table></figure>
+
+<h1 id="卸载集群"><a href="#卸载集群" class="headerlink" title="卸载集群"></a>卸载集群</h1><p><code>kubectl config delete-cluster</code> 删除对集群的本地引用。</p>
+<h3 id="删除节点"><a href="#删除节点" class="headerlink" title="删除节点"></a>删除节点</h3><p>使用适当的凭证与控制平面节点通信，运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl drain &lt;node name&gt; --delete-emptydir-data --force --ignore-daemonsets</span><br></pre></td></tr></table></figure>
+
+<p>在删除节点之前，请重置 <code>kubeadm</code> 安装的状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm reset</span><br></pre></td></tr></table></figure>
+
+<p>重置过程不会重置或清除 iptables 规则或 IPVS 表。如果你希望重置 iptables，则必须手动进行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -F &amp;&amp; iptables -t nat -F &amp;&amp; iptables -t mangle -F &amp;&amp; iptables -X</span><br></pre></td></tr></table></figure>
+
+<p>如果要重置 IPVS 表，则必须运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipvsadm -C</span><br></pre></td></tr></table></figure>
+
+<p>现在删除节点：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete node &lt;node name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果你想重新开始，只需运行 <code>kubeadm init</code> 或 <code>kubeadm join</code> 并加上适当的参数。</p>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h2 id="CentOS7镜像"><a href="#CentOS7镜像" class="headerlink" title="CentOS7镜像"></a><code>CentOS7</code>镜像<span id="repo"></span></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 备份</span></span><br><span class="line"><span class="built_in">mv</span> /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br><span class="line"><span class="comment"># 下载源文件</span></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="comment"># 生成缓存</span></span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a><code>Docker</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要挂载 ISO 镜像</span></span><br><span class="line">sudo <span class="built_in">mkdir</span> /mnt/cdrom</span><br><span class="line">sudo mount /dev/cdrom /mnt/cdrom/</span><br><span class="line">sudo yum install -y yum-utils</span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用阿里云"><a href="#使用阿里云" class="headerlink" title="使用阿里云"></a>使用阿里云</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step 1: 安装必要的一些系统工具</span></span><br><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="comment"># Step 2: 添加软件源信息</span></span><br><span class="line">sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"><span class="comment"># Step 3</span></span><br><span class="line">sudo sed -i <span class="string">&#x27;s+download.docker.com+mirrors.aliyun.com/docker-ce+&#x27;</span> /etc/yum.repos.d/docker-ce.repo</span><br><span class="line"><span class="comment"># Step 4: 更新并安装Docker-CE</span></span><br><span class="line">sudo yum makecache fast</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker镜像加速"><a href="#Docker镜像加速" class="headerlink" title="Docker镜像加速"></a><code>Docker</code>镜像加速</h2><h3 id="手动修改"><a href="#手动修改" class="headerlink" title="手动修改"></a>手动修改</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /etc/docker</span><br><span class="line">vim /etc/docker/daemon.json</span><br></pre></td></tr></table></figure>
+
+<p>写入</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;https://aj2rgad5.mirror.aliyuncs.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;https://registry.cn-hangzhou.aliyuncs.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;https://registry.docker-cn.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;https://05f073ad3c0010ea0f4bc00b7105ec20.mirror.swr.myhuaweicloud.com&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dns&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;8.8.8.8&quot;</span><span class="punctuation">,</span> <span class="string">&quot;8.8.4.4&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Spray安装后使用脚本"><a href="#Spray安装后使用脚本" class="headerlink" title="Spray安装后使用脚本"></a><code>Spray</code>安装后使用脚本</h3><p>可以使用任意一个地址</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Docker中国 mirror</span></span><br><span class="line"><span class="comment"># export REGISTRY_MIRROR=&quot;https://registry.docker-cn.com&quot;</span></span><br><span class="line"><span class="comment"># 腾讯云 docker hub mirror</span></span><br><span class="line"><span class="comment"># export REGISTRY_MIRROR=&quot;https://mirror.ccs.tencentyun.com&quot;</span></span><br><span class="line"><span class="comment"># 华为云镜像</span></span><br><span class="line"><span class="comment"># export REGISTRY_MIRROR=&quot;https://05f073ad3c0010ea0f4bc00b7105ec20.mirror.swr.myhuaweicloud.com&quot;</span></span><br><span class="line"><span class="comment"># DaoCloud 镜像</span></span><br><span class="line"><span class="comment"># export REGISTRY_MIRROR=&quot;http://f1361db2.m.daocloud.io&quot;</span></span><br><span class="line"><span class="comment"># 阿里云 docker hub mirror</span></span><br><span class="line"><span class="built_in">export</span> REGISTRY_MIRROR=https://registry.cn-hangzhou.aliyuncs.com</span><br><span class="line">curl -sSL https://kuboard.cn/install-script/set_mirror.sh | sh -s <span class="variable">$&#123;REGISTRY_MIRROR&#125;</span></span><br><span class="line"></span><br><span class="line">systemctl restart kubelet  <span class="comment"># 假设您安装了 kubenetes</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看修改结果"><a href="#查看修改结果" class="headerlink" title="查看修改结果"></a>查看修改结果</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker info</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/Docker/image-20220522214702999.png" alt="image-20220522214702999"></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/9c2c35af/">https://github.com/maxzhao-it/blog/post/9c2c35af/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/blog/tags/CentOS/" rel="tag"># CentOS</a>
+              <a href="/blog/tags/K8S/" rel="tag"># K8S</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/cfe111da/" rel="prev" title="K8S中的StorageClass">
+                  <i class="fa fa-chevron-left"></i> K8S中的StorageClass
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/cdb1e23a/" rel="next" title="Kubeadm安装K8S-Containerd">
+                  Kubeadm安装K8S-Containerd <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

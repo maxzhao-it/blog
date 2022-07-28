@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/45583/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/45583/","path":"post/45583/","title":"SpringBoot整合Redis及Redis简介"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SpringBoot整合Redis及Redis简介 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B4%E5%90%88"><span class="nav-number">2.</span> <span class="nav-text">整合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#maven-%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.</span> <span class="nav-text">maven 依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6application-properties"><span class="nav-number">2.2.</span> <span class="nav-text">配置文件application.properties</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Jedis-%E4%B8%8E-Lettuce-%E4%B8%A4%E7%A7%8D%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.1.</span> <span class="nav-text">Jedis 与 Lettuce 两种连接方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5"><span class="nav-number">2.3.</span> <span class="nav-text">注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#StringRedisTemplate-%E6%BA%90%E7%A0%81"><span class="nav-number">2.3.1.</span> <span class="nav-text">StringRedisTemplate 源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringRedisTemplate-%E6%B5%8B%E8%AF%95"><span class="nav-number">2.3.2.</span> <span class="nav-text">StringRedisTemplate 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-Cluster"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">Redis Cluster</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Enabling-Redis-Cluster"><span class="nav-number">2.3.2.1.1.</span> <span class="nav-text">Enabling Redis Cluster</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RedisTemplate%E6%BA%90%E7%A0%81"><span class="nav-number">2.3.3.</span> <span class="nav-text">RedisTemplate源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%88%90%E7%9A%84cache-redis-application-yml%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.4.</span> <span class="nav-text">完成的cache + redis application.yml配置</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/45583/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SpringBoot整合Redis及Redis简介 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot整合Redis及Redis简介
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于版本原因，SpringBoot2.0整合Redis和低版本的SpringBoot不太一样，此方案基于<code>Srping Boot 2.x</code>。</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d586b476c4cd">Linux下Redis安装</a></p>
+<h1 id="整合"><a href="#整合" class="headerlink" title="整合"></a>整合</h1><h2 id="maven-依赖"><a href="#maven-依赖" class="headerlink" title="maven 依赖"></a>maven 依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 下面的不用加，用于分布式共享session的配置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.session<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-session-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>分布式共享<code>session</code>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/qlong8807/p/5557271.html">参考</a></p>
+<h2 id="配置文件application-properties"><a href="#配置文件application-properties" class="headerlink" title="配置文件application.properties"></a>配置文件<code>application.properties</code></h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Redis 数据库索引</span></span><br><span class="line"><span class="attr">spring.redis.host</span>=<span class="string">127.0.0.1</span></span><br><span class="line"><span class="attr">spring.redis.port</span>=<span class="string">6379</span></span><br><span class="line"><span class="attr">spring.redis.password</span>=<span class="string">maxzhao</span></span><br><span class="line"><span class="comment"># 连接池最大连接数</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-active</span>=<span class="string">1000</span></span><br><span class="line"><span class="comment"># 连接池最大阻塞等待时间，负值没有限制</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-wait</span>=<span class="string">-1</span></span><br><span class="line"><span class="comment"># 连接池中最大空闲连接</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-idle</span>=<span class="string">10</span></span><br><span class="line"><span class="comment"># 连接池中的最小空闲连接</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.min-idle</span>=<span class="string">2</span></span><br><span class="line"><span class="comment"># 超时时间 毫秒</span></span><br><span class="line"><span class="attr">spring.redis.timeout</span>=<span class="string">1000</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的配置类：<code>org.springframework.boot.autoconfigure.data.redis.RedisProperties</code></p>
+<h3 id="Jedis-与-Lettuce-两种连接方式"><a href="#Jedis-与-Lettuce-两种连接方式" class="headerlink" title="Jedis 与 Lettuce 两种连接方式"></a>Jedis 与 Lettuce 两种连接方式</h3><ul>
+<li>defautl : 默认，0配置 ，也就是走的是 lettuce 单通道方式。   端口：8081</li>
+<li>jedis ： 使用Jedis 连接池。                                              端口：8082</li>
+<li>lettue: lettuce 连接池方式。                                            端口：8083</li>
+</ul>
+<ol>
+<li>使用jedis：当多线程使用同一个连接时，是线程不安全的。所以要使用连接池，为每个jedis实例分配一个连接。</li>
+<li>使用Lettuce：当多线程使用同一连接实例时，是线程安全的。</li>
+</ol>
+<h2 id="注入"><a href="#注入" class="headerlink" title="注入"></a>注入</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> StringRedisTemplate stringRedisTemplate;</span><br><span class="line"><span class="comment">// StringRedisTemplate是继承RedisTemplate的，</span></span><br><span class="line"><span class="comment">// RedisTemplate在StringRedisTemplate中泛型定义为String</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="StringRedisTemplate-源码"><a href="#StringRedisTemplate-源码" class="headerlink" title="StringRedisTemplate 源码"></a><code>StringRedisTemplate</code> 源码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringRedisTemplate</span> <span class="keyword">extends</span> <span class="title class_">RedisTemplate</span>&lt;String, String&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">StringRedisTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.setKeySerializer(RedisSerializer.string());</span><br><span class="line">        <span class="built_in">this</span>.setValueSerializer(RedisSerializer.string());</span><br><span class="line">        <span class="built_in">this</span>.setHashKeySerializer(RedisSerializer.string());</span><br><span class="line">        <span class="built_in">this</span>.setHashValueSerializer(RedisSerializer.string());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">StringRedisTemplate</span><span class="params">(RedisConnectionFactory connectionFactory)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>();</span><br><span class="line">        <span class="built_in">this</span>.setConnectionFactory(connectionFactory);</span><br><span class="line">        <span class="built_in">this</span>.afterPropertiesSet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> RedisConnection <span class="title function_">preProcessConnection</span><span class="params">(RedisConnection connection, <span class="type">boolean</span> existingConnection)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DefaultStringRedisConnection</span>(connection);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="StringRedisTemplate-测试"><a href="#StringRedisTemplate-测试" class="headerlink" title="StringRedisTemplate 测试"></a><code>StringRedisTemplate</code> 测试</h3><p>这里用的是Springboot Test</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="meta">@SpringBootTest(classes = IttestApplication.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisTest</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> StringRedisTemplate stringRedisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testRedisTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">prefix</span> <span class="operator">=</span> <span class="string">&quot;maxzhao:redisTemplate:&quot;</span>;</span><br><span class="line">        <span class="type">HashOperations</span> <span class="variable">hashOperations</span> <span class="operator">=</span> redisTemplate.opsForHash();</span><br><span class="line">        <span class="type">ValueOperations</span> <span class="variable">valueOps</span> <span class="operator">=</span> redisTemplate.opsForValue();</span><br><span class="line">        <span class="type">ListOperations</span> <span class="variable">listOps</span> <span class="operator">=</span> redisTemplate.opsForList();</span><br><span class="line">        <span class="type">SetOperations</span> <span class="variable">setOps</span> <span class="operator">=</span> redisTemplate.opsForSet();</span><br><span class="line">        <span class="type">ZSetOperations</span> <span class="variable">zSetOps</span> <span class="operator">=</span> redisTemplate.opsForZSet();</span><br><span class="line">        <span class="type">GeoOperations</span> <span class="variable">geoOperations</span> <span class="operator">=</span> redisTemplate.opsForGeo();</span><br><span class="line">        <span class="type">ClusterOperations</span> <span class="variable">clusterOperations</span> <span class="operator">=</span> redisTemplate.opsForCluster();</span><br><span class="line">        <span class="type">Map</span> <span class="variable">map</span> <span class="operator">=</span> Arrays.stream(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;a&quot;</span>, <span class="string">&quot;B&quot;</span>&#125;).collect(Collectors.toMap(Function.identity(), Function.identity()));</span><br><span class="line">        hashOperations.putAll(prefix + <span class="string">&quot;hash&quot;</span>, map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testStringRedisTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">prefix</span> <span class="operator">=</span> <span class="string">&quot;maxzhao:stringRedisTemplate:&quot;</span>;</span><br><span class="line">        <span class="type">HashOperations</span> <span class="variable">hashOperations</span> <span class="operator">=</span> stringRedisTemplate.opsForHash();</span><br><span class="line">        hashOperations.putAll(prefix + <span class="string">&quot;hash&quot;</span>, Arrays.stream(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>&#125;).collect(Collectors.toMap(Function.identity(), Function.identity())));</span><br><span class="line">        hashOperations.putAll(prefix + <span class="string">&quot;hash&quot;</span>, Arrays.stream(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>&#125;).collect(Collectors.toMap(Function.identity(), Function.identity())));</span><br><span class="line">        hashOperations.putAll(prefix + <span class="string">&quot;hash&quot;</span>, Arrays.stream(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;e&quot;</span>, <span class="string">&quot;f&quot;</span>&#125;).collect(Collectors.toMap(Function.identity(), Function.identity())));</span><br><span class="line">        hashOperations.put(prefix + <span class="string">&quot;hash&quot;</span>, <span class="string">&quot;max&quot;</span>, <span class="string">&quot;maxvalue&quot;</span>);<span class="comment">// a b c d e f max</span></span><br><span class="line">        hashOperations.get(prefix + <span class="string">&quot;hash&quot;</span>, <span class="string">&quot;max&quot;</span>);<span class="comment">// maxvalue</span></span><br><span class="line">        hashOperations.delete(prefix + <span class="string">&quot;hash&quot;</span>, <span class="string">&quot;f&quot;</span>);<span class="comment">// return 1  database:a b c d e max</span></span><br><span class="line">        hashOperations.delete(prefix + <span class="string">&quot;hash&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>);<span class="comment">// return 2  database:a b e max</span></span><br><span class="line">        hashOperations.hasKey(prefix + <span class="string">&quot;hash&quot;</span>, <span class="string">&quot;max&quot;</span>);<span class="comment">//return true</span></span><br><span class="line">        hashOperations.values(prefix + <span class="string">&quot;hash&quot;</span>);<span class="comment">// return map object</span></span><br><span class="line">        <span class="type">ValueOperations</span> <span class="variable">valueOperations</span> <span class="operator">=</span> stringRedisTemplate.opsForValue();</span><br><span class="line">        valueOperations.set(prefix + <span class="string">&quot;value&quot;</span>, <span class="string">&quot;value&quot;</span>);</span><br><span class="line">        valueOperations.set(prefix + <span class="string">&quot;value&quot;</span>, <span class="string">&quot;valueTest&quot;</span>);<span class="comment">//value 被覆盖</span></span><br><span class="line">        valueOperations.get(prefix + <span class="string">&quot;value&quot;</span>);<span class="comment">// return valueTest</span></span><br><span class="line"></span><br><span class="line">        <span class="type">ListOperations</span> <span class="variable">listOps</span> <span class="operator">=</span> stringRedisTemplate.opsForList();</span><br><span class="line"><span class="comment">//        listOps.remove(prefix + &quot;list&quot;, listOps.size(prefix + &quot;list&quot;), 1);</span></span><br><span class="line">        listOps.leftPush(prefix + <span class="string">&quot;list&quot;</span>, <span class="string">&quot;A&quot;</span>);</span><br><span class="line">        listOps.leftPush(prefix + <span class="string">&quot;list&quot;</span>, <span class="string">&quot;B&quot;</span>);</span><br><span class="line">        listOps.rightPush(prefix + <span class="string">&quot;list&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>);<span class="comment">//只有 1：B  2：A</span></span><br><span class="line">        listOps.leftPush(prefix + <span class="string">&quot;list&quot;</span>, <span class="string">&quot;C&quot;</span>);</span><br><span class="line">        listOps.leftPush(prefix + <span class="string">&quot;list&quot;</span>, <span class="string">&quot;D&quot;</span>);<span class="comment">//return 3  1:D 2:C 3:A</span></span><br><span class="line">        listOps.range(prefix + <span class="string">&quot;list&quot;</span>, <span class="number">0</span>, listOps.size(prefix + <span class="string">&quot;list&quot;</span>));<span class="comment">//return 3  0:D 1:C 2:A   list下标从0开始</span></span><br><span class="line">        listOps.leftPop(prefix + <span class="string">&quot;list&quot;</span>);<span class="comment">//只有   1：A 返回的为B</span></span><br><span class="line">        listOps.leftPush(prefix + <span class="string">&quot;list2&quot;</span>, <span class="string">&quot;A&quot;</span>);</span><br><span class="line">        listOps.leftPush(prefix + <span class="string">&quot;list2&quot;</span>, <span class="string">&quot;B&quot;</span>);<span class="comment">//只有 1：B  2：A</span></span><br><span class="line">        listOps.rightPush(prefix + <span class="string">&quot;list2&quot;</span>, <span class="string">&quot;C&quot;</span>);<span class="comment">//只有 1：B  2：A 3 C</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// set 是无序的，所有pop等获取value的操作，得到结果可能不同</span></span><br><span class="line">        <span class="type">SetOperations</span> <span class="variable">setOps</span> <span class="operator">=</span> stringRedisTemplate.opsForSet();</span><br><span class="line">        setOps.add(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;A&quot;</span>);<span class="comment">//return 1</span></span><br><span class="line">        setOps.add(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;A&quot;</span>);<span class="comment">//return 0</span></span><br><span class="line">        setOps.add(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;B&quot;</span>);<span class="comment">//return 1</span></span><br><span class="line">        setOps.difference(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;A&quot;</span>);<span class="comment">//return HashSet  A,B</span></span><br><span class="line">        setOps.isMember(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;A&quot;</span>);<span class="comment">//return true</span></span><br><span class="line">        setOps.isMember(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;C&quot;</span>);<span class="comment">//return false</span></span><br><span class="line">        setOps.members(prefix + <span class="string">&quot;set&quot;</span>);<span class="comment">//return HashSet  A,B</span></span><br><span class="line">        setOps.pop(prefix + <span class="string">&quot;set&quot;</span>);<span class="comment">// 出序列并删除 1个</span></span><br><span class="line">        setOps.add(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;A&quot;</span>,<span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>);<span class="comment">//return 5</span></span><br><span class="line">        setOps.pop(prefix + <span class="string">&quot;set&quot;</span>, <span class="number">2</span>);<span class="comment">// 出序列并删除 2个</span></span><br><span class="line">        setOps.add(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;A&quot;</span>,<span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>);</span><br><span class="line">        setOps.move(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;A&quot;</span>);<span class="comment">//return  true  database=BCE</span></span><br><span class="line">        <span class="comment">// 把当前key=set的c值，move到 key=set1</span></span><br><span class="line">        setOps.move(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;C&quot;</span>, prefix + <span class="string">&quot;set1&quot;</span>);<span class="comment">//return  true</span></span><br><span class="line">        setOps.remove(prefix + <span class="string">&quot;set&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>);<span class="comment">//删除</span></span><br><span class="line">        <span class="comment">// 有序的set</span></span><br><span class="line">        <span class="type">ZSetOperations</span> <span class="variable">zSetOps</span> <span class="operator">=</span> stringRedisTemplate.opsForZSet();</span><br><span class="line"></span><br><span class="line">        <span class="type">GeoOperations</span> <span class="variable">geoOperations</span> <span class="operator">=</span> stringRedisTemplate.opsForGeo();</span><br><span class="line">        <span class="comment">// 只有jedis 和 lettuce 支持Redis Cluster。</span></span><br><span class="line">        <span class="type">ClusterOperations</span> <span class="variable">clusterOperations</span> <span class="operator">=</span> stringRedisTemplate.opsForCluster();</span><br><span class="line">        System.out.println(<span class="string">&quot;====================&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="Redis-Cluster"><a href="#Redis-Cluster" class="headerlink" title="Redis Cluster"></a>Redis Cluster</h4><h5 id="Enabling-Redis-Cluster"><a href="#Enabling-Redis-Cluster" class="headerlink" title="Enabling Redis Cluster"></a>Enabling Redis Cluster</h5><p>集群的支持是基于非集群通讯构建的。RedisClusterConnection 是RedisConnection 的一个扩展，用来处理和Redis Cluster的通讯，转换错误信息到Spring DAO异常层。RedisClusterConnection 是通过RedisConnectionFactory 创建的，该工程的创建要依据于RedisClusterConfiguration配置。</p>
+
+<p>Example 1. Sample RedisConnectionFactory Configuration for Redis Cluster</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;spring.redis.cluster&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ClusterConfigurationProperties</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * spring.redis.cluster.nodes[0] = 127.0.0.1:7379</span></span><br><span class="line"><span class="comment">     * spring.redis.cluster.nodes[1] = 127.0.0.1:7380</span></span><br><span class="line"><span class="comment">     * ...</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;String&gt; nodes;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get initial collection of known cluster nodes in format &#123;<span class="doctag">@code</span> host:port&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">getNodes</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nodes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNodes</span><span class="params">(List&lt;String&gt; nodes)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.nodes = nodes;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Type safe representation of application.properties</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span> ClusterConfigurationProperties clusterProperties;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@Bean</span> RedisConnectionFactory <span class="title function_">connectionFactory</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">JedisConnectionFactory</span>(</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">RedisClusterConfiguration</span>(clusterProperties.getNodes()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过配置文件配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 这个初始化的配置为驱动库指定了一组初始化集群节点。集群可以在线修改配置，但修改结果只会保存在本驱动的内存中，不会写入到配置文件中。</span><br><span class="line">spring.redis.cluster.nodes: Comma delimited list of host:port pairs.</span><br><span class="line">spring.redis.cluster.max-redirects: Number of allowed cluster redirections.</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/spihz/p/8548800.html">官方文档中文版（个人站）</a></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-data/redis/docs/2.0.3.RELEASE/reference/html/#_working_with_redistemplate_and_clusteroperations">官方文档中文版（官网）</a></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-data/redis/docs/2.1.2.RELEASE/api/">官方文档中文版（官网doc）</a></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8bb40afa2e8c">SpringBoot的配置文件</a></p>
+</blockquote>
+<h3 id="RedisTemplate源码"><a href="#RedisTemplate源码" class="headerlink" title="RedisTemplate源码"></a><code>RedisTemplate</code>源码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisTemplate</span>&lt;K, V&gt; <span class="keyword">extends</span> <span class="title class_">RedisAccessor</span> <span class="keyword">implements</span> <span class="title class_">RedisOperations</span>&lt;K, V&gt;, BeanClassLoaderAware &#123;</span><br><span class="line">    <span class="comment">// 是否支持事物，必须通过设置setEnableTransactionSupport(true)显式地为使用中的每个RedisTemplate启用事务支持这将强制将正在使用的重断开绑定到当前线程触发MULTI。如果事务完成时没有错误，则调用EXEC，否则丢弃。一旦在MULTI中，RedisConnection将对写操作进行排队，所有只读操作(例如键)都将通过管道传输到一个新的(非线程绑定的)RedisConnection。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">enableTransactionSupport</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 有一个this.createRedisConnectionProxy代理</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">exposeConnection</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// afterPropertiesSet()方法用到，此方法允许bean实例在设置了所有bean属性后执行总体配置的验证和最终初始化。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">initialized</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 默认序列化</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">enableDefaultSerializer</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">// 默认使用JdkSerializationRedisSerializer序列化</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> RedisSerializer&lt;?&gt; defaultSerializer;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> ClassLoader classLoader;</span><br><span class="line">    <span class="comment">// 默认使用 this.defaultSerializer 序列化</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">RedisSerializer</span> <span class="variable">keySerializer</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 默认使用 this.defaultSerializer 序列化</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">RedisSerializer</span> <span class="variable">valueSerializer</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 默认使用 this.defaultSerializer 序列化</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">RedisSerializer</span> <span class="variable">hashKeySerializer</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 默认使用 this.defaultSerializer 序列化</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">RedisSerializer</span> <span class="variable">hashValueSerializer</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 默认使用 new StringRedisSerializer(StandardCharsets.UTF_8)</span></span><br><span class="line">    <span class="keyword">private</span> RedisSerializer&lt;String&gt; stringSerializer = RedisSerializer.string();</span><br><span class="line">    <span class="comment">// 用于执行Redis脚本的ScriptExecutor</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> ScriptExecutor&lt;K&gt; scriptExecutor;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> ValueOperations&lt;K, V&gt; valueOps;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> ListOperations&lt;K, V&gt; listOps;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> SetOperations&lt;K, V&gt; setOps;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> ZSetOperations&lt;K, V&gt; zSetOps;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> GeoOperations&lt;K, V&gt; geoOps;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> HyperLogLogOperations&lt;K, V&gt; hllOps;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RedisTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> ;</span><br><span class="line">	<span class="comment">// 在连接中执行给定的操作对象</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">execute</span><span class="params">(RedisCallback&lt;T&gt; action)</span> ;</span><br><span class="line">	<span class="comment">// 在连接中执行给定的操作对象，该对象可以公开，也可以不公开。</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">execute</span><span class="params">(RedisCallback&lt;T&gt; action, <span class="type">boolean</span> exposeConnection)</span> ;</span><br><span class="line">	<span class="comment">// 在可公开或不可公开的连接中执行给定的操作对象。此外，可以对连接进行流水线操作。注意，管道的结果被丢弃(使其适合只写的场景)。有道翻译</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">execute</span><span class="params">(RedisCallback&lt;T&gt; action, <span class="type">boolean</span> exposeConnection, <span class="type">boolean</span> pipeline)</span>;</span><br><span class="line">	<span class="comment">// 执行一个Redis会话。允许在同一个会话中执行多个操作，通过RedisOperations.multi()和RedisOperations.watch(Collection)操作启用“事务”功能。</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">execute</span><span class="params">(SessionCallback&lt;T&gt; session)</span> ;</span><br><span class="line">	<span class="comment">//在管道连接上执行给定的Redis会话。允许流水线处理事务。注意，回调函数不能返回非空值，因为它被管道覆盖。</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Object&gt; <span class="title function_">executePipelined</span><span class="params">(SessionCallback&lt;?&gt; session)</span> ;</span><br><span class="line">	<span class="comment">// 自定义序列化</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Object&gt; <span class="title function_">executePipelined</span><span class="params">(SessionCallback&lt;?&gt; session, <span class="meta">@Nullable</span> RedisSerializer&lt;?&gt; resultSerializer)</span> ;</span><br><span class="line">	<span class="comment">// 在管道连接上执行给定的操作对象，返回结果。注意，回调函数不能返回非空值，因为它被管道覆盖。此方法将使用默认的序列化器反序列化结果</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Object&gt; <span class="title function_">executePipelined</span><span class="params">(RedisCallback&lt;?&gt; action)</span> ;</span><br><span class="line">	<span class="comment">// 自定义序列化</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Object&gt; <span class="title function_">executePipelined</span><span class="params">(RedisCallback&lt;?&gt; action, <span class="meta">@Nullable</span> RedisSerializer&lt;?&gt; resultSerializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">execute</span><span class="params">(RedisScript&lt;T&gt; script, List&lt;K&gt; keys, Object... args)</span> ;</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">execute</span><span class="params">(RedisScript&lt;T&gt; script, RedisSerializer&lt;?&gt; argsSerializer, RedisSerializer&lt;T&gt; resultSerializer, List&lt;K&gt; keys, Object... args)</span> ;</span><br><span class="line">    <span class="keyword">public</span> &lt;T <span class="keyword">extends</span> <span class="title class_">Closeable</span>&gt; T <span class="title function_">executeWithStickyConnection</span><span class="params">(RedisCallback&lt;T&gt; callback)</span> ;</span><br><span class="line">    <span class="keyword">private</span> Object <span class="title function_">executeSession</span><span class="params">(SessionCallback&lt;?&gt; session)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> session.execute(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">protected</span> RedisConnection <span class="title function_">createRedisConnectionProxy</span><span class="params">(RedisConnection pm)</span> ;</span><br><span class="line">    <span class="keyword">protected</span> RedisConnection <span class="title function_">preProcessConnection</span><span class="params">(RedisConnection connection, <span class="type">boolean</span> existingConnection)</span> ;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">protected</span> &lt;T&gt; T <span class="title function_">postProcessResult</span><span class="params">(<span class="meta">@Nullable</span> T result, RedisConnection conn, <span class="type">boolean</span> existingConnection)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isExposeConnection</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setExposeConnection</span><span class="params">(<span class="type">boolean</span> exposeConnection)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEnableDefaultSerializer</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEnableDefaultSerializer</span><span class="params">(<span class="type">boolean</span> enableDefaultSerializer)</span> ;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">public</span> RedisSerializer&lt;?&gt; getDefaultSerializer() ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setDefaultSerializer</span><span class="params">(RedisSerializer&lt;?&gt; serializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setKeySerializer</span><span class="params">(RedisSerializer&lt;?&gt; serializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> RedisSerializer&lt;?&gt; getKeySerializer() ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setValueSerializer</span><span class="params">(RedisSerializer&lt;?&gt; serializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> RedisSerializer&lt;?&gt; getValueSerializer() ;</span><br><span class="line">    <span class="keyword">public</span> RedisSerializer&lt;?&gt; getHashKeySerializer() ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setHashKeySerializer</span><span class="params">(RedisSerializer&lt;?&gt; hashKeySerializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> RedisSerializer&lt;?&gt; getHashValueSerializer() ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setHashValueSerializer</span><span class="params">(RedisSerializer&lt;?&gt; hashValueSerializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> RedisSerializer&lt;String&gt; <span class="title function_">getStringSerializer</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setStringSerializer</span><span class="params">(RedisSerializer&lt;String&gt; stringSerializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setScriptExecutor</span><span class="params">(ScriptExecutor&lt;K&gt; scriptExecutor)</span> ;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] rawKey(Object key) ;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] rawString(String key) ;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] rawValue(Object value) ;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[][] rawKeys(Collection&lt;K&gt; keys) ;</span><br><span class="line">    <span class="keyword">private</span> K <span class="title function_">deserializeKey</span><span class="params">(<span class="type">byte</span>[] value)</span> ;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Object&gt; <span class="title function_">deserializeMixedResults</span><span class="params">(<span class="meta">@Nullable</span> List&lt;Object&gt; rawValues, <span class="meta">@Nullable</span> RedisSerializer valueSerializer, <span class="meta">@Nullable</span> RedisSerializer hashKeySerializer, <span class="meta">@Nullable</span> RedisSerializer hashValueSerializer)</span> ;</span><br><span class="line">    <span class="keyword">private</span> Set&lt;?&gt; deserializeSet(Set rawSet, <span class="meta">@Nullable</span> RedisSerializer valueSerializer) ;</span><br><span class="line">    <span class="keyword">private</span> Set&lt;TypedTuple&lt;V&gt;&gt; <span class="title function_">convertTupleValues</span><span class="params">(Set&lt;Tuple&gt; rawValues, <span class="meta">@Nullable</span> RedisSerializer valueSerializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Object&gt; <span class="title function_">exec</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Object&gt; <span class="title function_">exec</span><span class="params">(RedisSerializer&lt;?&gt; valueSerializer)</span> ;</span><br><span class="line">    <span class="keyword">protected</span> List&lt;Object&gt; <span class="title function_">execRaw</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">delete</span><span class="params">(K key)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">delete</span><span class="params">(Collection&lt;K&gt; keys)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">unlink</span><span class="params">(K key)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">unlink</span><span class="params">(Collection&lt;K&gt; keys)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">hasKey</span><span class="params">(K key)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">countExistingKeys</span><span class="params">(Collection&lt;K&gt; keys)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">expire</span><span class="params">(K key, <span class="type">long</span> timeout, TimeUnit unit)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">expireAt</span><span class="params">(K key, Date date)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">convertAndSend</span><span class="params">(String channel, Object message)</span>;</span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getExpire</span><span class="params">(K key)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getExpire</span><span class="params">(K key, TimeUnit timeUnit)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Set&lt;K&gt; <span class="title function_">keys</span><span class="params">(K pattern)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">persist</span><span class="params">(K key)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">move</span><span class="params">(K key, <span class="type">int</span> dbIndex)</span> ;</span><br><span class="line">    <span class="keyword">public</span> K <span class="title function_">randomKey</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rename</span><span class="params">(K oldKey, K newKey)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">renameIfAbsent</span><span class="params">(K oldKey, K newKey)</span> ;</span><br><span class="line">    <span class="keyword">public</span> DataType <span class="title function_">type</span><span class="params">(K key)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">byte</span>[] dump(K key) ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">restore</span><span class="params">(K key, <span class="type">byte</span>[] value, <span class="type">long</span> timeToLive, TimeUnit unit, <span class="type">boolean</span> replace)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">multi</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">discard</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">watch</span><span class="params">(K key)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">watch</span><span class="params">(Collection&lt;K&gt; keys)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unwatch</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> List&lt;V&gt; <span class="title function_">sort</span><span class="params">(SortQuery&lt;K&gt; query)</span> ;</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; List&lt;T&gt; <span class="title function_">sort</span><span class="params">(SortQuery&lt;K&gt; query, <span class="meta">@Nullable</span> RedisSerializer&lt;T&gt; resultSerializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; List&lt;T&gt; <span class="title function_">sort</span><span class="params">(SortQuery&lt;K&gt; query, BulkMapper&lt;T, V&gt; bulkMapper)</span> ;</span><br><span class="line">    <span class="keyword">public</span> &lt;T, S&gt; List&lt;T&gt; <span class="title function_">sort</span><span class="params">(SortQuery&lt;K&gt; query, BulkMapper&lt;T, S&gt; bulkMapper, <span class="meta">@Nullable</span> RedisSerializer&lt;S&gt; resultSerializer)</span> ;</span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">sort</span><span class="params">(SortQuery&lt;K&gt; query, K storeKey)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">killClient</span><span class="params">(String host, <span class="type">int</span> port)</span>;</span><br><span class="line">    <span class="keyword">public</span> List&lt;RedisClientInfo&gt; <span class="title function_">getClientList</span><span class="params">()</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">slaveOf</span><span class="params">(String host, <span class="type">int</span> port)</span> ;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">slaveOfNoOne</span><span class="params">()</span> ;</span><br></pre></td></tr></table></figure>
+
+<h3 id="完成的cache-redis-application-yml配置"><a href="#完成的cache-redis-application-yml配置" class="headerlink" title="完成的cache + redis application.yml配置"></a>完成的cache + redis application.yml配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cache:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">REDIS</span></span><br><span class="line">    <span class="attr">redis:</span></span><br><span class="line">      <span class="attr">cache-null-values:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">time-to-live:</span> <span class="string">600000ms</span></span><br><span class="line">      <span class="attr">use-key-prefix:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">cache-names:</span> <span class="string">userCache,allUsersCache</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">    <span class="attr">database:</span> <span class="number">0</span></span><br><span class="line">    <span class="attr">lettuce:</span></span><br><span class="line">      <span class="attr">shutdown-timeout:</span> <span class="string">200ms</span></span><br><span class="line">      <span class="attr">pool:</span></span><br><span class="line">        <span class="attr">max-active:</span> <span class="number">7</span></span><br><span class="line">        <span class="attr">max-idle:</span> <span class="number">7</span></span><br><span class="line">        <span class="attr">min-idle:</span> <span class="number">2</span></span><br><span class="line">        <span class="attr">max-wait:</span> <span class="string">-1ms</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4a0ce460388c">SpringBoot整合Redis及Redis简介</a></p>
+<p>推荐</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Idowww/article/details/80971166">Spring cache+ redis与redis 的比较</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/45583/">https://github.com/maxzhao-it/blog/post/45583/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Redis/" rel="tag"># Redis</a>
+              <a href="/blog/tags/Java/" rel="tag"># Java</a>
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/52100/" rel="prev" title="JAVA中常用的依赖">
+                  <i class="fa fa-chevron-left"></i> JAVA中常用的依赖
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/40132/" rel="next" title="SpringBoot实现RESTful与RestTemplate">
+                  SpringBoot实现RESTful与RestTemplate <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

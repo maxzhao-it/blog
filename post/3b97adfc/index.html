@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/3b97adfc/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/3b97adfc/","path":"post/3b97adfc/","title":"MySQL8主主"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySQL8主主 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.1.</span> <span class="nav-text">架构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">服务器配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL"><span class="nav-number">3.1.</span> <span class="nav-text">MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">3.2.</span> <span class="nav-text">关闭防火墙</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81MySQL"><span class="nav-number">4.1.</span> <span class="nav-text">1、MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">2、配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81master33%E4%B8%BA%E4%B8%BB%E5%BA%93"><span class="nav-number">4.3.</span> <span class="nav-text">3、master33为主库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%A4%87%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.1.</span> <span class="nav-text">主备配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-master33%E4%B8%BA%E4%B8%BB%E5%BA%93"><span class="nav-number">4.3.2.</span> <span class="nav-text">测试 master33为主库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E5%BD%95"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%BB%E5%BA%93%E7%8A%B6%E6%80%81"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">查看主库状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">4.3.2.3.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#master34-%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE"><span class="nav-number">4.3.2.4.</span> <span class="nav-text">master34 查询数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#master34%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">4.3.2.5.</span> <span class="nav-text">master34插入数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81master34%E4%B8%BA%E4%B8%BB%E5%BA%93"><span class="nav-number">4.4.</span> <span class="nav-text">4、master34为主库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">错误处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97"><span class="nav-number">5.0.1.</span> <span class="nav-text">查看错误日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E7%9A%84-slave%E7%BB%93%E6%9E%9C"><span class="nav-number">5.0.2.</span> <span class="nav-text">正确的 slave结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">6.</span> <span class="nav-text">操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5"><span class="nav-number">6.1.</span> <span class="nav-text">同步</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/3b97adfc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySQL8主主 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL8主主
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DB/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>都说<code>MySql8.x</code>比<code>5.7</code>快两倍，可以<a target="_blank" rel="noopener" href="https://www.oschina.net/news/95325/mysql-8-0-ga-released">参考</a>一下。<br>但不支持从 <code>MySQL 8.0</code> 降级到 <code>MySQL 5.7</code>（或从某个 <code>MySQL 8.0</code> 版本降级到任意一个更早的 <code>MySQL 8.0</code> 版本）。数据备份方式还是可以的。</p>
+<ul>
+<li>注意<code>MySql8</code> 的用户安全策略的改变</li>
+<li>注意<code>MySql8</code> 编码格式</li>
+<li>支撑内网服务器安装</li>
+</ul>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><p>主主</p>
+<h2 id="服务器配置"><a href="#服务器配置" class="headerlink" title="服务器配置"></a>服务器配置</h2><ul>
+<li><code>192.168.2.33 master33 server_id=33</code></li>
+<li><code>192.168.2.34 master34 server_id=34</code></li>
+</ul>
+<p>对于目前的状况，很少使用 <code>MySQL</code> 自增主键，解决主键冲突问题的最简单的方式，就是错开主键，可以在 <code>my.cnf</code> 文件中配置。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a><code>MySQL</code></h2><blockquote>
+<p><a href="../26543">Centos7 RPM安装MYSQL8</a><br><a href="../26542">Centos7 解压安装MYSQL8</a></p>
+</blockquote>
+<h2 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="1、MySQL"><a href="#1、MySQL" class="headerlink" title="1、MySQL"></a>1、<code>MySQL</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、配置"><a href="#2、配置" class="headerlink" title="2、配置"></a>2、配置</h2><ul>
+<li><code>master33 :server_id=33</code> `log-bin&#x3D;mysql-bin&#96;</li>
+<li><code>master34 :server_id=34</code> `log-bin&#x3D;mysql-bin&#96;</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mysql]</span></span><br><span class="line"><span class="comment"># 设置mysql客户端默认字符集</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="attr">socket</span>=<span class="string">/opt/db/mysql_data/mysql.sock</span></span><br><span class="line"><span class="attr">[mysqld]</span></span><br><span class="line"><span class="attr">skip-name-resolve</span></span><br><span class="line"><span class="comment">#设置3306端口</span></span><br><span class="line"><span class="attr">port</span>=<span class="string">3306 </span></span><br><span class="line"><span class="attr">datadir</span>=<span class="string">/opt/db/mysql_data</span></span><br><span class="line"><span class="attr">socket</span>=<span class="string">/opt/db/mysql_data/mysql.sock</span></span><br><span class="line"><span class="attr">log-error</span>=<span class="string">/opt/db/mysql_log/mysqld.log</span></span><br><span class="line"><span class="attr">pid-file</span>=<span class="string">/opt/db/mysqld/mysqld.pid</span></span><br><span class="line"><span class="comment"># 服务ID，集群中唯一</span></span><br><span class="line"><span class="attr">server-id</span>=<span class="string">33</span></span><br><span class="line"><span class="comment"># 二进制日志</span></span><br><span class="line"><span class="attr">log-bin</span>=<span class="string">mysql-bin</span></span><br><span class="line"><span class="comment"># 指定mysql的binlog日志记录哪个db，如果复制多个数据库，重复设置这个选项即可</span></span><br><span class="line"><span class="comment"># binlog-do-db：</span></span><br><span class="line"><span class="comment"># 参数是在slave上配置，指定slave要同步的数据库，默认所有库，如果复制多个数据库，重复设置这个选项即可</span></span><br><span class="line"><span class="comment"># replicate-do-db=aa   </span></span><br><span class="line"><span class="comment"># 自增主键步值auto_imcrement。一般有n台主MySQL就填n，保证主键不冲突</span></span><br><span class="line"><span class="attr">auto_increment_increment</span>=<span class="string">2   </span></span><br><span class="line"><span class="comment"># 自增起始值。一般填第n台主MySQL。此时为第一台主MySQL</span></span><br><span class="line"><span class="attr">auto_increment_offset</span>=<span class="string">1   </span></span><br><span class="line"><span class="comment"># 密码认证插件</span></span><br><span class="line"><span class="attr">default_authentication_plugin</span>=<span class="string">mysql_native_password</span></span><br><span class="line"><span class="comment"># 允许最大连接数</span></span><br><span class="line"><span class="attr">max_connections</span>=<span class="string">200</span></span><br><span class="line"><span class="comment"># 服务端使用的字符集默认为8比特编码的latin1字符集</span></span><br><span class="line"><span class="attr">character-set-server</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="comment">#排序规则</span></span><br><span class="line"><span class="attr">collation-server</span>=<span class="string">utf8mb4_0900_ai_ci</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  排序规则：ai 口音不敏感  ci 不区分大小写  ,默认支持表情符号</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  属于 utf8mb4_unicode_ci 中的一种</span></span><br><span class="line"><span class="comment">#utf8mb4_general_ci  没有实现utf8mb4_unicode_ci 的排序规则。没有utf8mb4_unicode_ci 准备。但是比较和排序的时候更快</span></span><br><span class="line"><span class="comment"># 创建新表时将使用的默认存储引擎,innodb支持事物</span></span><br><span class="line"><span class="attr">default-storage-engine</span>=<span class="string">INNODB </span></span><br><span class="line"><span class="comment"># 数据库不区分大小写</span></span><br><span class="line"><span class="attr">lower_case_table_names</span>=<span class="string">1</span></span><br><span class="line"><span class="attr">max_allowed_packet</span>=<span class="string">16M</span></span><br><span class="line"><span class="attr">lc-messages-dir</span>=<span class="string">/usr/share/mysql-8.0</span></span><br></pre></td></tr></table></figure>
+
+<p>重启 <code>master33</code>、<code>master34</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart mysqld</span><br><span class="line">systemctl status mysqld</span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line"><span class="built_in">cat</span> /opt/db/mysql_log/mysqld.log</span><br></pre></td></tr></table></figure>
+
+<p><code>master33 master34 SQL</code>命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询默认认证插件</span></span><br><span class="line">show variables like <span class="string">&#x27;default_authentication_plugin&#x27;</span>;</span><br><span class="line"><span class="comment"># 查询master slave 保证不重复</span></span><br><span class="line">show variables like <span class="string">&#x27;%server_id%&#x27;</span>;</span><br><span class="line"><span class="comment"># 查询master slave,如果是复制的数据库data，则 uuid有可能一样</span></span><br><span class="line">show variables like <span class="string">&#x27;%server_uuid%&#x27;</span>;</span><br><span class="line"><span class="comment"># 查询账号认证模式</span></span><br><span class="line">select host, user, plugin</span><br><span class="line">from mysql.user;</span><br><span class="line"><span class="comment"># 重置数据库slave信息</span></span><br><span class="line">reset slave;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、master33为主库"><a href="#3、master33为主库" class="headerlink" title="3、master33为主库"></a>3、<code>master33</code>为主库</h2><h3 id="主备配置"><a href="#主备配置" class="headerlink" title="主备配置"></a>主备配置</h3><p><code>master33</code>配置同步账号</p>
+<p><code>SQL</code>命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里创建账号不指定地址，一般情况下，需要指定 slave 账号的 IP</span></span><br><span class="line">create user <span class="built_in">sync</span>@<span class="string">&#x27;192.168.2.34&#x27;</span> identified by <span class="string">&#x27;sync&#x27;</span>;</span><br><span class="line">grant replication slave on *.* to <span class="built_in">sync</span>@<span class="string">&#x27;192.168.2.34&#x27;</span>;</span><br><span class="line"><span class="comment"># 使用 mysql_native_password 认证码模式</span></span><br><span class="line">alter user <span class="built_in">sync</span>@<span class="string">&#x27;192.168.2.34&#x27;</span> identified with mysql_native_password by <span class="string">&#x27;sync&#x27;</span>;</span><br><span class="line">flush privileges;</span><br><span class="line"><span class="comment"># 查询账号认证模式</span></span><br><span class="line">select host, user, plugin</span><br><span class="line">from mysql.user;</span><br><span class="line"><span class="comment"># 查看配置</span></span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210826090146083.png" alt="image-20210826090146083"></p>
+<p>在 <code>master34</code>写入 <code>master33</code>的配置</p>
+<p><code>master34 SQL</code>命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-- 停止 slave 库</span><br><span class="line">stop slave;</span><br><span class="line">-- 写入配置</span><br><span class="line">CHANGE MASTER TO MASTER_HOST =<span class="string">&#x27;192.168.2.33&#x27;</span>,MASTER_USER =<span class="string">&#x27;sync&#x27;</span>,MASTER_PASSWORD =<span class="string">&#x27;sync&#x27;</span>,MASTER_LOG_FILE =<span class="string">&#x27;mysql-bin.000009&#x27;</span>,MASTER_LOG_POS =156;</span><br><span class="line">-- 启动从库</span><br><span class="line">start slave;</span><br><span class="line">-- 查看从库状态</span><br><span class="line">SHOW SLAVE STATUS\G;</span><br></pre></td></tr></table></figure>
+
+<p>两个都为 <code>Yes</code> 则为成功。</p>
+<p><img src="/blog/uploads/images/image-20210826143503303.png"></p>
+<h3 id="测试-master33为主库"><a href="#测试-master33为主库" class="headerlink" title="测试 master33为主库"></a>测试 <code>master33</code>为主库</h3><h4 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看主库状态"><a href="#查看主库状态" class="headerlink" title="查看主库状态"></a>查看主库状态</h4><p><code>master33 SQL</code>命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show processlist</span><br><span class="line">\</span><br><span class="line">G</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210826143624909.png"></p>
+<p><code>Command: Binlog Dump</code>状态为成功。</p>
+<h4 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br><span class="line">create database test_db2;</span><br><span class="line">use test_db2;</span><br><span class="line">create table test_table(</span><br><span class="line">	<span class="built_in">id</span> int</span><br><span class="line">);</span><br><span class="line">insert into test_table values(1);</span><br><span class="line">select * from test_table;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210826143802988.png" alt="image-20210826143802988"></p>
+<h4 id="master34-查询数据"><a href="#master34-查询数据" class="headerlink" title="master34 查询数据"></a><code>master34</code> 查询数据</h4><p><code>SQL</code>命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br><span class="line">use test_db2;</span><br><span class="line">select * from test_table;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210826143849915.png" alt="image-20210826143849915"></p>
+<h4 id="master34插入数据"><a href="#master34插入数据" class="headerlink" title="master34插入数据"></a><code>master34</code>插入数据</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into test_table values (2);</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>master33</code> 上数据没有增加。</p>
+<h2 id="4、master34为主库"><a href="#4、master34为主库" class="headerlink" title="4、master34为主库"></a>4、<code>master34</code>为主库</h2><p>与步骤 <code>3、master33 为主库</code>步骤一样。</p>
+<p><code>master34 SQL</code>命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里创建账号不指定地址，一般情况下，需要指定 slave 账号的 IP</span></span><br><span class="line">create user <span class="built_in">sync</span>@<span class="string">&#x27;192.168.2.33&#x27;</span> identified by <span class="string">&#x27;sync&#x27;</span>;</span><br><span class="line">grant replication slave on *.* to <span class="built_in">sync</span>@<span class="string">&#x27;192.168.2.33&#x27;</span>;</span><br><span class="line"><span class="comment"># 使用 mysql_native_password 认证码模式</span></span><br><span class="line">alter user <span class="built_in">sync</span>@<span class="string">&#x27;192.168.2.33&#x27;</span> identified with mysql_native_password by <span class="string">&#x27;sync&#x27;</span>;</span><br><span class="line">flush privileges;</span><br><span class="line"><span class="comment"># 查询账号认证模式</span></span><br><span class="line">select host,user,plugin from mysql.user;</span><br><span class="line"><span class="comment"># 查看配置</span></span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure>
+
+<p><code>master33 SQL</code> 命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-- 停止 slave 库</span><br><span class="line">stop slave;</span><br><span class="line">-- 写入配置</span><br><span class="line">CHANGE MASTER TO MASTER_HOST=<span class="string">&#x27;192.168.2.34&#x27;</span>,MASTER_USER=<span class="string">&#x27;sync&#x27;</span>,MASTER_PASSWORD=<span class="string">&#x27;sync&#x27;</span>,MASTER_LOG_FILE=<span class="string">&#x27;mysql-bin.000009&#x27;</span>,MASTER_LOG_POS=1916;</span><br><span class="line">-- 启动从库</span><br><span class="line">start slave;</span><br><span class="line">-- 查看从库状态</span><br><span class="line">SHOW SLAVE STATUS\G;</span><br></pre></td></tr></table></figure>
+
+<h1 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h1><h3 id="查看错误日志"><a href="#查看错误日志" class="headerlink" title="查看错误日志"></a>查看错误日志</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /opt/db/mysql_log/mysqld.log</span><br></pre></td></tr></table></figure>
+
+<p><img src="/blog/uploads/images/image-20210826133025226.png"></p>
+<p>这是因为的 <code>mysql_data</code> 是复制的，只要修改 <code>auto.cnf</code> 中的 </p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[auto]</span></span><br><span class="line"><span class="attr">server-uuid</span>=<span class="string">f2c4ab17-01ce-11ec-9d35-000c29d3bb32</span></span><br></pre></td></tr></table></figure>
+
+<p>重启服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart mysqld</span><br></pre></td></tr></table></figure>
+
+<h3 id="正确的-slave结果"><a href="#正确的-slave结果" class="headerlink" title="正确的 slave结果"></a>正确的 <code>slave</code>结果</h3><p><img src="/blog/uploads/images/image-20210826133301759.png"></p>
+<h1 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h1><h2 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h2><ol>
+<li><p><code>master</code>锁表</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FLUSH TABLES WITH READ LOCK;</span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>slave</code>从库</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 写入配置</span><br><span class="line">CHANGE MASTER TO MASTER_HOST=<span class="string">&#x27;192.168.2.31&#x27;</span>,MASTER_USER=<span class="string">&#x27;sync&#x27;</span>,MASTER_PASSWORD=<span class="string">&#x27;sync&#x27;</span>,MASTER_LOG_FILE=<span class="string">&#x27;mysql-bin.000006&#x27;</span>,MASTER_LOG_POS=156;</span><br><span class="line">-- 启动从库</span><br><span class="line">start slave;</span><br><span class="line">-- 查看从库状态</span><br><span class="line">SHOW SLAVE STATUS\G;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>master</code>解锁</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unlock tables;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<blockquote>
+<p>推荐</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br>[官方介绍]([<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/3b97adfc/">https://github.com/maxzhao-it/blog/post/3b97adfc/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/blog/tags/%E8%B4%9F%E8%BD%BD/" rel="tag"># 负载</a>
+              <a href="/blog/tags/Centos/" rel="tag"># Centos</a>
+              <a href="/blog/tags/%E9%9B%86%E7%BE%A4/" rel="tag"># 集群</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/f34de611/" rel="prev" title="MySQL8主备">
+                  <i class="fa fa-chevron-left"></i> MySQL8主备
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/6a411b93/" rel="next" title="Spring接口接收参数转换器">
+                  Spring接口接收参数转换器 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

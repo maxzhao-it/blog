@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/848e11b6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/848e11b6/","path":"post/848e11b6/","title":"Redis集群部署"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Redis集群部署 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">Redis集群模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">安装方式：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%AE%8C%E5%85%A8%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.1.</span> <span class="nav-text">1、完全离线安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%85%B3%E9%94%AE%E4%BE%9D%E8%B5%96-gcc%E3%80%81make"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">安装关键依赖 gcc、make</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91-redis"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">编译 redis</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">下载依赖</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E8%81%94%E7%BD%91%E8%AE%BE%E5%A4%87%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.2.</span> <span class="nav-text">2、联网设备安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81rpm%E5%AE%89%E8%A3%85-%E4%B8%8D%E6%8E%A8%E8%8D%90"><span class="nav-number">2.1.3.</span> <span class="nav-text">3、rpm安装(不推荐)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81-snap-%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.4.</span> <span class="nav-text">4、 snap 安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.1.</span> <span class="nav-text">基础配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84"><span class="nav-number">3.</span> <span class="nav-text">附</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E4%BA%91%E9%95%9C%E5%83%8F"><span class="nav-number">3.1.</span> <span class="nav-text">阿里云镜像</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/848e11b6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Redis集群部署 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis集群部署
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Redis集群模式"><a href="#Redis集群模式" class="headerlink" title="Redis集群模式"></a><code>Redis</code>集群模式</h1><p><code>Redis</code>有三种集群模式：</p>
+<ol>
+<li>主从模式：提高可用性，解决了单节点故障</li>
+<li>哨兵（需要<code>Sentinel</code>）模式：在主从复制的基础上实现了主从切换和故障转移</li>
+<li><code>Cluster</code>模式：是官方提供的集群模式，使用 <code>Sharding</code> 技术，实现了高可用、读写分离、分布式存储。</li>
+</ol>
+<blockquote>
+<p>下载 <a target="_blank" rel="noopener" href="https://download.redis.io/redis-stable.tar.gz"><code>Redis source</code></a></p>
+</blockquote>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装方式："><a href="#安装方式：" class="headerlink" title="安装方式："></a>安装方式：</h2><h3 id="1、完全离线安装"><a href="#1、完全离线安装" class="headerlink" title="1、完全离线安装"></a>1、完全离线安装</h3><h4 id="安装关键依赖-gcc、make"><a href="#安装关键依赖-gcc、make" class="headerlink" title="安装关键依赖 gcc、make"></a>安装关键依赖 <code>gcc</code>、<code>make</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接全部安装</span></span><br><span class="line">rpm -ivh *.rpm</span><br><span class="line"><span class="comment"># 全部安装报错时，使用下面的安装找出错误</span></span><br><span class="line">rpm -ivh kernel-headers-3.10.0-1160.el7.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-common-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-headers-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-devel-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh make-3.82-24.el7.x86_64.rpm</span><br><span class="line">rpm -ivh binutils-2.27-44.base.el7.x86_64.rpm</span><br><span class="line">rpm -ivh libgcc-4.8.5-44.el7.x86_64.rpm</span><br><span class="line">rpm -ivh mpfr-3.1.1-4.el7.x86_64.rpm</span><br><span class="line">rpm -ivh libmpc-1.0.1-3.el7.x86_64.rpm</span><br><span class="line">rpm -ivh cpp-4.8.5-44.el7.x86_64.rpm</span><br><span class="line">rpm -ivh gcc-4.8.5-44.el7.x86_64.rpm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="编译-redis"><a href="#编译-redis" class="headerlink" title="编译 redis"></a>编译 <code>redis</code></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压</span></span><br><span class="line">tar -zxvf redis-stable.tar.gz</span><br><span class="line">cd redis-stable</span><br><span class="line">make</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">结束后</span></span><br><span class="line">make test</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装到 /usr/local/bin</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="下载依赖"><a href="#下载依赖" class="headerlink" title="下载依赖"></a>下载依赖</h4><p>下载依赖需要<strong>注意版本，依赖版本根据当前系统的版本号，特别是 <code>glibc</code></strong></p>
+<blockquote>
+<p>编译所需要的依赖  <a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/gcc-4.8.5-44.el7.x86_64.rpm"><code>gcc</code></a>、<a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/make-3.82-24.el7.x86_64.rpm"><code>make</code></a></p>
+<p>下面是<code>gcc</code>依赖：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/cpp-4.8.5-44.el7.x86_64.rpm"><code>cpp</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/libgcc-4.8.5-44.el7.x86_64.rpm"><code>libgcc</code></a> </li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-2.17-324.el7_9.x86_64.rpm"><code>glibc</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-devel-2.17-324.el7_9.x86_64.rpm"><code>glibc-devel</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-headers-2.17-324.el7_9.x86_64.rpm"><code>glibc-headers</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-common-2.17-324.el7_9.x86_64.rpm"><code>glibc-common</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/kernel-headers-3.10.0-1160.el7.x86_64.rpm"><code>kernel-headers</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/mpfr-3.1.1-4.el7.x86_64.rpm"><code>libmpc</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/mpfr-3.1.1-4.el7.x86_64.rpm"><code>mpfr</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/binutils-2.27-44.base.el7.x86_64.rpm"><code>binutils</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/make-3.82-24.el7.x86_64.rpm"><code>make</code></a></li>
+</ul>
+</blockquote>
+<h3 id="2、联网设备安装"><a href="#2、联网设备安装" class="headerlink" title="2、联网设备安装"></a>2、联网设备安装</h3><ol>
+<li><p><a href="#alibabaRepo">配置阿里云镜像</a></p>
+</li>
+<li><p>安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc make</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 <code>Redis</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">wget https://download.redis.io/redis-stable.tar.gz</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压</span></span><br><span class="line">tar -zxvf redis-stable.tar.gz</span><br><span class="line">cd redis-stable</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译</span></span><br><span class="line">make</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">结束后</span></span><br><span class="line">make test</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3、rpm安装-不推荐"><a href="#3、rpm安装-不推荐" class="headerlink" title="3、rpm安装(不推荐)"></a>3、<code>rpm</code>安装(不推荐)</h3><p>联网安装可能会安装旧的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#配置阿里云镜像</span></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="comment"># 配置阿里云 epel </span></span><br><span class="line">wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="line"><span class="comment"># 安装redis</span></span><br><span class="line">yum install -y epel-release</span><br><span class="line">yum install -y redis</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、-snap-安装"><a href="#4、-snap-安装" class="headerlink" title="4、 snap 安装"></a>4、 <code>snap</code> 安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br><span class="line">yum install snapd</span><br><span class="line">systemctl enable --now snapd.socket</span><br><span class="line">ln -s /var/lib/snapd/snap /snap</span><br><span class="line">snap install redis</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">bind * -::*                 </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保护模式，不允许不认证连接</span></span><br><span class="line">protected-mode yes</span><br><span class="line"></span><br><span class="line">port 56379</span><br><span class="line">tcp-backlog 511</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">unixsocket /run/redis.sock</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">unixsocketperm 700</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Close the connection after a client is idle <span class="keyword">for</span> N seconds (0 to <span class="built_in">disable</span>)</span></span><br><span class="line">timeout 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ack 验证client 是否存活</span></span><br><span class="line">tcp-keepalive 300</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">守护进程运行</span></span><br><span class="line">daemonize yes</span><br><span class="line">pidfile /opt/redis56379/redis_56379.pid</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">日志级别 debug verbose notice warning</span></span><br><span class="line">loglevel notice</span><br><span class="line">logfile &quot;/opt/redis56379/redis56379.log&quot;</span><br><span class="line"></span><br><span class="line">databases 16</span><br><span class="line"></span><br><span class="line">always-show-logo no</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启用进程标题</span></span><br><span class="line">set-proc-title yes </span><br><span class="line">proc-title-template &quot;&#123;title&#125; &#123;listen-addr&#125; &#123;server-mode&#125;&#123;port&#125;&quot;</span><br><span class="line"> </span><br><span class="line">dir /opt/redis56379/data/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">密码</span></span><br><span class="line">requirepass maxzhao </span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="阿里云镜像"><a href="#阿里云镜像" class="headerlink" title="阿里云镜像"></a>阿里云镜像<span id="alibabaRepo"></span></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置阿里云镜像</span></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">配置阿里云 epel</span> </span><br><span class="line">wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/848e11b6/">https://github.com/maxzhao-it/blog/post/848e11b6/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/ff3733f2/" rel="prev" title="SpringEvent事件机制">
+                  <i class="fa fa-chevron-left"></i> SpringEvent事件机制
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/3c725d5d/" rel="next" title="JVM参数">
+                  JVM参数 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

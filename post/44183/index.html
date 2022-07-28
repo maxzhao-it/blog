@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/44183/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/44183/","path":"post/44183/","title":"OAuth2与JWT"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OAuth2与JWT | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFOauth2%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Oauth2？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3OAuth2%E4%B8%8EJWT"><span class="nav-number">1.2.</span> <span class="nav-text">了解OAuth2与JWT</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OAuth"><span class="nav-number">2.</span> <span class="nav-text">OAuth</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Roles%E8%A7%92%E8%89%B2"><span class="nav-number">2.1.</span> <span class="nav-text">Roles角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OAuth2%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E6%9C%AF%E8%AF%AD%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">OAuth2中的其他术语：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OAuth2%E4%B8%AD%E7%9A%84%E4%BB%A4%E7%89%8C%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">OAuth2中的令牌类型：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%88%E6%9D%83%E6%A8%A1%E5%BC%8F%EF%BC%9A"><span class="nav-number">2.4.</span> <span class="nav-text">授权模式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.5.</span> <span class="nav-text">客户端类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="nav-number">2.6.</span> <span class="nav-text">客户端配置</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/44183/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OAuth2与JWT | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OAuth2与JWT
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Spring/OAuth/" itemprop="url" rel="index"><span itemprop="name">OAuth</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="https://oauth.net/images/oauth-2-sm.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是Oauth2？"><a href="#什么是Oauth2？" class="headerlink" title="什么是Oauth2？"></a>什么是Oauth2？</h3><p>OAuth（Open Authorization，开放授权）是为用户资源的授权定义了一个安全、开放及简单的标准，第三方无需知道用户的账号及密码，就可获取到用户的授权信息。<br> OAuth2.0是OAuth协议的延续版本，但不向后兼容OAuth 1.0即完全废止了OAuth1.0</p>
+<p>注意：对于OAuth2的使用场景，官方文档都提到针对第三方应用，需要强调的是，这个第三方应用，不指的是除了服务本身外的应用，都是第三方应用，即使是自己的应用，也是第三方应用。</p>
+<h3 id="了解OAuth2与JWT"><a href="#了解OAuth2与JWT" class="headerlink" title="了解OAuth2与JWT"></a>了解OAuth2与JWT</h3><ul>
+<li><p>JWT：JSON Web Token &#x2F;&#x2F; 是一种具体的Token实现框架；</p>
+</li>
+<li><p>OAuth2：Open Authorization &#x2F;&#x2F; 是一种授权协议，是规范，不是实现；</p>
+</li>
+<li><p>Spring Security OAuth2：Spring 对 OAuth2 的开源实现，优点是能与Spring Cloud技术栈无缝集成；</p>
+</li>
+<li><p>Spring Security：前身是 Acegi Security ，能够为 Spring企业应用系统提供声明式的安全访问控制；</p>
+</li>
+</ul>
+<p>这里需要理解两个概念：</p>
+<ul>
+<li>Authentication：用户认证，一般是通过用户名密码来确认用户是否为系统中合法主体；</li>
+<li>Authorization：用户授权，一般是给系统中合法主体授予相关资源访问权限；</li>
+</ul>
+<p>jwt是基于token的认证协议的实现，OAuth2是一种授权框架，提供了一套详细的授权协议标准（指导）。</p>
+<p>jwt的基本思路就是用户提供用户名和密码给认证服务器，服务器验证用户提交信息信息的合法性；如果验证成功，会产生并返回一个Token（令牌），用户可以使用这个token访问服务器上受保护的资源。</p>
+<h2 id="OAuth"><a href="#OAuth" class="headerlink" title="OAuth"></a>OAuth</h2><h3 id="Roles角色"><a href="#Roles角色" class="headerlink" title="Roles角色"></a>Roles角色</h3><p>在OAuth2中主要有四个角色，主要如下：</p>
+<ol>
+<li>Resource Owner(资源拥有者)：用户，即资源的拥有人，想要分享某些资 源给第三方应用</li>
+<li>Resource Server(资源服务器)：放受保护资源，要访问这些资源，需要获得访问令牌</li>
+<li>Authorization server(授权（认证）服务器)：授权服务器用于发放访问令牌给客户端</li>
+<li>Client(客户端应用（第三方应用）)：客户端代表请求资源服务器资源的第三方程序</li>
+</ol>
+<h3 id="OAuth2中的其他术语："><a href="#OAuth2中的其他术语：" class="headerlink" title="OAuth2中的其他术语："></a>OAuth2中的其他术语：</h3><ul>
+<li>Client Credentials(客户凭证)：客户的clientId 和密码用于认证客户</li>
+<li>Access Token(访问令牌)：授权服务器在接收到客户请求后，颁发的访问令牌</li>
+<li>Scopes(作用域)：客户请求访问令牌时,由资源拥有者额外指定的细分权限(permission)</li>
+<li>User Agent(用户代理)：用户代理。一般就是指浏览器</li>
+</ul>
+<h3 id="OAuth2中的令牌类型："><a href="#OAuth2中的令牌类型：" class="headerlink" title="OAuth2中的令牌类型："></a>OAuth2中的令牌类型：</h3><ul>
+<li>Authorization Code Token(授权码)：仅用于授权码授权类型,用于交换获取访问令牌和刷新令牌</li>
+<li>Refresh Token(刷新令牌)：用于去授权服务器获取一个新的访问令牌</li>
+<li>Access Token(访问令牌)：用于代表一个用户或服务直接去访问受保护的资源</li>
+<li>Proof of Possession(PoP) Token(持有证明(pop)令牌)：可以校验client是否对Token 有明确的拥有权</li>
+</ul>
+<h3 id="授权模式："><a href="#授权模式：" class="headerlink" title="授权模式："></a>授权模式：</h3><ol>
+<li>授权码模式（Authorization Code）(正统方式)(支持refresh token)</li>
+<li>授权码简化模式（Implicit）(为web浏览器设计)(不支持refresh token)</li>
+<li>Pwd模式（Resource Owner Password Credentials） (基本不用)(支持refresh token)</li>
+<li>Client模式（Client Credentials） (为后台api调用设计)(不支持refresh token)</li>
+<li>扩展模式（Extension）（自定义模式）</li>
+</ol>
+<p>最常用的grant_type组合有: <code>authorization_code,refresh_token</code>(针对通过浏览器访问的客户端); <code>password,refresh_token</code>(针对移动设备的客户端). <code>implicit</code>与<code>client_credentials</code>在实际中很少使用.</p>
+<p>Authorization Grants 认证授权  </p>
+<h3 id="客户端类型"><a href="#客户端类型" class="headerlink" title="客户端类型"></a>客户端类型</h3><p>OAuth 2.0客户端角色被细分为一系列类型和配置，本节将阐述这些类型和配置。</p>
+<p>OAuth 2.0规范定义了两种客户端类型：</p>
+<ul>
+<li>保密的</li>
+<li>公有的</li>
+</ul>
+<p>保密的客户端能够对外部保持客户端密码保密。该客户端密码是由授权服务器分配给客户端应用的。为了避免欺骗，该密码是授权服务器用来识别客户端的。例如一个保密的客户端可以是web应用，除了管理员，没有任何人能够访问服务器和看到该密码。</p>
+<p>公有的客户端不能使客户端密码保密。比如移动手机应用或桌面应用会将密码嵌入在内部。这样的应用可能被破解，并且泄漏密码。这同于在用户的浏览器上运行的JavaScript应用。用户可以使用一个JavaScript调试器来寻找到应用程序，并查看客户端密码。</p>
+<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>OAuth 2.0规范也提到了一系列客户端配置文件。这些配置文件是具体类型的应用程序，这可以是保密或公开的。这些配置文件有：</p>
+<ul>
+<li>web应用</li>
+<li>用户代理</li>
+<li>原生</li>
+</ul>
+<blockquote>
+<p>推荐</p>
+<p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/oauth2/">w3cschool</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0dc9c452b40e">SpringBoot+Security+JWT进阶：二、自定义认证实践</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44183/">https://github.com/maxzhao-it/blog/post/44183/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Spring/" rel="tag"># Spring</a>
+              <a href="/blog/tags/OAuth2/" rel="tag"># OAuth2</a>
+              <a href="/blog/tags/JWT/" rel="tag"># JWT</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/30842/" rel="prev" title="SpringBoot 安装CLI">
+                  <i class="fa fa-chevron-left"></i> SpringBoot 安装CLI
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/43590/" rel="next" title="Docker从0安装MySql8(Linux)">
+                  Docker从0安装MySql8(Linux) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

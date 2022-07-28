@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/55853/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/55853/","path":"post/55853/","title":"JAVA自定义注解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JAVA自定义注解 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">自定义注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%85%83%E6%B3%A8%E8%A7%A3%EF%BC%88meta-annotation%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">1、元注解（meta-annotation）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Target%EF%BC%9A"><span class="nav-number">1.1.1.</span> <span class="nav-text">@Target：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Retention%EF%BC%9A"><span class="nav-number">1.1.2.</span> <span class="nav-text">@Retention：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Documented"><span class="nav-number">1.1.3.</span> <span class="nav-text">@Documented:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Inherited%EF%BC%9A"><span class="nav-number">1.1.4.</span> <span class="nav-text">@Inherited：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">2、自定义注解：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E6%A0%BC%E5%BC%8F%EF%BC%9A"><span class="nav-number">1.2.2.</span> <span class="nav-text">定义注解格式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E5%8F%82%E6%95%B0%E7%9A%84%E5%8F%AF%E6%94%AF%E6%8C%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="nav-number">1.2.3.</span> <span class="nav-text">注解参数的可支持数据类型：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Annotation%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%BE%E5%AE%9A"><span class="nav-number">1.2.4.</span> <span class="nav-text">Annotation类型的参数设定:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B%EF%BC%9A"><span class="nav-number">1.2.5.</span> <span class="nav-text">定义和使用实例：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%EF%BC%9A"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">定义：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%EF%BC%9A"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">使用：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E6%9D%A5%E8%B0%83%E7%94%A8%E6%B3%A8%E8%A7%A3%E4%B8%AD%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">1.2.6.</span> <span class="nav-text">用反射机制来调用注解中的内容</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP-%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">AOP 使用自定义注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3-UserAccess"><span class="nav-number">2.1.</span> <span class="nav-text">注解 @UserAccess</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOP-%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">AOP 中的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E6%B3%A8%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">其它注解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Deprecated-%E8%A1%A8%E6%98%8E%E4%B8%8D%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8"><span class="nav-number">3.0.1.</span> <span class="nav-text">@Deprecated 表明不建议使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JsonValue-%E5%BA%8F%E5%88%97%E5%8C%96%E4%B9%8B%E5%90%8E%E5%8F%AA%E8%BF%94%E5%9B%9E%E8%BF%99%E4%B8%80%E4%B8%AA%E5%80%BC"><span class="nav-number">3.0.2.</span> <span class="nav-text">@JsonValue 序列化之后只返回这一个值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JsonProperty-%E6%8A%8A%E5%BD%93%E5%89%8D%E5%B1%9E%E6%80%A7%E5%90%8D%E7%A7%B0%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%BA%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%90%8D%E7%A7%B0"><span class="nav-number">3.0.3.</span> <span class="nav-text">@JsonProperty 把当前属性名称序列化为另一个名称</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/55853/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JAVA自定义注解 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JAVA自定义注解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/AOP/" itemprop="url" rel="index"><span itemprop="name">AOP</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/AOP/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">自定义注解</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h2><h3 id="1、元注解（meta-annotation）"><a href="#1、元注解（meta-annotation）" class="headerlink" title="1、元注解（meta-annotation）"></a>1、元注解（meta-annotation）</h3><p>元注解的作用就是负责注解其他注解。<code>Java5.0</code>定义了4个标准的 <code>meta-annotation</code>类型，它们被用来提供对其它<code>annotation</code>类型作说明。<code>Java5.0</code>定义的元注解：<br>　　　　1.@Target,<br>　　　　2.@Retention,<br>　　　　3.@Documented,<br>　　　　4.@Inherited<br>　　这些类型和它们所支持的类在java.lang.annotation包中可以找到。下面我们看一下每个元注解的作用和相应分参数的使用说明。</p>
+<h4 id="Target："><a href="#Target：" class="headerlink" title="@Target："></a><strong>@Target：</strong></h4><p>　　　@Target说明了Annotation所修饰的对象范围：Annotation可被用于 packages、types（类、接口、枚举、Annotation类型）、类型成员（方法、构造方法、成员变量、枚举值）、方法参数和本地变量（如循环变量、catch参数）。在Annotation类型的声明中使用了target可更加明晰其修饰的目标。</p>
+<p>　　<strong>作用：用于描述注解的使用范围（即：被描述的注解可以用在什么地方）</strong></p>
+<p>　　<strong>取值(ElementType)有：</strong></p>
+<p>　　　　1.CONSTRUCTOR:用于描述构造器<br>　　　　2.FIELD:用于描述域<br>　　　　3.LOCAL_VARIABLE:用于描述局部变量<br>　　　　4.METHOD:用于描述方法<br>　　　　5.PACKAGE:用于描述包<br>　　　　6.PARAMETER:用于描述参数<br>　　　　7.TYPE:用于描述类、接口(包括注解类型) 或enum声明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Target(ElementType.TYPE)</span><br><span class="line">public @interface Table &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 数据表名称注解，默认值为类名称</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public String tableName() default &quot;className&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Target(ElementType.FIELD)</span><br><span class="line">public @interface NoDBColumn &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注解Table 可以用于注解类、接口(包括注解类型) 或enum声明,而注解NoDBColumn仅可用于注解类的成员变量。</p>
+<h4 id="Retention："><a href="#Retention：" class="headerlink" title="@Retention："></a><strong>@Retention：</strong></h4><p>　　<strong>@Retention</strong>定义了该Annotation被保留的时间长短：某些Annotation仅出现在源代码中，而被编译器丢弃；而另一些却被编译在class文件中；编译在class文件中的Annotation可能会被虚拟机忽略，而另一些在class被装载时将被读取（请注意并不影响class的执行，因为Annotation与class在使用上是被分离的）。使用这个meta-Annotation可以对 Annotation的“生命周期”限制。</p>
+<p>　　<strong>作用：表示需要在什么级别保存该注释信息，用于描述注解的生命周期（即：被描述的注解在什么范围内有效）</strong></p>
+<p>　　<strong>取值（RetentionPoicy）有：</strong></p>
+<p>　　　　1.SOURCE:在源文件中有效（即源文件保留）<br>　　　　2.CLASS:在class文件中有效（即class保留）<br>　　　　3.RUNTIME:在运行时有效（即运行时保留）</p>
+<p>　　Retention meta-annotation类型有唯一的value作为成员，它的取值来自java.lang.annotation.RetentionPolicy的枚举类型值。具体实例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Target(ElementType.FIELD)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">public @interface Column &#123;</span><br><span class="line">    public String name() default &quot;fieldName&quot;;</span><br><span class="line">    public String setFuncName() default &quot;setField&quot;;</span><br><span class="line">    public String getFuncName() default &quot;getField&quot;; </span><br><span class="line">    public boolean defaultDBValue() default false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>Column注解的的RetentionPolicy的属性值是RUTIME,这样注解处理器可以通过反射，获取到该注解的属性值，从而去做一些运行时的逻辑处理</p>
+<hr>
+<h4 id="Documented"><a href="#Documented" class="headerlink" title="@Documented:"></a><strong>@Documented:</strong></h4><p>　　**@**Documented用于描述其它类型的annotation应该被作为被标注的程序成员的公共API，因此可以被例如javadoc此类的工具文档化。Documented是一个标记注解，没有成员。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Target(ElementType.FIELD)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">public @interface Column &#123;</span><br><span class="line">    public String name() default &quot;fieldName&quot;;</span><br><span class="line">    public String setFuncName() default &quot;setField&quot;;</span><br><span class="line">    public String getFuncName() default &quot;getField&quot;; </span><br><span class="line">    public boolean defaultDBValue() default false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Inherited："><a href="#Inherited：" class="headerlink" title="@Inherited："></a><strong>@Inherited：</strong></h4><p>　　@Inherited 元注解是一个标记注解，@Inherited阐述了某个被标注的类型是被继承的。如果一个使用了@Inherited修饰的annotation类型被用于一个class，则这个annotation将被用于该class的子类。</p>
+<p>　　注意：@Inherited annotation类型是被标注过的class的子类所继承。类并不从它所实现的接口继承annotation，方法并不从它所重载的方法继承annotation。</p>
+<p>　　当@Inherited annotation类型标注的annotation的Retention是RetentionPolicy.RUNTIME，则反射API增强了这种继承性。如果我们使用java.lang.reflect去查询一个@Inherited annotation类型的annotation时，反射代码检查将展开工作：检查class和其父类，直到发现指定的annotation类型被发现，或者到达类继承结构的顶层。</p>
+<p>　　实例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * </span><br><span class="line"> * @author peida</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">@Inherited</span><br><span class="line">public @interface Greeting &#123;</span><br><span class="line">    public enum FontColor&#123; BULE,RED,GREEN&#125;;</span><br><span class="line">    String name();</span><br><span class="line">    FontColor fontColor() default FontColor.GREEN;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、自定义注解："><a href="#2、自定义注解：" class="headerlink" title="2、自定义注解："></a>2、自定义注解：</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>　使用@interface自定义注解时，自动继承了<code>java.lang.annotation.Annotation</code>接口，由编译程序自动完成其他细节。在定义注解时，不能继承其他的注解或接口。@interface用来声明一个注解，其中的每一个方法实际上是声明了一个配置参数。方法的名称就是参数的名称，返回值类型就是参数的类型（返回值类型只能是基本类型、Class、String、enum）。可以通过default来声明参数的默认值。</p>
+<p>注解的的<code>RetentionPolicy</code>的属性值是<code>RUTIME</code>, 这样注解处理器可以通过反射，获取到该注解的属性值，从而去做一些运行时的逻辑处理.</p>
+<h4 id="定义注解格式："><a href="#定义注解格式：" class="headerlink" title="定义注解格式："></a><strong>定义注解格式：</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> 注解名 &#123;定义体&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="注解参数的可支持数据类型："><a href="#注解参数的可支持数据类型：" class="headerlink" title="注解参数的可支持数据类型："></a><strong>注解参数的可支持数据类型：</strong></h4><p>　　　　1.所有基本数据类型（int,float,boolean,byte,double,char,long,short)<br>　　　　2.String类型<br>　　　　3.Class类型<br>　　　　4.enum类型<br>　　　　5.Annotation类型<br>　　　　6.以上所有类型的数组</p>
+<h4 id="Annotation类型的参数设定"><a href="#Annotation类型的参数设定" class="headerlink" title="Annotation类型的参数设定:"></a><code>Annotation</code>类型的参数设定:</h4><ol>
+<li>只能用public或默认(default)这两个访问权修饰.例如,String value();这里把方法设为defaul默认类型；　</li>
+<li>参数成员只能用基本类型byte,short,char,int,long,float,double,boolean八种基本数据类型和 String,Enum,Class,annotations等数据类型,以及这一些类型的数组.例如,String value();这里的参数成员就为String;　</li>
+<li>如果只有一个参数成员,最好把参数名称设为”value”,后加小括号.例:下面的例子FruitName注解就只有一个参数成员。</li>
+</ol>
+<h4 id="定义和使用实例："><a href="#定义和使用实例：" class="headerlink" title="定义和使用实例："></a>定义和使用实例：</h4><h5 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * &lt;p&gt;多数据源标识&lt;/p&gt;</span><br><span class="line"> * &lt;p&gt;使用方式：必须用在方法上&lt;/p&gt;</span><br><span class="line"> *</span><br><span class="line"> * @author maxzhao</span><br><span class="line"> * @date 2019-06-26 16:13</span><br><span class="line"> */</span><br><span class="line">@Inherited</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Target(&#123;ElementType.METHOD&#125;)</span><br><span class="line">public @interface MultiDatabase &#123;</span><br><span class="line">    String name() default &quot;main&quot;;</span><br><span class="line">     /**</span><br><span class="line">     * 枚举</span><br><span class="line">     * @author peida</span><br><span class="line">     *</span><br><span class="line">     */</span><br><span class="line">    public enum SourceType&#123; MYSQL,POSTGRESQL,ORACLE&#125;;</span><br><span class="line">    /**</span><br><span class="line">     * 属性</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    Type sourceType() default Type.MYSQL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用："><a href="#使用：" class="headerlink" title="使用："></a>使用：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TempServiceDemo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> TempRepository tempRepository;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">findAll</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;default&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@MultiDatabase(name = &quot;second&quot;,sourceType=MultiDataSource.SourceType.ORACLE)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">findAllSecond</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;second&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@MultiDatabase(name = &quot;third&quot;,sourceType=MultiDataSource.SourceType.MYSQL)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">findAllThird</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;third&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="用反射机制来调用注解中的内容"><a href="#用反射机制来调用注解中的内容" class="headerlink" title="用反射机制来调用注解中的内容"></a>用反射机制来调用注解中的内容</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">        <span class="comment">//获得要调用的类，一般不会这么获取</span></span><br><span class="line">Class&lt;TempServiceDemo&gt; tempServiceDemoClass = TempServiceDemo.class;</span><br><span class="line">        <span class="comment">// 获得要调用的方法，output是要调用的方法名字，new Class[]&#123;&#125;为所需要的参数。空则不是这种</span></span><br><span class="line"><span class="type">Method</span> <span class="variable">currentMethod</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	currentMethod = tempServiceDemoClass.getMethod(<span class="string">&quot;findAllSecond&quot;</span>, <span class="keyword">new</span> <span class="title class_">Class</span>[]&#123;&#125;);</span><br><span class="line">            <span class="comment">// 是否有类型为MyAnnotation的注解</span></span><br><span class="line">	<span class="keyword">if</span> (currentMethod.isAnnotationPresent(MultiDatabase.class)) &#123;</span><br><span class="line">                <span class="comment">// 获得注解</span></span><br><span class="line">		<span class="type">MultiDatabase</span> <span class="variable">datasource</span> <span class="operator">=</span> currentMethod.getAnnotation(MultiDatabase.class);</span><br><span class="line">                <span class="comment">// 调用注解的内容</span></span><br><span class="line">		System.out.println(datasource.name());</span><br><span class="line">	&#125;</span><br><span class="line">	System.out.println(<span class="string">&quot;----------------------------------&quot;</span>);</span><br><span class="line">            <span class="comment">// 获得所有注解。必须是runtime类型的  @Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line">	Annotation[] annotations = currentMethod.getAnnotations();</span><br><span class="line">	<span class="keyword">for</span> (Annotation annotation : annotations) &#123;</span><br><span class="line">                <span class="comment">// 遍历所有注解的名字</span></span><br><span class="line">                System.out.println(annotation.annotationType().getName());</span><br><span class="line">   &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">            <span class="comment">//错误处理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="AOP-使用自定义注解"><a href="#AOP-使用自定义注解" class="headerlink" title="AOP 使用自定义注解"></a>AOP 使用自定义注解</h2><h3 id="注解-UserAccess"><a href="#注解-UserAccess" class="headerlink" title="注解 @UserAccess"></a>注解 @UserAccess</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> UserAccess &#123;</span><br><span class="line">    String <span class="title function_">desc</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;无信息&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="AOP-中的使用"><a href="#AOP-中的使用" class="headerlink" title="AOP 中的使用"></a>AOP 中的使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@After(&quot;@annotation(userAccess)&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">after</span><span class="params">(JoinPoint jp, UserAccess userAccess)</span> &#123;</span><br><span class="line">    log.debug(<span class="string">&quot;second after:&quot;</span> + userAccess.desc());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line">	<span class="meta">@RequestMapping(&quot;/second&quot;)</span></span><br><span class="line">    <span class="meta">@UserAccess(desc = &quot;second&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">second</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;second controller&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="其它注解"><a href="#其它注解" class="headerlink" title="其它注解"></a>其它注解</h2><h4 id="Deprecated-表明不建议使用"><a href="#Deprecated-表明不建议使用" class="headerlink" title="@Deprecated 表明不建议使用"></a>@Deprecated 表明不建议使用</h4><h4 id="JsonValue-序列化之后只返回这一个值"><a href="#JsonValue-序列化之后只返回这一个值" class="headerlink" title="@JsonValue 序列化之后只返回这一个值"></a>@JsonValue 序列化之后只返回这一个值</h4><p>用在属性或者get方法上。</p>
+<h4 id="JsonProperty-把当前属性名称序列化为另一个名称"><a href="#JsonProperty-把当前属性名称序列化为另一个名称" class="headerlink" title="@JsonProperty 把当前属性名称序列化为另一个名称"></a>@JsonProperty 把当前属性名称序列化为另一个名称</h4><p>当接受application&#x2F;json编码格式的参数时,同样需要接收参数为this_name的参数.</p>
+<p>但是当用表单提交时,则必须传thisName或ThisName才能接收</p>
+<blockquote>
+<p>本文地址： <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/fdd9a7546aee">SpringBoot+JPA多数据源（注解方式）</a></p>
+<p>推荐<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1f87b0dd597">IDEA好用的插件</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c60d3b36142e">JAVA自定义注解</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/55853/">https://github.com/maxzhao-it/blog/post/55853/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Java/" rel="tag"># Java</a>
+              <a href="/blog/tags/AOP/" rel="tag"># AOP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/56235/" rel="prev" title="JAVA获取类的泛型信息">
+                  <i class="fa fa-chevron-left"></i> JAVA获取类的泛型信息
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/5456/" rel="next" title="Stream多线程并行数据处理">
+                  Stream多线程并行数据处理 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>
