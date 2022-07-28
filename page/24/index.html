@@ -370,109 +370,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/43589/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/43589/" class="post-title-link" itemprop="url">Docker从0安装MySql8(Linux)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 18:30:51" itemprop="dateModified" datetime="2022-07-28T18:30:51+08:00">2022-07-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DevelopTools/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Manjaro 安装MySQL8很简单粗暴，为什么还要装 Docker 呢？</p>
-<p>滚动更新惹得祸！！！</p>
-<p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code> GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code> GCC 9.1.0</code><br>版本，操作系统都起不来了。</p>
-<p>最后选择<code>Docker</code>，确实简单粗暴！</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="ArchLinux-安装"><a href="#ArchLinux-安装" class="headerlink" title="ArchLinux 安装"></a>ArchLinux 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S docker</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
-
-<h3 id="其它安装"><a href="#其它安装" class="headerlink" title="其它安装"></a>其它安装</h3><p><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/ubuntu-docker-install.html">Ubuntu Docker 安装</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/centos-docker-install.html">CentOS Docker 安装</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/windows-docker-install.html">Windows Docker 安装</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/macos-docker-install.html">MacOS Docker 安装</a></p>
-<h2 id="安装MySQL8"><a href="#安装MySQL8" class="headerlink" title="安装MySQL8"></a>安装MySQL8</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo  docker pull mysql</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">sudo docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=maxzhao -d mysql</span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment">#登录mysql 密码 maxzhao</span></span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">grant all privileges on *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> WITH GRANT OPTION;</span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
-
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="容器外登录MySQL"><a href="#容器外登录MySQL" class="headerlink" title="容器外登录MySQL"></a>容器外登录MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h127.0.0.1 -uroot -p</span><br></pre></td></tr></table></figure>
-
-<h3 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo docker images</span><br><span class="line">sudo docker ps</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker start mysql</span><br></pre></td></tr></table></figure>
-
-<h3 id="RUN-START"><a href="#RUN-START" class="headerlink" title="RUN | START"></a>RUN | START</h3><p>docker run 只在第一次运行时使用，将镜像放到容器中，以后再次启动这个容器时，只需要使用命令docker start 即可。</p>
-<blockquote>
-<p>推荐:</p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/43589/">https://github.com/maxzhao-it/blog/post/43589/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/43590/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -587,6 +484,257 @@
 <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a></p>
 </blockquote>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/43590/">https://github.com/maxzhao-it/blog/post/43590/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/43589/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/43589/" class="post-title-link" itemprop="url">Docker从0安装MySql8(Linux)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 18:30:51" itemprop="dateModified" datetime="2022-07-28T18:30:51+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Manjaro 安装MySQL8很简单粗暴，为什么还要装 Docker 呢？</p>
+<p>滚动更新惹得祸！！！</p>
+<p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code> GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code> GCC 9.1.0</code><br>版本，操作系统都起不来了。</p>
+<p>最后选择<code>Docker</code>，确实简单粗暴！</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="ArchLinux-安装"><a href="#ArchLinux-安装" class="headerlink" title="ArchLinux 安装"></a>ArchLinux 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S docker</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="其它安装"><a href="#其它安装" class="headerlink" title="其它安装"></a>其它安装</h3><p><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/ubuntu-docker-install.html">Ubuntu Docker 安装</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/centos-docker-install.html">CentOS Docker 安装</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/windows-docker-install.html">Windows Docker 安装</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/macos-docker-install.html">MacOS Docker 安装</a></p>
+<h2 id="安装MySQL8"><a href="#安装MySQL8" class="headerlink" title="安装MySQL8"></a>安装MySQL8</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo  docker pull mysql</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">sudo docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=maxzhao -d mysql</span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment">#登录mysql 密码 maxzhao</span></span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">grant all privileges on *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> WITH GRANT OPTION;</span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="容器外登录MySQL"><a href="#容器外登录MySQL" class="headerlink" title="容器外登录MySQL"></a>容器外登录MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h127.0.0.1 -uroot -p</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo docker images</span><br><span class="line">sudo docker ps</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker start mysql</span><br></pre></td></tr></table></figure>
+
+<h3 id="RUN-START"><a href="#RUN-START" class="headerlink" title="RUN | START"></a>RUN | START</h3><p>docker run 只在第一次运行时使用，将镜像放到容器中，以后再次启动这个容器时，只需要使用命令docker start 即可。</p>
+<blockquote>
+<p>推荐:</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/43589/">https://github.com/maxzhao-it/blog/post/43589/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/44183/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/44183/" class="post-title-link" itemprop="url">OAuth2与JWT</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Spring/OAuth/" itemprop="url" rel="index"><span itemprop="name">OAuth</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><img src="https://oauth.net/images/oauth-2-sm.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是Oauth2？"><a href="#什么是Oauth2？" class="headerlink" title="什么是Oauth2？"></a>什么是Oauth2？</h3><p>OAuth（Open Authorization，开放授权）是为用户资源的授权定义了一个安全、开放及简单的标准，第三方无需知道用户的账号及密码，就可获取到用户的授权信息。<br> OAuth2.0是OAuth协议的延续版本，但不向后兼容OAuth 1.0即完全废止了OAuth1.0</p>
+<p>注意：对于OAuth2的使用场景，官方文档都提到针对第三方应用，需要强调的是，这个第三方应用，不指的是除了服务本身外的应用，都是第三方应用，即使是自己的应用，也是第三方应用。</p>
+<h3 id="了解OAuth2与JWT"><a href="#了解OAuth2与JWT" class="headerlink" title="了解OAuth2与JWT"></a>了解OAuth2与JWT</h3><ul>
+<li><p>JWT：JSON Web Token &#x2F;&#x2F; 是一种具体的Token实现框架；</p>
+</li>
+<li><p>OAuth2：Open Authorization &#x2F;&#x2F; 是一种授权协议，是规范，不是实现；</p>
+</li>
+<li><p>Spring Security OAuth2：Spring 对 OAuth2 的开源实现，优点是能与Spring Cloud技术栈无缝集成；</p>
+</li>
+<li><p>Spring Security：前身是 Acegi Security ，能够为 Spring企业应用系统提供声明式的安全访问控制；</p>
+</li>
+</ul>
+<p>这里需要理解两个概念：</p>
+<ul>
+<li>Authentication：用户认证，一般是通过用户名密码来确认用户是否为系统中合法主体；</li>
+<li>Authorization：用户授权，一般是给系统中合法主体授予相关资源访问权限；</li>
+</ul>
+<p>jwt是基于token的认证协议的实现，OAuth2是一种授权框架，提供了一套详细的授权协议标准（指导）。</p>
+<p>jwt的基本思路就是用户提供用户名和密码给认证服务器，服务器验证用户提交信息信息的合法性；如果验证成功，会产生并返回一个Token（令牌），用户可以使用这个token访问服务器上受保护的资源。</p>
+<h2 id="OAuth"><a href="#OAuth" class="headerlink" title="OAuth"></a>OAuth</h2><h3 id="Roles角色"><a href="#Roles角色" class="headerlink" title="Roles角色"></a>Roles角色</h3><p>在OAuth2中主要有四个角色，主要如下：</p>
+<ol>
+<li>Resource Owner(资源拥有者)：用户，即资源的拥有人，想要分享某些资 源给第三方应用</li>
+<li>Resource Server(资源服务器)：放受保护资源，要访问这些资源，需要获得访问令牌</li>
+<li>Authorization server(授权（认证）服务器)：授权服务器用于发放访问令牌给客户端</li>
+<li>Client(客户端应用（第三方应用）)：客户端代表请求资源服务器资源的第三方程序</li>
+</ol>
+<h3 id="OAuth2中的其他术语："><a href="#OAuth2中的其他术语：" class="headerlink" title="OAuth2中的其他术语："></a>OAuth2中的其他术语：</h3><ul>
+<li>Client Credentials(客户凭证)：客户的clientId 和密码用于认证客户</li>
+<li>Access Token(访问令牌)：授权服务器在接收到客户请求后，颁发的访问令牌</li>
+<li>Scopes(作用域)：客户请求访问令牌时,由资源拥有者额外指定的细分权限(permission)</li>
+<li>User Agent(用户代理)：用户代理。一般就是指浏览器</li>
+</ul>
+<h3 id="OAuth2中的令牌类型："><a href="#OAuth2中的令牌类型：" class="headerlink" title="OAuth2中的令牌类型："></a>OAuth2中的令牌类型：</h3><ul>
+<li>Authorization Code Token(授权码)：仅用于授权码授权类型,用于交换获取访问令牌和刷新令牌</li>
+<li>Refresh Token(刷新令牌)：用于去授权服务器获取一个新的访问令牌</li>
+<li>Access Token(访问令牌)：用于代表一个用户或服务直接去访问受保护的资源</li>
+<li>Proof of Possession(PoP) Token(持有证明(pop)令牌)：可以校验client是否对Token 有明确的拥有权</li>
+</ul>
+<h3 id="授权模式："><a href="#授权模式：" class="headerlink" title="授权模式："></a>授权模式：</h3><ol>
+<li>授权码模式（Authorization Code）(正统方式)(支持refresh token)</li>
+<li>授权码简化模式（Implicit）(为web浏览器设计)(不支持refresh token)</li>
+<li>Pwd模式（Resource Owner Password Credentials） (基本不用)(支持refresh token)</li>
+<li>Client模式（Client Credentials） (为后台api调用设计)(不支持refresh token)</li>
+<li>扩展模式（Extension）（自定义模式）</li>
+</ol>
+<p>最常用的grant_type组合有: <code>authorization_code,refresh_token</code>(针对通过浏览器访问的客户端); <code>password,refresh_token</code>(针对移动设备的客户端). <code>implicit</code>与<code>client_credentials</code>在实际中很少使用.</p>
+<p>Authorization Grants 认证授权  </p>
+<h3 id="客户端类型"><a href="#客户端类型" class="headerlink" title="客户端类型"></a>客户端类型</h3><p>OAuth 2.0客户端角色被细分为一系列类型和配置，本节将阐述这些类型和配置。</p>
+<p>OAuth 2.0规范定义了两种客户端类型：</p>
+<ul>
+<li>保密的</li>
+<li>公有的</li>
+</ul>
+<p>保密的客户端能够对外部保持客户端密码保密。该客户端密码是由授权服务器分配给客户端应用的。为了避免欺骗，该密码是授权服务器用来识别客户端的。例如一个保密的客户端可以是web应用，除了管理员，没有任何人能够访问服务器和看到该密码。</p>
+<p>公有的客户端不能使客户端密码保密。比如移动手机应用或桌面应用会将密码嵌入在内部。这样的应用可能被破解，并且泄漏密码。这同于在用户的浏览器上运行的JavaScript应用。用户可以使用一个JavaScript调试器来寻找到应用程序，并查看客户端密码。</p>
+<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>OAuth 2.0规范也提到了一系列客户端配置文件。这些配置文件是具体类型的应用程序，这可以是保密或公开的。这些配置文件有：</p>
+<ul>
+<li>web应用</li>
+<li>用户代理</li>
+<li>原生</li>
+</ul>
+<blockquote>
+<p>推荐</p>
+<p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/oauth2/">w3cschool</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0dc9c452b40e">SpringBoot+Security+JWT进阶：二、自定义认证实践</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44183/">https://github.com/maxzhao-it/blog/post/44183/</a> </p>
 
       
     </div>
@@ -964,154 +1112,6 @@
 <hr>
 <p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/284b4b359dcc">https://www.jianshu.com/p/284b4b359dcc</a></p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/50708/">https://github.com/maxzhao-it/blog/post/50708/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/44183/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/44183/" class="post-title-link" itemprop="url">OAuth2与JWT</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Spring/OAuth/" itemprop="url" rel="index"><span itemprop="name">OAuth</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="https://oauth.net/images/oauth-2-sm.png"></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是Oauth2？"><a href="#什么是Oauth2？" class="headerlink" title="什么是Oauth2？"></a>什么是Oauth2？</h3><p>OAuth（Open Authorization，开放授权）是为用户资源的授权定义了一个安全、开放及简单的标准，第三方无需知道用户的账号及密码，就可获取到用户的授权信息。<br> OAuth2.0是OAuth协议的延续版本，但不向后兼容OAuth 1.0即完全废止了OAuth1.0</p>
-<p>注意：对于OAuth2的使用场景，官方文档都提到针对第三方应用，需要强调的是，这个第三方应用，不指的是除了服务本身外的应用，都是第三方应用，即使是自己的应用，也是第三方应用。</p>
-<h3 id="了解OAuth2与JWT"><a href="#了解OAuth2与JWT" class="headerlink" title="了解OAuth2与JWT"></a>了解OAuth2与JWT</h3><ul>
-<li><p>JWT：JSON Web Token &#x2F;&#x2F; 是一种具体的Token实现框架；</p>
-</li>
-<li><p>OAuth2：Open Authorization &#x2F;&#x2F; 是一种授权协议，是规范，不是实现；</p>
-</li>
-<li><p>Spring Security OAuth2：Spring 对 OAuth2 的开源实现，优点是能与Spring Cloud技术栈无缝集成；</p>
-</li>
-<li><p>Spring Security：前身是 Acegi Security ，能够为 Spring企业应用系统提供声明式的安全访问控制；</p>
-</li>
-</ul>
-<p>这里需要理解两个概念：</p>
-<ul>
-<li>Authentication：用户认证，一般是通过用户名密码来确认用户是否为系统中合法主体；</li>
-<li>Authorization：用户授权，一般是给系统中合法主体授予相关资源访问权限；</li>
-</ul>
-<p>jwt是基于token的认证协议的实现，OAuth2是一种授权框架，提供了一套详细的授权协议标准（指导）。</p>
-<p>jwt的基本思路就是用户提供用户名和密码给认证服务器，服务器验证用户提交信息信息的合法性；如果验证成功，会产生并返回一个Token（令牌），用户可以使用这个token访问服务器上受保护的资源。</p>
-<h2 id="OAuth"><a href="#OAuth" class="headerlink" title="OAuth"></a>OAuth</h2><h3 id="Roles角色"><a href="#Roles角色" class="headerlink" title="Roles角色"></a>Roles角色</h3><p>在OAuth2中主要有四个角色，主要如下：</p>
-<ol>
-<li>Resource Owner(资源拥有者)：用户，即资源的拥有人，想要分享某些资 源给第三方应用</li>
-<li>Resource Server(资源服务器)：放受保护资源，要访问这些资源，需要获得访问令牌</li>
-<li>Authorization server(授权（认证）服务器)：授权服务器用于发放访问令牌给客户端</li>
-<li>Client(客户端应用（第三方应用）)：客户端代表请求资源服务器资源的第三方程序</li>
-</ol>
-<h3 id="OAuth2中的其他术语："><a href="#OAuth2中的其他术语：" class="headerlink" title="OAuth2中的其他术语："></a>OAuth2中的其他术语：</h3><ul>
-<li>Client Credentials(客户凭证)：客户的clientId 和密码用于认证客户</li>
-<li>Access Token(访问令牌)：授权服务器在接收到客户请求后，颁发的访问令牌</li>
-<li>Scopes(作用域)：客户请求访问令牌时,由资源拥有者额外指定的细分权限(permission)</li>
-<li>User Agent(用户代理)：用户代理。一般就是指浏览器</li>
-</ul>
-<h3 id="OAuth2中的令牌类型："><a href="#OAuth2中的令牌类型：" class="headerlink" title="OAuth2中的令牌类型："></a>OAuth2中的令牌类型：</h3><ul>
-<li>Authorization Code Token(授权码)：仅用于授权码授权类型,用于交换获取访问令牌和刷新令牌</li>
-<li>Refresh Token(刷新令牌)：用于去授权服务器获取一个新的访问令牌</li>
-<li>Access Token(访问令牌)：用于代表一个用户或服务直接去访问受保护的资源</li>
-<li>Proof of Possession(PoP) Token(持有证明(pop)令牌)：可以校验client是否对Token 有明确的拥有权</li>
-</ul>
-<h3 id="授权模式："><a href="#授权模式：" class="headerlink" title="授权模式："></a>授权模式：</h3><ol>
-<li>授权码模式（Authorization Code）(正统方式)(支持refresh token)</li>
-<li>授权码简化模式（Implicit）(为web浏览器设计)(不支持refresh token)</li>
-<li>Pwd模式（Resource Owner Password Credentials） (基本不用)(支持refresh token)</li>
-<li>Client模式（Client Credentials） (为后台api调用设计)(不支持refresh token)</li>
-<li>扩展模式（Extension）（自定义模式）</li>
-</ol>
-<p>最常用的grant_type组合有: <code>authorization_code,refresh_token</code>(针对通过浏览器访问的客户端); <code>password,refresh_token</code>(针对移动设备的客户端). <code>implicit</code>与<code>client_credentials</code>在实际中很少使用.</p>
-<p>Authorization Grants 认证授权  </p>
-<h3 id="客户端类型"><a href="#客户端类型" class="headerlink" title="客户端类型"></a>客户端类型</h3><p>OAuth 2.0客户端角色被细分为一系列类型和配置，本节将阐述这些类型和配置。</p>
-<p>OAuth 2.0规范定义了两种客户端类型：</p>
-<ul>
-<li>保密的</li>
-<li>公有的</li>
-</ul>
-<p>保密的客户端能够对外部保持客户端密码保密。该客户端密码是由授权服务器分配给客户端应用的。为了避免欺骗，该密码是授权服务器用来识别客户端的。例如一个保密的客户端可以是web应用，除了管理员，没有任何人能够访问服务器和看到该密码。</p>
-<p>公有的客户端不能使客户端密码保密。比如移动手机应用或桌面应用会将密码嵌入在内部。这样的应用可能被破解，并且泄漏密码。这同于在用户的浏览器上运行的JavaScript应用。用户可以使用一个JavaScript调试器来寻找到应用程序，并查看客户端密码。</p>
-<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>OAuth 2.0规范也提到了一系列客户端配置文件。这些配置文件是具体类型的应用程序，这可以是保密或公开的。这些配置文件有：</p>
-<ul>
-<li>web应用</li>
-<li>用户代理</li>
-<li>原生</li>
-</ul>
-<blockquote>
-<p>推荐</p>
-<p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/oauth2/">w3cschool</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0dc9c452b40e">SpringBoot+Security+JWT进阶：二、自定义认证实践</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44183/">https://github.com/maxzhao-it/blog/post/44183/</a> </p>
 
       
     </div>

@@ -1378,111 +1378,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f9aa9996/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/f9aa9996/" class="post-title-link" itemprop="url">分析JVM内存溢出的hprof</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><h3 id="手动导出内存快照"><a href="#手动导出内存快照" class="headerlink" title="手动导出内存快照"></a>手动导出内存快照</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:format=b,file=./java_pid6902.hprof 6902</span><br></pre></td></tr></table></figure>
-
-<h3 id="自动导出"><a href="#自动导出" class="headerlink" title="自动导出"></a>自动导出</h3><p>添加脚本命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;`</span><br><span class="line">java -Xmx1G -XX:+PrintGCDetails  -XX:+PrintGCTimeStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./dump/  -Xloggc:gclog.log-$&#123;current&#125; -XX:+UseGCLogFileRotation  -XX:GCLogFileSize=20M  -XX:NumberOfGCLogFiles=50 -jar  app.jar</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>更多参考<a href="./3c725d5d">JVM参数</a></p>
-</blockquote>
-<h2 id="jhat-查看"><a href="#jhat-查看" class="headerlink" title="jhat 查看"></a><code>jhat</code> 查看</h2><h2 id="打开-hprof"><a href="#打开-hprof" class="headerlink" title="打开 hprof"></a>打开 <code>hprof</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">端口默认 7000 -J-Xmx512m</span></span><br><span class="line">jhat -port 7000 -J-Xmx512m java_pid14827.hprof</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用<code>-J-Xmx512m</code>来设置最大堆大小为<code>512M</code>。</li>
-</ul>
-<h2 id="jvisualvm-查看"><a href="#jvisualvm-查看" class="headerlink" title="jvisualvm  查看"></a><code>jvisualvm</code>  查看</h2><p>直接载入文件,选择文件类型 <code>.hprof</code></p>
-<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524103324385.png" alt="image-20220524103324385"></p>
-<blockquote>
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=tools-using-hprof-profiler">IBM：使用 <code>HPROF</code> 概要文件分析器</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=profiler-explanation-hprof-output-file">IBM：<code>HPROF</code> 输出文件的说明</a></p>
-<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/samples/hprof.html"><code>HPROF: A Heap/CPU Profiling Tool</code></a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/276">深入浅出<code>JProfiler</code></a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onmyway20xx/p/3963735.html">使用<code>JProfiler</code>进行内存分析</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.ej-technologies.com/resources/jprofiler/help/doc/main/introduction.html#jprofiler.introduction"><code>Introduction To JProfiler</code></a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f9aa9996/">https://github.com/maxzhao-it/blog/post/f9aa9996/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/3c725d5d/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1669,6 +1564,111 @@
 
 
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/3c725d5d/">https://github.com/maxzhao-it/blog/post/3c725d5d/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f9aa9996/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/f9aa9996/" class="post-title-link" itemprop="url">分析JVM内存溢出的hprof</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><h3 id="手动导出内存快照"><a href="#手动导出内存快照" class="headerlink" title="手动导出内存快照"></a>手动导出内存快照</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:format=b,file=./java_pid6902.hprof 6902</span><br></pre></td></tr></table></figure>
+
+<h3 id="自动导出"><a href="#自动导出" class="headerlink" title="自动导出"></a>自动导出</h3><p>添加脚本命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;`</span><br><span class="line">java -Xmx1G -XX:+PrintGCDetails  -XX:+PrintGCTimeStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./dump/  -Xloggc:gclog.log-$&#123;current&#125; -XX:+UseGCLogFileRotation  -XX:GCLogFileSize=20M  -XX:NumberOfGCLogFiles=50 -jar  app.jar</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>更多参考<a href="./3c725d5d">JVM参数</a></p>
+</blockquote>
+<h2 id="jhat-查看"><a href="#jhat-查看" class="headerlink" title="jhat 查看"></a><code>jhat</code> 查看</h2><h2 id="打开-hprof"><a href="#打开-hprof" class="headerlink" title="打开 hprof"></a>打开 <code>hprof</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">端口默认 7000 -J-Xmx512m</span></span><br><span class="line">jhat -port 7000 -J-Xmx512m java_pid14827.hprof</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用<code>-J-Xmx512m</code>来设置最大堆大小为<code>512M</code>。</li>
+</ul>
+<h2 id="jvisualvm-查看"><a href="#jvisualvm-查看" class="headerlink" title="jvisualvm  查看"></a><code>jvisualvm</code>  查看</h2><p>直接载入文件,选择文件类型 <code>.hprof</code></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524103324385.png" alt="image-20220524103324385"></p>
+<blockquote>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=tools-using-hprof-profiler">IBM：使用 <code>HPROF</code> 概要文件分析器</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=profiler-explanation-hprof-output-file">IBM：<code>HPROF</code> 输出文件的说明</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/samples/hprof.html"><code>HPROF: A Heap/CPU Profiling Tool</code></a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/276">深入浅出<code>JProfiler</code></a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onmyway20xx/p/3963735.html">使用<code>JProfiler</code>进行内存分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ej-technologies.com/resources/jprofiler/help/doc/main/introduction.html#jprofiler.introduction"><code>Introduction To JProfiler</code></a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f9aa9996/">https://github.com/maxzhao-it/blog/post/f9aa9996/</a> </p>
 
       
     </div>

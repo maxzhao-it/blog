@@ -895,98 +895,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/8bda86f4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/8bda86f4/" class="post-title-link" itemprop="url">Java操作图片裁剪</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Java</code> 操作图片，实现图片的裁剪</p>
-<h1 id="裁剪图片"><a href="#裁剪图片" class="headerlink" title="裁剪图片"></a>裁剪图片</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ImageUtil</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取人脸图片数据</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pictureBytes 照片数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> contentType  请求内容类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> faceName     人脸模型名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 人脸图片数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] getFaceHead(String faceName, <span class="type">byte</span>[] pictureBytes, MediaType contentType) &#123;</span><br><span class="line">        <span class="comment">/*获取人脸位置与大小*/</span></span><br><span class="line">        <span class="type">double</span>[] faceDetectResult = <span class="built_in">this</span>.getFaceDetectResult(faceName, pictureBytes, contentType);</span><br><span class="line">        <span class="keyword">if</span> (faceDetectResult[<span class="number">0</span>] == <span class="number">0</span></span><br><span class="line">                &amp;&amp; faceDetectResult[<span class="number">1</span>] == <span class="number">0</span></span><br><span class="line">                &amp;&amp; (faceDetectResult[<span class="number">2</span>] == <span class="number">0</span></span><br><span class="line">                || faceDetectResult[<span class="number">3</span>] == <span class="number">0</span>)) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;图片无法裁剪，使用原图片&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> pictureBytes;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*裁剪图片*/</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">/*获取图片 buffer*/</span></span><br><span class="line">            <span class="type">BufferedImage</span> <span class="variable">pictureImage</span> <span class="operator">=</span> ImageIO.read(<span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(pictureBytes));</span><br><span class="line">            <span class="keyword">final</span> <span class="type">int</span> <span class="variable">width</span> <span class="operator">=</span> pictureImage.getWidth();</span><br><span class="line">            <span class="keyword">final</span> <span class="type">int</span> <span class="variable">height</span> <span class="operator">=</span> pictureImage.getHeight();</span><br><span class="line">            <span class="comment">/*图片裁剪*/</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">0</span>] * width);</span><br><span class="line">            <span class="comment">/*坐标 - 10*/</span></span><br><span class="line">            x = Math.max((x - <span class="number">10</span>), <span class="number">0</span>);</span><br><span class="line">            <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">1</span>] * height);</span><br><span class="line">            <span class="comment">/*坐标 - 10*/</span></span><br><span class="line">            y = Math.max((y - <span class="number">10</span>), <span class="number">0</span>);</span><br><span class="line">            <span class="type">int</span> <span class="variable">w</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">2</span>] * width);</span><br><span class="line">            <span class="comment">/*宽度 + 10*/</span></span><br><span class="line">            w = Math.min((w + <span class="number">10</span>), width - x);</span><br><span class="line">            <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">3</span>] * height);</span><br><span class="line">            <span class="comment">/*高度 + 10*/</span></span><br><span class="line">            h = Math.min((h + <span class="number">10</span>), height - y);</span><br><span class="line">            <span class="type">BufferedImage</span> <span class="variable">headImage</span> <span class="operator">=</span> pictureImage.getSubimage(x, y, w, h);</span><br><span class="line">            <span class="type">ByteArrayOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">            ImageIO.write(headImage, <span class="string">&quot;jpg&quot;</span>, out);</span><br><span class="line">            <span class="keyword">return</span> out.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;裁剪图片失败使用原照片 &#123;&#125;&quot;</span>, e.getMessage());</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;裁剪图片失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h1 id="1-图片操作类"><a href="#1-图片操作类" class="headerlink" title="1 图片操作类"></a>1 图片操作类</h1><ol>
-<li><code>Image</code></li>
-<li><code>BufferedImage</code><ol>
-<li><code>getSubimage</code>  图片裁剪</li>
-</ol>
-</li>
-<li><code>ImageIO</code><ol>
-<li><code>read</code> 读取图片</li>
-<li><code>wirte</code> 写出图片</li>
-</ol>
-</li>
-</ol>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/8bda86f4/">https://github.com/maxzhao-it/blog/post/8bda86f4/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/1a9b93f6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1054,6 +962,98 @@
 </li>
 </ol>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/1a9b93f6/">https://github.com/maxzhao-it/blog/post/1a9b93f6/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/8bda86f4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/8bda86f4/" class="post-title-link" itemprop="url">Java操作图片裁剪</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Java</code> 操作图片，实现图片的裁剪</p>
+<h1 id="裁剪图片"><a href="#裁剪图片" class="headerlink" title="裁剪图片"></a>裁剪图片</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ImageUtil</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取人脸图片数据</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pictureBytes 照片数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> contentType  请求内容类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> faceName     人脸模型名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 人脸图片数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] getFaceHead(String faceName, <span class="type">byte</span>[] pictureBytes, MediaType contentType) &#123;</span><br><span class="line">        <span class="comment">/*获取人脸位置与大小*/</span></span><br><span class="line">        <span class="type">double</span>[] faceDetectResult = <span class="built_in">this</span>.getFaceDetectResult(faceName, pictureBytes, contentType);</span><br><span class="line">        <span class="keyword">if</span> (faceDetectResult[<span class="number">0</span>] == <span class="number">0</span></span><br><span class="line">                &amp;&amp; faceDetectResult[<span class="number">1</span>] == <span class="number">0</span></span><br><span class="line">                &amp;&amp; (faceDetectResult[<span class="number">2</span>] == <span class="number">0</span></span><br><span class="line">                || faceDetectResult[<span class="number">3</span>] == <span class="number">0</span>)) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;图片无法裁剪，使用原图片&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> pictureBytes;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*裁剪图片*/</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">/*获取图片 buffer*/</span></span><br><span class="line">            <span class="type">BufferedImage</span> <span class="variable">pictureImage</span> <span class="operator">=</span> ImageIO.read(<span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(pictureBytes));</span><br><span class="line">            <span class="keyword">final</span> <span class="type">int</span> <span class="variable">width</span> <span class="operator">=</span> pictureImage.getWidth();</span><br><span class="line">            <span class="keyword">final</span> <span class="type">int</span> <span class="variable">height</span> <span class="operator">=</span> pictureImage.getHeight();</span><br><span class="line">            <span class="comment">/*图片裁剪*/</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">0</span>] * width);</span><br><span class="line">            <span class="comment">/*坐标 - 10*/</span></span><br><span class="line">            x = Math.max((x - <span class="number">10</span>), <span class="number">0</span>);</span><br><span class="line">            <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">1</span>] * height);</span><br><span class="line">            <span class="comment">/*坐标 - 10*/</span></span><br><span class="line">            y = Math.max((y - <span class="number">10</span>), <span class="number">0</span>);</span><br><span class="line">            <span class="type">int</span> <span class="variable">w</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">2</span>] * width);</span><br><span class="line">            <span class="comment">/*宽度 + 10*/</span></span><br><span class="line">            w = Math.min((w + <span class="number">10</span>), width - x);</span><br><span class="line">            <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> (<span class="type">int</span>) (faceDetectResult[<span class="number">3</span>] * height);</span><br><span class="line">            <span class="comment">/*高度 + 10*/</span></span><br><span class="line">            h = Math.min((h + <span class="number">10</span>), height - y);</span><br><span class="line">            <span class="type">BufferedImage</span> <span class="variable">headImage</span> <span class="operator">=</span> pictureImage.getSubimage(x, y, w, h);</span><br><span class="line">            <span class="type">ByteArrayOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">            ImageIO.write(headImage, <span class="string">&quot;jpg&quot;</span>, out);</span><br><span class="line">            <span class="keyword">return</span> out.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;裁剪图片失败使用原照片 &#123;&#125;&quot;</span>, e.getMessage());</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;裁剪图片失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h1 id="1-图片操作类"><a href="#1-图片操作类" class="headerlink" title="1 图片操作类"></a>1 图片操作类</h1><ol>
+<li><code>Image</code></li>
+<li><code>BufferedImage</code><ol>
+<li><code>getSubimage</code>  图片裁剪</li>
+</ol>
+</li>
+<li><code>ImageIO</code><ol>
+<li><code>read</code> 读取图片</li>
+<li><code>wirte</code> 写出图片</li>
+</ol>
+</li>
+</ol>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/8bda86f4/">https://github.com/maxzhao-it/blog/post/8bda86f4/</a> </p>
 
       
     </div>
