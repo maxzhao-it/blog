@@ -155,12 +155,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-count">133</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-count">161</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -216,100 +216,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/54174/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/54174/" class="post-title-link" itemprop="url">Vue请求跨域（请求映射）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/VUE/" itemprop="url" rel="index"><span itemprop="name">VUE</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这里用的 <code>Antd pro vue</code>，与 <code>vue</code> 相差不大。</p>
-<p>在开发环境中，是可以配置请求代理的。</p>
-<p>开发环境与打包后的实际运行环境的配置有很大区别，这里只记录开发环境。</p>
-<h1 id="vue-config-js"><a href="#vue-config-js" class="headerlink" title="vue.config.js"></a><code>vue.config.js</code></h1><p>这里配置的代理路径为 <code>/boot</code> ,当前路径的请求，都会转发到 <code>http://localhost:8888</code> 上。</p>
-<p><code> pathRewrite: &#123; &#39;/&#39;: &#39;/&#39;, &#125;</code> 表示当前路径不变。</p>
-<p>比如，当前请求为 <code>http://127.0.0.1:8000/boot/user/login</code> 则当前请求会被转发到 <code>http://localhost:8888/boot/user/login</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vueConfig = &#123;</span><br><span class="line">    <span class="comment">//************</span></span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">        <span class="comment">// development server port 8000</span></span><br><span class="line">        <span class="attr">port</span>: <span class="number">8000</span></span><br><span class="line">        <span class="comment">// If you want to turn on the proxy, please remove the mockjs /src/main.jsL11</span></span><br><span class="line">        , <span class="attr">proxy</span>: &#123;</span><br><span class="line">            <span class="comment">/*基础接口*/</span></span><br><span class="line">            <span class="string">&#x27;/boot&#x27;</span>: &#123;</span><br><span class="line">                <span class="attr">target</span>: <span class="string">&#x27;http://localhost:8888&#x27;</span>,</span><br><span class="line">                <span class="attr">ws</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">changeOrigin</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">pathRewrite</span>: &#123;</span><br><span class="line">                    <span class="string">&#x27;/&#x27;</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = vueConfig;</span><br></pre></td></tr></table></figure>
-
-<h1 id="html-中的图片路径"><a href="#html-中的图片路径" class="headerlink" title="html 中的图片路径"></a><code>html</code> 中的图片路径</h1><p><code>html</code> 总的图片路径，如果使用的路径格式符合代理规则，则当前 <code>url</code> 也会被代理。</p>
-<p>比如说下面两种路径，都会被代理：</p>
-<pre><code>- http://127.0.0.1:8000/boot/file/server/view/20210422083822582708935283585024.jpg
-- /boot/file/server/view/20210422083822582708935283585024.jpg
-</code></pre>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/54174/">https://github.com/maxzhao-it/blog/post/54174/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/48544/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -338,7 +244,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-07-28 18:30:52" itemprop="dateModified" datetime="2022-07-28T18:30:52+08:00">2022-07-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -763,6 +669,88 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/59143/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/59143/" class="post-title-link" itemprop="url">SpringCloud中的注解</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/SpringCloud/" itemprop="url" rel="index"><span itemprop="name">SpringCloud</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="RefreshScope"><a href="#RefreshScope" class="headerlink" title="@RefreshScope"></a><code>@RefreshScope</code></h4><p> <code>Spring Cloud</code> 原生注解 <code>@RefreshScope</code> 实现配置自动更新。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/59143/">https://github.com/maxzhao-it/blog/post/59143/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/29799/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -843,88 +831,6 @@
 </tr>
 </tbody></table>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/29799/">https://github.com/maxzhao-it/blog/post/29799/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/59143/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/59143/" class="post-title-link" itemprop="url">SpringCloud中的注解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/SpringCloud/" itemprop="url" rel="index"><span itemprop="name">SpringCloud</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="RefreshScope"><a href="#RefreshScope" class="headerlink" title="@RefreshScope"></a><code>@RefreshScope</code></h4><p> <code>Spring Cloud</code> 原生注解 <code>@RefreshScope</code> 实现配置自动更新。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/59143/">https://github.com/maxzhao-it/blog/post/59143/</a> </p>
 
       
     </div>
@@ -1582,6 +1488,180 @@
 
 
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/2700/">https://github.com/maxzhao-it/blog/post/2700/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/40046/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/40046/" class="post-title-link" itemprop="url">Java中@SuppressWarnings的作用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 17:37:16" itemprop="dateModified" datetime="2022-07-28T17:37:16+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/%E6%B3%A8%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">注解</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><code>java.lang.SuppressWarnings</code>是J2SE5.0中标准的Annotation之一。可以标注在类、字段、方法、参数、构造方法，以及局部变量上。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123;ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.CONSTRUCTOR, ElementType.LOCAL_VARIABLE&#125;)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>告诉编译器忽略指定的警告，不用在编译完成后出现警告信息。</p>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings(“”)</span></span><br><span class="line"><span class="meta">@SuppressWarnings(&#123;&#125;)</span></span><br><span class="line"><span class="meta">@SuppressWarnings(value = &#123;&#125;)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h2><h3 id="SuppressWarnings-“serial”"><a href="#SuppressWarnings-“serial”" class="headerlink" title="@SuppressWarnings(“serial”)"></a>@SuppressWarnings(“serial”)</h3><p>警告信息：<code>The serializable class WmailCalendar does notdeclare a static final serialVersionUID field of type long</code><br>使用这个注释将警告信息去掉。</p>
+<h3 id="SuppressWarnings-“unused”"><a href="#SuppressWarnings-“unused”" class="headerlink" title="@SuppressWarnings(“unused”)"></a>@SuppressWarnings(“unused”)</h3><p>编码时出现变量未被使用的警告提示</p>
+<p>可以在方法前添加 <code>@SuppressWarnings(&quot;unused&quot;)</code> 去除这些“感叹号”。</p>
+<h2 id="抑制警告的关键字"><a href="#抑制警告的关键字" class="headerlink" title="抑制警告的关键字"></a>抑制警告的关键字</h2><table>
+<thead>
+<tr>
+<th><em><strong>*关键字*</strong></em></th>
+<th><em><strong>*用途*</strong></em></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>all</td>
+<td>to suppress all warnings（抑制所有警告）</td>
+</tr>
+<tr>
+<td>boxing</td>
+<td>to suppress warnings relative to boxing&#x2F;unboxing operations（要抑制与箱&#x2F;非装箱操作相关的警告）</td>
+</tr>
+<tr>
+<td>cast</td>
+<td>to suppress warnings relative to cast operations（为了抑制与强制转换操作相关的警告）</td>
+</tr>
+<tr>
+<td>dep-ann</td>
+<td>to suppress warnings relative to deprecated annotation（要抑制相对于弃用注释的警告）</td>
+</tr>
+<tr>
+<td>deprecation</td>
+<td>to suppress warnings relative to deprecation（要抑制相对于弃用的警告）</td>
+</tr>
+<tr>
+<td>fallthrough</td>
+<td>to suppress warnings relative to missing breaks in switch statements（在switch语句中，抑制与缺失中断相关的警告）</td>
+</tr>
+<tr>
+<td>finally</td>
+<td>to suppress warnings relative to finally block that don’t return（为了抑制警告，相对于最终阻止不返回的警告）</td>
+</tr>
+<tr>
+<td>hiding</td>
+<td>to suppress warnings relative to locals that hide variable（为了抑制本地隐藏变量的警告）</td>
+</tr>
+<tr>
+<td>incomplete-switch</td>
+<td>to suppress warnings relative to missing entries in a switch statement (enum case)（为了在switch语句（enum案例）中抑制相对于缺失条目的警告）</td>
+</tr>
+<tr>
+<td>nls</td>
+<td>to suppress warnings relative to non-nls string literals（要抑制相对于非nls字符串字面量的警告）</td>
+</tr>
+<tr>
+<td>null</td>
+<td>to suppress warnings relative to null analysis（为了抑制与null分析相关的警告）</td>
+</tr>
+<tr>
+<td>rawtypes</td>
+<td>to suppress warnings relative to un-specific types when using generics on class params（在类params上使用泛型时，要抑制相对于非特异性类型的警告）</td>
+</tr>
+<tr>
+<td>restriction</td>
+<td>to suppress warnings relative to usage of discouraged or forbidden references（禁止使用警告或禁止引用的警告）</td>
+</tr>
+<tr>
+<td>serial</td>
+<td>to suppress warnings relative to missing serialVersionUID field for a serializable class（为了一个可串行化的类，为了抑制相对于缺失的serialVersionUID字段的警告）</td>
+</tr>
+<tr>
+<td>static-access</td>
+<td>o suppress warnings relative to incorrect static access（o抑制与不正确的静态访问相关的警告）</td>
+</tr>
+<tr>
+<td>synthetic-access</td>
+<td>to suppress warnings relative to unoptimized access from inner classes（相对于内部类的未优化访问，来抑制警告）</td>
+</tr>
+<tr>
+<td>unchecked</td>
+<td>to suppress warnings relative to unchecked operations（相对于不受约束的操作，抑制警告）</td>
+</tr>
+<tr>
+<td>unqualified-field-access</td>
+<td>to suppress warnings relative to field access unqualified（为了抑制与现场访问相关的警告）</td>
+</tr>
+<tr>
+<td>unused</td>
+<td>to suppress warnings relative to unused code（抑制没有使用过代码的警告）</td>
+</tr>
+</tbody></table>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/40046/">https://github.com/maxzhao-it/blog/post/40046/</a> </p>
 
       
     </div>

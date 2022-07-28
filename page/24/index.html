@@ -155,12 +155,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-count">133</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-count">161</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,170 +207,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/59134/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/59134/" class="post-title-link" itemprop="url">SpringBoot+Security+JWT基础</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/Security/" itemprop="url" rel="index"><span itemprop="name">Security</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="First"><a href="#First" class="headerlink" title="First"></a>First</h3><ul>
-<li>我第一次使用，所以代码中的注释和说明比较多</li>
-</ul>
-<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
-<li>由于服务器不保存 session 状态，因此无法在使用过程中废止某个 token，或者更改 token 的权限。也就是说，一旦 JWT 签发了，在到期之前就会始终有效，除非服务器部署额外的逻辑。</li>
-</ul>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><h3 id="Security-基本原理"><a href="#Security-基本原理" class="headerlink" title="Security 基本原理"></a>Security 基本原理</h3><p>下面每个类或接口的作用,之后都会有代码.</p>
-<p><img src="/blog/uploads/images/647585-20181109110908290-328952476.png"></p>
-<p><img src="/blog/uploads/images/2018042723003377.png"></p>
-<h3 id="了解-Token结构"><a href="#了解-Token结构" class="headerlink" title="了解 Token结构"></a>了解 <code>Token</code>结构</h3><p><code>Token</code>是一个很长的字符串，中间用点（<code>.</code>）分隔成三个部分。</p>
-<p>JWT 的三个部分依次如下。</p>
-<ul>
-<li>Header（头部）</li>
-<li>Payload（负载）</li>
-<li>Signature（签名）</li>
-</ul>
-<h4 id="Header（头部）"><a href="#Header（头部）" class="headerlink" title="Header（头部）"></a>Header（头部）</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;alg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;HS256&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;typ&quot;</span><span class="punctuation">:</span> <span class="string">&quot;JWT&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>alg</code>属性表示签名的算法（algorithm），默认是 HMAC SHA256（写成 HS256）；<code>typ</code>属性表示这个令牌（token）的类型（type），JWT 令牌统一写为<code>JWT</code>。</p>
-<h4 id="Payload（负载）"><a href="#Payload（负载）" class="headerlink" title="Payload（负载）"></a>Payload（负载）</h4><p>Payload 部分也是一个 JSON 对象，用来存放实际需要传递的数据。JWT 规定了7个官方字段，供选用。</p>
-<ul>
-<li>iss (issuer)：签发人</li>
-<li>exp (expiration time)：过期时间</li>
-<li>sub (subject)：主题</li>
-<li>aud (audience)：受众</li>
-<li>nbf (Not Before)：生效时间</li>
-<li>iat (Issued At)：签发时间</li>
-<li>jti (JWT ID)：编号</li>
-</ul>
-<p>除了官方字段，你还可以在这个部分定义私有字段，下面就是一个例子。</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1234567890&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;admin&quot;</span><span class="punctuation">:</span> <span class="keyword">true</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>注意，JWT 默认是不加密的，任何人都可以读到，所以不要把秘密信息放在这个部分。</p>
-<h4 id="Signature（签名）"><a href="#Signature（签名）" class="headerlink" title="Signature（签名）"></a>Signature（签名）</h4><p>Signature 部分是对前两部分的签名，防止数据篡改。</p>
-<p>首先，需要指定一个密钥（secret）。这个密钥只有服务器才知道，不能泄露给用户。然后，使用 Header 里面指定的签名算法（默认是 HMAC SHA256），按照下面的公式产生签名。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(</span><br><span class="line">  base64UrlEncode(header) + <span class="string">&quot;.&quot;</span> +</span><br><span class="line">  base64UrlEncode(payload),</span><br><span class="line">  secret)</span><br></pre></td></tr></table></figure>
-
-<p>算出签名以后，把 Header、Payload、Signature 三个部分拼成一个字符串，每个部分之间用”点”（<code>.</code>）分隔，就可以返回给用户。</p>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ol>
-<li>构建</li>
-<li>导入 security 、 jwt 依赖</li>
-<li>用户的验证（service 、 dao 、model）</li>
-<li>实现<code>UserDetailsService</code> 、<code>UserDetails</code>接口</li>
-<li>可选：实现<code>PasswordEncoder</code> 接口（密码加密）</li>
-<li>验证用户登录信息、用户权限的拦截器</li>
-<li>security 配置</li>
-<li>登录认证 API</li>
-</ol>
-<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><h3 id="1-构建"><a href="#1-构建" class="headerlink" title="1. 构建"></a>1. 构建</h3><p><a target="_blank" rel="noopener" href="https://start.spring.io/">创建个项目</a></p>
-<h3 id="2-导入-security-、-jwt-依赖"><a href="#2-导入-security-、-jwt-依赖" class="headerlink" title="2.导入 security 、 jwt 依赖"></a>2.导入 security 、 jwt 依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">spring-security-jwt.version</span>&gt;</span>1.0.9.RELEASE<span class="tag">&lt;/<span class="name">spring-security-jwt.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">jjwt.version</span>&gt;</span>0.9.1<span class="tag">&lt;/<span class="name">jjwt.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;jjwt.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.security<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-security-jwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-security-jwt.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-jpa<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>druid-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.16<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--使用啦Lombok插件，需要自己添加 其它需要自己添加了--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h3 id="3-用户的验证（service-、-dao-、model）"><a href="#3-用户的验证（service-、-dao-、model）" class="headerlink" title="3.用户的验证（service 、 dao 、model）"></a>3.用户的验证（service 、 dao 、model）</h3><h4 id="model"><a href="#model" class="headerlink" title="model"></a>model</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户表</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-6-6 13:53:17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table(name = &quot;app_user&quot;, schema = &quot;&quot;, catalog = &quot;&quot;)</span></span><br><span class="line"><span class="meta">@ApiModel(value = &quot;用户表&quot;, description = &quot;用户表&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppUser</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Id</span></span><br><span class="line">	<span class="meta">@Column(name = &quot;ID&quot;,unique = true)</span></span><br><span class="line">	<span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Basic</span></span><br><span class="line">	<span class="meta">@Column(name = &quot;LIVE_ADDRESS&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String liveAddress;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Basic</span></span><br><span class="line">	<span class="meta">@Column(name = &quot;LOGIN_NAME&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String loginName;</span><br><span class="line">	<span class="meta">@Basic</span></span><br><span class="line">	<span class="meta">@Column(name = &quot;PASSWORD&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String password;</span><br><span class="line"><span class="comment">/* 省略 其它*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="dao"><a href="#dao" class="headerlink" title="dao"></a>dao</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户表</span></span><br><span class="line"><span class="comment"> * Repository</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-5-21 11:17:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Repository(value = &quot;appUserRepository&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">AppUserRepository</span> <span class="keyword">extends</span> <span class="title class_">JpaRepository</span>&lt;AppUser, Long&gt;, JpaSpecificationExecutor&lt;AppUser&gt; &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据登录名 查询当前用户</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> loginName 登录名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@date</span> 2019-05-22</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;AppUser&gt; <span class="title function_">findByLoginNameEquals</span><span class="params">(String loginName)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="service"><a href="#service" class="headerlink" title="service"></a>service</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户表</span></span><br><span class="line"><span class="comment"> * Service</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-5-21 11:17:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">AppUserService</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 保存</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> appUser</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@date</span> 2019-06-19</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    AppUser <span class="title function_">saveOne</span><span class="params">(AppUser appUser)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据登录名查询 当前登录用户</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> loginName</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    AppUser <span class="title function_">findByLoginName</span><span class="params">(String loginName)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户表</span></span><br><span class="line"><span class="comment"> * ServiceImpl</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-5-21 11:17:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service(value = &quot;appUserService&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppUserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">AppUserService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource(name = &quot;appUserRepository&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> AppUserRepository appUserRepository;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> AppUser <span class="title function_">saveOne</span><span class="params">(AppUser appUser)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> appUserRepository.save(appUser);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> AppUser <span class="title function_">findByLoginName</span><span class="params">(String loginName)</span> &#123;</span><br><span class="line">        List&lt;AppUser&gt; appUserList = appUserRepository.findByLoginNameEquals(loginName);</span><br><span class="line">        <span class="keyword">return</span> appUserList.size() &gt; <span class="number">0</span> ? appUserList.get(<span class="number">0</span>) : <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="Jwt-工具类"><a href="#Jwt-工具类" class="headerlink" title="Jwt 工具类"></a>Jwt 工具类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;jjwt封装一下方便调用&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;JwtTokenUtil&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-07-04 13:30</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JwtTokenUtil</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 密钥</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SECRET</span> <span class="operator">=</span> <span class="string">&quot;jwt_secret_gtboot&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ISS</span> <span class="operator">=</span> <span class="string">&quot;gtboot&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 过期时间是 1800 秒</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">EXPIRATION</span> <span class="operator">=</span> <span class="number">1800L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">createToken</span><span class="params">(String issuer, String subject, <span class="type">long</span> expiration)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> createToken(issuer, subject, expiration, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建 token</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> issuer     签发人</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject    主体,即用户信息的JSON</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> expiration 有效时间(秒)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> claims     自定义参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@description</span> todo https://www.cnblogs.com/wangshouchang/p/9551748.html</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">createToken</span><span class="params">(String issuer, String subject, <span class="type">long</span> expiration, Claims claims)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Jwts.builder()</span><br><span class="line">                <span class="comment">// JWT_ID：是JWT的唯一标识，根据业务需要，这个可以设置为一个不重复的值，主要用来作为一次性token,从而回避重放攻击。</span></span><br><span class="line"><span class="comment">//                .setId(id)</span></span><br><span class="line">                <span class="comment">// 签名算法以及密匙</span></span><br><span class="line">                .signWith(SignatureAlgorithm.HS512, SECRET)</span><br><span class="line">                <span class="comment">// 自定义属性</span></span><br><span class="line">                .setClaims(<span class="literal">null</span>)</span><br><span class="line">                <span class="comment">// 主题：代表这个JWT的主体，即它的所有人，这个是一个json格式的字符串，可以存放什么userid，roldid之类的，作为什么用户的唯一标志。</span></span><br><span class="line">                .setSubject(subject)</span><br><span class="line">                <span class="comment">// 受众</span></span><br><span class="line"><span class="comment">//                .setAudience(loginName)</span></span><br><span class="line">                <span class="comment">// 签发人</span></span><br><span class="line">                .setIssuer(Optional.ofNullable(issuer).orElse(ISS))</span><br><span class="line">                <span class="comment">// 签发时间</span></span><br><span class="line">                .setIssuedAt(<span class="keyword">new</span> <span class="title class_">Date</span>())</span><br><span class="line">                <span class="comment">// 过期时间</span></span><br><span class="line">                .setExpiration(<span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis() + (expiration &gt; <span class="number">0</span> ? expiration : EXPIRATION) * <span class="number">1000</span>))</span><br><span class="line">                .compact();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从 token 中获取主题信息</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getProperties</span><span class="params">(String token)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> getTokenBody(token).getSubject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 校验是否过期</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isExpiration</span><span class="params">(String token)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> getTokenBody(token).getExpiration().before(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获得 token 的 body</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Claims <span class="title function_">getTokenBody</span><span class="params">(String token)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Jwts.parser()</span><br><span class="line">                .setSigningKey(SECRET)</span><br><span class="line">                .parseClaimsJws(token)</span><br><span class="line">                .getBody();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-实现UserDetailsService-、UserDetails接口"><a href="#4-实现UserDetailsService-、UserDetails接口" class="headerlink" title="4.实现UserDetailsService 、UserDetails接口"></a>4.实现<code>UserDetailsService</code> 、<code>UserDetails</code>接口</h3><h4 id="UserDetailsService"><a href="#UserDetailsService" class="headerlink" title="UserDetailsService "></a><code>UserDetailsService </code></h4><p>可以把角色相关禁用掉,然后修改参数.</p>
-<p>我也会把角色相关操作,以及表的 sql 放到最后.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 加载特定于用户的数据的核心接口。</span></span><br><span class="line"><span class="comment"> * 它作为用户DAO在整个框架中使用，是DaoAuthenticationProvider使用的策略。</span></span><br><span class="line"><span class="comment"> * 该接口只需要一个只读方法，这简化了对新数据访问策略的支持。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service(&quot;userDetailsService&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDetailsServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDetailsService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(UserDetailsServiceImpl.class);</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户操作服务</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Resource(name = &quot;appUserService&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> AppUserService appUserService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户角色服务</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Resource(name = &quot;appRoleService&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> AppRoleService appRoleService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据用户登录名定位用户。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> loginName</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> UsernameNotFoundException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> UserDetails <span class="title function_">loadUserByUsername</span><span class="params">(String loginName)</span> <span class="keyword">throws</span> UsernameNotFoundException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">UserDetails</span> <span class="variable">userDetails</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">AppUser</span> <span class="variable">appUser</span> <span class="operator">=</span> appUserService.findByLoginName(loginName);</span><br><span class="line">            <span class="keyword">if</span> (appUser != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="comment">// 查询当前用户的权限</span></span><br><span class="line">                List&lt;AppRole&gt; appRoleList = appRoleService.findByUserId(appUser.getId());</span><br><span class="line">                Collection&lt;GrantedAuthority&gt; authorities = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">                <span class="keyword">for</span> (AppRole appRole : appRoleList) &#123;</span><br><span class="line">                    <span class="type">SimpleGrantedAuthority</span> <span class="variable">grant</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleGrantedAuthority</span>(appRole.getConstName());</span><br><span class="line">                    authorities.add(grant);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//封装自定义UserDetails类</span></span><br><span class="line">                userDetails = <span class="keyword">new</span> <span class="title class_">UserDetailsImpl</span>(appUser, authorities);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UsernameNotFoundException</span>(<span class="string">&quot;该用户不存在！&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            logger.error(e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> userDetails;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><code>UserDetails</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 自定义用户身份信息</span></span><br><span class="line"><span class="comment"> * 提供核心用户信息。</span></span><br><span class="line"><span class="comment"> * 出于安全目的，Spring Security不直接使用实现。它们只是存储用户信息，这些信息稍后封装到身份验证对象中。这允许将非安全相关的用户信息(如电子邮件地址、电话号码等)存储在一个方便的位置。</span></span><br><span class="line"><span class="comment"> * 具体实现必须特别注意，以确保每个方法的非空契约都得到了执行。有关参考实现(您可能希望在代码中对其进行扩展或使用)，请参见User。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-05-22</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDetailsImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDetails</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> AppUser appUser;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户角色</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Collection&lt;? <span class="keyword">extends</span> <span class="title class_">GrantedAuthority</span>&gt; authorities;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UserDetailsImpl</span><span class="params">(AppUser appUser, Collection&lt;? extends GrantedAuthority&gt; authorities)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>();</span><br><span class="line">        <span class="built_in">this</span>.appUser = appUser;</span><br><span class="line">        <span class="built_in">this</span>.authorities = authorities;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回用户所有角色的封装，一个Role对应一个GrantedAuthority</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 返回授予用户的权限。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Collection&lt;? <span class="keyword">extends</span> <span class="title class_">GrantedAuthority</span>&gt; getAuthorities() &#123;</span><br><span class="line">    <span class="comment">/*    Collection&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">        String username = this.getUsername();</span></span><br><span class="line"><span class="comment">        if (username != null) &#123;</span></span><br><span class="line"><span class="comment">            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(username);</span></span><br><span class="line"><span class="comment">            authorities.add(authority);</span></span><br><span class="line"><span class="comment">        &#125;*/</span></span><br><span class="line">        <span class="keyword">return</span> authorities;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回用于验证用户身份的密码。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Returns the password used to authenticate the user.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getPassword</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> appUser.getPassword();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getUsername</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> appUser.getLoginName();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断账号是否已经过期，默认没有过期</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> true 没有过期</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAccountNonExpired</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> appUser.getExpiration() == <span class="literal">null</span> || appUser.getExpiration().before(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断账号是否被锁定，默认没有锁定</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> true 没有锁定  false 锁定</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAccountNonLocked</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> appUser.getLockStatus() == <span class="literal">null</span> || appUser.getLockStatus() == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * todo 判断信用凭证是否过期，默认没有过期</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isCredentialsNonExpired</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断账号是否可用，默认可用</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEnabled</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> appUser.getDelStatus() == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-可选：实现PasswordEncoder-接口（密码加密）"><a href="#5-可选：实现PasswordEncoder-接口（密码加密）" class="headerlink" title="5.可选：实现PasswordEncoder 接口（密码加密）"></a>5.可选：实现<code>PasswordEncoder</code> 接口（密码加密）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * PasswordEncoderImpl</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-05-23 15:55</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service(&quot;passwordEncoder&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PasswordEncoderImpl</span> <span class="keyword">implements</span> <span class="title class_">PasswordEncoder</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> strength;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> SecureRandom random;</span><br><span class="line">    <span class="keyword">private</span> Pattern BCRYPT_PATTERN;</span><br><span class="line">    <span class="keyword">private</span> Logger logger;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构造函数用于设置不同的加密过程</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEncoderImpl</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>(-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEncoderImpl</span><span class="params">(<span class="type">int</span> strength)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>(strength, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEncoderImpl</span><span class="params">(<span class="type">int</span> strength, SecureRandom random)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.BCRYPT_PATTERN = Pattern.compile(<span class="string">&quot;\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]&#123;53&#125;&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.logger = LoggerFactory.getLogger(<span class="built_in">this</span>.getClass());</span><br><span class="line">        <span class="keyword">if</span> (strength == -<span class="number">1</span> || strength &gt;= <span class="number">4</span> &amp;&amp; strength &lt;= <span class="number">31</span>) &#123;</span><br><span class="line">            <span class="built_in">this</span>.strength = strength;</span><br><span class="line">            <span class="built_in">this</span>.random = random;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Bad strength&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对原始密码进行编码。通常，一个好的编码算法应用SHA-1或更大的哈希值和一个8字节或更大的随机生成的salt。</span></span><br><span class="line"><span class="comment">     * Encode the raw password. Generally, a good encoding algorithm applies a SHA-1 or greater hash combined with an 8-byte or greater randomly generated salt.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> rawPassword</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">encode</span><span class="params">(CharSequence rawPassword)</span> &#123;</span><br><span class="line">        String salt;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.strength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.random != <span class="literal">null</span>) &#123;</span><br><span class="line">                salt = BCrypt.gensalt(<span class="built_in">this</span>.strength, <span class="built_in">this</span>.random);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                salt = BCrypt.gensalt(<span class="built_in">this</span>.strength);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            salt = BCrypt.gensalt();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> BCrypt.hashpw(rawPassword.toString(), salt);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 验证从存储中获得的已编码密码在经过编码后是否与提交的原始密码匹配。</span></span><br><span class="line"><span class="comment">     * 如果密码匹配，返回true;如果密码不匹配，返回false。存储的密码本身永远不会被解码。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> rawPassword     the raw password to encode and match</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> encodedPassword the encoded password from storage to compare with</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">matches</span><span class="params">(CharSequence rawPassword, String encodedPassword)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (encodedPassword != <span class="literal">null</span> &amp;&amp; encodedPassword.length() != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="built_in">this</span>.BCRYPT_PATTERN.matcher(encodedPassword).matches()) &#123;</span><br><span class="line">                <span class="built_in">this</span>.logger.warn(<span class="string">&quot;Encoded password does not look like BCrypt&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> BCrypt.checkpw(rawPassword.toString(), encodedPassword);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.logger.warn(<span class="string">&quot;Empty encoded password&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 如果为了更好的安全性，应该再次对已编码的密码进行编码，则返回true，否则为false。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> encodedPassword the encoded password to check</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Returns true if the encoded password should be encoded again for better security, else false. The default implementation always returns false.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">upgradeEncoding</span><span class="params">(String encodedPassword)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="6-验证用户登录信息、用户权限的拦截器"><a href="#6-验证用户登录信息、用户权限的拦截器" class="headerlink" title="6.验证用户登录信息、用户权限的拦截器"></a>6.验证用户登录信息、用户权限的拦截器</h3><ul>
-<li><code>JwtAuthenticationFilter</code>用户账号的验证</li>
-<li><code>JwtAuthorizationFilter</code>用户权限的验证</li>
-</ul>
-<p><code>JwtAuthenticationFilter</code>继承于<code>UsernamePasswordAuthenticationFilter</code><br>该拦截器用于获取用户登录的信息，只需创建一个 <code>token</code>并调用 <code>authenticationManager.authenticate() </code>让<code>spring-security</code><br>去进行验证就可以了，不用自己查数据库再对比密码了，这一步交给spring去操作。</p>
-<p>这个操作有点像是<code>shiro</code>的 <code>subject.login(new UsernamePasswordToken())</code>，验证的事情交给框架。</p>
-<h3 id="7-security-配置"><a href="#7-security-配置" class="headerlink" title="7.security 配置"></a>7.security 配置</h3><h3 id="8-登录认证-API"><a href="#8-登录认证-API" class="headerlink" title="8.登录认证 API"></a>8.登录认证 API</h3><h4 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h4><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driverClassName:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://127.0.0.1:3306/maxzhao_ittest?charset=utf8mb4&amp;useSSL=false</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">maxzhao</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">maxzhao</span></span><br><span class="line">  <span class="attr">main:</span></span><br><span class="line">    <span class="attr">allow-bean-definition-overriding:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">jpa:</span></span><br><span class="line">    <span class="attr">database:</span> <span class="string">MYSQL</span></span><br><span class="line">    <span class="attr">database-plinatform:</span> <span class="string">org.hibernate.dialect.MySQL5InnoDBDialect</span></span><br><span class="line">    <span class="attr">show-sql:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">generate-ddl:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">open-in-view:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">hibernate:</span></span><br><span class="line">      <span class="attr">ddl-auto:</span> <span class="string">update</span></span><br><span class="line">    <span class="comment">#       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy</span></span><br><span class="line">    <span class="attr">properties:</span></span><br><span class="line">      <span class="comment">#不加此配置，获取不到当前currentsession</span></span><br><span class="line">      <span class="attr">hibernate:</span></span><br><span class="line">        <span class="attr">current_session_context_class:</span> <span class="string">org.springframework.orm.hibernate5.SpringSessionContext</span></span><br><span class="line">        <span class="attr">dialect:</span> <span class="string">org.hibernate.dialect.MySQL5Dialect</span></span><br><span class="line"><span class="comment"># 多数据源配置</span></span><br><span class="line"><span class="attr">gt:</span></span><br><span class="line">  <span class="attr">maxzhao:</span></span><br><span class="line">    <span class="attr">boot:</span></span><br><span class="line">      <span class="comment">#主动开启多数据源</span></span><br><span class="line">      <span class="attr">multiDatasourceOpen:</span> <span class="literal">true</span></span><br><span class="line">      <span class="string">datasource[0]:</span></span><br><span class="line">        <span class="attr">dbName:</span> <span class="string">second</span></span><br><span class="line">        <span class="attr">driverClassName:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line">        <span class="attr">url:</span> <span class="string">jdbc:mysql://127.0.0.1:3306/pos?charset=utf8mb4&amp;useSSL=false</span></span><br><span class="line">        <span class="attr">username:</span> <span class="string">maxzhao</span></span><br><span class="line">        <span class="attr">password:</span> <span class="string">maxzhao</span></span><br><span class="line">      <span class="string">datasource[1]:</span></span><br><span class="line">        <span class="attr">dbName:</span> <span class="string">third</span></span><br><span class="line">        <span class="attr">driverClassName:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line">        <span class="attr">url:</span> <span class="string">jdbc:mysql://127.0.0.1:3306/biz?charset=utf8mb4&amp;useSSL=false</span></span><br><span class="line">        <span class="attr">username:</span> <span class="string">maxzhao</span></span><br><span class="line">        <span class="attr">password:</span> <span class="string">maxzhao</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>本文地址： <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a></p>
-<p><a target="_blank" rel="noopener" href="https://gitee.com/zhaoliansheng/gtboot-multidatasource">gitee</a></p>
-<p>推荐<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0dc9c452b40e">SpringBoot+Security+JWT进阶：二、自定义认证实践</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/59134/">https://github.com/maxzhao-it/blog/post/59134/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -562,7 +398,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-07-28 18:30:51" itemprop="dateModified" datetime="2022-07-28T18:30:51+08:00">2022-07-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -590,7 +426,7 @@
     <div class="post-body" itemprop="articleBody">
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Manjaro 安装MySQL8很简单粗暴，为什么还要装 Docker 呢？</p>
 <p>滚动更新惹得祸！！！</p>
-<p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code> GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code> GCC 9.1.0</code> 版本，操作系统都起不来了。</p>
+<p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code> GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code> GCC 9.1.0</code><br>版本，操作系统都起不来了。</p>
 <p>最后选择<code>Docker</code>，确实简单粗暴！</p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="ArchLinux-安装"><a href="#ArchLinux-安装" class="headerlink" title="ArchLinux 安装"></a>ArchLinux 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S docker</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
 
@@ -598,8 +434,6 @@
 <h2 id="安装MySQL8"><a href="#安装MySQL8" class="headerlink" title="安装MySQL8"></a>安装MySQL8</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo  docker pull mysql</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">sudo docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=maxzhao -d mysql</span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment">#登录mysql 密码 maxzhao</span></span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
 
 <h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">grant all privileges on *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> WITH GRANT OPTION;</span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
-
-
 
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="容器外登录MySQL"><a href="#容器外登录MySQL" class="headerlink" title="容器外登录MySQL"></a>容器外登录MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h127.0.0.1 -uroot -p</span><br></pre></td></tr></table></figure>
 
@@ -753,154 +587,6 @@
 <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a></p>
 </blockquote>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/43590/">https://github.com/maxzhao-it/blog/post/43590/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/44183/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/44183/" class="post-title-link" itemprop="url">OAuth2与JWT</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Spring/OAuth/" itemprop="url" rel="index"><span itemprop="name">OAuth</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="https://oauth.net/images/oauth-2-sm.png"></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是Oauth2？"><a href="#什么是Oauth2？" class="headerlink" title="什么是Oauth2？"></a>什么是Oauth2？</h3><p>OAuth（Open Authorization，开放授权）是为用户资源的授权定义了一个安全、开放及简单的标准，第三方无需知道用户的账号及密码，就可获取到用户的授权信息。<br> OAuth2.0是OAuth协议的延续版本，但不向后兼容OAuth 1.0即完全废止了OAuth1.0</p>
-<p>注意：对于OAuth2的使用场景，官方文档都提到针对第三方应用，需要强调的是，这个第三方应用，不指的是除了服务本身外的应用，都是第三方应用，即使是自己的应用，也是第三方应用。</p>
-<h3 id="了解OAuth2与JWT"><a href="#了解OAuth2与JWT" class="headerlink" title="了解OAuth2与JWT"></a>了解OAuth2与JWT</h3><ul>
-<li><p>JWT：JSON Web Token &#x2F;&#x2F; 是一种具体的Token实现框架；</p>
-</li>
-<li><p>OAuth2：Open Authorization &#x2F;&#x2F; 是一种授权协议，是规范，不是实现；</p>
-</li>
-<li><p>Spring Security OAuth2：Spring 对 OAuth2 的开源实现，优点是能与Spring Cloud技术栈无缝集成；</p>
-</li>
-<li><p>Spring Security：前身是 Acegi Security ，能够为 Spring企业应用系统提供声明式的安全访问控制；</p>
-</li>
-</ul>
-<p>这里需要理解两个概念：</p>
-<ul>
-<li>Authentication：用户认证，一般是通过用户名密码来确认用户是否为系统中合法主体；</li>
-<li>Authorization：用户授权，一般是给系统中合法主体授予相关资源访问权限；</li>
-</ul>
-<p>jwt是基于token的认证协议的实现，OAuth2是一种授权框架，提供了一套详细的授权协议标准（指导）。</p>
-<p>jwt的基本思路就是用户提供用户名和密码给认证服务器，服务器验证用户提交信息信息的合法性；如果验证成功，会产生并返回一个Token（令牌），用户可以使用这个token访问服务器上受保护的资源。</p>
-<h2 id="OAuth"><a href="#OAuth" class="headerlink" title="OAuth"></a>OAuth</h2><h3 id="Roles角色"><a href="#Roles角色" class="headerlink" title="Roles角色"></a>Roles角色</h3><p>在OAuth2中主要有四个角色，主要如下：</p>
-<ol>
-<li>Resource Owner(资源拥有者)：用户，即资源的拥有人，想要分享某些资 源给第三方应用</li>
-<li>Resource Server(资源服务器)：放受保护资源，要访问这些资源，需要获得访问令牌</li>
-<li>Authorization server(授权（认证）服务器)：授权服务器用于发放访问令牌给客户端</li>
-<li>Client(客户端应用（第三方应用）)：客户端代表请求资源服务器资源的第三方程序</li>
-</ol>
-<h3 id="OAuth2中的其他术语："><a href="#OAuth2中的其他术语：" class="headerlink" title="OAuth2中的其他术语："></a>OAuth2中的其他术语：</h3><ul>
-<li>Client Credentials(客户凭证)：客户的clientId 和密码用于认证客户</li>
-<li>Access Token(访问令牌)：授权服务器在接收到客户请求后，颁发的访问令牌</li>
-<li>Scopes(作用域)：客户请求访问令牌时,由资源拥有者额外指定的细分权限(permission)</li>
-<li>User Agent(用户代理)：用户代理。一般就是指浏览器</li>
-</ul>
-<h3 id="OAuth2中的令牌类型："><a href="#OAuth2中的令牌类型：" class="headerlink" title="OAuth2中的令牌类型："></a>OAuth2中的令牌类型：</h3><ul>
-<li>Authorization Code Token(授权码)：仅用于授权码授权类型,用于交换获取访问令牌和刷新令牌</li>
-<li>Refresh Token(刷新令牌)：用于去授权服务器获取一个新的访问令牌</li>
-<li>Access Token(访问令牌)：用于代表一个用户或服务直接去访问受保护的资源</li>
-<li>Proof of Possession(PoP) Token(持有证明(pop)令牌)：可以校验client是否对Token 有明确的拥有权</li>
-</ul>
-<h3 id="授权模式："><a href="#授权模式：" class="headerlink" title="授权模式："></a>授权模式：</h3><ol>
-<li>授权码模式（Authorization Code）(正统方式)(支持refresh token)</li>
-<li>授权码简化模式（Implicit）(为web浏览器设计)(不支持refresh token)</li>
-<li>Pwd模式（Resource Owner Password Credentials） (基本不用)(支持refresh token)</li>
-<li>Client模式（Client Credentials） (为后台api调用设计)(不支持refresh token)</li>
-<li>扩展模式（Extension）（自定义模式）</li>
-</ol>
-<p>最常用的grant_type组合有: <code>authorization_code,refresh_token</code>(针对通过浏览器访问的客户端); <code>password,refresh_token</code>(针对移动设备的客户端). <code>implicit</code>与<code>client_credentials</code>在实际中很少使用.</p>
-<p>Authorization Grants 认证授权  </p>
-<h3 id="客户端类型"><a href="#客户端类型" class="headerlink" title="客户端类型"></a>客户端类型</h3><p>OAuth 2.0客户端角色被细分为一系列类型和配置，本节将阐述这些类型和配置。</p>
-<p>OAuth 2.0规范定义了两种客户端类型：</p>
-<ul>
-<li>保密的</li>
-<li>公有的</li>
-</ul>
-<p>保密的客户端能够对外部保持客户端密码保密。该客户端密码是由授权服务器分配给客户端应用的。为了避免欺骗，该密码是授权服务器用来识别客户端的。例如一个保密的客户端可以是web应用，除了管理员，没有任何人能够访问服务器和看到该密码。</p>
-<p>公有的客户端不能使客户端密码保密。比如移动手机应用或桌面应用会将密码嵌入在内部。这样的应用可能被破解，并且泄漏密码。这同于在用户的浏览器上运行的JavaScript应用。用户可以使用一个JavaScript调试器来寻找到应用程序，并查看客户端密码。</p>
-<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>OAuth 2.0规范也提到了一系列客户端配置文件。这些配置文件是具体类型的应用程序，这可以是保密或公开的。这些配置文件有：</p>
-<ul>
-<li>web应用</li>
-<li>用户代理</li>
-<li>原生</li>
-</ul>
-<blockquote>
-<p>推荐</p>
-<p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/oauth2/">w3cschool</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0dc9c452b40e">SpringBoot+Security+JWT进阶：二、自定义认证实践</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44183/">https://github.com/maxzhao-it/blog/post/44183/</a> </p>
 
       
     </div>
@@ -1304,6 +990,154 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/44183/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/44183/" class="post-title-link" itemprop="url">OAuth2与JWT</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Spring/OAuth/" itemprop="url" rel="index"><span itemprop="name">OAuth</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><img src="https://oauth.net/images/oauth-2-sm.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是Oauth2？"><a href="#什么是Oauth2？" class="headerlink" title="什么是Oauth2？"></a>什么是Oauth2？</h3><p>OAuth（Open Authorization，开放授权）是为用户资源的授权定义了一个安全、开放及简单的标准，第三方无需知道用户的账号及密码，就可获取到用户的授权信息。<br> OAuth2.0是OAuth协议的延续版本，但不向后兼容OAuth 1.0即完全废止了OAuth1.0</p>
+<p>注意：对于OAuth2的使用场景，官方文档都提到针对第三方应用，需要强调的是，这个第三方应用，不指的是除了服务本身外的应用，都是第三方应用，即使是自己的应用，也是第三方应用。</p>
+<h3 id="了解OAuth2与JWT"><a href="#了解OAuth2与JWT" class="headerlink" title="了解OAuth2与JWT"></a>了解OAuth2与JWT</h3><ul>
+<li><p>JWT：JSON Web Token &#x2F;&#x2F; 是一种具体的Token实现框架；</p>
+</li>
+<li><p>OAuth2：Open Authorization &#x2F;&#x2F; 是一种授权协议，是规范，不是实现；</p>
+</li>
+<li><p>Spring Security OAuth2：Spring 对 OAuth2 的开源实现，优点是能与Spring Cloud技术栈无缝集成；</p>
+</li>
+<li><p>Spring Security：前身是 Acegi Security ，能够为 Spring企业应用系统提供声明式的安全访问控制；</p>
+</li>
+</ul>
+<p>这里需要理解两个概念：</p>
+<ul>
+<li>Authentication：用户认证，一般是通过用户名密码来确认用户是否为系统中合法主体；</li>
+<li>Authorization：用户授权，一般是给系统中合法主体授予相关资源访问权限；</li>
+</ul>
+<p>jwt是基于token的认证协议的实现，OAuth2是一种授权框架，提供了一套详细的授权协议标准（指导）。</p>
+<p>jwt的基本思路就是用户提供用户名和密码给认证服务器，服务器验证用户提交信息信息的合法性；如果验证成功，会产生并返回一个Token（令牌），用户可以使用这个token访问服务器上受保护的资源。</p>
+<h2 id="OAuth"><a href="#OAuth" class="headerlink" title="OAuth"></a>OAuth</h2><h3 id="Roles角色"><a href="#Roles角色" class="headerlink" title="Roles角色"></a>Roles角色</h3><p>在OAuth2中主要有四个角色，主要如下：</p>
+<ol>
+<li>Resource Owner(资源拥有者)：用户，即资源的拥有人，想要分享某些资 源给第三方应用</li>
+<li>Resource Server(资源服务器)：放受保护资源，要访问这些资源，需要获得访问令牌</li>
+<li>Authorization server(授权（认证）服务器)：授权服务器用于发放访问令牌给客户端</li>
+<li>Client(客户端应用（第三方应用）)：客户端代表请求资源服务器资源的第三方程序</li>
+</ol>
+<h3 id="OAuth2中的其他术语："><a href="#OAuth2中的其他术语：" class="headerlink" title="OAuth2中的其他术语："></a>OAuth2中的其他术语：</h3><ul>
+<li>Client Credentials(客户凭证)：客户的clientId 和密码用于认证客户</li>
+<li>Access Token(访问令牌)：授权服务器在接收到客户请求后，颁发的访问令牌</li>
+<li>Scopes(作用域)：客户请求访问令牌时,由资源拥有者额外指定的细分权限(permission)</li>
+<li>User Agent(用户代理)：用户代理。一般就是指浏览器</li>
+</ul>
+<h3 id="OAuth2中的令牌类型："><a href="#OAuth2中的令牌类型：" class="headerlink" title="OAuth2中的令牌类型："></a>OAuth2中的令牌类型：</h3><ul>
+<li>Authorization Code Token(授权码)：仅用于授权码授权类型,用于交换获取访问令牌和刷新令牌</li>
+<li>Refresh Token(刷新令牌)：用于去授权服务器获取一个新的访问令牌</li>
+<li>Access Token(访问令牌)：用于代表一个用户或服务直接去访问受保护的资源</li>
+<li>Proof of Possession(PoP) Token(持有证明(pop)令牌)：可以校验client是否对Token 有明确的拥有权</li>
+</ul>
+<h3 id="授权模式："><a href="#授权模式：" class="headerlink" title="授权模式："></a>授权模式：</h3><ol>
+<li>授权码模式（Authorization Code）(正统方式)(支持refresh token)</li>
+<li>授权码简化模式（Implicit）(为web浏览器设计)(不支持refresh token)</li>
+<li>Pwd模式（Resource Owner Password Credentials） (基本不用)(支持refresh token)</li>
+<li>Client模式（Client Credentials） (为后台api调用设计)(不支持refresh token)</li>
+<li>扩展模式（Extension）（自定义模式）</li>
+</ol>
+<p>最常用的grant_type组合有: <code>authorization_code,refresh_token</code>(针对通过浏览器访问的客户端); <code>password,refresh_token</code>(针对移动设备的客户端). <code>implicit</code>与<code>client_credentials</code>在实际中很少使用.</p>
+<p>Authorization Grants 认证授权  </p>
+<h3 id="客户端类型"><a href="#客户端类型" class="headerlink" title="客户端类型"></a>客户端类型</h3><p>OAuth 2.0客户端角色被细分为一系列类型和配置，本节将阐述这些类型和配置。</p>
+<p>OAuth 2.0规范定义了两种客户端类型：</p>
+<ul>
+<li>保密的</li>
+<li>公有的</li>
+</ul>
+<p>保密的客户端能够对外部保持客户端密码保密。该客户端密码是由授权服务器分配给客户端应用的。为了避免欺骗，该密码是授权服务器用来识别客户端的。例如一个保密的客户端可以是web应用，除了管理员，没有任何人能够访问服务器和看到该密码。</p>
+<p>公有的客户端不能使客户端密码保密。比如移动手机应用或桌面应用会将密码嵌入在内部。这样的应用可能被破解，并且泄漏密码。这同于在用户的浏览器上运行的JavaScript应用。用户可以使用一个JavaScript调试器来寻找到应用程序，并查看客户端密码。</p>
+<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>OAuth 2.0规范也提到了一系列客户端配置文件。这些配置文件是具体类型的应用程序，这可以是保密或公开的。这些配置文件有：</p>
+<ul>
+<li>web应用</li>
+<li>用户代理</li>
+<li>原生</li>
+</ul>
+<blockquote>
+<p>推荐</p>
+<p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/oauth2/">w3cschool</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0dc9c452b40e">SpringBoot+Security+JWT进阶：二、自定义认证实践</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44183/">https://github.com/maxzhao-it/blog/post/44183/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/56669/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1550,6 +1384,142 @@
 
 
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/47805/">https://github.com/maxzhao-it/blog/post/47805/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/53052/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/53052/" class="post-title-link" itemprop="url">SpringCloud中的配置中心Nacos</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/SpringCloud/" itemprop="url" rel="index"><span itemprop="name">SpringCloud</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>强烈推荐<a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/quick-start.html">官方文档</a>：很详细了。</p>
+<p>我这里主要是以<code>linux</code>下的使用。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>我这里以我的安装路径为准<code>/home/maxzhao/soft/</code></p>
+<h2 id="1-预备环境准备"><a href="#1-预备环境准备" class="headerlink" title="1.预备环境准备"></a>1.预备环境准备</h2><p>Nacos 依赖 <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/">Java</a><br>环境来运行。如果您是从代码开始构建并运行Nacos，还需要为此配置 <a target="_blank" rel="noopener" href="https://maven.apache.org/index.html">Maven</a>环境，请确保是在以下版本环境中安装使用:</p>
+<ol>
+<li>64 bit OS，支持 Linux&#x2F;Unix&#x2F;Mac&#x2F;Windows，推荐选用 Linux&#x2F;Unix&#x2F;Mac。</li>
+<li>64 bit JDK 1.8+；<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">下载</a><br>&amp; <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/">配置</a>。</li>
+<li>Maven 3.2.x+；<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">下载</a> &amp; <a target="_blank" rel="noopener" href="https://maven.apache.org/settings.html">配置</a>。</li>
+</ol>
+<h2 id="2-从-Github-上下载源码方式"><a href="#2-从-Github-上下载源码方式" class="headerlink" title="2.从 Github 上下载源码方式"></a>2.从 Github 上下载源码方式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cd /home/maxzhao/soft/</span><br><span class="line">git clone https://github.com/alibaba/nacos.git</span><br><span class="line">cd nacos/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">会安装一个稳定的版本</span></span><br><span class="line">mvn -Prelease-nacos -Dmaven.test.skip=true clean install -U  </span><br><span class="line">ls -al distribution/target/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">drwxr-xr-x 2 maxzhao maxzhao     4096  4月 20 10:16 archive-tmp</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">drwxr-xr-x 3 maxzhao maxzhao     4096  4月 20 10:16 nacos-server-1.0.0</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-rw-r--r-- 1 maxzhao maxzhao 42946896  4月 20 10:16 nacos-server-1.0.0.tar.gz</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-rw-r--r-- 1 maxzhao maxzhao 42948559  4月 20 10:16 nacos-server-1.0.0.zip</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">change the <span class="variable">$version</span> to your actual path</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">cd</span> distribution/target/nacos-server-<span class="variable">$version</span>/nacos/bin</span></span><br><span class="line">cd distribution/target/nacos-server-1.4.2-SNAPSHOT/nacos/bin</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-启动服务器"><a href="#3-启动服务器" class="headerlink" title="3.启动服务器"></a>3.启动服务器</h2><p>Linux&#x2F;Unix&#x2F;Mac</p>
+<p>启动命令(standalone代表着单机模式运行，非集群模式):</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh startup.sh -m standalone</span><br></pre></td></tr></table></figure>
+
+<p>创建快捷启动方式</p>
+<p>添加脚本环境变量路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+<p>在其他 append_path 添加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">append_path &#x27;/home/maxzhao/script&#x27;</span><br></pre></td></tr></table></figure>
+<p>创建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/script/gt-nacos-start </span><br></pre></td></tr></table></figure>
+<p>添加 nacos 启动脚本，默认就是后台执行的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">sh /home/maxzhao/soft/nacos/distribution/target/nacos-server-1.4.2-SNAPSHOT/nacos/bin/startup.sh -m standalone</span><br></pre></td></tr></table></figure>
+<p>查看当前是否执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -mV |grep nacos</span><br></pre></td></tr></table></figure>
+<p>关闭</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /home/maxzhao/soft/nacos/distribution/target/nacos-server-1.4.2-SNAPSHOT/nacos/bin/shutdown.sh</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-服务注册-amp-发现和配置管理——测试"><a href="#4-服务注册-amp-发现和配置管理——测试" class="headerlink" title="4.服务注册&amp;发现和配置管理——测试"></a>4.服务注册&amp;发现和配置管理——测试</h2><h3 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &#x27;http://127.0.0.1:8848/nacos/v1/ns/instance?serviceName=nacos.naming.serviceName&amp;ip=20.18.7.10&amp;port=8080&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET &#x27;http://127.0.0.1:8848/nacos/v1/ns/instances?serviceName=nacos.naming.serviceName&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="发布配置"><a href="#发布配置" class="headerlink" title="发布配置"></a>发布配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&amp;content=HelloWorld&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取配置"><a href="#获取配置" class="headerlink" title="获取配置"></a>获取配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET &quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-关闭服务器"><a href="#5-关闭服务器" class="headerlink" title="5.关闭服务器"></a>5.关闭服务器</h2><h3 id="Linux-x2F-Unix-x2F-Mac"><a href="#Linux-x2F-Unix-x2F-Mac" class="headerlink" title="Linux&#x2F;Unix&#x2F;Mac"></a>Linux&#x2F;Unix&#x2F;Mac</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh shutdown.sh</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="端口配置"><a href="#端口配置" class="headerlink" title="端口配置"></a>端口配置</h2><ul>
+<li><p>配置在<code>/bin/startup.sh</code>（linux下），在<code>set &quot;JAVA_OPT=%JAVA_OPT%</code>添加代码：<code>set &quot;JAVA_OPT=%JAVA_OPT% --server.port=8448</code></p>
+</li>
+<li><p>在<code>  /home/maxzhao/soft/nacos/distribution/target/nacos-server-1.0.0/nacos/conf/application.properties</code><br>配置文件中添加：<code>server.port=8448</code></p>
+</li>
+</ul>
+<p>也可以在该文件下指定数据源，方法和springboot中配置一样（单机模式模式下默认连接的是javaDB），该文件夹下 nacos-logback.xml自然是修改nacos日志输出规则的。</p>
+<p>如果是0.3.0+版本 启动后访问下面这个地址：<a target="_blank" rel="noopener" href="http://127.0.0.1:8848/nacos/index.html">http://127.0.0.1:8848/nacos/index.html</a></p>
+<p>默认账号：nacos</p>
+<p>默认密码：nacos</p>
+<h2 id="SpringCloud中的配置"><a href="#SpringCloud中的配置" class="headerlink" title="SpringCloud中的配置"></a>SpringCloud中的配置</h2><p>在<code>resource</code>目录下加入<code> bootstrap.properties</code>文件 并添加配置中心相关信息</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#服务名</span></span><br><span class="line"><span class="attr">spring.application.name</span>=<span class="string">nacos-config-example</span></span><br><span class="line"><span class="comment">#指定开发环境</span></span><br><span class="line"><span class="attr">spring.profiles.active</span>=<span class="string">dev</span></span><br><span class="line"><span class="comment">#服务器地址</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br><span class="line"><span class="comment">#默认为Public命名空间,可以省略不写</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.namespace</span>=<span class="string">Public</span></span><br><span class="line"><span class="comment"># 新建命名空间之后则为命名空间的ID</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.namespace</span>=<span class="string"></span></span><br><span class="line"><span class="attr">49d37ddb-3750-4b0e-afaf-c1494c4769dc</span></span><br><span class="line"><span class="comment">#指定配置群组 --如果是Public命名空间 则可以省略群组配置</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.group</span>=<span class="string">DEFAULT_GROUP</span></span><br><span class="line"><span class="comment">#文件名 -- 如果没有配置则默认为 $&#123;spring.appliction.name&#125;</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.prefix</span>=<span class="string">member</span></span><br><span class="line"><span class="comment">#指定文件后缀</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.file-extension</span>=<span class="string">yaml</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/53052/">https://github.com/maxzhao-it/blog/post/53052/</a> </p>
 
       
     </div>

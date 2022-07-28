@@ -156,12 +156,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">129</span>
+        <span class="site-state-item-count">133</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-count">161</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-07-28 18:30:51" itemprop="dateModified" datetime="2022-07-28T18:30:51+08:00">2022-07-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -274,7 +274,7 @@
     <div class="post-body" itemprop="articleBody">
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Manjaro 安装MySQL8很简单粗暴，为什么还要装 Docker 呢？</p>
 <p>滚动更新惹得祸！！！</p>
-<p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code> GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code> GCC 9.1.0</code> 版本，操作系统都起不来了。</p>
+<p>当前状态 MySQL8.0.16 更新之后需要 <code>GLIBGXX_3.4.26</code> ，我这里的 <code> GCC 8.3.0-1</code>版本正好没有  <code>GLIBGXX_3.4.26</code> ，但是还是最新的，搞了一次社区<code> GCC 9.1.0</code><br>版本，操作系统都起不来了。</p>
 <p>最后选择<code>Docker</code>，确实简单粗暴！</p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="ArchLinux-安装"><a href="#ArchLinux-安装" class="headerlink" title="ArchLinux 安装"></a>ArchLinux 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S docker</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
 
@@ -282,8 +282,6 @@
 <h2 id="安装MySQL8"><a href="#安装MySQL8" class="headerlink" title="安装MySQL8"></a>安装MySQL8</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo  docker pull mysql</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">sudo docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=maxzhao -d mysql</span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment">#登录mysql 密码 maxzhao</span></span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
 
 <h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">grant all privileges on *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> WITH GRANT OPTION;</span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
-
-
 
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="容器外登录MySQL"><a href="#容器外登录MySQL" class="headerlink" title="容器外登录MySQL"></a>容器外登录MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h127.0.0.1 -uroot -p</span><br></pre></td></tr></table></figure>
 
@@ -306,8 +304,8 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/blog/tags/MySQL/" rel="tag"># MySQL</a>
               <a href="/blog/tags/Docker/" rel="tag"># Docker</a>
+              <a href="/blog/tags/MySQL/" rel="tag"># MySQL</a>
           </div>
 
         
