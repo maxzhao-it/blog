@@ -155,12 +155,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">166</span>
+        <span class="site-state-item-count">185</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,121 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/41645/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/41645/" class="post-title-link" itemprop="url">ES安装HanLP分词插件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/ElasticSearch/" itemprop="url" rel="index"><span itemprop="name">ElasticSearch</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/ElasticSearch/HanLP/" itemprop="url" rel="index"><span itemprop="name">HanLP</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>安装步骤：</p>
+<p>1、下载插件并解压到es的plugins目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改analysis-hanlp目录下的hanlp.properties文件，修改root的属性，值为analysis－hanlp下的data 目录的地址</span><br><span class="line">root=plugins/analysis-hanlp/</span><br><span class="line"></span><br><span class="line">修改analysis-hanlp目录下的plugin-descriptor.properties文件，</span><br><span class="line">修改elasticsearch的版本为你当前的版本elasticsearch.version=你的es版本号(like:5.5.1)</span><br></pre></td></tr></table></figure>
+
+<p>2、修改es config目录下的jvm.options文件，最后一行添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Djava.security.policy=/home/es/elasticsearch-7.0.1/plugins/analysis-hanlp/plugin-security.policy(地址换成你自己的地址)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir config/analysis-hanlp</span><br><span class="line">cp plugins/analysis-hanlp/config/hanlp.properties config/analysis-hanlp/</span><br><span class="line">cp plugins/analysis-hanlp/config/hanlp-remote.xml config/analysis-hanlp/</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>重启es</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET /_analyze?analyzer=hanlp-index&amp;pretty=true </span><br><span class="line"></span><br><span class="line">&#123; </span><br><span class="line"></span><br><span class="line">&quot;text&quot;:&quot;张柏芝士蛋糕店&quot; </span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试是否安装成功</p>
+<p>analyzer有hanlp_max_word（索引模式）和hanlp_smart（智能模式）</p>
+<p>hanlp_max_word：尽可能的切分多的结果</p>
+<p>hanlp_smart：切分少的词</p>
+<p>自定义词典：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改plugins/analysis-hanlp/data/dictionary/custom下的 我的词典.txt文件</span><br><span class="line"></span><br><span class="line">格式遵从[单词] [词性A] [A的频次]</span><br><span class="line"></span><br><span class="line">修改完后删除同目录下的CustomDictionary.txt.bin文件</span><br></pre></td></tr></table></figure>
+
+<p>重启es服务</p>
+<p>首次启动hanlp会生成相应的文件，首次启动可能会慢一点</p>
+<p>注意，在win10下配置 <code>policy</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[JDK]\jre\lib\security中的 java.policy 文件添加上面的权限控制后，win</span><br><span class="line">10下可以用hanlp分词了</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/41645/">https://github.com/maxzhao-it/blog/post/41645/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -368,239 +483,6 @@
 
 <h3 id="ElasticSearch-API"><a href="#ElasticSearch-API" class="headerlink" title="ElasticSearch API"></a>ElasticSearch API</h3><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/index.html">Java Rest Client 7.13.2</a></p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/14230/">https://github.com/maxzhao-it/blog/post/14230/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/1864/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/1864/" class="post-title-link" itemprop="url">ES使用HanLP分词</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/ELK/ElasticSearch/" itemprop="url" rel="index"><span itemprop="name">ElasticSearch</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/ELK/ElasticSearch/HanLP/" itemprop="url" rel="index"><span itemprop="name">HanLP</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Elasticsearch</code> 是使用比较广泛的分布式搜索引擎，<code>es</code> 提供了一个的单字分词工具，还有一个分词插件 <code>ik</code> 使用比较广泛，<code>HanLP</code>是一个自然语言处理包，能更好的根据上下文的语义，人名，地名，组织机构名等来切分词。</p>
-<h2 id="分词"><a href="#分词" class="headerlink" title="分词"></a>分词</h2><p><code>elasticsearch-analysis-hanlp</code>插件地址：<a href="https://github.com/KennFalcon/elasticsearch-analysis-hanlp"><code>github</code></a></p>
-<h3 id="默认分词器"><a href="#默认分词器" class="headerlink" title="默认分词器"></a>默认分词器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET /_analyze?pretty=true</span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;:&quot;赵联胜添加了一个使用默认分词器的语句&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-HanLP分词器"><a href="#1-HanLP分词器" class="headerlink" title="1.HanLP分词器"></a>1.<code>HanLP</code>分词器</h3><h4 id="安装-安装步骤一个不能少"><a href="#安装-安装步骤一个不能少" class="headerlink" title="安装(安装步骤一个不能少)"></a>安装(安装步骤一个不能少)</h4><p>注意：只能使用修改过的 <code>elasticsearch-analysis-hanlp-7.10.2-to-7.13.2.zip</code> 文件安装</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin\elasticsearch-plugin install file:///D:\tools\window\elasticsearch\elasticsearch-analysis-hanlp-7.10.2-to-7.13.2.zip</span><br><span class="line"># 这个在 win10 下不行，权限过不了。</span><br><span class="line">bin\elasticsearch-plugin install https://github.com/KennFalcon/elasticsearch-analysis-hanlp/releases/download/v6.5.4/elasticsearch-analysis-hanlp-7.10.2.zip</span><br></pre></td></tr></table></figure>
-
-<p>安装步骤：</p>
-<p>1、下载插件并解压到 <code>es</code> 的<code>plugins</code>目录下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">修改analysis-hanlp目录下的hanlp.properties文件，修改root的属性，值为analysis－hanlp下的data 目录的地址</span><br><span class="line">修改analysis-hanlp目录下的plugin-descriptor.properties文件，</span><br><span class="line">修改elasticsearch的版本为你当前的版本elasticsearch.version=你的es版本号(like:5.5.1)</span><br></pre></td></tr></table></figure>
-
-<p>2、修改<code>es config</code>目录下的 <code>jvm.options</code> 文件，最后一行添加</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Djava.security.policy=/home/es/elasticsearch-7.0.1/plugins/analysis-hanlp/plugin-security.policy(地址换成你自己的地址)</span><br></pre></td></tr></table></figure>
-
-<p>当前方式不行请看 <code>ES安装HanLP分词插件</code> 文件</p>
-<h4 id="重启-es"><a href="#重启-es" class="headerlink" title="重启 es"></a>重启 <code>es</code></h4><h4 id="特别注意"><a href="#特别注意" class="headerlink" title="特别注意"></a><strong>特别注意</strong></h4><blockquote>
-<p> 注意，在win10下配置 <code>policy</code>：这里会报错非法许可</p>
-<p> <code>permission (&quot;java.io.FilePermission&quot; &quot;plugins/analysis-hanlp/data/-&quot; &quot;read,write,delete&quot;) in global grant</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files\Java\jdk1.8.0_291\jre\lib\security\java.policy</span><br><span class="line"></span><br><span class="line">[JDK]\jre\lib\security中的 java.policy 文件添加上面的权限控制后，win</span><br><span class="line">10下可以用hanlp分词了</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>第一次启动比较慢</p>
-<h4 id="测试是否安装成功"><a href="#测试是否安装成功" class="headerlink" title="测试是否安装成功"></a>测试是否安装成功</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">POST http://localhost:9200/twitter2/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;美国阿拉斯加州发生8.0级地震&quot;,</span><br><span class="line">  &quot;tokenizer&quot;: &quot;hanlp&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="索引模式"><a href="#索引模式" class="headerlink" title="索引模式"></a>索引模式</h4><p><code>analyzer</code> 有 <code>hanlp_max_word</code>（索引模式）和 <code>hanlp_smart</code>（智能模式）</p>
-<ul>
-<li><code>hanlp_max_word</code>：尽可能的切分多的结果</li>
-<li><code>hanlp_smart</code>：切分少的词</li>
-</ul>
-<h4 id="自定义词典："><a href="#自定义词典：" class="headerlink" title="自定义词典："></a>自定义词典：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改plugins/analysis-hanlp/data/dictionary/custom下的 CustomDictionary.txt文件</span><br><span class="line"></span><br><span class="line">格式遵从[单词] [词性A] [A的频次]</span><br><span class="line"></span><br><span class="line">修改完后删除同目录下的CustomDictionary.txt.bin文件</span><br></pre></td></tr></table></figure>
-
-<p>重启 <code>es</code> 服务</p>
-<h3 id="2-HanLP-数据包"><a href="#2-HanLP-数据包" class="headerlink" title="2. HanLP 数据包"></a>2. <code>HanLP</code> 数据包</h3><p><code>release</code>包中存放的为<code>HanLP</code>源码中默认的分词数据，若要下载完整版数据包，请查看<a href="https://github.com/hankcs/HanLP/releases"><code>HanLP Release</code></a>。</p>
-<p>数据包目录：<code>*ES_HOME*/plugins/analysis-hanlp</code></p>
-<p><strong>注：因原版数据包自定义词典部分文件名为中文，这里的<code>hanlp.properties</code>中已修改为英文，请对应修改文件名</strong></p>
-<h3 id="3-重启Elasticsearch（最新：Github）"><a href="#3-重启Elasticsearch（最新：Github）" class="headerlink" title="3. 重启Elasticsearch（最新：Github）"></a>3. 重启<code>Elasticsearch</code>（最新：<a href="https://github.com/KennFalcon/elasticsearch-analysis-hanlp"><code>Github</code></a>）</h3><p><strong>注：上述说明中的<code>ES_HOME</code>为自己的<code>ES</code>安装路径，需要绝对路径</strong></p>
-<h3 id="4-热更新（最新：Github）"><a href="#4-热更新（最新：Github）" class="headerlink" title="4. 热更新（最新：Github）"></a>4. 热更新（最新：<a href="https://github.com/KennFalcon/elasticsearch-analysis-hanlp"><code>Github</code></a>）</h3><p>在本版本中，增加了词典热更新，修改步骤如下：</p>
-<p>a. 在<code>*ES_HOME*/plugins/analysis-hanlp/data/dictionary/custom</code>目录中新增自定义词典</p>
-<p>b. 修改<code>hanlp.properties</code>，修改<code>CustomDictionaryPath</code>，增加自定义词典配置</p>
-<p>c. 等待1分钟后，词典自动加载</p>
-<p><strong>注：每个节点都需要做上述更改</strong></p>
-<h4 id="提供的分词方式说明"><a href="#提供的分词方式说明" class="headerlink" title="提供的分词方式说明"></a>提供的分词方式说明</h4><ul>
-<li><code>hanlp</code>: <code>hanlp</code>默认分词</li>
-<li><code>hanlp_standard</code>: 标准分词</li>
-<li><code>hanlp_index</code>: 索引分词</li>
-<li><code>hanlp_nlp</code>: NLP分词</li>
-<li><code>hanlp_crf</code>: CRF分词</li>
-<li><code>hanlp_n_short</code>: N-最短路分词</li>
-<li><code>hanlp_dijkstra</code>: 最短路分词</li>
-<li><code>hanlp_speed</code>: 极速词典分词</li>
-</ul>
-<h4 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">POST http://localhost:9200/twitter2/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;美国阿拉斯加州发生8.0级地震&quot;,</span><br><span class="line">  &quot;tokenizer&quot;: &quot;hanlp&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokens&quot; : [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;美国&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 2,</span><br><span class="line">      &quot;type&quot; : &quot;nsf&quot;,</span><br><span class="line">      &quot;position&quot; : 0</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;阿拉斯加州&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 5,</span><br><span class="line">      &quot;type&quot; : &quot;nsf&quot;,</span><br><span class="line">      &quot;position&quot; : 1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;发生&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 2,</span><br><span class="line">      &quot;type&quot; : &quot;v&quot;,</span><br><span class="line">      &quot;position&quot; : 2</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;8.0&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 3,</span><br><span class="line">      &quot;type&quot; : &quot;m&quot;,</span><br><span class="line">      &quot;position&quot; : 3</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;级&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 1,</span><br><span class="line">      &quot;type&quot; : &quot;q&quot;,</span><br><span class="line">      &quot;position&quot; : 4</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;地震&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 2,</span><br><span class="line">      &quot;type&quot; : &quot;n&quot;,</span><br><span class="line">      &quot;position&quot; : 5</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="远程词典配置"><a href="#远程词典配置" class="headerlink" title="远程词典配置"></a>远程词典配置</h4><p>配置文件为<code>ES_HOME/config/analysis-hanlp/hanlp-remote.xml</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;properties&gt;</span><br><span class="line">    &lt;comment&gt;HanLP Analyzer 扩展配置&lt;/comment&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--用户可以在这里配置远程扩展字典 --&gt;</span><br><span class="line">    &lt;entry key=&quot;remote_ext_dict&quot;&gt;words_location&lt;/entry&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--用户可以在这里配置远程扩展停止词字典--&gt;</span><br><span class="line">    &lt;entry key=&quot;remote_ext_stopwords&quot;&gt;stop_words_location&lt;/entry&gt;</span><br><span class="line">&lt;/properties&gt;</span><br></pre></td></tr></table></figure>
-
-<h5 id="1-远程扩展字典"><a href="#1-远程扩展字典" class="headerlink" title="1. 远程扩展字典"></a>1. 远程扩展字典</h5><p>其中words_location为URL或者URL+” “+词性，如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. http://localhost:8080/mydic</span><br><span class="line"></span><br><span class="line">2. http://localhost:8080/mydic nt</span><br></pre></td></tr></table></figure>
-
-<p>第一个样例，是直接配置URL，词典内部每一行代表一个单词，格式遵从[单词] [词性A] [A的频次] [词性B] [B的频次] … 如果不填词性则表示采用词典的默认词性n。</p>
-<p>第二个样例，配置词典URL，同时配置该词典的默认词性nt，当然词典内部同样遵循[单词] [词性A] [A的频次] [词性B] [B的频次] … 如果不配置词性，则采用默认词性nt。</p>
-<h5 id="2-远程扩展停止词字典"><a href="#2-远程扩展停止词字典" class="headerlink" title="2. 远程扩展停止词字典"></a>2. 远程扩展停止词字典</h5><p>其中stop_words_location为URL，如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1. http://localhost:8080/mystopdic</span><br></pre></td></tr></table></figure>
-
-<p>样例直接配置URL，词典内部每一行代表一个单词，不需要配置词性和频次，换行符用 \n 即可。</p>
-<p><strong>注意，所有的词典URL是需要满足条件即可完成分词热更新：</strong></p>
-<ul>
-<li>该 http 请求需要返回两个头部(header)，一个是 Last-Modified，一个是 ETag，这两者都是字符串类型，只要有一个发生变化，该插件就会去抓取新的分词进而更新词库。</li>
-<li>可以配置多个字典路径，中间用英文分号;间隔</li>
-<li>URL每隔1分钟访问一次</li>
-<li>保证词典编码UTF-8</li>
-</ul>
-<h4 id="自定义分词配置"><a href="#自定义分词配置" class="headerlink" title="自定义分词配置"></a>自定义分词配置</h4><p>HanLP在提供了各类分词方式的基础上，也提供了一系列的分词配置，分词插件也提供了相关的分词配置，我们可以在通过如下配置来自定义自己的分词器：</p>
-<table>
-<thead>
-<tr>
-<th>Config</th>
-<th>Elastic version</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>enable_custom_config</td>
-<td>是否开启自定义配置</td>
-</tr>
-<tr>
-<td>enable_index_mode</td>
-<td>是否是索引分词</td>
-</tr>
-<tr>
-<td>enable_number_quantifier_recognize</td>
-<td>是否识别数字和量词</td>
-</tr>
-<tr>
-<td>enable_custom_dictionary</td>
-<td>是否加载用户词典</td>
-</tr>
-<tr>
-<td>enable_translated_name_recognize</td>
-<td>是否识别音译人名</td>
-</tr>
-<tr>
-<td>enable_japanese_name_recognize</td>
-<td>是否识别日本人名</td>
-</tr>
-<tr>
-<td>enable_organization_recognize</td>
-<td>是否识别机构</td>
-</tr>
-<tr>
-<td>enable_place_recognize</td>
-<td>是否识别地名</td>
-</tr>
-<tr>
-<td>enable_name_recognize</td>
-<td>是否识别中国人名</td>
-</tr>
-<tr>
-<td>enable_traditional_chinese_mode</td>
-<td>是否开启繁体中文</td>
-</tr>
-<tr>
-<td>enable_stop_dictionary</td>
-<td>是否启用停用词</td>
-</tr>
-<tr>
-<td>enable_part_of_speech_tagging</td>
-<td>是否开启词性标注</td>
-</tr>
-<tr>
-<td>enable_remote_dict</td>
-<td>是否开启远程词典</td>
-</tr>
-<tr>
-<td>enable_normalization</td>
-<td>是否执行字符正规化</td>
-</tr>
-<tr>
-<td>enable_offset</td>
-<td>是否计算偏移量</td>
-</tr>
-</tbody></table>
-<p>注意： 如果要采用如上配置配置自定义分词，需要设置enable_custom_config为true</p>
-<p>例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">PUT test</span><br><span class="line">&#123;</span><br><span class="line">  &quot;settings&quot;: &#123;</span><br><span class="line">    &quot;analysis&quot;: &#123;</span><br><span class="line">      &quot;analyzer&quot;: &#123;</span><br><span class="line">        &quot;my_hanlp_analyzer&quot;: &#123;</span><br><span class="line">          &quot;tokenizer&quot;: &quot;my_hanlp&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;tokenizer&quot;: &#123;</span><br><span class="line">        &quot;my_hanlp&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;hanlp&quot;,</span><br><span class="line">          &quot;enable_stop_dictionary&quot;: true,</span><br><span class="line">          &quot;enable_custom_config&quot;: true</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">POST test/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;美国,|=阿拉斯加州发生8.0级地震&quot;,</span><br><span class="line">  &quot;analyzer&quot;: &quot;my_hanlp_analyzer&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;tokens&quot; : [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;美国&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 2,</span><br><span class="line">      &quot;type&quot; : &quot;nsf&quot;,</span><br><span class="line">      &quot;position&quot; : 0</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;,|=&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 3,</span><br><span class="line">      &quot;type&quot; : &quot;w&quot;,</span><br><span class="line">      &quot;position&quot; : 1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;阿拉斯加州&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 5,</span><br><span class="line">      &quot;type&quot; : &quot;nsf&quot;,</span><br><span class="line">      &quot;position&quot; : 2</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;发生&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 2,</span><br><span class="line">      &quot;type&quot; : &quot;v&quot;,</span><br><span class="line">      &quot;position&quot; : 3</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;8.0&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 3,</span><br><span class="line">      &quot;type&quot; : &quot;m&quot;,</span><br><span class="line">      &quot;position&quot; : 4</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;级&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 1,</span><br><span class="line">      &quot;type&quot; : &quot;q&quot;,</span><br><span class="line">      &quot;position&quot; : 5</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;token&quot; : &quot;地震&quot;,</span><br><span class="line">      &quot;start_offset&quot; : 0,</span><br><span class="line">      &quot;end_offset&quot; : 2,</span><br><span class="line">      &quot;type&quot; : &quot;n&quot;,</span><br><span class="line">      &quot;position&quot; : 6</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/1864/">https://github.com/maxzhao-it/blog/post/1864/</a> </p>
 
       
     </div>

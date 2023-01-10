@@ -155,12 +155,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">166</span>
+        <span class="site-state-item-count">185</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,772 +207,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/36180/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/36180/" class="post-title-link" itemprop="url">Centos7安装nexus3</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a href="ttps://www.sonatype.com/download-oss-sonatype">下载地址</a><br><a target="_blank" rel="noopener" href="https://download.sonatype.com/nexus/3/latest-unix.tar.gz">直接下载地址</a><br>也可以<code>wget https://download.sonatype.com/nexus/3/latest-unix.tar.gz</code><br>下载unix版本。<br>#####上传到服务器<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/14ca7f7eaea8">SSH命令传输文件</a></p>
-<h3 id="安装-amp-启动"><a href="#安装-amp-启动" class="headerlink" title="安装&amp;启动"></a>安装&amp;启动</h3><p>默认已经安装了JDK。<br>我看了网上很多资料都是安装到&#x2F;use&#x2F;local&#x2F;目录下，** 我 偏 不 **<br>我这里解压到&#x2F;home目录下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nexus-3.15.1-01-unix.tar.gz -C /home/</span><br><span class="line"><span class="built_in">mv</span> nexus-3.15.1-01 nexus3/bin</span><br><span class="line">./nexus start</span><br><span class="line"><span class="comment"># 这里报错</span></span><br><span class="line">WARNING: ************************************************************</span><br><span class="line">WARNING: Detected execution as <span class="string">&quot;root&quot;</span> user.  This is NOT recommended!</span><br><span class="line">WARNING: ************************************************************</span><br><span class="line">Usage: ./nexus &#123;start|stop|run|run-redirect|status|restart|force-reload&#125;</span><br></pre></td></tr></table></figure>
-<p>这里用root用户操作所以出现警告，可以在环境变量中添加<code>export RUN_AS_USER=root</code>解决。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim  /etc/profile</span><br><span class="line">#最后添加变量</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-<p>这里还有一个文件<code>nexus3/bin/nexus.rc</code>，文件中恰巧是<code>run_as_user=&quot;&quot;</code>，这里不再修改尝试了。</p>
-<p><strong>重新启动</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -ef |grep nexus</span><br><span class="line">#如果有运行的nexus   则kill 掉</span><br><span class="line">./nexus start</span><br></pre></td></tr></table></figure>
-<p>然后就可以访问了，默认端口8081.</p>
-<h3 id="修改IP、端口、访问根目录，文件"><a href="#修改IP、端口、访问根目录，文件" class="headerlink" title="修改IP、端口、访问根目录，文件"></a>修改IP、端口、访问根目录，文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /home/nexus3/etc/nexus-default.properties </span><br><span class="line">vim /home/nexus3/bin/nexus.vmoptions</span><br></pre></td></tr></table></figure>
-
-<h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><p>右上角登录，<br>默认用户名为admin，密码admin123<br>登录之后点击有上角admin进入信息管理界面可以修改密码。<br><img src="https://upload-images.jianshu.io/upload_images/9787847-b9eaf77b59790bb9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<blockquote>
-<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1189ae59c13f">Centos7安装nexus3</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/36180/">https://github.com/maxzhao-it/blog/post/36180/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/24424/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/24424/" class="post-title-link" itemprop="url">Centos7挂载的ntfs硬盘为只读，并且修改挂载硬盘权限报错</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>####首先安装了ntfs-3g，如果没有安装是识别不了的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先判断自己有没有安装</span></span><br><span class="line">rpm -qa|grep ntfs</span><br><span class="line"><span class="comment">#安装ntfs全家桶，这里装了全家桶，下面的就不用重复安装了</span></span><br><span class="line">yum install -y ntfs*</span><br></pre></td></tr></table></figure>
-
-
-<p>#####报错提示：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The disk contains an unclean file system (0, 0).</span><br><span class="line">Falling back to read-only mount because the NTFS partition is <span class="keyword">in</span> an unsafe state. Please resume and shutdown Windows fully (no hibernation or fast restarting.)</span><br></pre></td></tr></table></figure>
-<p>我出现这个情况的原因是：双系统使用中，因为window与linux交替使用就会产生一些系统使用残留。</p>
-<p>###解决方案就是修复硬盘</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先判断自己有没有安装</span></span><br><span class="line">rpm -qa|grep ntfsprogs</span><br><span class="line"><span class="comment"># 如果没有安装则安装，先搜索一下yum源，查不到就换源</span></span><br><span class="line">yum list |grep ntfsprogs</span><br><span class="line">yum install -y ntfsprogs</span><br><span class="line"><span class="comment"># 输入要修复的ntfs硬盘，Xx是自己的盘符</span></span><br><span class="line">ntfsfix /dev/sdXx</span><br><span class="line"><span class="comment"># 重新挂载over</span></span><br><span class="line">umount /dev/sdXx</span><br><span class="line">mount /dev/sdXx /XX/xx</span><br></pre></td></tr></table></figure>
-
-<p><a target="_blank" rel="noopener" href="https://www.linuxidc.com/Linux/2013-07/87537.htm">无法挂载参考链接</a></p>
-<blockquote>
-<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7648613b4a63">Centos7挂载的ntfs硬盘为只读，并且修改挂载硬盘权限报错</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/24424/">https://github.com/maxzhao-it/blog/post/24424/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/26429/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/26429/" class="post-title-link" itemprop="url">AUR 助手的选择</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>Yaourt 曾是最流行的 AUR 助手，但现已停止开发。在这篇文章中，我们会为 Arch 衍生发行版们列出 Yaourt 最佳的替代品。</p>
-<h2 id="Arch-User-Repository-（常被称作-AUR）"><a href="#Arch-User-Repository-（常被称作-AUR）" class="headerlink" title="Arch User Repository （常被称作 AUR）"></a>Arch User Repository （常被称作 AUR）</h2><p>是一个为 Arch 用户而生的社区驱动软件仓库。Debian&#x2F;Ubuntu 用户的对应类比是 PPA。</p>
-<p>AUR 包含了不直接被 Arch Linux 官方所背书的软件。如果有人想在 Arch 上发布软件或者包，它可以通过这个社区仓库提供。这让最终用户们可以使用到比默认仓库里更多的软件。</p>
-<p>所以你该如何使用 AUR 呢？简单来说，你需要另外的工具以从 AUR 中安装软件。Arch 的包管理器 pacman 不直接支持 AUR。那些支持 AUR 的“特殊工具”我们称之为 AUR 助手。</p>
-<h1 id="Yaourt-（Yet-AnOther-User-Repository-Tool）"><a href="#Yaourt-（Yet-AnOther-User-Repository-Tool）" class="headerlink" title="Yaourt （Yet AnOther User Repository Tool）"></a>Yaourt （Yet AnOther User Repository Tool）</h1><p>（曾经）是 pacman 的一个封装，便于用户在 Arch Linux 上安装 AUR 软件。它基本上采用和 pacman 一样的语法。Yaourt 对于 AUR 的搜索、安装，乃至冲突解决和包依赖关系维护都有着良好的支持。</p>
-<p>然而，Yaourt 的开发进度近来十分缓慢，甚至在 Arch Wiki 上已经被列为“停止或有问题”。许多 Arch 用户认为它不安全 进而开始寻找其它的 AUR 助手。</p>
-<p>例如 Trizen 和 Packer 这样的流行的选择，它们也被列为“停止或有问题”的了。</p>
-<h1 id="1、-aurman"><a href="#1、-aurman" class="headerlink" title="1、 aurman"></a>1、 aurman</h1><p>aurman 是最好的 AUR 助手之一，也能胜任 Yaourt 替代品的地位。它有非常类似于 pacman 的语法，可以支持所有的 pacman 操作。你可以搜索 AUR、解决包依赖，在构建 AUR 包前检查 PKGBUILD 的内容等等。</p>
-<p>aurman 的特性：</p>
-<p>aurman 支持所有 pacman 操作，并且引入了可靠的包依赖解决方案、冲突判定和分包split package支持<br>线程化的 sudo 循环会在后台运行，所以你每次安装只需要输入一次管理员密码<br>提供开发包支持，并且可以区分显性安装和隐性安装的包<br>支持搜索 AUR 包和仓库<br>在构建 AUR 包之前，你可以检视并编辑 PKGBUILD 的内容<br>可以用作单独的 包依赖解决工具<br>安装 aurman：</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/aurman.git">https://aur.archlinux.org/aurman.git</a><br>cd aurman<br>makepkg -si<br>使用 aurman：</p>
-<p>用名字搜索：</p>
-<p>aurman -Ss <package-name><br>安装：</p>
-<p>aurman -S &lt;package-name&gt;</p>
-<h1 id="2、-yay"><a href="#2、-yay" class="headerlink" title="2、 yay"></a>2、 yay</h1><p>yay 是下一个最好的 AUR 助手。它使用 Go 语言写成，宗旨是提供最少化用户输入的 pacman 界面、yaourt 式的搜索，而几乎没有任何依赖软件。</p>
-<p>yay 的特性：</p>
-<p>yay 提供 AUR 表格补全，并且从 ABS 或 AUR 下载 PKGBUILD<br>支持收窄搜索，并且不需要引用 PKGBUILD 源<br>yay 的二进制文件除了 pacman 以外别无依赖<br>提供先进的包依赖解决方案，以及在编译安装之后移除编译时的依赖<br>当在 &#x2F;etc&#x2F;pacman.conf 文件配置中启用了色彩时支持色彩输出<br>yay 可被配置成只支持 AUR 或者 repo 里的软件包<br>安装 yay：</p>
-<p>你可以从 git 克隆并编译安装。</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/yay.git">https://aur.archlinux.org/yay.git</a><br>cd yay<br>makepkg -si<br>使用 yay：</p>
-<p>搜索：</p>
-<p>yay -Ss <package-name><br>安装：</p>
-<p>yay -S <package-name></p>
-<h1 id="3、-pakku"><a href="#3、-pakku" class="headerlink" title="3、 pakku"></a>3、 pakku</h1><p>Pakku 是另一个还处于开发早期的 pacman 封装，虽然它还处于开放早期，但这不说明它逊于其它任何 AUR 助手。Pakku 能很好地支持从 AUR 搜索和安装，并且也可以在安装后移除不必要的编译依赖。</p>
-<p>pakku 的特性：</p>
-<p>从 AUR 搜索和安装软件<br>检视不同构建之间的文件和变化<br>从官方仓库编译，并事后移除编译依赖<br>获取 PKGBUILD 以及 pacman 整合<br>类 pacman 的用户界面和选项支持<br>支持pacman 配置文件以及无需 PKGBUILD 源<br>安装 pakku：</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/pakku.git">https://aur.archlinux.org/pakku.git</a><br>cd pakku<br>makepkg -si<br>使用 pakku：</p>
-<p>搜索：</p>
-<p>pakku -Ss spotify<br>安装：</p>
-<p>pakku -S spotify</p>
-<h1 id="4、-aurutils"><a href="#4、-aurutils" class="headerlink" title="4、 aurutils"></a>4、 aurutils</h1><p>aurutils 本质上是一堆使用 AUR 的自动化脚本的集合。它可以搜索 AUR、检查更新，并且解决包依赖。</p>
-<p>aurutils 的特性：</p>
-<p>aurutils 使用本地仓库以支持 pacman 文件，所有的包都支持 –asdeps<br>不同的任务可以有多个仓库<br>aursync -u 一键同步本地代码库<br>aursearch 搜索提供 pkgbase、长格式和 raw 支持<br>能忽略指定包<br>安装 aurutils：</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/aurutils.git">https://aur.archlinux.org/aurutils.git</a><br>cd aurutils<br>makepkg -si<br>使用 aurutils：</p>
-<p>搜索：</p>
-<p>aurutils -Ss <package-name><br>安装：</p>
-<p>aurutils -S <package-name><br>所有这些包，在有 Yaourt 或者其它 AUR 助手的情况下都可以直接安装。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/26429/">https://github.com/maxzhao-it/blog/post/26429/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/21486/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/21486/" class="post-title-link" itemprop="url">U盘安装manjaro——抛弃Centos的旅程开始</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/ArchLinux/" itemprop="url" rel="index"><span itemprop="name">ArchLinux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="安装KDE中的组件"><a href="#安装KDE中的组件" class="headerlink" title="安装KDE中的组件"></a>安装KDE中的组件</h2><h3 id="安装需要包"><a href="#安装需要包" class="headerlink" title="安装需要包"></a>安装需要包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 plasma 桌面</span></span><br><span class="line">sudo pacman -S plasma plasma-wayland-session xorg</span><br><span class="line"><span class="comment"># 终端控制</span></span><br><span class="line">sudo pacman -S konsole</span><br><span class="line"><span class="comment"># 文件管理器</span></span><br><span class="line">sudo pacman -S dolphin</span><br><span class="line"><span class="comment"># 完整的软件</span></span><br><span class="line">sudo pacman -S kde-applications</span><br><span class="line"><span class="comment"># 安装中文语言包</span></span><br><span class="line">sudo pacman -S  kde-l10n-zh_cn</span><br><span class="line"><span class="comment"># 安装 sudo  vim，如果已经安装，则不需要执行</span></span><br><span class="line">sudo pacman -S sudo vim </span><br></pre></td></tr></table></figure>
-
-<h3 id="配置显示管理器"><a href="#配置显示管理器" class="headerlink" title="配置显示管理器"></a>配置显示管理器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sddm --example-config &gt;/etc/sddm.conf</span><br></pre></td></tr></table></figure>
-
-<h4 id="配置用户"><a href="#配置用户" class="headerlink" title="配置用户"></a>配置用户</h4><p><code>sddm</code>不会列出<code>root</code> 用户，所以添加一个 <code>maxzhao</code> 的用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加账号</span></span><br><span class="line">useradd -m -g <span class="built_in">users</span> -s /bin/bash maxzhao</span><br><span class="line"><span class="comment"># 设置密码</span></span><br><span class="line">passwd maxzhao</span><br></pre></td></tr></table></figure>
-
-<p>添加账号的 <code>sudo</code> 权限</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/sudoers</span><br></pre></td></tr></table></figure>
-
-<p>在 <code>root ALL=(ALL)ALL</code> 下添加</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root ALL=(ALL)ALL</span><br><span class="line">maxzhao ALL=(ALL)ALL</span><br></pre></td></tr></table></figure>
-
-<h3 id="开启服务"><a href="#开启服务" class="headerlink" title="开启服务"></a>开启服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> sddm.service</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> NetworkManager.service</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/21486/">https://github.com/maxzhao-it/blog/post/21486/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/916/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/916/" class="post-title-link" itemprop="url">ArchLinux下使用anaconda</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/asynspace/article/details/80654379">https://blog.csdn.net/asynspace/article/details/80654379</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xingkongyidian/article/details/85162285">https://blog.csdn.net/xingkongyidian/article/details/85162285</a></p>
-<p> pip 下载包ValueError: Unable to determine SOCKS version from socks:&#x2F;&#x2F;127.0.0.1:1081&#x2F;问题</p>
-<p> 用指令： unset all_proxy &amp;&amp; unset ALL_PROXY</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/daerzei/article/details/79504816">https://blog.csdn.net/daerzei/article/details/79504816</a></p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/916/">https://github.com/maxzhao-it/blog/post/916/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/31920/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/31920/" class="post-title-link" itemprop="url">ArchLinux（Manjaro）中的Java版本切换</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="JDK-安装"><a href="#JDK-安装" class="headerlink" title="JDK 安装"></a>JDK 安装</h2><ul>
-<li>安装oracle jdk <code>sudo pacman -S jdk</code></li>
-<li>安装openjdk<code>sudo pacman -S jdk8-openjdk</code></li>
-</ul>
-<h3 id="安装多个JDK时"><a href="#安装多个JDK时" class="headerlink" title="安装多个JDK时"></a>安装多个JDK时</h3><p>我这里先安装的 <code>jdk8-openjdk</code>，后安装 <code>jdk12</code></p>
-<p>安装 <code>jdk12</code>时提示：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Default Java environment is already <span class="built_in">set</span> to <span class="string">&#x27;java-8-openjdk&#x27;</span></span><br><span class="line">See <span class="string">&#x27;archlinux-java help&#x27;</span> to change it.</span><br><span class="line">When you use a non-reparenting window manager,</span><br><span class="line"><span class="built_in">set</span> _JAVA_AWT_WM_NONREPARENTING=1 <span class="keyword">in</span> /etc/profile.d/jre.sh</span><br><span class="line">jre 的可选依赖</span><br><span class="line">    alsa-lib: <span class="keyword">for</span> basic sound support [已安装]</span><br><span class="line">(3/3) 正在安装 jdk                                           [<span class="comment">################################] 100%</span></span><br><span class="line">Default Java environment is already <span class="built_in">set</span> to <span class="string">&#x27;java-8-openjdk&#x27;</span></span><br><span class="line">See <span class="string">&#x27;archlinux-java help&#x27;</span> to change it</span><br></pre></td></tr></table></figure>
-
-<h2 id="切换-JDK-版本"><a href="#切换-JDK-版本" class="headerlink" title="切换 JDK 版本"></a>切换 JDK 版本</h2><h3 id="使用archlinux-java命令切换JDK-版本"><a href="#使用archlinux-java命令切换JDK-版本" class="headerlink" title="使用archlinux-java命令切换JDK 版本"></a>使用<code>archlinux-java</code>命令切换JDK 版本</h3><h4 id="archlinux-java-help"><a href="#archlinux-java-help" class="headerlink" title="archlinux-java help"></a><code>archlinux-java help</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">archlinux-java &lt;COMMAND&gt;</span><br><span class="line"></span><br><span class="line">COMMAND:</span><br><span class="line">	status		List installed Java environments and enabled one</span><br><span class="line">	get		Return the short name of the Java environment <span class="built_in">set</span> as default</span><br><span class="line">	<span class="built_in">set</span> &lt;JAVA_ENV&gt;	Force &lt;JAVA_ENV&gt; as default</span><br><span class="line">	<span class="built_in">unset</span>		Unset current default Java environment</span><br><span class="line">	fix		Fix an invalid/broken default Java environment configuration</span><br></pre></td></tr></table></figure>
-
-<h4 id="set-就是设置默认环境的方法"><a href="#set-就是设置默认环境的方法" class="headerlink" title="set  就是设置默认环境的方法"></a>set <JAVA_ENV> 就是设置默认环境的方法</h4><h5 id="set-之前"><a href="#set-之前" class="headerlink" title="set 之前"></a>set 之前</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br><span class="line">openjdk version <span class="string">&quot;1.8.0_212&quot;</span></span><br><span class="line">OpenJDK Runtime Environment (build 1.8.0_212-b03)</span><br><span class="line">OpenJDK 64-Bit Server VM (build 25.212-b03, mixed mode)</span><br></pre></td></tr></table></figure>
-
-<h5 id="执行sudo-archlinux-java-set-java-12-jdk"><a href="#执行sudo-archlinux-java-set-java-12-jdk" class="headerlink" title="执行sudo archlinux-java  set java-12-jdk"></a>执行<code>sudo archlinux-java  set java-12-jdk</code></h5><h5 id="set-之后"><a href="#set-之后" class="headerlink" title="set 之后"></a>set 之后</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br><span class="line">java version <span class="string">&quot;12.0.1&quot;</span> 2019-04-16</span><br><span class="line">Java(TM) SE Runtime Environment (build 12.0.1+12)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 12.0.1+12, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
-
-<p>JDK版本切换就成功了，非常简单吧。</p>
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/063c80def55a">archLinux（Manjaro）中的Java版本切换</a></p>
-<p>推荐：</p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d586b476c4cd">arch-gnome 编程环境和其它环境安装</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7cfc16dba667">u盘安装manjaro——抛弃Centos的旅程开始</a> </p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/31920/">https://github.com/maxzhao-it/blog/post/31920/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/29380/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/29380/" class="post-title-link" itemprop="url">安装wps(Centos7)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如果，已经安装了Libre Office，则可以忽略下面的WPS安装（Libre Office是我第二次在安装GNOME的时候，直接勾选的选项，然后系统就默认安装了这个办公软件，不过操作上与WPS有点区别）。</p>
-<p>第一步：首先到wps官网(<a target="_blank" rel="noopener" href="http://linux.wps.cn/)%E4%B8%8B%E8%BD%BD">http://linux.wps.cn/)下载</a> wps for linux，选择合适自己的系统位数的rpm包.<br>第二步： 打开终端，cd进入文件下载的路径(我下载的存放路径是&#x2F;home&#x2F;XXX&#x2F;downloads)，进行软件安装<br>第三步：启动wps,在终端输入“wps”进行启动、通过点击(应用程序–&gt;办公–&gt;wps即可打开wps)<br>第四步：安装WPS For Linux后，打开提示系统缺失字体，因为版权问题，打包时候没有打包进来。</p>
-<p>下面提供解决方案，仅供学习参考。<br>(1) 字体库下载地址：（再次声明：仅供学习使用！） <a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1qW2roDY">http://pan.baidu.com/s/1qW2roDY</a>    提取密码：<code>z610</code><br>(2) 如果下载失效，可以到 <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1pKZnad1%EF%BC%8C">https://pan.baidu.com/s/1pKZnad1，</a> 提取密码： <code>y56i </code>路径下载。<br>首先下载字体，解压后将整个wps_symbol_fonts目录拷贝到&#x2F;usr&#x2F;share&#x2F;fonts目录下，然后赋予可读可执行权限。<br>权限设置操作如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/fonts/</span><br><span class="line"><span class="built_in">chmod</span> 755 wps_symbol_fonts</span><br><span class="line"><span class="built_in">cd</span> /usr/share/fonts/wps_symbol_fonts</span><br><span class="line"><span class="built_in">chmod</span> 644 *  </span><br></pre></td></tr></table></figure>
-
-
-
-<p>接着生存缓存配置信息，具体操作如下：<br>至此，完成所有操作，打开WPS则不会再提示缺失字体。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/share/fonts/wps_symbol_fonts</span><br><span class="line">mkfontdir</span><br><span class="line">mkfontscale</span><br><span class="line">fc-cache</span><br></pre></td></tr></table></figure>
-
-
-
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u010445843/article/details/77828552">https://blog.csdn.net/u010445843/article/details/77828552</a> </p>
-<blockquote>
-<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cb1df1223658">安装wps(Centos7)</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/29380/">https://github.com/maxzhao-it/blog/post/29380/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/44770/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/44770/" class="post-title-link" itemprop="url">Manjaro 添加 path 路径</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Manjaro 添加<code>path</code>路径</p>
-<p>很多喜欢创建软链接到<code>/usr/bin</code> 或者 <code>/usr/local/bin</code> 或者 <code>/usr/local/sbin</code> 路径下</p>
-<p>备注：软链接命令<code> ln -s /home/源文件路径  /usr/local/bin/文件名</code>  </p>
-<p>有时候，我们写了很多脚本，每次添加脚本都要添加一次到 <code>bin</code>下，非常不方便。</p>
-<p>这里我们可以直接添加脚本路径作为 <code>path</code> ：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/profile </span><br><span class="line"># 在appendpath &#x27;/usr/bin&#x27; 后面添加自己的脚本文件目录路径</span><br><span class="line">appendpath &#x27;/home/maxzhao/script&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>然后<code> source /etc/profilr</code> 就可以直接运行我们写好的脚本了。</p>
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f5cd9a79772c">Manjaro 添加 path 路径</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44770/">https://github.com/maxzhao-it/blog/post/44770/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1327,6 +561,947 @@ or</li>
 <p>修改 AutoEnable&#x3D;false，去掉前面的#注释，改为AutoEnable&#x3D;true。</p>
 <p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7cfc16dba667">u盘安装manjaro——抛弃Centos的旅程开始</a> </p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/21487/">https://github.com/maxzhao-it/blog/post/21487/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/40134/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/40134/" class="post-title-link" itemprop="url">anaconda conda 切换为国内源</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="anaconda-conda-切换为国内源"><a href="#anaconda-conda-切换为国内源" class="headerlink" title="anaconda conda 切换为国内源"></a>anaconda conda 切换为国内源</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_28442665/article/details/86658593">https://blog.csdn.net/sinat_28442665/article/details/86658593</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/40134/">https://github.com/maxzhao-it/blog/post/40134/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/17841/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/17841/" class="post-title-link" itemprop="url">arch-gnome 编程环境和其它环境安装</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/ArchLinux/" itemprop="url" rel="index"><span itemprop="name">ArchLinux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>对于我用过的几个发行版本来说，ArchLinux算是天生对程序员亲和的，主要是有这几个原因，首先是官方源中维护了许多的编程环境的包，尤其是以Python维护的最多。其次是有AUR源，有许多人在共同的维护这个源，可以让开箱即用的包越来越多。最后的原因才是他是一个Linux的发行版本。</p>
+<h1 id="安装之前"><a href="#安装之前" class="headerlink" title="安装之前"></a>安装之前</h1><p>在配置安装环境之前，我们得先对我们镜像源改造一下，这样才能继续我们之后的工作。我们得启用用<code>multilib</code>和<code>archlinuxcn</code>两个源。</p>
+<h2 id="multilib"><a href="#multilib" class="headerlink" title="multilib"></a><code>multilib</code></h2><p>将<code>/etc/pacman.conf</code>中的<code>multilib</code>的注释取消了就行</p>
+<h2 id="arclinuxcn源"><a href="#arclinuxcn源" class="headerlink" title="arclinuxcn源"></a>arclinuxcn源</h2><p>在<code>/etc/pacman.conf</code>加入如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[archlinuxcn]</span><br><span class="line">SigLevel = Optional TrustedOnly</span><br><span class="line">Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch</span><br></pre></td></tr></table></figure>
+<p>其它说法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">在终端输入</span><br><span class="line">pacman-mirrors -c China</span><br><span class="line">即可换成国内镜像</span><br><span class="line">原有的被保存在/var/lib/pacman-mirrors/custom-mirrors.json</span><br><span class="line">现在的被保存在/etc/pacman.d/mirrorlist</span><br><span class="line">另外pacman的下载缓存在/var/cache/pacman中</span><br><span class="line">对于始终无法信任的情况，选择Optional TrustAll 即可</span><br><span class="line">原文：https://blog.csdn.net/izzxacbbt/article/details/80150176 </span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="yaourt-或者-yay"><a href="#yaourt-或者-yay" class="headerlink" title="yaourt 或者 yay"></a>yaourt 或者 yay</h4><p>Yaourt是archlinux方便使用的关键部件之一，但没有被整合到系统安装中的工具。建议在装完系统重启之后，更新完pacman和基本系统之后，就安装这个工具。<br>最简单安装Yaourt的方式是<code>arclinuxcn源</code>，<code>pacman -Syu yaourt</code></p>
+<p>安装<code>pacman  -S archlinuxcn-keyring</code>这个包导入秘钥就行。<br>对于这其中可能存在的两个问题，也就是由使用硬件时钟造成秘钥导入不成功的问题，可以使用以下方法进行解决：</p>
+<ul>
+<li>立即同步时间，不用修改系统的时间设置</li>
+<li>删除<code>/etc/pacman.d/gnupg</code>文件夹，然后运行<code>pacman-key --init</code>和<code>pacman-key --refresh-keys</code>就可以解决这一个问题<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -R /etc/pacman.d/gnupg/</span><br><span class="line">sudo rm -R /root/.gnupg/</span><br><span class="line">sudo gpg --refresh-keys</span><br><span class="line">sudo pacman-key --init &amp;&amp;sudo  pacman-key --populate archlinux manjaro</span><br><span class="line">sudo pacman-key --refresh-keys</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="TIM-QQ"><a href="#TIM-QQ" class="headerlink" title="TIM QQ"></a>TIM QQ</h4><p><code>yaourt qq</code></p>
+<h4 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h4><p>对于Python编程环境来说，<code>ArchLinux</code>默认的<code>Python</code>环境是最新版本的<code>Python3</code>版本，所以在使用的时候需要注意这个问题，对于常见<code>Python</code>环境的安装方法如下：</p>
+<ul>
+<li><p>安装Python，这里是2.7  <code>sudo pacman -S python2</code></p>
+</li>
+<li><p>安装Anaconda  <code>sudo pacman -S anaconda</code></p>
+</li>
+<li><p>安装pyenv  <code>sudo pacman -S pyenv</code></p>
+</li>
+<li><p>安装Pytcharm  <code>sudo yaourt -S pycharm-professional</code></p>
+</li>
+</ul>
+<h5 id="Java-JDK"><a href="#Java-JDK" class="headerlink" title="Java JDK"></a>Java JDK</h5><p>在ArchLinux中使用Java，可以选择两种JDK的版本，一种是使用openjdk，另外一个是使用Oracle jdk版本，并且在ArchLinux中，可以使用archlinux-java来切换不同的版本。对于Java环境的一些工具集，可以使用如下的命令进行安装。</p>
+<ul>
+<li>安装oracle jdk <code>sudo pacman -S jdk</code></li>
+<li>安装openjdk<code>sudo pacman -S jdk9-openjdk</code></li>
+</ul>
+<h4 id="安装谷歌浏览器"><a href="#安装谷歌浏览器" class="headerlink" title="安装谷歌浏览器"></a>安装谷歌浏览器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S google-chrome   <span class="comment">#安装chrome</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="安装maven-sudo-pacman-S-maven"><a href="#安装maven-sudo-pacman-S-maven" class="headerlink" title="安装maven sudo pacman -S maven"></a>安装maven <code>sudo pacman -S maven</code></h4><h4 id="安装gradle-sudo-pacman-S-gradle"><a href="#安装gradle-sudo-pacman-S-gradle" class="headerlink" title="安装gradle sudo pacman -S gradle"></a>安装gradle <code>sudo pacman -S gradle</code></h4><h4 id="安装eclipse-96-96"><a href="#安装eclipse-96-96" class="headerlink" title="安装eclipse &#96;&#96;"></a>安装eclipse &#96;&#96;</h4><h4 id="安装Ideasudo-pacman-S-intellij-idea-ultimate-edition"><a href="#安装Ideasudo-pacman-S-intellij-idea-ultimate-edition" class="headerlink" title="安装Ideasudo pacman -S intellij-idea-ultimate-edition"></a>安装Idea<code>sudo pacman -S intellij-idea-ultimate-edition</code></h4><h4 id="安装wget-sudo-pacman-S-wget"><a href="#安装wget-sudo-pacman-S-wget" class="headerlink" title="安装wget sudo pacman -S wget "></a>安装wget <code>sudo pacman -S wget </code></h4><h4 id="安装vim-sudo-pacman-S-vim"><a href="#安装vim-sudo-pacman-S-vim" class="headerlink" title="安装vim sudo pacman -S vim "></a>安装vim <code>sudo pacman -S vim </code></h4><h4 id="安装netstat-ifconfig等等net工具-sudo-pacman-S-net-tools"><a href="#安装netstat-ifconfig等等net工具-sudo-pacman-S-net-tools" class="headerlink" title="安装netstat\ifconfig等等net工具 sudo pacman -S net-tools "></a>安装netstat\ifconfig等等net工具 <code>sudo pacman -S net-tools </code></h4><h4 id="PostgreSQL"><a href="#PostgreSQL" class="headerlink" title="PostgreSQL"></a>PostgreSQL</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S postgresql</span><br><span class="line">sudo passwd postgres</span><br><span class="line">sudo echo -e &quot;postgres ALL=(ALL) ALL&quot; &gt;&gt; /etc/sudoers</span><br><span class="line">su postgres</span><br><span class="line">sudo chmod +w /var/lib/</span><br><span class="line">initdb --locale en_US.UTF-8 -D &#x27;/var/lib/postgres/data&#x27;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-5.0.4.tar.gz</span><br><span class="line">tar -zxvf redis-5.0.4.tar.gz</span><br><span class="line">cd redis-5.0.4</span><br><span class="line">sudo pacman -S gcc make</span><br><span class="line">make &amp;&amp; make install </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Redis">wiki-Redis</a></p>
+</blockquote>
+<h4 id="redis-desktop-manager"><a href="#redis-desktop-manager" class="headerlink" title="redis-desktop-manager"></a>redis-desktop-manager</h4><p><code>sudo pacman -S redis-desktop-manager</code></p>
+<h4 id="Node环境"><a href="#Node环境" class="headerlink" title="Node环境"></a>Node环境</h4><p>和大部分的平台的安装配置一样，就是有可能需要配置以下全局的npm包的安装位置和一些目录，可以使用<br><code>sudo pacman -S nodejs npm</code><br>可以在<code>~/.npmrc</code>中写入如下配置：</p>
+<h5 id="HOME为你home目录路径的全写"><a href="#HOME为你home目录路径的全写" class="headerlink" title="$HOME为你home目录路径的全写"></a>$HOME为你home目录路径的全写</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cache=$HOME/.node_modules</span><br><span class="line">prefix=$HOME/.node_modules</span><br></pre></td></tr></table></figure>
+
+<h4 id="markdown-Typora-yaourt-typora"><a href="#markdown-Typora-yaourt-typora" class="headerlink" title="markdown Typora yaourt typora"></a>markdown Typora <code>yaourt typora</code></h4><h4 id="yaourt-foxit"><a href="#yaourt-foxit" class="headerlink" title="yaourt foxit"></a><code>yaourt foxit</code></h4><h4 id="小巧强大的截图工具深度截图：sudo-pacman-S-deepin-screenshot"><a href="#小巧强大的截图工具深度截图：sudo-pacman-S-deepin-screenshot" class="headerlink" title="小巧强大的截图工具深度截图：sudo pacman -S deepin-screenshot"></a>小巧强大的截图工具深度截图：<code>sudo pacman -S deepin-screenshot</code></h4><h4 id="zsh"><a href="#zsh" class="headerlink" title="zsh"></a>zsh</h4><p>强大的shell命令脚本解释器zsh: <a target="_blank" rel="noopener" href="https://www.zhyong.cn/posts/edab/#%E5%AE%89%E8%A3%85zsh">https://www.zhyong.cn/posts/edab/#安装zsh</a></p>
+<h4 id="you-get"><a href="#you-get" class="headerlink" title="you-get"></a>you-get</h4><p>强大的Web内容（视频，音频，图片）下载工具you-get: <code> sudo pacman -S you-get</code></p>
+<h4 id="brook"><a href="#brook" class="headerlink" title="brook"></a>brook</h4><p>轻量级跨平台的go语言代理工具brook:<br><code>sudo pacman -S brook</code></p>
+<h4 id="aria2"><a href="#aria2" class="headerlink" title="aria2"></a>aria2</h4><p>强大的命令行下载工具aria2: <code>sudo pacman -S aria2</code></p>
+<h4 id="fzf"><a href="#fzf" class="headerlink" title="fzf"></a>fzf</h4><p>模糊搜素神奇fzf: <code>sudo pacman -S fzf</code></p>
+<p>具体配置查看文档，我的配置是添加alias:alias fzf&#x3D;“fzf –height 40%”，可在oh-my-zsh配置文件中添加fzf插件。<br>个人认为通过vim **再按Tab键更好地利用了fzf命令，类似的还有kill **等。</p>
+<h4 id="ag"><a href="#ag" class="headerlink" title="ag"></a>ag</h4><p>一个速度极快的类似ack的代码搜索工具ag: <code>sudo pacman -S the_silver_searcher</code></p>
+<h4 id="thefuck"><a href="#thefuck" class="headerlink" title="thefuck"></a>thefuck</h4><p>自动纠正上一个控制台命令thefuck: <code>sudo pacman -S thefuck</code></p>
+<h4 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h4><p>强大的终端复用工具tmux: <code>sudo pacman -S tmux</code></p>
+<h4 id="tig"><a href="#tig" class="headerlink" title="tig"></a>tig</h4><p>字符模式下交互查看git项目tig: <code>sudo pacman -S tig</code></p>
+<h4 id="安装配置Git"><a href="#安装配置Git" class="headerlink" title="安装配置Git"></a>安装配置Git</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S git </span><br></pre></td></tr></table></figure>
+<p>设置个人github信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;github昵称&quot; </span><br><span class="line">git config --global user.email &quot;注册邮箱&quot; </span><br><span class="line">git config --global user.name &quot;maxzhao&quot; </span><br><span class="line">git config --global user.email &quot;1441439636@qq.com&quot; </span><br></pre></td></tr></table></figure>
+
+<h4 id="集合sudo-pacman-S-python2-anaconda-pyenv-pycharm-professional-maven-gradle-intellij-idea-ultimate-edition-wget-vim-nodejs-npm-git-openssh-file-roller-unrar-unzip-p7zip"><a href="#集合sudo-pacman-S-python2-anaconda-pyenv-pycharm-professional-maven-gradle-intellij-idea-ultimate-edition-wget-vim-nodejs-npm-git-openssh-file-roller-unrar-unzip-p7zip" class="headerlink" title="集合sudo pacman -S  python2 anaconda pyenv pycharm-professional maven gradle    intellij-idea-ultimate-edition  wget vim nodejs npm git openssh file-roller unrar unzip p7zip"></a>集合<code>sudo pacman -S  python2 anaconda pyenv pycharm-professional maven gradle    intellij-idea-ultimate-edition  wget vim nodejs npm git openssh file-roller unrar unzip p7zip</code></h4><h4 id="安装网易云音乐"><a href="#安装网易云音乐" class="headerlink" title="安装网易云音乐"></a>安装网易云音乐</h4><p><code>sudo pacman -S netease-cloud-music</code></p>
+<h4 id="即时聊天工具——wechat"><a href="#即时聊天工具——wechat" class="headerlink" title="即时聊天工具——wechat"></a>即时聊天工具——wechat</h4><p>Github上electronic-wechat开源项目(据说比腾讯官方开发的要好-) </p>
+<p>可以直接使用：<code>sudo pacman -S electronic-wechat</code></p>
+<p>在安装前需要安装node.js不然不能使用其中的命令安装<br>安装 Node.js 的最佳方式是使用 nvm。</p>
+<ul>
+<li><p>cURL:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>Wget: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>安装完成后，重启终端并执行下列命令即可安装 Node.js。 </p>
+<p><code>npm install stable</code></p>
+<p>切换目录到下载git clone下载<br><code>git clone https://github.com/geeeeeeeeek/electronic-wechat.git</code></p>
+<p>切换到wechat目录<br><code>cd electronic-wechat</code></p>
+<p>安装运行<br><code>npm install &amp;&amp; npm start</code></p>
+<p>编译安装在本地(Linux选择linux,这个不用解释吧?)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm run build:osx</span><br><span class="line">npm run build:linux</span><br><span class="line">npm run build:win32</span><br><span class="line">npm run build:win64</span><br></pre></td></tr></table></figure>
+<h4 id="国内版火狐浏览器-pacman-S-firefox-firefox-i18n-zh-cn"><a href="#国内版火狐浏览器-pacman-S-firefox-firefox-i18n-zh-cn" class="headerlink" title="国内版火狐浏览器 pacman -S firefox firefox-i18n-zh-cn "></a>国内版火狐浏览器 <code>pacman -S firefox firefox-i18n-zh-cn </code></h4><h4 id="压缩解压缩-pacman-S-file-roller-unrar-unzip-p7zip"><a href="#压缩解压缩-pacman-S-file-roller-unrar-unzip-p7zip" class="headerlink" title="压缩解压缩 pacman -S file-roller unrar unzip p7zip "></a>压缩解压缩 <code>pacman -S file-roller unrar unzip p7zip </code></h4><h4 id="Git-ssh-pacman-S-git-openssh"><a href="#Git-ssh-pacman-S-git-openssh" class="headerlink" title="Git ssh pacman -S git openssh "></a>Git ssh <code>pacman -S git openssh </code></h4><h4 id="安装wps-yaourt-S-wps-office"><a href="#安装wps-yaourt-S-wps-office" class="headerlink" title="安装wps yaourt -S wps-office "></a>安装wps <code>yaourt -S wps-office </code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/pacman-mirrors.conf</span><br><span class="line">#文末添加 </span><br><span class="line">OnlyCountry = China</span><br><span class="line"></span><br><span class="line">#然后执行 </span><br><span class="line">pacman-mirrors -g</span><br><span class="line"></span><br><span class="line">vim /etc/pacman.conf</span><br><span class="line">#文末添加：</span><br><span class="line">SigLevel = Optional TrustedOnly　　　　　　　　　　　　</span><br><span class="line">Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch　</span><br><span class="line"></span><br><span class="line">#然后执行：</span><br><span class="line">pacman -S archlinuxcn-keyring</span><br><span class="line"></span><br><span class="line"># 最后安装 wps： </span><br><span class="line">sudo pacman -S wps-office</span><br><span class="line"></span><br><span class="line"># wps字体</span><br><span class="line">sudo pacman -S ttf-wps-fonts</span><br></pre></td></tr></table></figure>
+<hr>
+<p>如果安装上好搜狗和wps后不能输入中文的解决方法：<br><code>vim ~/.xprofile</code>　　　　<br>#在最后添加以下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">export LC_ALL=zh_CN.UTF-8</span><br><span class="line">export XIM=fcitx  </span><br><span class="line">export XIM_PROGRAM=fcitx</span><br><span class="line">export GTK_IM_MODULE=fcitx</span><br><span class="line">export QT_IM_MODULE=fcitx</span><br><span class="line">export XMODIFIERS=&quot;@im=fcitx&quot;</span><br><span class="line">eval `dbus-launch --sh-syntax --exit-with-session`</span><br><span class="line">exec fcitx &amp;</span><br></pre></td></tr></table></figure>
+<p>如果有重复登录不进界面系统的情况，则改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> XIM_PROGRAM=fcitx</span><br><span class="line"><span class="built_in">export</span> GTK_IM_MODULE=fcitx</span><br><span class="line"><span class="built_in">export</span> QT_IM_MODULE=fcitx</span><br><span class="line"><span class="built_in">export</span> XMODIFIERS=<span class="string">&quot;@im=fcitx&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后reboot即可</p>
+<hr>
+<h4 id="VSCode-sudo-pacman-S-visual-studio-code-bin"><a href="#VSCode-sudo-pacman-S-visual-studio-code-bin" class="headerlink" title="VSCode  sudo pacman -S visual-studio-code-bin  "></a>VSCode  <code>sudo pacman -S visual-studio-code-bin  </code></h4><h4 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h4><p>我的笔记本是Intel的集成显卡和英伟达的独立显卡,这里有一些相关描述：<code>https://wiki.archlinux.org/index.php/NVIDIA_(简体中文)</code><br><code>sudo pacman -S xf86-video-intel </code><br><code>sudo pacman -S xf86-video-nouveau </code></p>
+<h4 id="安装NVIDIA显卡驱动"><a href="#安装NVIDIA显卡驱动" class="headerlink" title="安装NVIDIA显卡驱动"></a>安装NVIDIA显卡驱动</h4><p>Manjaro虽然自带硬件管理，但无法在两个显卡之间自由切换，按照ArchLinux Wiki给出的方法，只有Bumblebee方案成功<br><code>sudo pacman -S bumblebee bbswitch</code></p>
+<hr>
+<p>把用户添加到bumblebee组里：<br><code>sudo gpasswd -a XXX bumblebee 　　　</code>　 &#x2F;&#x2F;XXX是用户名</p>
+<hr>
+<p>启动bumblebeed服务：<br><code>sudo systemctl enable bumblebeed.service</code></p>
+<p>安装依赖<br><code>sudo pacman -S bumblebee nvidia opencl-nvidia lib32-nvidia-utils lib32-opencl-nvidia mesa lib32-mesa-libgl xf86-video-intel</code></p>
+<p>配置bumblebee：<br>编辑<code>vim  /etc/bumblebee/bumblebee.conf</code>，修改以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Driver=nvidia # 指定nvidia</span><br><span class="line">[driver-nvidia]</span><br><span class="line">PMMethod=bbswitch　　　　　　 # 电源管理指定bbswitch</span><br></pre></td></tr></table></figure>
+<p>用vim编辑文件的保存方法：<br>编辑好以后按esc键退出，然后输入英文的冒号再输入wq，即保存并退出<br><code>reboot</code></p>
+<p>开启NVIDIA显卡 <code>sudo tee /proc/acpi/bbswitch &lt;&lt;&lt; ON #关闭则是off</code></p>
+<p>查看显卡状态 <code>nvidia-smi</code></p>
+<p>Steam配置<br>Manjaro自带Steam，双击打开之后出现一个License界面之后再也没有反应，通过谷歌之后发现是缺少依赖:<br><code>sudo pacman -S steam-native-runtime</code><br><code>steam_install_workaround</code><br>等待依赖安装完成后就可以发现steam已经正常打开</p>
+<h3 id="sublimit官方地址"><a href="#sublimit官方地址" class="headerlink" title="sublimit官方地址"></a>sublimit官方地址</h3><p><a target="_blank" rel="noopener" href="http://www.sublimetext.com/docs/3/linux_repositories.html#pacman">http://www.sublimetext.com/docs/3/linux_repositories.html#pacman</a></p>
+<h2 id="一些软件安装卸载的操作"><a href="#一些软件安装卸载的操作" class="headerlink" title="一些软件安装卸载的操作"></a>一些软件安装卸载的操作</h2><ul>
+<li>安装 pacman -S </li>
+<li>删除 pacman -R </li>
+<li>移除已安装不需要软件包 pacman -Rs </li>
+<li>删除一个包,所有依赖 pacman -Rsc </li>
+<li>升级包 pacman -Syu </li>
+<li>查询包数据库 pacman -Ss </li>
+<li>搜索已安装的包 pacman -Qs </li>
+<li>显示包大量信息 pacman -Si </li>
+<li>本地安装包 pacman -Qi </li>
+<li>清理包缓存 pacman -Sc</li>
+</ul>
+<h3 id="添加命令打别名，比如ll"><a href="#添加命令打别名，比如ll" class="headerlink" title="添加命令打别名，比如ll"></a>添加命令打别名，比如<code>ll</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br><span class="line"><span class="built_in">alias</span> ll=<span class="string">&#x27;ls -l&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d586b476c4cd">arch-gnome 编程环境和其它环境安装</a></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3ccecb86f640">Linux上IDEA激活</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9bef94309e04"><em>curl 与 wget 的区别</em></a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7648613b4a63">无法挂载参考链接</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7cfc16dba667">u盘安装manjaro——抛弃Centos的旅程开始</a> </p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/17841/">https://github.com/maxzhao-it/blog/post/17841/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/1421/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/1421/" class="post-title-link" itemprop="url">编写我的第二个shell脚本</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="目的："><a href="#目的：" class="headerlink" title="目的："></a>目的：</h2><p>快速启动<code>nacos</code>服务。</p>
+<p>本人并没有任何 <code>shell</code> 编程的基础。</p>
+<h2 id="第一次尝试"><a href="#第一次尝试" class="headerlink" title="第一次尝试"></a>第一次尝试</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">option=&quot;$1&quot;</span><br><span class="line">echo $1</span><br><span class="line">if [&quot;$option&quot; == &quot;start&quot;]; then</span><br><span class="line">	echo &quot;start&quot;</span><br><span class="line">elif [&quot;$option&quot; == &quot;stop&quot;]; then</span><br><span class="line">	echo &quot;stop&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;options start|stop&quot;</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">执行 nacos start</span></span><br></pre></td></tr></table></figure>
+
+<p>毫无疑问—报错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">/home/maxzhao/script/nacos:行4: [start：未找到命令</span><br><span class="line">/home/maxzhao/script/nacos:行6: [start：未找到命令</span><br><span class="line">options start|stop</span><br></pre></td></tr></table></figure>
+
+<p>猜测：<code>[ ]</code>左右都需要空格</p>
+<h2 id="第二次尝试"><a href="#第二次尝试" class="headerlink" title="第二次尝试"></a>第二次尝试</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">option=&quot;$1&quot;</span><br><span class="line">echo $1</span><br><span class="line">if [ &quot;$option&quot; == &quot;start&quot; ]; then</span><br><span class="line">	echo &quot;start&quot;</span><br><span class="line">elif [ &quot;$option&quot; == &quot;stop&quot; ]; then</span><br><span class="line">	echo &quot;stop&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;options start|stop&quot;</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">执行 nacos start</span></span><br></pre></td></tr></table></figure>
+
+<p>执行<code> nacos start</code></p>
+<p>正确结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">start+start</span><br><span class="line">start</span><br></pre></td></tr></table></figure>
+
+<p>执行 <code>nacos</code>：</p>
+<p>正确结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options start|stop</span><br></pre></td></tr></table></figure>
+
+<h2 id="加入操作指令"><a href="#加入操作指令" class="headerlink" title="加入操作指令"></a>加入操作指令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">option=&quot;$1&quot;</span><br><span class="line">echo $1</span><br><span class="line">if [ &quot;$option&quot; == &quot;start&quot; ]; then</span><br><span class="line">	pwd</span><br><span class="line">elif [ &quot;$option&quot; == &quot;stop&quot; ]; then</span><br><span class="line">	echo &quot;stop&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;options start|stop&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>执行<code> nacos start</code></p>
+<p>正确结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">/home/maxzhao/script</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试宏定义操作执行"><a href="#测试宏定义操作执行" class="headerlink" title="测试宏定义操作执行"></a>测试宏定义操作执行</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">option=&quot;$1&quot;</span><br><span class="line">test_pwd=&quot;pw&quot;</span><br><span class="line">echo $1+&quot;$option&quot;</span><br><span class="line">if [ &quot;$option&quot; == &quot;start&quot; ]; then</span><br><span class="line">	&quot;$test_pwd&quot;d </span><br><span class="line">elif [ &quot;$option&quot; == &quot;stop&quot; ]; then</span><br><span class="line">	echo &quot;stop&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;options start|stop&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>执行<code> nacos start</code></p>
+<p>正确结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">/home/maxzhao/script</span><br></pre></td></tr></table></figure>
+
+<h2 id="写入操作脚本测试"><a href="#写入操作脚本测试" class="headerlink" title="写入操作脚本测试"></a>写入操作脚本测试</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">local_addr=&quot;/home/maxzhao/soft/nacos/distribution/target/nacos-server-1.0.0/nacos/bin/&quot;</span><br><span class="line">option=&quot;$1&quot;</span><br><span class="line">echo $1+&quot;$option&quot;</span><br><span class="line">if [ &quot;$option&quot; == &quot;start&quot; ]; then</span><br><span class="line">	sh &quot;$local_addr&quot;startup.sh -m standalone </span><br><span class="line">elif [ &quot;$option&quot; == &quot;stop&quot; ]; then</span><br><span class="line">	echo &quot;stop&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;options start|stop&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>执行<code> nacos start</code></p>
+<p>正确结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">/home/maxzhao/script</span><br></pre></td></tr></table></figure>
+
+<p>正确执行</p>
+<h2 id="最后脚本"><a href="#最后脚本" class="headerlink" title="最后脚本"></a>最后脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">local_addr=&quot;/home/maxzhao/soft/nacos/distribution/target/nacos-server-1.0.0/nacos/bin/&quot;</span><br><span class="line">option=&quot;$1&quot;</span><br><span class="line">if [ &quot;$option&quot; == &quot;start&quot; ]; then</span><br><span class="line">	nohup sh &quot;$local_addr&quot;startup.sh -m standalone &amp; </span><br><span class="line">elif [ &quot;$option&quot; == &quot;stop&quot; ]; then</span><br><span class="line">	sh &quot;$local_addr&quot;shutdown.sh </span><br><span class="line">else</span><br><span class="line">	echo &quot;options start|stop&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>执行<code> nacos start</code></p>
+<p>查看结果：<code>ps -ef |grep nacos</code></p>
+<p>查询到nacos进程，说明结果正确。</p>
+<h2 id="自此我的第二个脚本就完成了。"><a href="#自此我的第二个脚本就完成了。" class="headerlink" title="自此我的第二个脚本就完成了。"></a>自此我的第二个脚本就完成了。</h2><h2 id="为什么有第二个没有写第一个呢？"><a href="#为什么有第二个没有写第一个呢？" class="headerlink" title="为什么有第二个没有写第一个呢？"></a>为什么有第二个没有写第一个呢？</h2><p>我的第一个脚本就是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">nohup idea &amp;	</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/1421/">https://github.com/maxzhao-it/blog/post/1421/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/30332/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/30332/" class="post-title-link" itemprop="url">CentOS7用U盘安装</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>$\color{red}{这是为的关于centos7的第一篇文章，}$<br>$\color{red}{你可能觉得为说的不够详细，}$<br>$\color{red}{但是，请你相信我，}$<br>$\color{red}{我每次重装系统都是按照自己的流程走下来的}$<br>$\color{red}{看我的文集就会发现好多我们想要的，并且为已经踩过的坑}$<br>$\color{red}{坑踩多了就变成了路}$<br>#####如果是虚拟机，请右拐。<br>#####如果是双系统，建议把另一个系统盘禁用，或把盘拿掉。</p>
+<h4 id="制作映像U盘右拐"><a href="#制作映像U盘右拐" class="headerlink" title="制作映像U盘右拐"></a>制作映像U盘右拐</h4><h3 id="U盘启动后，根据不同的系统引导模式，会有两种不同的安装引导页面（大同小异）"><a href="#U盘启动后，根据不同的系统引导模式，会有两种不同的安装引导页面（大同小异）" class="headerlink" title="U盘启动后，根据不同的系统引导模式，会有两种不同的安装引导页面（大同小异）"></a>U盘启动后，根据不同的系统引导模式，会有两种不同的安装引导页面（大同小异）</h3><ul>
+<li>上下转到 Install CentOS 7 </li>
+<li>按Tab 键或者Ctrl+e</li>
+<li>在 vmlinuz 后面添加  initrd&#x3D;initrd.img linux dd quiet （每个空都是单空格），回车执行（或者Ctrl + x 执行，看下面有没有说明）</li>
+<li>找到自己的启动盘的盘符,比如&#x2F;dev&#x2F;sda1</li>
+<li>关机-开机 （如果是重起，有可能找不到U盘，会让自己感觉自己记错了U盘的盘符）</li>
+<li>上下转到 Install CentOS 7 </li>
+<li>按Tab 键或者Ctrl+e</li>
+<li>在 vmlinuz 后面添加 initrd&#x3D;initrd.img inst.stage2&#x3D;hd:&#x2F;dev&#x2F;sdc4 quiet（每个空都是单空格），回车执行（或者Ctrl + x 执行，看下面有没有说明）</li>
+<li>好了，你已经进入安装模式了，怎么安装，请右拐，<strong>右拐是百度、google、必应</strong></li>
+</ul>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="中文字体"><a href="#中文字体" class="headerlink" title="中文字体"></a>中文字体</h3><h4 id="方式1"><a href="#方式1" class="headerlink" title="方式1"></a>方式1</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install fonts-chinese</span><br><span class="line">yum -y install fonts-ISO8859</span><br><span class="line">fc-cache  -fv</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h4 id="方式2"><a href="#方式2" class="headerlink" title="方式2"></a>方式2</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install fontconfig</span><br><span class="line"><span class="built_in">mkdir</span> chinses</span><br><span class="line"><span class="built_in">chmod</span> -R 755 /usr/share/fonts/chinses/</span><br><span class="line">vim /etc/fonts/fonts.conf</span><br></pre></td></tr></table></figure>
+<p>在  <code>&lt;dir prefix=&quot;xdg&quot;&gt;fonts&lt;/dir&gt;</code> 这一行下面插入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">dir</span>&gt;/usr/share/fonts/chinses&lt;/dir&gt; </span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拷贝本地字体</span></span><br><span class="line">fc-cache</span><br></pre></td></tr></table></figure>
+
+<h3 id="源"><a href="#源" class="headerlink" title="源"></a>源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak</span><br><span class="line">vim /etc/yum.repos.d/CentOS-Base.repo </span><br></pre></td></tr></table></figure>
+
+<p>详情请看附</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum repolist	</span><br><span class="line">sudo yum -y install epel-release</span><br><span class="line"></span><br><span class="line">sed -e <span class="string">&#x27;s!^metalink=!#metalink=!g&#x27;</span> \</span><br><span class="line">    -e <span class="string">&#x27;s!^#baseurl=!baseurl=!g&#x27;</span> \</span><br><span class="line">    -e <span class="string">&#x27;s!//download\.fedoraproject\.org/pub!//mirrors.tuna.tsinghua.edu.cn!g&#x27;</span> \</span><br><span class="line">    -e <span class="string">&#x27;s!http://mirrors\.tuna!https://mirrors.tuna!g&#x27;</span> \</span><br><span class="line">    -i /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel-testing.repo</span><br><span class="line">    </span><br><span class="line">rpm -ivh https://mirrors.tuna.tsinghua.edu.cn/epel/6/x86_64/epel-release-6-8.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h4 id="报错-RPM-GPG-KEY-EPEL-7"><a href="#报错-RPM-GPG-KEY-EPEL-7" class="headerlink" title="报错 RPM-GPG-KEY-EPEL-7"></a>报错 <code>RPM-GPG-KEY-EPEL-7</code></h4><p>先设置 <code>CentOS-Base.repo </code> 中的 <code>gpgcheck=0</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y wget</span><br><span class="line"><span class="built_in">cd</span> /etc/pki/rpm-gpg</span><br><span class="line">sudo wget https://archive.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7</span><br><span class="line">sudo wget https://archive.fedoraproject.org/pub/epel/RPM-GPG-KEY-7</span><br><span class="line">sudo wget https://www.centos.org/keys/RPM-GPG-KEY-CentOS-7</span><br></pre></td></tr></table></figure>
+<h4 id="国内"><a href="#国内" class="headerlink" title="国内"></a>国内</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -e <span class="string">&#x27;s|^mirrorlist=|#mirrorlist=|g&#x27;</span> \</span><br><span class="line">         -e <span class="string">&#x27;s|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.tuna.tsinghua.edu.cn|g&#x27;</span> \</span><br><span class="line">         -i.bak \</span><br><span class="line">         /etc/yum.repos.d/CentOS-*.repo</span><br><span class="line">         </span><br><span class="line">sudo yum clean all</span><br><span class="line">sudo yum makecache</span><br><span class="line">sudo yum -y update</span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line"><span class="comment"># 关闭服务</span></span><br><span class="line">systemctl stop firewalld</span><br><span class="line"><span class="comment"># 关闭自启服务</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line"><span class="comment"># 开放端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=80/tcp --add-port=3306/tcp --permanent</span><br><span class="line"><span class="comment"># 重新载入</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">firewall-cmd --zone=public --query-port=80/tcp</span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line">firewall-cmd --zone=public --remove-port=80/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/60e8916ff89d">CentOS7用U盘安装</a></p>
+</blockquote>
+<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><h3 id="清华大学-repo-配置"><a href="#清华大学-repo-配置" class="headerlink" title="清华大学 repo 配置"></a>清华大学 <code>repo</code> 配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CentOS-Base.repo</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># The mirror system uses the connecting IP address of the client and the</span></span><br><span class="line"><span class="comment"># update status of each mirror to pick mirrors that are updated to and</span></span><br><span class="line"><span class="comment"># geographically close to the client.  You should use this for CentOS updates</span></span><br><span class="line"><span class="comment"># unless you are manually picking other mirrors.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># If the mirrorlist= does not work for you, as a fall back you can try the</span></span><br><span class="line"><span class="comment"># remarked out baseurl= line instead.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[base]</span><br><span class="line">name=CentOS-<span class="variable">$releasever</span> - Base</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/<span class="variable">$releasever</span>/os/<span class="variable">$basearch</span>/</span><br><span class="line"><span class="comment">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=os</span></span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-7</span><br><span class="line"></span><br><span class="line"><span class="comment">#released updates</span></span><br><span class="line">[updates]</span><br><span class="line">name=CentOS-<span class="variable">$releasever</span> - Updates</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/<span class="variable">$releasever</span>/updates/<span class="variable">$basearch</span>/</span><br><span class="line"><span class="comment">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=updates</span></span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-7</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#additional packages that may be useful</span></span><br><span class="line">[extras]</span><br><span class="line">name=CentOS-<span class="variable">$releasever</span> - Extras</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/<span class="variable">$releasever</span>/extras/<span class="variable">$basearch</span>/</span><br><span class="line"><span class="comment">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=extras</span></span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-7</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#additional packages that extend functionality of existing packages</span></span><br><span class="line">[centosplus]</span><br><span class="line">name=CentOS-<span class="variable">$releasever</span> - Plus</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/<span class="variable">$releasever</span>/centosplus/<span class="variable">$basearch</span>/</span><br><span class="line"><span class="comment">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=centosplus</span></span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=0</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-7</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/30332/">https://github.com/maxzhao-it/blog/post/30332/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/54531/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/54531/" class="post-title-link" itemprop="url">CentOS7设置GRUB系统内核开机选单</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/Centos/GRUB/" itemprop="url" rel="index"><span itemprop="name">GRUB</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>CentOS7设置GRUB系统内核开机选单<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/csdn_duomaomao/article/details/78963761">https://blog.csdn.net/csdn_duomaomao/article/details/78963761</a></p>
+<h1 id="Linux-CentOS-7-X-如何修改内核启动默认顺序"><a href="#Linux-CentOS-7-X-如何修改内核启动默认顺序" class="headerlink" title="Linux CentOS 7.X 如何修改内核启动默认顺序"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cnsong/p/7058000.html">Linux CentOS 7.X 如何修改内核启动默认顺序</a></h1><h2 id="有一个坑"><a href="#有一个坑" class="headerlink" title="有一个坑"></a>有一个坑</h2><p><code>grub.cfg </code>脚本中有<code>linux</code>与<code>linuxefi</code>的区别！</p>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/aa23356f1d52">CentOS7设置GRUB系统内核开机选单</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/54531/">https://github.com/maxzhao-it/blog/post/54531/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/60816/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/60816/" class="post-title-link" itemprop="url">Centos7 安装 SDK</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在Centos开发之前，默认会使用Centos基础命令。</p>
+<h3 id="卸载openjdk"><a href="#卸载openjdk" class="headerlink" title="卸载openjdk"></a>卸载openjdk</h3><h3 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h3><p><a href="%5BJDK%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98%E2%80%94%E2%80%94CentOS7%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6%5D(https://www.jianshu.com/p/1604ce74450d)">这里有环境变量配置失败的解决方案</a></p>
+<h3 id="下载SDK-Tool"><a href="#下载SDK-Tool" class="headerlink" title="下载SDK Tool"></a>下载SDK Tool</h3><p><code>wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz</code></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/soft/sdk</span><br><span class="line">tar -xvf http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz -d /home/soft/sdk</span><br><span class="line">cd /home/soft/sdk</span><br><span class="line"># 切换到root</span><br><span class="line">su root </span><br><span class="line">vim /etc/profile</span><br><span class="line">export ANDROID_HOME=&quot;/home/maxzhao/Android/Sdk/&quot;</span><br><span class="line">export ANDROID_SDK_ROOT=&quot;/home/maxzhao/Android/Sdk/&quot;</span><br><span class="line">export PATH=&quot;$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH&quot;</span><br><span class="line">source /etc/profile</span><br><span class="line">sdkmanager -;-list</span><br><span class="line">adb version</span><br></pre></td></tr></table></figure>
+<h4 id="安装需要的package"><a href="#安装需要的package" class="headerlink" title="安装需要的package"></a>安装需要的package</h4><p><code>sdkmanager &quot;build-tools;26.0.0&quot;</code></p>
+<p>您可以使用 <code>sdkmanager</code> 执行以下任务。</p>
+<h3 id="列出已安装和可用的软件包"><a href="#列出已安装和可用的软件包" class="headerlink" title="列出已安装和可用的软件包"></a>列出已安装和可用的软件包</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --list [options]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="安装软件包"><a href="#安装软件包" class="headerlink" title="安装软件包"></a>安装软件包</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager packages [options]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="sdkmanager-list-执行报错"><a href="#sdkmanager-list-执行报错" class="headerlink" title="sdkmanager --list 执行报错"></a><code>sdkmanager --list</code> 执行报错</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ sdkmanager --list</span><br><span class="line">Exception <span class="keyword">in</span> thread <span class="string">&quot;main&quot;</span> java.lang.NoClassDefFoundError: javax/xml/bind/annotation/XmlSchema</span><br><span class="line">    at com.android.repository.api.SchemaModule<span class="variable">$SchemaModuleVersion</span>.&lt;init&gt;(SchemaModule.java:156)</span><br><span class="line">    at com.android.repository.api.SchemaModule.&lt;init&gt;(SchemaModule.java:75)</span><br><span class="line">    at com.android.sdklib.repository.AndroidSdkHandler.&lt;clinit&gt;(AndroidSdkHandler.java:81)</span><br><span class="line">    at com.android.sdklib.tool.SdkManagerCli.main(SdkManagerCli.java:117)</span><br><span class="line">    at com.android.sdklib.tool.SdkManagerCli.main(SdkManagerCli.java:93)</span><br><span class="line">Caused by: java.lang.ClassNotFoundException: javax.xml.bind.annotation.XmlSchema</span><br><span class="line">    at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:582)</span><br><span class="line">    at java.base/jdk.internal.loader.ClassLoaders<span class="variable">$AppClassLoader</span>.loadClass(ClassLoaders.java:185)</span><br><span class="line">    at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:496)</span><br><span class="line">    ... 5 more</span><br></pre></td></tr></table></figure>
+
+<p>解决：</p>
+<ol>
+<li><p>切换为 <code>JDK8</code></p>
+</li>
+<li><p>添加依赖到 <code>tools\lib</code> 路径中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">activation-1.1.1.jar </span><br><span class="line">jaxb-api-2.3.1.jar </span><br><span class="line">jaxb-core-2.3.0.1.jar</span><br><span class="line">jaxb-impl-2.3.2.jar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后在 <strong>sdkmanager.bat</strong> 的 <code>set CLASSPATH=</code> 后面加入如下依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%APP_HOME%\jer\activation-1.1.1.jar;%APP_HOME%\jer\jaxb-api-2.3.1.jar;%APP_HOME%\jer\jaxb-core-2.3.0.1.jar;%APP_HOME%\jer\jaxb-impl-2.3.2.jar</span><br></pre></td></tr></table></figure></li>
+</ol>
+<blockquote>
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/460936ace90a"><em>Centos7</em> <em>安装</em> <em>SDK</em></a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/60816/">https://github.com/maxzhao-it/blog/post/60816/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/9187/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/9187/" class="post-title-link" itemprop="url">Centos7 安装Chrome</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>###chrome download url：<br><a target="_blank" rel="noopener" href="http://dl.google.com/linux/chrome/rpm/stable/x86_64//google-chrome-stable-66.0.3359.181-1.x86_64.rpm">http://dl.google.com/linux/chrome/rpm/stable/x86_64&#x2F;&#x2F;google-chrome-stable-66.0.3359.181-1.x86_64.rpm</a></p>
+<h5 id="可以直接用："><a href="#可以直接用：" class="headerlink" title="可以直接用："></a>可以直接用：</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://dl.google.com/linux/chrome/rpm/stable/x86_64//google-chrome-stable-66.0.3359.181-1.x86_64.rpm</span><br><span class="line">sudo yum install google-chrome  (tab)</span><br></pre></td></tr></table></figure>
+<h5 id="如果看到缺少的-用下面的yum指令安装-缺什么把后面的名字换了就可以了，-是通配符"><a href="#如果看到缺少的-用下面的yum指令安装-缺什么把后面的名字换了就可以了，-是通配符" class="headerlink" title="如果看到缺少的,用下面的yum指令安装,缺什么把后面的名字换了就可以了，*是通配符"></a>如果看到缺少的,用下面的yum指令安装,缺什么把后面的名字换了就可以了，*是通配符</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y  redhat-lsb*</span><br></pre></td></tr></table></figure>
+
+<p>我的通用傻瓜式脚本(最终还是缺什么就yum一下)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install -y redhat-lsb* libXss*  libappindicator3*  liberation-fonts*</span><br><span class="line">yum install -y libXScrnSaver</span><br><span class="line">yum install -y libappindicator-gtk3</span><br><span class="line">yum install -y liberation-fonts</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cd474e9dd310">Centos7 安装Chrome</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/9187/">https://github.com/maxzhao-it/blog/post/9187/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/30297/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/30297/" class="post-title-link" itemprop="url">Centos7下的Redis安装</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-11-26 10:31:44" itemprop="dateModified" datetime="2022-11-26T10:31:44+08:00">2022-11-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/Centos/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="解压安装"><a href="#解压安装" class="headerlink" title="解压安装"></a>解压安装</h2><h3 id="一、下载Redis"><a href="#一、下载Redis" class="headerlink" title="一、下载Redis"></a>一、下载Redis</h3><p>手动下载地址：<a target="_blank" rel="noopener" href="http://download.redis.io/releases/">http://download.redis.io/releases/</a><br>或</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> tools &amp;&amp; <span class="built_in">cd</span> tools</span><br><span class="line">wget http://download.redis.io/releases/redis-7.0.4.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="二、解压Redis"><a href="#二、解压Redis" class="headerlink" title="二、解压Redis"></a>二、解压Redis</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../ </span><br><span class="line">tar -zxvf redis-7.0.4.tar.gz </span><br></pre></td></tr></table></figure>
+<h3 id="三、编译安装"><a href="#三、编译安装" class="headerlink" title="三、编译安装"></a>三、编译安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下面操作如果报gcc错误，需要先安装gcc，</span></span><br><span class="line">yum install -y gcc</span><br><span class="line"><span class="built_in">cd</span> redis-7.0.4/</span><br><span class="line">make PREFIX=/home/redis/redis MALLOC=libc</span><br><span class="line"><span class="built_in">cd</span> src &amp;&amp; make PREFIX=/home/redis/redis install</span><br></pre></td></tr></table></figure>
+<p>成功安装的提示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">    CC Makefile.dep</span><br><span class="line"></span><br><span class="line">Hint: It<span class="string">&#x27;s a good idea to run &#x27;</span>make <span class="built_in">test</span><span class="string">&#x27; ;)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br><span class="line"><span class="string">    INSTALL install</span></span><br></pre></td></tr></table></figure>
+<h3 id="四-开机自启"><a href="#四-开机自启" class="headerlink" title="四 开机自启"></a>四 开机自启</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig redis on</span><br></pre></td></tr></table></figure>
+
+<h2 id="另外-yum-安装"><a href="#另外-yum-安装" class="headerlink" title="另外: yum 安装"></a>另外: yum 安装</h2><h3 id="安装库"><a href="#安装库" class="headerlink" title="安装库"></a>安装库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装redis"><a href="#安装redis" class="headerlink" title="安装redis "></a>安装<code>redis </code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install redis</span><br></pre></td></tr></table></figure>
+
+<h3 id="服务操作"><a href="#服务操作" class="headerlink" title="服务操作"></a>服务操作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl status redis <span class="comment"># redis 状态</span></span><br><span class="line">systemctl entable redis <span class="comment"># 开机自启 </span></span><br><span class="line">systemctl start redis <span class="comment">#启动</span></span><br><span class="line">systemctl restart redis <span class="comment"># 重启</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="启动操作"><a href="#启动操作" class="headerlink" title="启动操作"></a>启动操作</h2><h4 id="直接启动"><a href="#直接启动" class="headerlink" title="直接启动"></a>直接启动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#如果当前模式安装，会自动添加全局快捷方式</span></span><br><span class="line"><span class="comment">#直接执行下面命令可以启动redis</span></span><br><span class="line">redis-server</span><br></pre></td></tr></table></figure>
+<h3 id="后台方式启动"><a href="#后台方式启动" class="headerlink" title="后台方式启动"></a>后台方式启动</h3><p><strong>方式一：</strong></p>
+<ul>
+<li>修改<code>redis.conf</code>文件<br><code>daemonize no</code><br>修改为<br><code>daemonize yes</code></li>
+<li>指定redis配置文件启动<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server /home/redis/redis.conf </span><br></pre></td></tr></table></figure>
+<strong>方式二：</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup redis-server &amp;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="后台方式启动的关闭"><a href="#后台方式启动的关闭" class="headerlink" title="后台方式启动的关闭"></a>后台方式启动的关闭</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep redis</span><br><span class="line">#root      7767  5357  0 10:31 pts/1    00:00:00 redis-server *:6379</span><br><span class="line">kill -9 7767</span><br></pre></td></tr></table></figure>
+<h5 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h5><p><code>redis-cli -h  yourIp-p yourPort  -a youPassword</code></p>
+<h3 id="设置远程连接"><a href="#设置远程连接" class="headerlink" title="设置远程连接"></a>设置远程连接</h3><p>编辑 <code>redis.conf</code>文件<br><code> bind 127.0.0.1</code>这一行注释掉，或者 <code>bind 0.0.0.0 </code><br><code>protected-mode </code>要设置成 <code>no </code><br>重启redis</p>
+<h3 id="防火墙配置"><a href="#防火墙配置" class="headerlink" title="防火墙配置"></a>防火墙配置</h3><p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/irokay/article/details/72717132">https://blog.csdn.net/irokay/article/details/72717132</a><br><strong>切记：</strong>ssh远程访问时，不要把22端口删掉，22是ssh连接的端口。<br>各种数据库需要的默认端口：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50f15b3d0de6">https://www.jianshu.com/p/50f15b3d0de6</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#清除所有规则，开放所有端口</span><br><span class="line">iptables -F</span><br></pre></td></tr></table></figure>
+<p>下面是我的一个iptables的配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sample configuration for iptables service</span></span><br><span class="line"><span class="comment"># you can edit this manually or use system-config-firewall</span></span><br><span class="line"><span class="comment"># please do not ask us to add additional ports/services to this default configuration</span></span><br><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">-A INPUT -p icmp -j ACCEPT</span><br><span class="line">-A INPUT -i lo -j ACCEPT</span><br><span class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT</span><br><span class="line"><span class="comment">#-A INPUT -p tcp -m state --state NEW -m multiport tcp --dport 1433,1521,3306,5000,5432,6379,9092,11211,27017 -j ACCEPT</span></span><br><span class="line">-A INPUT -m state --state NEW -p tcp -m multiport --dport 1433,1521,3306,5000,5432,6379,9092,11211,27017 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 8000:8888 -j ACCEPT</span><br><span class="line"></span><br><span class="line">-A INPUT -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">-A FORWARD -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="获取默认配置文件"><a href="#获取默认配置文件" class="headerlink" title="获取默认配置文件"></a>获取默认配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">daemonize no <span class="comment"># 后台运行</span></span><br><span class="line"><span class="built_in">bind</span> 0.0.0.0  <span class="comment"># 访问地址</span></span><br><span class="line">port 6379 <span class="comment">#端口</span></span><br><span class="line">requirepass <span class="comment"># 密码</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动redis</span></span><br><span class="line">service redis start</span><br><span class="line"><span class="comment"># 停止redis</span></span><br><span class="line">service redis stop</span><br><span class="line"><span class="comment"># 查看redis运行状态</span></span><br><span class="line">service redis status</span><br><span class="line"><span class="comment"># 查看redis进程</span></span><br><span class="line">ps -ef | grep redis</span><br><span class="line"><span class="comment"># 进入本机redis</span></span><br><span class="line">redis-cli</span><br><span class="line"><span class="comment"># 列出所有key</span></span><br><span class="line">keys *</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"># start</span><br><span class="line"># ~/redis/redis-server ~/redis/redis.conf</span><br><span class="line"></span><br><span class="line">bind 127.0.0.1 -::1</span><br><span class="line"></span><br><span class="line">protected-mode yes</span><br><span class="line"></span><br><span class="line">port 56379</span><br><span class="line"></span><br><span class="line">tcp-backlog 511</span><br><span class="line">timeout 0</span><br><span class="line">tcp-keepalive 300</span><br><span class="line">daemonize yes</span><br><span class="line">pidfile ~/redis/redis_56379.pid</span><br><span class="line">loglevel notice</span><br><span class="line">logfile &quot;&quot;</span><br><span class="line">databases 16</span><br><span class="line">always-show-logo no</span><br><span class="line">set-proc-title yes</span><br><span class="line">proc-title-template &quot;&#123;title&#125; &#123;listen-addr&#125; &#123;server-mode&#125;&quot;</span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line">rdbcompression yes</span><br><span class="line">rdbchecksum yes</span><br><span class="line">dbfilename dump.rdb</span><br><span class="line">rdb-del-sync-files no</span><br><span class="line">dir ./</span><br><span class="line">replica-serve-stale-data yes</span><br><span class="line">replica-read-only yes</span><br><span class="line">repl-diskless-sync yes</span><br><span class="line">repl-diskless-sync-delay 5</span><br><span class="line">repl-diskless-sync-max-replicas 0</span><br><span class="line">repl-diskless-load disabled</span><br><span class="line">repl-disable-tcp-nodelay no</span><br><span class="line">replica-priority 100</span><br><span class="line">acllog-max-len 128</span><br><span class="line"></span><br><span class="line">requirepass Skynj@123</span><br><span class="line"></span><br><span class="line">lazyfree-lazy-eviction no</span><br><span class="line">lazyfree-lazy-expire no</span><br><span class="line">lazyfree-lazy-server-del no</span><br><span class="line">replica-lazy-flush no</span><br><span class="line">lazyfree-lazy-user-del no</span><br><span class="line">lazyfree-lazy-user-flush no</span><br><span class="line">oom-score-adj no</span><br><span class="line">oom-score-adj-values 0 200 800</span><br><span class="line">disable-thp yes</span><br><span class="line">appendonly no</span><br><span class="line">appendfilename &quot;appendonly.aof&quot;</span><br><span class="line">appenddirname &quot;appendonlydir&quot;</span><br><span class="line">appendfsync everysec</span><br><span class="line">no-appendfsync-on-rewrite no</span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line">aof-load-truncated yes</span><br><span class="line">aof-use-rdb-preamble yes</span><br><span class="line">aof-timestamp-enabled no</span><br><span class="line">slowlog-log-slower-than 10000</span><br><span class="line">slowlog-max-len 128</span><br><span class="line">latency-monitor-threshold 0</span><br><span class="line">notify-keyspace-events &quot;&quot;</span><br><span class="line">hash-max-listpack-entries 512</span><br><span class="line">hash-max-listpack-value 64</span><br><span class="line">list-max-listpack-size -2</span><br><span class="line">list-compress-depth 0</span><br><span class="line">set-max-intset-entries 512</span><br><span class="line">zset-max-listpack-entries 128</span><br><span class="line">zset-max-listpack-value 64</span><br><span class="line">hll-sparse-max-bytes 3000</span><br><span class="line">stream-node-max-bytes 4096</span><br><span class="line">stream-node-max-entries 100</span><br><span class="line">activerehashing yes</span><br><span class="line">client-output-buffer-limit normal 0 0 0</span><br><span class="line">client-output-buffer-limit replica 256mb 64mb 60</span><br><span class="line">client-output-buffer-limit pubsub 32mb 8mb 60</span><br><span class="line">hz 10</span><br><span class="line">dynamic-hz yes</span><br><span class="line">aof-rewrite-incremental-fsync yes</span><br><span class="line">rdb-save-incremental-fsync yes</span><br><span class="line">jemalloc-bg-thread yes</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/89c6982296b5">Centos7下的Redis安装</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/30297/">https://github.com/maxzhao-it/blog/post/30297/</a> </p>
 
       
     </div>

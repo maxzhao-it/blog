@@ -155,12 +155,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">166</span>
+        <span class="site-state-item-count">185</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,341 +207,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f9aa9996/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/f9aa9996/" class="post-title-link" itemprop="url">分析JVM内存溢出的hprof</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><h3 id="手动导出内存快照"><a href="#手动导出内存快照" class="headerlink" title="手动导出内存快照"></a>手动导出内存快照</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:format=b,file=./java_pid6902.hprof 6902</span><br></pre></td></tr></table></figure>
-
-<h3 id="自动导出"><a href="#自动导出" class="headerlink" title="自动导出"></a>自动导出</h3><p>添加脚本命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;`</span><br><span class="line">java -Xmx1G -XX:+PrintGCDetails  -XX:+PrintGCTimeStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./dump/  -Xloggc:gclog.log-$&#123;current&#125; -XX:+UseGCLogFileRotation  -XX:GCLogFileSize=20M  -XX:NumberOfGCLogFiles=50 -jar  app.jar</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>更多参考<a href="./3c725d5d">JVM参数</a></p>
-</blockquote>
-<h2 id="jhat-查看"><a href="#jhat-查看" class="headerlink" title="jhat 查看"></a><code>jhat</code> 查看</h2><h2 id="打开-hprof"><a href="#打开-hprof" class="headerlink" title="打开 hprof"></a>打开 <code>hprof</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">端口默认 7000 -J-Xmx512m</span></span><br><span class="line">jhat -port 7000 -J-Xmx512m java_pid14827.hprof</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用<code>-J-Xmx512m</code>来设置最大堆大小为<code>512M</code>。</li>
-</ul>
-<h2 id="jvisualvm-查看"><a href="#jvisualvm-查看" class="headerlink" title="jvisualvm  查看"></a><code>jvisualvm</code>  查看</h2><p>直接载入文件,选择文件类型 <code>.hprof</code></p>
-<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524103324385.png" alt="image-20220524103324385"></p>
-<blockquote>
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=tools-using-hprof-profiler">IBM：使用 <code>HPROF</code> 概要文件分析器</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=profiler-explanation-hprof-output-file">IBM：<code>HPROF</code> 输出文件的说明</a></p>
-<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/samples/hprof.html"><code>HPROF: A Heap/CPU Profiling Tool</code></a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/276">深入浅出<code>JProfiler</code></a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onmyway20xx/p/3963735.html">使用<code>JProfiler</code>进行内存分析</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.ej-technologies.com/resources/jprofiler/help/doc/main/introduction.html#jprofiler.introduction"><code>Introduction To JProfiler</code></a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f9aa9996/">https://github.com/maxzhao-it/blog/post/f9aa9996/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/848e11b6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/848e11b6/" class="post-title-link" itemprop="url">Redis集群部署</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:42:25" itemprop="dateModified" datetime="2022-07-28T17:42:25+08:00">2022-07-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DevelopTools/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="Redis集群模式"><a href="#Redis集群模式" class="headerlink" title="Redis集群模式"></a><code>Redis</code>集群模式</h1><p><code>Redis</code>有三种集群模式：</p>
-<ol>
-<li>主从模式：提高可用性，解决了单节点故障</li>
-<li>哨兵（需要<code>Sentinel</code>）模式：在主从复制的基础上实现了主从切换和故障转移</li>
-<li><code>Cluster</code>模式：是官方提供的集群模式，使用 <code>Sharding</code> 技术，实现了高可用、读写分离、分布式存储。</li>
-</ol>
-<blockquote>
-<p>下载 <a target="_blank" rel="noopener" href="https://download.redis.io/redis-stable.tar.gz"><code>Redis source</code></a></p>
-</blockquote>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装方式："><a href="#安装方式：" class="headerlink" title="安装方式："></a>安装方式：</h2><h3 id="1、完全离线安装"><a href="#1、完全离线安装" class="headerlink" title="1、完全离线安装"></a>1、完全离线安装</h3><h4 id="安装关键依赖-gcc、make"><a href="#安装关键依赖-gcc、make" class="headerlink" title="安装关键依赖 gcc、make"></a>安装关键依赖 <code>gcc</code>、<code>make</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接全部安装</span></span><br><span class="line">rpm -ivh *.rpm</span><br><span class="line"><span class="comment"># 全部安装报错时，使用下面的安装找出错误</span></span><br><span class="line">rpm -ivh kernel-headers-3.10.0-1160.el7.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-common-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-headers-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-devel-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh make-3.82-24.el7.x86_64.rpm</span><br><span class="line">rpm -ivh binutils-2.27-44.base.el7.x86_64.rpm</span><br><span class="line">rpm -ivh libgcc-4.8.5-44.el7.x86_64.rpm</span><br><span class="line">rpm -ivh mpfr-3.1.1-4.el7.x86_64.rpm</span><br><span class="line">rpm -ivh libmpc-1.0.1-3.el7.x86_64.rpm</span><br><span class="line">rpm -ivh cpp-4.8.5-44.el7.x86_64.rpm</span><br><span class="line">rpm -ivh gcc-4.8.5-44.el7.x86_64.rpm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="编译-redis"><a href="#编译-redis" class="headerlink" title="编译 redis"></a>编译 <code>redis</code></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压</span></span><br><span class="line">tar -zxvf redis-stable.tar.gz</span><br><span class="line">cd redis-stable</span><br><span class="line">make</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">结束后</span></span><br><span class="line">make test</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装到 /usr/local/bin</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<h4 id="下载依赖"><a href="#下载依赖" class="headerlink" title="下载依赖"></a>下载依赖</h4><p>下载依赖需要<strong>注意版本，依赖版本根据当前系统的版本号，特别是 <code>glibc</code></strong></p>
-<blockquote>
-<p>编译所需要的依赖  <a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/gcc-4.8.5-44.el7.x86_64.rpm"><code>gcc</code></a><br>、<a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/make-3.82-24.el7.x86_64.rpm"><code>make</code></a></p>
-<p>下面是<code>gcc</code>依赖：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/cpp-4.8.5-44.el7.x86_64.rpm"><code>cpp</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/libgcc-4.8.5-44.el7.x86_64.rpm"><code>libgcc</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-2.17-324.el7_9.x86_64.rpm"><code>glibc</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-devel-2.17-324.el7_9.x86_64.rpm"><code>glibc-devel</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-headers-2.17-324.el7_9.x86_64.rpm"><code>glibc-headers</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-common-2.17-324.el7_9.x86_64.rpm"><code>glibc-common</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/kernel-headers-3.10.0-1160.el7.x86_64.rpm"><code>kernel-headers</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/mpfr-3.1.1-4.el7.x86_64.rpm"><code>libmpc</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/mpfr-3.1.1-4.el7.x86_64.rpm"><code>mpfr</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/binutils-2.27-44.base.el7.x86_64.rpm"><code>binutils</code></a></li>
-<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/make-3.82-24.el7.x86_64.rpm"><code>make</code></a></li>
-</ul>
-</blockquote>
-<h3 id="2、联网设备安装"><a href="#2、联网设备安装" class="headerlink" title="2、联网设备安装"></a>2、联网设备安装</h3><ol>
-<li><p><a href="#alibabaRepo">配置阿里云镜像</a></p>
-</li>
-<li><p>安装依赖</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc make</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装 <code>Redis</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">wget https://download.redis.io/redis-stable.tar.gz</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压</span></span><br><span class="line">tar -zxvf redis-stable.tar.gz</span><br><span class="line">cd redis-stable</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译</span></span><br><span class="line">make</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">结束后</span></span><br><span class="line">make test</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="3、rpm安装-不推荐"><a href="#3、rpm安装-不推荐" class="headerlink" title="3、rpm安装(不推荐)"></a>3、<code>rpm</code>安装(不推荐)</h3><p>联网安装可能会安装旧的版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#配置阿里云镜像</span></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="comment"># 配置阿里云 epel </span></span><br><span class="line">wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="line"><span class="comment"># 安装redis</span></span><br><span class="line">yum install -y epel-release</span><br><span class="line">yum install -y redis</span><br></pre></td></tr></table></figure>
-
-<h3 id="4、-snap-安装"><a href="#4、-snap-安装" class="headerlink" title="4、 snap 安装"></a>4、 <code>snap</code> 安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br><span class="line">yum install snapd</span><br><span class="line">systemctl enable --now snapd.socket</span><br><span class="line">ln -s /var/lib/snapd/snap /snap</span><br><span class="line">snap install redis</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">bind * -::*                 </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保护模式，不允许不认证连接</span></span><br><span class="line">protected-mode yes</span><br><span class="line"></span><br><span class="line">port 56379</span><br><span class="line">tcp-backlog 511</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">unixsocket /run/redis.sock</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">unixsocketperm 700</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Close the connection after a client is idle <span class="keyword">for</span> N seconds (0 to <span class="built_in">disable</span>)</span></span><br><span class="line">timeout 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ack 验证client 是否存活</span></span><br><span class="line">tcp-keepalive 300</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">守护进程运行</span></span><br><span class="line">daemonize yes</span><br><span class="line">pidfile /opt/redis56379/redis_56379.pid</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">日志级别 debug verbose notice warning</span></span><br><span class="line">loglevel notice</span><br><span class="line">logfile &quot;/opt/redis56379/redis56379.log&quot;</span><br><span class="line"></span><br><span class="line">databases 16</span><br><span class="line"></span><br><span class="line">always-show-logo no</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启用进程标题</span></span><br><span class="line">set-proc-title yes </span><br><span class="line">proc-title-template &quot;&#123;title&#125; &#123;listen-addr&#125; &#123;server-mode&#125;&#123;port&#125;&quot;</span><br><span class="line"> </span><br><span class="line">dir /opt/redis56379/data/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">密码</span></span><br><span class="line">requirepass maxzhao </span><br></pre></td></tr></table></figure>
-
-<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="阿里云镜像"><a href="#阿里云镜像" class="headerlink" title="阿里云镜像"></a>阿里云镜像<span id="alibabaRepo"></span></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置阿里云镜像</span></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">配置阿里云 epel</span> </span><br><span class="line">wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/848e11b6/">https://github.com/maxzhao-it/blog/post/848e11b6/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/ff3733f2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/ff3733f2/" class="post-title-link" itemprop="url">SpringEvent事件机制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Spring Event 机制使用起来比较简单。</p>
-<ul>
-<li>需要一个事件类</li>
-<li>需要监听当前事件类</li>
-<li>需要发布当前事件类的事件</li>
-</ul>
-<h3 id="简单了解一下"><a href="#简单了解一下" class="headerlink" title="简单了解一下"></a>简单了解一下</h3><p><code>ApplicationEventPublisher</code>用来发布事件，默认实现类 <code>AbstractApplicationContext</code>.</p>
-<p><img src="/blog/(/uploads/images/image-20220401143619272.png" alt=" "></p>
-<p>其中 <code>ApplicationEventPublisher</code>有两个 <code>publishEvent</code> 方法，在<code>Spring Context 4.2</code>之后就没有区别了。</p>
-<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StartSpringBootEventDemoApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SpringApplication</span> <span class="variable">application</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringApplication</span>(StartSpringBootEventDemoApplication.class);</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> CommandLineRunner <span class="title function_">test</span><span class="params">(ApplicationEventPublisher applicationEventPublisher)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> args -&gt; &#123;</span><br><span class="line">            <span class="comment">/*发布事件*/</span></span><br><span class="line">            applicationEventPublisher.publishEvent(<span class="keyword">new</span> <span class="title class_">CustomEvent</span>(<span class="number">11111</span>));</span><br><span class="line">            applicationEventPublisher.publishEvent(<span class="keyword">new</span> <span class="title class_">CustomEvent2</span>(<span class="number">22222</span>));</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试自定义事件类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">CustomEvent</span> &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 标识</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> id;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">CustomEvent</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.id = id;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;CustomEvent&#123;&quot;</span> + <span class="string">&quot;id=&quot;</span> + id + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试自定义事件类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">CustomEvent2</span> &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 标识</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> id;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">CustomEvent2</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.id = id;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;CustomEvent2&#123;&quot;</span> + <span class="string">&quot;id=&quot;</span> + id + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 监听事件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@EventListener(value = CustomEvent.class)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener</span><span class="params">(CustomEvent customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener2</span><span class="params">(CustomEvent customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener2=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener(value = CustomEvent2.class)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener3</span><span class="params">(CustomEvent2 customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener3=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener4</span><span class="params">(CustomEvent2 customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener4=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener(value = &#123;CustomEvent.class, CustomEvent2.class&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener5</span><span class="params">(Object customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener5=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面会输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">listener=&gt;CustomEvent&#123;id=11111&#125;</span><br><span class="line">listener5=&gt;CustomEvent&#123;id=11111&#125;</span><br><span class="line">listener2=&gt;CustomEvent&#123;id=11111&#125;</span><br><span class="line">listener3=&gt;CustomEvent2&#123;id=22222&#125;</span><br><span class="line">listener5=&gt;CustomEvent2&#123;id=22222&#125;</span><br><span class="line">listener4=&gt;CustomEvent2&#123;id=22222&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/ff3733f2/">https://github.com/maxzhao-it/blog/post/ff3733f2/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -2020,6 +1685,336 @@
 </li>
 </ul>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/582c1911/">https://github.com/maxzhao-it/blog/post/582c1911/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/5570fc49/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/5570fc49/" class="post-title-link" itemprop="url">执行SQL脚本的Maven插件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 17:37:16" itemprop="dateModified" datetime="2022-07-28T17:37:16+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>项目中，有许多需要初始化的数据脚本在其它项目中使用，需要一个初始化数据库脚本的插件，可以必然数据库环境或人员手动执行带来的影响。</p>
+<h2 id="Maven-插件"><a href="#Maven-插件" class="headerlink" title="Maven 插件"></a>Maven 插件</h2><h3 id="Mojo-工程"><a href="#Mojo-工程" class="headerlink" title="Mojo 工程"></a>Mojo 工程</h3><p>Mojo 就是 Maven Plain Old Java Object。是对 Pojo 的一种改进。<br>每一个 Mojo 都是 Maven 中的一个执行目标（executable goal），Maven plugin 就是对多个 Mojo 的封装。</p>
+<h3 id="创建-Mojo-工程"><a href="#创建-Mojo-工程" class="headerlink" title="创建 Mojo 工程"></a>创建 Mojo 工程</h3><h4 id="1、创建一个-Maven-项目"><a href="#1、创建一个-Maven-项目" class="headerlink" title="1、创建一个 Maven 项目"></a>1、创建一个 Maven 项目</h4><h4 id="2、添加依赖"><a href="#2、添加依赖" class="headerlink" title="2、添加依赖"></a>2、添加依赖</h4><p>这里直接放完整依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.gt.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sql-init-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--设置打包方式--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>maven-plugin<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>1-plugin-sql-init<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>https://github.com/maxzhao-it/sql-init-maven-plugin<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">developers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">developer</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>maxzhao<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">email</span>&gt;</span>1441439636@qq.com<span class="tag">&lt;/<span class="name">email</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">developer</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">developers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">licenses</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">license</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>Apache License Version 2.0<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://www.apache.org/licenses/LICENSE-2.0<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">license</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">licenses</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven-plugin-api.version</span>&gt;</span>3.8.4<span class="tag">&lt;/<span class="name">maven-plugin-api.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven-plugin-annotations.version</span>&gt;</span>3.6.4<span class="tag">&lt;/<span class="name">maven-plugin-annotations.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">log4j2.version</span>&gt;</span>2.17.1<span class="tag">&lt;/<span class="name">log4j2.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">commons-lang3.version</span>&gt;</span>3.11<span class="tag">&lt;/<span class="name">commons-lang3.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">fastjson.version</span>&gt;</span>1.2.79<span class="tag">&lt;/<span class="name">fastjson.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">lombok.version</span>&gt;</span>1.18.22<span class="tag">&lt;/<span class="name">lombok.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--使用doc的方式--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-plugin-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;maven-plugin-api.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--使用注解的方式--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugin-tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-plugin-annotations<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;maven-plugin-annotations.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-lang3<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;commons-lang3.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;fastjson.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--log4j2 日志--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-slf4j-impl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;log4j2.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;log4j2.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;log4j2.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;lombok.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sourceDirectory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">sourceDirectory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-plugin-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;maven-plugin-annotations.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 插件执行命令前缀 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goalPrefix</span>&gt;</span>gt-boot<span class="tag">&lt;/<span class="name">goalPrefix</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">skipErrorNoDescriptorsFound</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skipErrorNoDescriptorsFound</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 编码和编译和JDK版本 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">source</span>&gt;</span>$&#123;maven.compiler.source&#125;<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">target</span>&gt;</span>$&#123;maven.compiler.target&#125;<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">skip</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skip</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="3、设置打包方式"><a href="#3、设置打包方式" class="headerlink" title="3、设置打包方式"></a>3、设置打包方式</h4> <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--设置打包方式--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>maven-plugin<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4、创建一个继承-AbstractMojo-的类"><a href="#4、创建一个继承-AbstractMojo-的类" class="headerlink" title="4、创建一个继承 AbstractMojo 的类"></a>4、创建一个继承 <code>AbstractMojo</code> 的类</h4><p>创建一个 <a href="#InitTableMojo.java"><code>InitTableMojo</code></a> 类，继承 <code>AbstractMojo</code>，其中 <code>execute()</code> 方法就是需要自定义实现的业务。</p>
+<p><code>Mojo</code> 标记方法，需要 <code>@Mojo</code>注解或<code>Javadoc</code>包里含<code>@goal</code> 注解的类来当做一个 <code>Mojo</code> 类。</p>
+<p>使用 <code>@Mojo</code> 需要引入</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugin-tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-plugin-annotations<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="引入自定义plugin"><a href="#引入自定义plugin" class="headerlink" title="引入自定义plugin"></a>引入自定义<code>plugin</code></h3><p>下面引入的是 <code>MySQL</code> 依赖，数据库连接 <code>MySQL</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.gt.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sql-init-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;gt-base.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sqlFile</span>&gt;</span>$&#123;project.basedir&#125;/src/http/sql.sql<span class="tag">&lt;/<span class="name">sqlFile</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 脚本文件的编码 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sqlFileEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">sqlFileEncoding</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 数据源配置，( **必配** ) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dataSource</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- driverClassName 是要传入的值 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">driverClassName</span>&gt;</span>com.mysql.cj.jdbc.Driver<span class="tag">&lt;/<span class="name">driverClassName</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>jdbc:mysql://xxxx:3306/xxxx?charset=utf8mb4<span class="symbol">&amp;amp;</span>useUnicode=true<span class="symbol">&amp;amp;</span>useSSL=false<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">username</span>&gt;</span>xxxx<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">password</span>&gt;</span>xxx..<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;mysql.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><h4 id="IDEA-直接调试"><a href="#IDEA-直接调试" class="headerlink" title="IDEA 直接调试"></a>IDEA 直接调试</h4><p>创建一个自定义的Mojo 类 <a href="#InitTableMojo.java"><code>InitTableMojo.java</code></a></p>
+<p>命令行启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mvnDebug com.gt.boot:sql-init-maven-plugin:1.0.0-SNAPSHOT:touch</span><br><span class="line">mvnDebug com.gt.boot:sql-init-maven-plugin:1.0.0-SNAPSHOT:initTable</span><br></pre></td></tr></table></figure>
+
+<p>然后使用 <code>Remote JVM Debug</code> 连接，运行后就可以 Debug 调试代码了。</p>
+<p><img src="/blog/uploads/images/Snipaste_2022-02-19_11-36-51.png"></p>
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h3 id="InitTableMojo-java"><a href="#InitTableMojo-java" class="headerlink" title="InitTableMojo.java "></a><code>InitTableMojo.java</code> <span id="InitTableMojo.java"></span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.gt.boot.plugin.sqlInit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.gt.boot.plugin.sqlInit.config.DataSourceConfig;</span><br><span class="line"><span class="keyword">import</span> com.gt.boot.plugin.sqlInit.dao.DBDao;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.maven.plugin.AbstractMojo;</span><br><span class="line"><span class="keyword">import</span> org.apache.maven.plugin.MojoExecutionException;</span><br><span class="line"><span class="keyword">import</span> org.apache.maven.plugin.MojoFailureException;</span><br><span class="line"><span class="keyword">import</span> org.apache.maven.plugins.annotations.Mojo;</span><br><span class="line"><span class="keyword">import</span> org.apache.maven.plugins.annotations.Parameter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Files;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * InitTableMojo</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022-02-19 10:59</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Mojo(name = &quot;initTable&quot;, threadSafe = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InitTableMojo</span> <span class="keyword">extends</span> <span class="title class_">AbstractMojo</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据源配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Parameter(required = true)</span></span><br><span class="line">    <span class="keyword">private</span> DataSourceConfig dataSource;</span><br><span class="line">    <span class="meta">@Parameter(required = true)</span></span><br><span class="line">    <span class="keyword">private</span> File sqlFile;</span><br><span class="line">    <span class="meta">@Parameter</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">sqlFileEncoding</span> <span class="operator">=</span> StandardCharsets.UTF_8.toString();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * SQL 分隔符</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEFAULT_DELIMITER</span> <span class="operator">=</span> <span class="string">&quot;;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> DBDao config;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span> <span class="keyword">throws</span> MojoExecutionException, MojoFailureException &#123;</span><br><span class="line">        log.info(<span class="string">&quot;====================== 开始 连接数据库 ======================&quot;</span>);</span><br><span class="line">        config = <span class="keyword">new</span> <span class="title class_">DBDao</span>(dataSource);</span><br><span class="line">        log.info(<span class="string">&quot;====================== 开始解析SQL脚本 ======================&quot;</span>);</span><br><span class="line">        List&lt;String&gt; sqlList = readSQLs(sqlFile);</span><br><span class="line">        <span class="keyword">if</span> (sqlList.isEmpty()) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;====================== SQL脚本不存在 ======================&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(<span class="string">&quot;====================== 开始执行SQL脚本 ======================&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (config.executeSqls(sqlList)) &#123;</span><br><span class="line">            log.info(<span class="string">&quot;====================== 执行SQL脚本成功 ======================&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 读取文本文件内容</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sqlFile 文本文件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">read</span><span class="params">(File sqlFile)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (sqlFile == <span class="literal">null</span></span><br><span class="line">                || !sqlFile.exists()</span><br><span class="line">                || sqlFile.isDirectory()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!sqlFile.getName().endsWith(<span class="string">&quot;.sql&quot;</span>)</span><br><span class="line">                &amp;&amp; !sqlFile.getName().endsWith(<span class="string">&quot;.txt&quot;</span>)) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;SQL脚本 文件只能为 .sql 或 .txt &quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">InputStreamReader</span> <span class="variable">isr</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            isr = <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(Files.newInputStream(sqlFile.toPath()), sqlFileEncoding);</span><br><span class="line">            reader = <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(isr);</span><br><span class="line">            <span class="type">char</span>[] buf = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">50</span>];</span><br><span class="line">            <span class="type">int</span> len;</span><br><span class="line">            <span class="keyword">while</span> ((len = reader.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                sql.append(buf, <span class="number">0</span>, len);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (reader != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    reader.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (isr != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    isr.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sql.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 读取文本文件内容</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sqlFile 文本文件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">readSQLs</span><span class="params">(File sqlFile)</span> &#123;</span><br><span class="line">        <span class="comment">/*待执行的SQL脚本*/</span></span><br><span class="line">        List&lt;String&gt; sqlList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span> (sqlFile == <span class="literal">null</span></span><br><span class="line">                || !sqlFile.exists()</span><br><span class="line">                || sqlFile.isDirectory()) &#123;</span><br><span class="line">            <span class="keyword">return</span> sqlList;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!sqlFile.getName().endsWith(<span class="string">&quot;.sql&quot;</span>)</span><br><span class="line">                &amp;&amp; !sqlFile.getName().endsWith(<span class="string">&quot;.txt&quot;</span>)) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;SQL脚本 文件只能为 .sql 或 .txt &quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> sqlList;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">sqlTemp</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">InputStreamReader</span> <span class="variable">isr</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            isr = <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(Files.newInputStream(sqlFile.toPath()), sqlFileEncoding);</span><br><span class="line">            reader = <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(isr);</span><br><span class="line">            String sqlLine;</span><br><span class="line">            <span class="keyword">while</span> ((sqlLine = reader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="comment">/*先添加*/</span></span><br><span class="line">                sqlTemp.append(sqlLine);</span><br><span class="line">                <span class="comment">/*去除左右空格*/</span></span><br><span class="line">                sqlLine = sqlLine.trim();</span><br><span class="line">                <span class="keyword">if</span> (sqlLine.isEmpty() || sqlLine.startsWith(<span class="string">&quot;--&quot;</span>)</span><br><span class="line">                        || sqlLine.startsWith(<span class="string">&quot;//&quot;</span>)) &#123;</span><br><span class="line">                    <span class="comment">/*Do nothing*/</span></span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sqlLine.endsWith(DEFAULT_DELIMITER)) &#123;</span><br><span class="line">                    <span class="comment">/*最后是否为分号*/</span></span><br><span class="line">                    sqlList.add(sqlTemp.substring(<span class="number">0</span>, sqlTemp.length() - <span class="number">1</span>));</span><br><span class="line">                    sqlTemp = <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (reader != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    reader.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (isr != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    isr.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sqlList;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="DBDao-java"><a href="#DBDao-java" class="headerlink" title="DBDao.java"></a><code>DBDao.java</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.gt.boot.plugin.sqlInit.dao;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.gt.boot.plugin.sqlInit.config.DataSourceConfig;</span><br><span class="line"><span class="keyword">import</span> jdk.nashorn.internal.runtime.ScriptRuntime;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.codehaus.plexus.util.StringUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.PreparedStatement;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.sql.Statement;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 持久层</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022-02-19</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DBDao</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * SQL连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Connection connection;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据库配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> DataSourceConfig dataSourceConfig;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 在构造器中处理配置</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> dataSourceConfig 数据源配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DBDao</span><span class="params">(DataSourceConfig dataSourceConfig)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.dataSourceConfig = dataSourceConfig;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 执行 SQL</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sql 待执行的SQL</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 执行结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">executeSql</span><span class="params">(String sql)</span> &#123;</span><br><span class="line">        <span class="type">Statement</span> <span class="variable">ps</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        connection = dataSourceConfig.getConn();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ps = connection.createStatement();</span><br><span class="line"><span class="comment">//            int[] ints = ps.executeBatch();</span></span><br><span class="line"><span class="comment">//            log.info(&quot;执行成功数据量：&#123;&#125;&quot;, ints.length);</span></span><br><span class="line">            <span class="keyword">return</span> ps.execute(sql);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;====================== 执行SQL脚本失败 ======================&quot;</span>);</span><br><span class="line">            log.error(<span class="string">&quot;执行失败SQL脚本：\n&#123;&#125;\n&quot;</span>, sql);</span><br><span class="line">            log.error(<span class="string">&quot;SQL 执行失败 &quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//释放资源</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (ps != <span class="literal">null</span>) &#123;</span><br><span class="line">                    ps.close();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (connection != <span class="literal">null</span>) &#123;</span><br><span class="line">                    connection.close();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 执行 sqls</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sqlList 待执行的SQLs</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 执行结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">executeSqls</span><span class="params">(List&lt;String&gt; sqlList)</span> &#123;</span><br><span class="line">        <span class="type">Statement</span> <span class="variable">ps</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        connection = dataSourceConfig.getConn();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ps = connection.createStatement();</span><br><span class="line">            <span class="keyword">for</span> (String sql : sqlList) &#123;</span><br><span class="line">                <span class="keyword">if</span> (StringUtils.isBlank(sql)) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                ps.addBatch(sql);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">int</span>[] ints = ps.executeBatch();</span><br><span class="line">            log.info(<span class="string">&quot;执行成功数据量：&#123;&#125;&quot;</span>, ints.length);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;====================== 执行SQL脚本失败 ======================&quot;</span>);</span><br><span class="line">            log.error(<span class="string">&quot;执行失败SQL脚本：\n&#123;&#125;\n&quot;</span>, Arrays.toString(sqlList.toArray()));</span><br><span class="line">            log.error(<span class="string">&quot;SQL 执行失败 &quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//释放资源</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (ps != <span class="literal">null</span>) &#123;</span><br><span class="line">                    ps.close();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (connection != <span class="literal">null</span>) &#123;</span><br><span class="line">                    connection.close();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="DataSourceConfig-java"><a href="#DataSourceConfig-java" class="headerlink" title="DataSourceConfig.java"></a><code>DataSourceConfig.java</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.gt.boot.plugin.sqlInit.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.maven.plugins.annotations.Parameter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据库配置</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022-02-19</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataSourceConfig</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 驱动连接的URL</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Parameter(required = true)</span></span><br><span class="line">    <span class="keyword">private</span> String url;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 驱动名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Parameter(required = true)</span></span><br><span class="line">    <span class="keyword">private</span> String driverClassName;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据库连接用户名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Parameter(required = true)</span></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据库连接密码</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Parameter(required = true)</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建数据库连接对象</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Connection</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Connection <span class="title function_">getConn</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class.forName(driverClassName);</span><br><span class="line">            conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;请添加数据库依赖:比如：\n&#123;&#125;\n&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;&lt;dependency&gt;\n&quot;</span> +</span><br><span class="line">                            <span class="string">&quot;    &lt;groupId&gt;mysql&lt;/groupId&gt;\n&quot;</span> +</span><br><span class="line">                            <span class="string">&quot;    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;\n&quot;</span> +</span><br><span class="line">                            <span class="string">&quot;&lt;/dependency&gt;&quot;</span>,</span><br><span class="line">                    e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> conn;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/5570fc49/">https://github.com/maxzhao-it/blog/post/5570fc49/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/e1cf5d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/e1cf5d/" class="post-title-link" itemprop="url">CentOS安装Jenkins</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 18:30:51" itemprop="dateModified" datetime="2022-07-28T18:30:51+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/Jenkins/" itemprop="url" rel="index"><span itemprop="name">Jenkins</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><code>Jenkins</code> 是一款非常强大的持续集成工具</p>
+<p><code>Jenkins</code>需要安装 <code>Java8 or  Java11</code></p>
+<h3 id="安装-Java8"><a href="#安装-Java8" class="headerlink" title="安装 Java8"></a>安装 <code>Java8</code></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y java-1.8.0-openjdk-devel</span><br><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-Jenkins"><a href="#安装-Jenkins" class="headerlink" title="安装 Jenkins"></a>安装 <code>Jenkins</code></h3><p>To use this repository, run the following command:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo yum upgrade</span><br><span class="line">sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo</span><br><span class="line">sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key</span><br><span class="line">sudo yum install epel-release # repository that provides &#x27;daemonize&#x27;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">yum install java-11-openjdk-devel</span></span><br><span class="line">sudo yum install jenkins</span><br></pre></td></tr></table></figure>
+
+<p>If you’ve previously imported the key from Jenkins, the <code>rpm --import</code> will fail because you already have a key. Please<br>ignore that and move on.</p>
+<p>The rpm packages were signed using this key:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pub   rsa4096 2020-03-30 [SC] [expires: 2023-03-30]</span><br><span class="line">      62A9756BFD780C377CF24BA8FCEF32E745F2C3D5</span><br><span class="line">uid                      Jenkins Project </span><br><span class="line">sub   rsa4096 2020-03-30 [E] [expires: 2023-03-30]</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><p><a href="https://github.com/jenkinsci/jenkins/releases"><code>GitHub</code>地址</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh jenkins-2.327-1.1.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start jenkins</span><br><span class="line">sudo systemctl status jenkins</span><br><span class="line">sudo systemctl enable jenkins</span><br><span class="line">sudo cat /var/lib/jenkins/secrets/initialAdminPassword </span><br></pre></td></tr></table></figure>
+
+<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p><a target="_blank" rel="noopener" href="http://192.168.2.250:8080/">http://192.168.2.250:8080</a></p>
+<p>输入 <code>initialAdminPassword</code> 文件中的密码</p>
+<h3 id="配置中文"><a href="#配置中文" class="headerlink" title="配置中文"></a>配置中文</h3><p>插件管理中安装 <code>locale</code>插件。</p>
+<p>系统管理配置中找到 <code>Default Language</code> &#x3D; <code>zh_CN</code></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://pkg.jenkins.io/redhat-stable/">参考官网</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jenkins.io/doc/book/installing/linux/">官网 doc book install linux</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/e1cf5d/">https://github.com/maxzhao-it/blog/post/e1cf5d/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7c1db227/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/7c1db227/" class="post-title-link" itemprop="url">Nexus批量上传下载</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Nexus/" itemprop="url" rel="index"><span itemprop="name">Nexus</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>下载</p>
+<p>只需要更换仓库名称：<code>http://32.1.0.x:8081/service/rest/repository/browse/maven-snapshot/</code> </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -m -r -e robots=off -A jar,pom,html -U mozilla  http://32.1.0.x:8081/service/rest/repository/browse/maven-snapshot/</span><br></pre></td></tr></table></figure>
+
+<p>上传</p>
+<p>脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">USERNAME=&quot;$1&quot;</span><br><span class="line">PASSWORD=&quot;$2&quot;</span><br><span class="line">REPO_URL=&quot;$3&quot;</span><br><span class="line">echo &#x27;USERNAME&#x27; $USERNAME</span><br><span class="line">echo &#x27;password&#x27; $PASSWORD</span><br><span class="line">echo &#x27;REPO_URL&#x27; $REPO_URL</span><br><span class="line"> </span><br><span class="line">find . -type f -not -path &#x27;./mavenimport\.sh*&#x27;  -not -path &#x27;./index\.html*&#x27; -not -path &#x27;*/\.*&#x27; -not -path &#x27;*/\^archetype\-catalog\.xml*&#x27; -not -path &#x27;*/\^maven\-metadata\-local*\.xml&#x27; -not -path &#x27;*/\^maven\-metadata\-deployment*\.xml&#x27; | sed &quot;s|^\./||&quot; | xargs -I &#x27;&#123;&#125;&#x27; curl -v -u $USERNAME:$PASSWORD --upload-file &#123;&#125; $&#123;REPO_URL&#125;/&#123;&#125; ;</span><br></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mavenimport.sh admin admin http://nexus/repository/maven/</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.hangge.com/blog/cache/detail_2910.html">原文</a></p>
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="url-上传包到nexus"><a href="#url-上传包到nexus" class="headerlink" title="url 上传包到nexus"></a><code>url</code> 上传包到<code>nexus</code></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -u &quot;$USERNAME:$PASSWORD&quot; -X PUT -v -T localfile $&#123;REPO_URL&#125;/filename </span><br></pre></td></tr></table></figure>
+
+<h2 id="官方api"><a href="#官方api" class="headerlink" title="官方api"></a>官方<code>api</code></h2><p><a target="_blank" rel="noopener" href="https://help.sonatype.com/repomanager3/integrations/rest-and-integration-api/components-api?_ga=2.187141739.254614937.1604483825-1150653186.1592359043#ComponentsAPI-UploadComponent">官方</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -v -u admin:admin123 -X POST &#x27;http://localhost:8081/service/rest/v1/components?repository=maven-releases&#x27; -F maven2.groupId=com.google.guava -F maven2.artifactId=guava -F maven2.version=24.0-jre -F maven2.asset1=@guava-24.0-jre.jar -F maven2.asset1.extension=jar -F maven2.asset2=@guava-24.0-jre-sources.jar -F maven2.asset2.classifier=sources -F maven2.asset2.extension=jar</span><br><span class="line"></span><br><span class="line">curl -v -u admin:admin123 -F &quot;maven2.generate-pom=false&quot; -F &quot;maven2.asset1=@/absolute/path/to/the/local/file/pom.xml&quot; -F &quot;maven2.asset1.extension=pom&quot; -F &quot;maven2.asset2=@/absolute/path/to/the/local/file/product-1.0.0.jar;type=application/java-archive&quot; -F &quot;maven2.asset2.extension=jar&quot; &quot;http://localhost:8081/service/rest/v1/components?repository=maven-releases&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="另一个批量脚本"><a href="#另一个批量脚本" class="headerlink" title="另一个批量脚本"></a>另一个批量脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">while getopts &quot;:r:u:p:&quot; opt; do</span><br><span class="line">    case $opt in</span><br><span class="line">        r) REPO_URL=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">        u) USERNAME=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">        p) PASSWORD=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">    esac</span><br><span class="line">done</span><br><span class="line">  </span><br><span class="line">find . -type f -not -path &#x27;./mavenimport\.sh*&#x27; -not -path &#x27;*/\.*&#x27; -not -path &#x27;*/\^archetype\-catalog\.xml*&#x27; -not -path &#x27;*/\^maven\-metadata\-local*\.xml&#x27; -not -path &#x27;*/\^maven\-metadata\-deployment*\.xml&#x27; | sed &quot;s|^\./||&quot; | xargs -I &#x27;&#123;&#125;&#x27; curl -v -u &quot;$USERNAME:$PASSWORD&quot;   --upload-file  &#123;&#125; $&#123;REPO_URL&#125;/&#123;&#125; ;</span><br></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mavenimport.sh -u admin -p admin -r http://nexus/repository/maven/</span><br></pre></td></tr></table></figure>
+
+<h2 id="批量下载NPM"><a href="#批量下载NPM" class="headerlink" title="批量下载NPM"></a>批量下载<code>NPM</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -m -r -e robots=off -A jar,pom,html,tgz -U mozilla  http://32.1.0.x:8081/service/rest/repository/browse/maven-snapshot/</span><br></pre></td></tr></table></figure>
+
+<h2 id="上传NPM包"><a href="#上传NPM包" class="headerlink" title="上传NPM包"></a>上传<code>NPM</code>包</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -v -u admin:admin -X POST &quot;http://32.1.0.x:8081/service/rest/v1/components?repository=npm-skytech&quot; -H &quot;accept: application/json&quot; -H &quot;Content-Type: multipart/form-data&quot; -F &quot;npm.asset=@cordova-icon-splash/-/cordova-icon-splash-0.0.1.tgz;type=application/x-compressed&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="批量下载-NPM-包"><a href="#批量下载-NPM-包" class="headerlink" title="批量下载 NPM 包"></a>批量下载 <code>NPM</code> 包</h2><p>脚本 <code>npmimport.sh</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">USERNAME=&quot;$1&quot;</span><br><span class="line">PASSWORD=&quot;$2&quot;</span><br><span class="line">NEXUS_URL=&quot;$3&quot;</span><br><span class="line">REPONAME=&quot;$4&quot;</span><br><span class="line">echo &#x27;USERNAME&#x27; $USERNAME</span><br><span class="line">echo &#x27;password&#x27; $PASSWORD</span><br><span class="line">echo &#x27;NEXUS_URL&#x27; $NEXUS_URL</span><br><span class="line">echo &#x27;REPONAME&#x27; $REPONAME</span><br><span class="line"></span><br><span class="line">find . -type f -not -path &#x27;./mavenimport\.sh*&#x27; -not -path &#x27;*/\.*&#x27; -not -path &#x27;*/\^archetype\-catalog\.xml*&#x27; -not -path &#x27;*/\^maven\-metadata\-local*\.xml&#x27; -not -path &#x27;*/\^maven\-metadata\-deployment*\.xml&#x27; | sed &quot;s|^\./||&quot; | xargs -I &#x27;&#123;&#125;&#x27; curl -v -u &quot;$USERNAME:$PASSWORD&quot; -X POST &quot;$NEXUS_URL/service/rest/v1/components?repository=$REPONAME&quot;  -H &quot;accept: application/json&quot; -H &quot;Content-Type: multipart/form-data&quot; -F &quot;npm.asset=@&#123;&#125;;type=application/x-compressed&quot; ;</span><br></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./npmimport.sh  admin  admin http://32.1.0.x:8081 npm-hosts</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="后台wget"><a href="#后台wget" class="headerlink" title="后台wget"></a>后台<code>wget</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -b</span><br><span class="line">while :;do ps -ef|grep wget ;sleep 1 ;done</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7c1db227/">https://github.com/maxzhao-it/blog/post/7c1db227/</a> </p>
 
       
     </div>
