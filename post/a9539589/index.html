@@ -150,18 +150,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-count">333</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">133</span>
+        <span class="site-state-item-count">138</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">161</span>
+        <span class="site-state-item-count">166</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
+      <time title="Modified: 2022-12-23 17:16:30" itemprop="dateModified" datetime="2022-12-23T17:16:30+08:00">2022-12-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -302,7 +302,7 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">java -Djava.rmi.server.hostname=xx.xx.xx.xx</span><br><span class="line">-Dfile.encoding=utf-8</span><br><span class="line">-Dcom.sun.management.jmxremote</span><br><span class="line">-Dcom.sun.management.jmxremote.port=50001</span><br><span class="line">-Dcom.sun.management.jmxremote.rmi.port=50002</span><br><span class="line">-Dcom.sun.management.jmxremote.ssl=<span class="literal">false</span></span><br><span class="line">-Dcom.sun.management.jmxremote.authenticate=maxzhao</span><br><span class="line">-jar  xxx.jar </span><br></pre></td></tr></table></figure>
 
 <p>使用 <code>jconsole</code>连接</p>
-<p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524105611920.png" alt="image-20220524105611920"></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524105611920.png" alt="image-20220524105611920"></p>
 <h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>偶发性极强，无法主观复现。</p>
 <p>对于线上系统，实时监控效率低下，意义不大。</p>
 <h1 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h1><h2 id="主要思路-1"><a href="#主要思路-1" class="headerlink" title="主要思路"></a>主要思路</h2><p>由于实时分析<code>JVM</code>行不通，我们这里在<code>OOM</code>发生时自动导出 <code>dump</code>，然后分析。</p>
@@ -311,7 +311,7 @@
 <li>分析<code>OOM</code>时的内存<code>dump</code>文件</li>
 </ol>
 <h2 id="过程-1"><a href="#过程-1" class="headerlink" title="过程"></a>过程</h2><h3 id="配置启动参数"><a href="#配置启动参数" class="headerlink" title="配置启动参数"></a>配置启动参数</h3><p>打印<code>JVM GC</code> 信息和<code>oom</code>时的<code>dump</code>文件，启动参数：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;</span><br><span class="line">java \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">为了更好的复现，最大堆内存改为 4G</span></span><br><span class="line">-Xmx4G \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印出GC详细信息</span></span><br><span class="line">-XX:+PrintGCDetails \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印时间戳</span></span><br><span class="line">-XX:+PrintGCDateStamps \</span><br><span class="line">-XX:+PrintHeapAtGC \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">记录到文件,添加文件名称时间戳，防止紧急重启后覆盖文件</span></span><br><span class="line">-Xloggc:gc.log-$&#123;current&#125; \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">JVM 一个日志文件达到了20M以后，会生成新的，保留50个历史</span></span><br><span class="line">-XX:+UseGCLogFileRotation \</span><br><span class="line">-XX:GCLogFileSize=20M \</span><br><span class="line">-XX:NumberOfGCLogFiles=50 \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">内存溢出异常时Dump出当前的堆内存转储快照</span></span><br><span class="line">-XX:+HeapDumpOnOutOfMemoryError \</span><br><span class="line">-XX:HeapDumpPath=./dump/ \</span><br><span class="line">-jar xxx.jar </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;`</span><br><span class="line">java \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">为了更好的复现，最大堆内存改为 4G</span></span><br><span class="line">-Xmx4G \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印出GC详细信息</span></span><br><span class="line">-XX:+PrintGCDetails \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印时间戳</span></span><br><span class="line">-XX:+PrintGCDateStamps \</span><br><span class="line">-XX:+PrintHeapAtGC \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">记录到文件,添加文件名称时间戳，防止紧急重启后覆盖文件</span></span><br><span class="line">-Xloggc:gc.log-$&#123;current&#125; \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">JVM 一个日志文件达到了20M以后，会生成新的，保留50个历史</span></span><br><span class="line">-XX:+UseGCLogFileRotation \</span><br><span class="line">-XX:GCLogFileSize=20M \</span><br><span class="line">-XX:NumberOfGCLogFiles=50 \</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">内存溢出异常时Dump出当前的堆内存转储快照</span></span><br><span class="line">-XX:+HeapDumpOnOutOfMemoryError \</span><br><span class="line">-XX:HeapDumpPath=./dump/ \</span><br><span class="line">-jar xxx.jar </span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>这里使用时间戳的方式解决系统重启导致 <code>gc.log</code> 文件被覆盖的问题</p>
@@ -334,7 +334,7 @@
 
 <p>现象：&#96;&#96;YGC<code> 正常，</code>Full GC&#96; 正常</p>
 <h2 id="OOM分析"><a href="#OOM分析" class="headerlink" title="OOM分析"></a><code>OOM</code>分析</h2><h3 id="系统宕机，oom发生"><a href="#系统宕机，oom发生" class="headerlink" title="系统宕机，oom发生"></a>系统宕机，<code>oom</code>发生</h3><p>发生在 <code>2022-5-20:17:31</code></p>
-<h3 id="gc-log-xxx日志分析"><a href="#gc-log-xxx日志分析" class="headerlink" title="gc.log.xxx日志分析"></a><code>gc.log.xxx</code>日志分析</h3><p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524110934865.png" alt="image-20220524110934865"></p>
+<h3 id="gc-log-xxx日志分析"><a href="#gc-log-xxx日志分析" class="headerlink" title="gc.log.xxx日志分析"></a><code>gc.log.xxx</code>日志分析</h3><p><img src="/blog/uploads/images/JAVA/JVM/image-20220524110934865.png" alt="image-20220524110934865"></p>
 <p>可以从日志中了解到：</p>
 <ol>
 <li>在 <code>oom</code> 前半小时，在 <code>16:54:32</code>开始内存处于不正常的增长， <code>YGC</code>与<code>FGC</code>异常。</li>
@@ -344,15 +344,15 @@
 <h4 id="用-jvisualvm打开-hprof"><a href="#用-jvisualvm打开-hprof" class="headerlink" title="用 jvisualvm打开 hprof"></a>用 <code>jvisualvm</code>打开 <code>hprof</code></h4><p>这里使用 <code>jdk1.8</code>的  <code>jvisualvm</code></p>
 <p>配置 <code>jvisualvm</code>的初始内存配置，本机文件所在路径 <code>$&#123;JAVA_HOME&#125;\lib\visualvm\etc\visualvm.conf</code></p>
 <p>找到 <code>visualvm_default_options</code> 配置 <code>-J-Xmx8G</code>就可以正常打开 <code>4G</code>的<code>hprof</code>。</p>
-<p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524111550357.png" alt="image-20220524111550357"></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524111550357.png" alt="image-20220524111550357"></p>
 <p>命令行打开 <code>jvisualvm</code>，点击左上角的<strong>文件</strong>-<strong>载入</strong></p>
-<img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524111838333.png" alt="image-20220524111838333" style="zoom: 67%;" />
+<img src="/uploads/images/JAVA/JVM/image-20220524111838333.png" alt="image-20220524111838333" style="zoom: 67%;" />
 
-<h4 id="概要信息"><a href="#概要信息" class="headerlink" title="概要信息"></a>概要信息</h4><p><img src="D:/develop/code/blog_code/source/_posts/JAVA/JVM/image-20220530114251459.png" alt="image-20220530114251459"></p>
+<h4 id="概要信息"><a href="#概要信息" class="headerlink" title="概要信息"></a>概要信息</h4><p><img src="/blog/uploads/images/JAVA/JVM/image-20220530114251459.png" alt="image-20220530114251459"></p>
 <p>在概要信息里，我们可以点击 <strong>异常错误的线程</strong>来查看异常信息。</p>
 <p>对于<code>OOM</code>来讲，一般情况下，堆栈被几百上千个对象占用，无法判断是否有问题，而且错误的堆栈不一定是产生<code>OOM</code>的原因，可能是压垮整个系统的最后一根稻草，所以具体我们还需要查看堆中的<strong>类</strong>和<strong>实例</strong></p>
-<h4 id="查看类的内容"><a href="#查看类的内容" class="headerlink" title="查看类的内容"></a>查看类的内容</h4><p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524114048695.png" alt="image-20220524114048695"></p>
-<p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524113951091.png" alt="image-20220524113951091"></p>
+<h4 id="查看类的内容"><a href="#查看类的内容" class="headerlink" title="查看类的内容"></a>查看类的内容</h4><p><img src="/blog/uploads/images/JAVA/JVM/image-20220524114048695.png" alt="image-20220524114048695"></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524113951091.png" alt="image-20220524113951091"></p>
 <p>这里我们可以看到</p>
 <ol>
 <li><code>char[]</code> 占用<code>2.2G</code></li>
@@ -362,7 +362,7 @@
 </ol>
 <h4 id="查看实例"><a href="#查看实例" class="headerlink" title="查看实例"></a>查看实例</h4><p><code>char[]</code>是比较难看懂的，我们这里直接看 <code>String</code></p>
 <p>双击 <code>String</code> 所在的行</p>
-<p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524115014932.png" alt="image-20220524115014932"></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524115014932.png" alt="image-20220524115014932"></p>
 <p>随机看一看其它<code>String</code> 实例，发现绝大部分都是属于 <code>对象X</code>。</p>
 <p>而<code>对象X</code>是一个百万级的集合，根据 <code>gc.log.xxx</code> 异常的时间，以及操作日志，找出所有请求的<code>URL</code>。</p>
 <p>然后根据这些接口排查持久层返回 <code>对象X</code> 的方法。</p>
@@ -378,12 +378,12 @@
 <li><code>JVM</code>堆内存不建议设置过大，默认为服务器 <code>1/4</code></li>
 </ol>
 <h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="安装-VisualGC-插件"><a href="#安装-VisualGC-插件" class="headerlink" title="安装 VisualGC 插件"></a>安装 <code>VisualGC</code> 插件</h2><p>当前插件可以用于实时监控</p>
-<p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524120157898.png" alt="image-20220524120157898"></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524120157898.png" alt="image-20220524120157898"></p>
 <p>填入地址：<code>https://visualvm.github.io/uc/8u131/updates.xml.gz</code></p>
 <blockquote>
 <p>插件官网：<a target="_blank" rel="noopener" href="https://visualvm.github.io/plugins.html"><code>https://visualvm.github.io/plugins.html</code></a></p>
 </blockquote>
-<p><img src="D:\develop\code\blog_code/source/uploads/images/JAVA/JVM/image-20220524120304503.png" alt="image-20220524120304503"></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524120304503.png" alt="image-20220524120304503"></p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/a9539589/">https://github.com/maxzhao-it/blog/post/a9539589/</a> </p>
 
     </div>
@@ -430,7 +430,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -122,7 +122,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -135,6 +135,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">1.</span> <span class="nav-text">端口转发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90IP"><span class="nav-number">2.</span> <span class="nav-text">源IP</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -149,18 +150,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-count">333</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">133</span>
+        <span class="site-state-item-count">138</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">161</span>
+        <span class="site-state-item-count">166</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -245,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:36:28" itemprop="dateModified" datetime="2022-07-28T17:36:28+08:00">2022-07-28</time>
+      <time title="Modified: 2022-12-13 10:18:35" itemprop="dateModified" datetime="2022-12-13T10:18:35+08:00">2022-12-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -274,7 +275,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --query-port=80/tcp</span><br></pre></td></tr></table></figure>
 
 <p>添加开放端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line">sudo firewall-cmd --zone=public --add-port=20003/tcp --permanent</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line">sudo firewall-cmd --zone=public --add-port=20003/tcp --permanent</span><br><span class="line"><span class="comment"># 开放服务</span></span><br><span class="line">sudo firewall-cmd --zone=public --add-service=nfs --permanent</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p><code>permanent</code>永久生效，没有此参数重启后失效</p>
@@ -284,6 +285,12 @@
 
 <p>删除开放端口</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --remove-port=80/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+<h3 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br><span class="line">sed -i <span class="string">&#x27;s/#user  nobody;/user nginx;/&#x27;</span> /home/nginx/nginx/conf/nginx.conf</span><br><span class="line"><span class="comment"># 默认情况下Linux的1024以下端口是只有root用户才有权限占用 ,所以80 端口改为 50080</span></span><br><span class="line"><span class="comment"># firewall配置端口转发</span></span><br><span class="line">sudo firewall-cmd --permanent --add-masquerade</span><br><span class="line"><span class="comment"># sudo firewall-cmd --permanent --zone=public --add-forward-port=port=80:proto=tcp:toaddr=127.0.0.1:toport=50080</span></span><br><span class="line">sudo firewall-cmd --permanent --zone=public --add-forward-port=port=80:proto=tcp:toport=50080</span><br><span class="line">sudo firewall-cmd --reload</span><br><span class="line">/home/nginx/nginx/sbin/nginx -c /home/nginx/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="源IP"><a href="#源IP" class="headerlink" title="源IP"></a>源IP</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 192.168.1.1/24</span><br><span class="line">firewall-cmd --permanent --add-rich-rule=&quot;rule family=&quot;ipv4&quot; source address=&quot;192.168.1.1/24&quot; port protocol=&quot;tcp&quot; port=&quot;3306&quot; accept&quot;</span><br></pre></td></tr></table></figure>
+
+
 
 <p>本文地址： [<a href="https://github.com/maxzhao-it/blog/post/93d07d99">https://github.com/maxzhao-it/blog/post/93d07d99</a> -&#x2F;](<a href="https://github.com/maxzhao-it/blog/post/93d07d99">https://github.com/maxzhao-it/blog/post/93d07d99</a> -&#x2F;) </p>
 
@@ -303,13 +310,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/post/12e2d0c0/" rel="prev" title="nginx修改Banner">
-                  <i class="fa fa-chevron-left"></i> nginx修改Banner
+                <a href="/blog/post/ba563af2/" rel="prev" title="Linux替换文件内容sed">
+                  <i class="fa fa-chevron-left"></i> Linux替换文件内容sed
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/blog/post/ebede6dg/" rel="next" title="生成CA证书（K8S)">
-                  生成CA证书（K8S) <i class="fa fa-chevron-right"></i>
+                <a href="/blog/post/aa6dc455/" rel="next" title="nginx的负载模式">
+                  nginx的负载模式 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -331,7 +338,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -122,7 +122,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -135,6 +135,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%8F%E6%97%A5%E4%B8%80%E4%B8%AA%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">每日一个日志文件</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -149,18 +150,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-count">333</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">133</span>
+        <span class="site-state-item-count">138</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">161</span>
+        <span class="site-state-item-count">166</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -245,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:36:28" itemprop="dateModified" datetime="2022-07-28T17:36:28+08:00">2022-07-28</time>
+      <time title="Modified: 2022-09-19 15:38:32" itemprop="dateModified" datetime="2022-09-19T15:38:32+08:00">2022-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -272,10 +273,29 @@
 
 <p><img src="/blog/uploads/images%5CNginx%5Cimage-20220727162934378.png" alt="image-20220727162934378"></p>
 <p>配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y gcc gcc-c++ pcre-devel zlib-devel</span><br><span class="line">./configure --sbin-path=/usr/local/nginx/nginx --conf-path=/usr/local/nginx/nginx.conf --pid-path=/usr/local/nginx/nginx.pid</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y gcc gcc-c++ pcre-devel zlib-devel</span><br><span class="line">./configure --prefix=/home/nginx/nginx </span><br></pre></td></tr></table></figure>
 
 <p>编译安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br><span class="line">sed -i <span class="string">&#x27;s/#user  nobody;/user nginx;/&#x27;</span> /home/nginx/nginx/conf/nginx.conf</span><br><span class="line"><span class="comment"># 默认情况下Linux的1024以下端口是只有root用户才有权限占用 ,所以80 端口改为 50080</span></span><br><span class="line"><span class="comment"># firewall配置端口转发</span></span><br><span class="line">sudo firewall-cmd --permanent --add-masquerade</span><br><span class="line"><span class="comment"># sudo firewall-cmd --permanent --zone=public --add-forward-port=port=80:proto=tcp:toaddr=127.0.0.1:toport=50080</span></span><br><span class="line">sudo firewall-cmd --permanent --zone=public --add-forward-port=port=80:proto=tcp:toport=50080</span><br><span class="line">sudo firewall-cmd --reload</span><br><span class="line">/home/nginx/nginx/sbin/nginx -c /home/nginx/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<p>开启防火墙</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checking for C compiler ... not found</span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y gcc</span><br></pre></td></tr></table></figure>
+
+<p>问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">the HTTP rewrite module requires the PCRE library</span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y  pcre-devel </span><br></pre></td></tr></table></figure>
+
+<h2 id="每日一个日志文件"><a href="#每日一个日志文件" class="headerlink" title="每日一个日志文件"></a>每日一个日志文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">	map $time_iso8601 $logdate &#123;</span><br><span class="line">    	&#x27;~^(?&lt;ymd&gt;\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;)&#x27; $ymd;</span><br><span class="line">    	default    &#x27;date-not-found&#x27;;</span><br><span class="line">	&#125;</span><br><span class="line">	access_log  /home/nginx/nginx/logs/access-$logdate.log json_log;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -302,8 +322,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/blog/post/93d07d99%20-/" rel="next" title="Firewalld开放端口">
-                  Firewalld开放端口 <i class="fa fa-chevron-right"></i>
+                <a href="/blog/post/ebede6dg/" rel="next" title="生成CA证书（K8S)">
+                  生成CA证书（K8S) <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -325,7 +345,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

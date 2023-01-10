@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/cc5b4532/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/cc5b4532/","path":"post/cc5b4532/","title":"Linux当前磁盘扩容及新磁盘环境下逻辑卷扩容的操作指南（CentOS7）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux当前磁盘扩容及新磁盘环境下逻辑卷扩容的操作指南（CentOS7） | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LVM-%E7%A3%81%E7%9B%98%E6%89%A9%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">LVM 磁盘扩容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9A%E8%99%9A%E6%8B%9F%E7%A3%81%E7%9B%98%E8%BF%BD%E5%8A%A0%E7%A9%BA%E9%97%B4"><span class="nav-number">1.1.</span> <span class="nav-text">场景一：虚拟磁盘追加空间</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sda%E5%89%A9%E4%BD%99%E7%A9%BA%E9%97%B4%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA"><span class="nav-number">1.1.1.</span> <span class="nav-text">sda剩余空间创建分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86%E5%88%86%E5%8C%BAsda4%E5%8A%A0%E5%85%A5%E9%80%BB%E8%BE%91%E5%8D%B7"><span class="nav-number">1.1.2.</span> <span class="nav-text">将分区sda4加入逻辑卷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9A%E6%96%B0%E5%A2%9E%E7%A3%81%E7%9B%98"><span class="nav-number">1.2.</span> <span class="nav-text">场景二：新增磁盘</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sdc%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA"><span class="nav-number">1.2.1.</span> <span class="nav-text">sdc创建分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86%E5%88%86%E5%8C%BAsdc1%E5%8A%A0%E5%85%A5%E9%80%BB%E8%BE%91%E5%8D%B7"><span class="nav-number">1.2.2.</span> <span class="nav-text">将分区sdc1加入逻辑卷</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84"><span class="nav-number">2.</span> <span class="nav-text">附</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E5%88%86%E5%8C%BA%E5%8A%A0%E5%85%A5%E9%80%BB%E8%BE%91%E5%8D%B7%E7%9A%84%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="nav-number">2.1.</span> <span class="nav-text">将分区加入逻辑卷的详细说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.2.</span> <span class="nav-text">查询文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.3.</span> <span class="nav-text">切换文件系统</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">333</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">166</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/cc5b4532/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux当前磁盘扩容及新磁盘环境下逻辑卷扩容的操作指南（CentOS7） | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux当前磁盘扩容及新磁盘环境下逻辑卷扩容的操作指南（CentOS7）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-03 14:22:43" itemprop="dateModified" datetime="2023-01-03T14:22:43+08:00">2023-01-03</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="LVM-磁盘扩容"><a href="#LVM-磁盘扩容" class="headerlink" title="LVM 磁盘扩容"></a><code>LVM</code> 磁盘扩容</h2><p>查看分区情况</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
+
+<p>查看磁盘使用情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
+
+<p>结果中可以找到需要扩展的 <code>LV</code>， 名称是<code>/dev/mapper/centos_localhost-root</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">文件系统                           容量  已用  可用 已用% 挂载点</span><br><span class="line">devtmpfs                           3.9G     0  3.9G    0% /dev</span><br><span class="line">tmpfs                              3.9G     0  3.9G    0% /dev/shm</span><br><span class="line">tmpfs                              3.9G  8.9M  3.9G    1% /run</span><br><span class="line">tmpfs                              3.9G     0  3.9G    0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/centos_localhost-root  222G  8.8G  213G    4% /</span><br><span class="line">/dev/sda1                         1014M  182M  833M   18% /boot</span><br><span class="line">tmpfs                              783M     0  783M    0% /run/user/0</span><br></pre></td></tr></table></figure>
+
+<p>查看分区使用情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsblk </span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sda                         8:0    0   200G  0 disk</span><br><span class="line">├─sda1                      8:1    0     1G  0 part /boot</span><br><span class="line">├─sda2                      8:2    0    99G  0 part</span><br><span class="line">│ ├─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">│ └─centos_localhost-swap 253:1    0   7.9G  0 lvm  [SWAP]</span><br><span class="line">└─sda3                      8:3    0    50G  0 part</span><br><span class="line">  └─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">sdb                         8:16   0    80G  0 disk</span><br><span class="line">└─sdb1                      8:17   0    80G  0 part</span><br><span class="line">  └─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">sdc                         8:32   0    50G  0 disk</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="场景一：虚拟磁盘追加空间"><a href="#场景一：虚拟磁盘追加空间" class="headerlink" title="场景一：虚拟磁盘追加空间"></a>场景一：虚拟磁盘追加空间</h3><p>通过 <code>lsblk</code> 命令，可以查询到 <code>sda</code> 磁盘有<code>200G</code>，其中有三块分区 <code>sda1、sda2、sda3</code>，三块分区一共<code>150G</code>，剩余 <code>50G</code>，现在就把剩余的 <code>50G</code> 加入到 <code>LVM</code> 中，并分配给逻辑卷 <code>centos_localhost-root</code>。</p>
+<h4 id="sda剩余空间创建分区"><a href="#sda剩余空间创建分区" class="headerlink" title="sda剩余空间创建分区"></a><code>sda</code>剩余空间创建分区</h4><p>分区<code>sda4</code>：因为现在已经存在  <code>sda1、sda2、sda3</code>，所以创建的下一个分区为 <code>sda4</code>.</p>
+<p>记住此次示例的分区编号：4</p>
+<p>下面是具体步骤：</p>
+<p>1、输入：<code>fdisk  /dev/sda </code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">欢迎使用 fdisk (util-linux 2.23.2)。</span><br><span class="line"></span><br><span class="line">更改将停留在内存中，直到您决定将更改写入磁盘。</span><br><span class="line">使用写入命令前请三思。</span><br><span class="line"></span><br><span class="line">命令(输入 m 获取帮助)：</span><br></pre></td></tr></table></figure>
+
+<p>2、输入：<code>n</code>，并<strong>回车</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)：n</span><br><span class="line">Partition type:</span><br><span class="line">   p   primary (3 primary, 0 extended, 1 free)</span><br><span class="line">   e   extended</span><br></pre></td></tr></table></figure>
+
+<p>3、输入：<code>p</code>，并<strong>回车</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Partition type:</span><br><span class="line">   p   primary (3 primary, 0 extended, 1 free)</span><br><span class="line">   e   extended</span><br><span class="line">Select (default e): p</span><br></pre></td></tr></table></figure>
+
+<p>4、这里会出现两种情况：</p>
+<p>情况一：如果为第4个分区，则这里直接<strong>回车</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">已选择分区 4</span><br><span class="line">起始 扇区 (314572800-419430399，默认为 314572800)：</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>直接回车会选择所有剩余的磁盘空间创建当前分区</p>
+</blockquote>
+<p>情况二：出现下面文字，直接<strong>回车</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">分区号（1-3，默认 3）：</span><br></pre></td></tr></table></figure>
+
+<p>再<strong>回车</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">起始 扇区 (314572800-419430399，默认为 314572800)：</span><br></pre></td></tr></table></figure>
+
+<p>5、4步骤后，会出现下面文字，再次<strong>回车</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Last 扇区, +扇区 or +size&#123;K,M,G&#125; (314572800-419430399，默认为 419430399)：</span><br></pre></td></tr></table></figure>
+
+<p>回车后会出现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)：</span><br></pre></td></tr></table></figure>
+
+<p>6、输入：<code>t</code>，并<strong>回车</strong></p>
+<p>7、输入分区号：<code>4</code>，并<strong>回车</strong></p>
+<p>8、输入：<code>8e</code>，并<strong>回车</strong></p>
+<p>9、输入：<code>w</code>，并<strong>回车</strong></p>
+<p>如果提醒 <code>设备或资源忙</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">WARNING: Re-reading the partition table failed with error 16: 设备或资源忙.</span><br><span class="line">The kernel still uses the old table. The new table will be used at</span><br><span class="line">the next reboot or after you run partprobe(8) or kpartx(8)</span><br></pre></td></tr></table></figure>
+
+<p> 则执行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">partprobe</span><br></pre></td></tr></table></figure>
+
+<p>查看分区结果 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsblk</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sda                         8:0    0   200G  0 disk</span><br><span class="line">├─sda1                      8:1    0     1G  0 part /boot</span><br><span class="line">├─sda2                      8:2    0    99G  0 part</span><br><span class="line">│ ├─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">│ └─centos_localhost-swap 253:1    0   7.9G  0 lvm  [SWAP]</span><br><span class="line">├─sda3                      8:3    0    50G  0 part</span><br><span class="line">│ └─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">└─sda4                      8:4    0    50G  0 part</span><br><span class="line">sdb                         8:16   0    80G  0 disk</span><br><span class="line">└─sdb1                      8:17   0    80G  0 part</span><br><span class="line">  └─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">sdc                         8:32   0    50G  0 disk</span><br></pre></td></tr></table></figure>
+
+<h4 id="将分区sda4加入逻辑卷"><a href="#将分区sda4加入逻辑卷" class="headerlink" title="将分区sda4加入逻辑卷"></a>将分区<code>sda4</code>加入逻辑卷</h4><p>分区名：<code>sda4</code></p>
+<p>逻辑卷名：<code>centos_localhost-root</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里输入分区地址</span></span><br><span class="line">CURRENT_PARTITION=/dev/sda4</span><br><span class="line"><span class="comment"># 这里输入 LV 名称</span></span><br><span class="line">CURRENT_LV_NAME=centos_localhost-root</span><br><span class="line">pvcreate <span class="variable">$CURRENT_PARTITION</span></span><br><span class="line">CURRENT_VG_NAME=`vgdisplay |grep Name|awk <span class="string">&#x27;&#123;print $3&#125;&#x27;</span> `</span><br><span class="line">vgextend <span class="variable">$CURRENT_VG_NAME</span> <span class="variable">$CURRENT_PARTITION</span></span><br><span class="line">lvextend -l +100%FREE  /dev/mapper/<span class="variable">$CURRENT_LV_NAME</span></span><br><span class="line">xfs_growfs /dev/mapper/<span class="variable">$CURRENT_LV_NAME</span></span><br><span class="line"><span class="built_in">df</span> -h</span><br></pre></td></tr></table></figure>
+
+<h3 id="场景二：新增磁盘"><a href="#场景二：新增磁盘" class="headerlink" title="场景二：新增磁盘"></a>场景二：新增磁盘</h3><p>通过 <code>lsblk</code> 命令，可以查询到 新磁盘<code>sdc</code> 磁盘有<code>50G</code>，现在就把 <code>50G</code> 加入到 <code>LVM</code> 中，并分配给逻辑卷 <code>centos_localhost-root</code>。</p>
+<h4 id="sdc创建分区"><a href="#sdc创建分区" class="headerlink" title="sdc创建分区"></a><code>sdc</code>创建分区</h4><p>分区<code>sdc1</code>：当前磁盘第一个分区为1</p>
+<p>记住此次示例的分区编号：1</p>
+<p>下面是具体步骤：</p>
+<p>1、输入：<code>fdisk  /dev/sdc </code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">欢迎使用 fdisk (util-linux 2.23.2)。</span><br><span class="line"></span><br><span class="line">更改将停留在内存中，直到您决定将更改写入磁盘。</span><br><span class="line">使用写入命令前请三思。</span><br><span class="line"></span><br><span class="line">命令(输入 m 获取帮助)：</span><br></pre></td></tr></table></figure>
+
+<p>2、输入：<code>n</code>，并<strong>回车</strong></p>
+<p>3、直接输入<strong>回车</strong>，再<strong>回车</strong>，再<strong>回车</strong>，再<strong>回车</strong></p>
+<p>直到出现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">命令(输入 m 获取帮助)：</span><br></pre></td></tr></table></figure>
+
+<p>4、输入：<code>t</code>，并<strong>回车</strong>，再<strong>回车</strong></p>
+<p>5、输入：<code>8e</code>，并<strong>回车</strong></p>
+<p>6、输入：<code>w</code>，并<strong>回车</strong></p>
+<p>如果提醒 <code>设备或资源忙</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">WARNING: Re-reading the partition table failed with error 16: 设备或资源忙.</span><br><span class="line">The kernel still uses the old table. The new table will be used at</span><br><span class="line">the next reboot or after you run partprobe(8) or kpartx(8)</span><br></pre></td></tr></table></figure>
+
+<p> 则执行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">partprobe</span><br></pre></td></tr></table></figure>
+
+<p>查看分区结果 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsblk</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sda                         8:0    0   200G  0 disk</span><br><span class="line">├─sda1                      8:1    0     1G  0 part /boot</span><br><span class="line">├─sda2                      8:2    0    99G  0 part</span><br><span class="line">│ ├─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">│ └─centos_localhost-swap 253:1    0   7.9G  0 lvm  [SWAP]</span><br><span class="line">├─sda3                      8:3    0    50G  0 part</span><br><span class="line">│ └─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">└─sda4                      8:4    0    50G  0 part</span><br><span class="line">sdb                         8:16   0    80G  0 disk</span><br><span class="line">└─sdb1                      8:17   0    80G  0 part</span><br><span class="line">  └─centos_localhost-root 253:0    0 221.1G  0 lvm  /</span><br><span class="line">sdc                         8:32   0    50G  0 disk</span><br></pre></td></tr></table></figure>
+
+<h4 id="将分区sdc1加入逻辑卷"><a href="#将分区sdc1加入逻辑卷" class="headerlink" title="将分区sdc1加入逻辑卷"></a>将分区<code>sdc1</code>加入逻辑卷</h4><p>分区名：<code>sdc1</code></p>
+<p>逻辑卷名：<code>centos_localhost-root</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建PV</span></span><br><span class="line">pvcreate /dev/sdc1</span><br><span class="line"><span class="comment"># PV 加入 VG</span></span><br><span class="line">CURRENT_VG_NAME=`vgdisplay |grep Name|awk <span class="string">&#x27;&#123;print $3&#125;&#x27;</span> `</span><br><span class="line">vgextend <span class="variable">$CURRENT_VG_NAME</span> $/dev/sdc1</span><br><span class="line"><span class="comment"># 给 LV 扩容</span></span><br><span class="line">lvextend -l +100%FREE  /dev/mapper/centos_localhost-root</span><br><span class="line"><span class="comment"># 刷新文件系统</span></span><br><span class="line">xfs_growfs /dev/mapper/centos_localhost-root</span><br><span class="line"><span class="built_in">df</span> -h</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><h3 id="将分区加入逻辑卷的详细说明"><a href="#将分区加入逻辑卷的详细说明" class="headerlink" title="将分区加入逻辑卷的详细说明"></a>将分区加入逻辑卷的详细说明</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建分区的 pv</span></span><br><span class="line">pvcreate /dev/sda4</span><br><span class="line"><span class="comment">#   Physical volume &quot;/dev/sda4&quot; successfully created.</span></span><br><span class="line"><span class="comment"># 查看 vg 名</span></span><br><span class="line">vgdisplay |grep Name|awk <span class="string">&#x27;&#123;print $3&#125;&#x27;</span></span><br><span class="line"><span class="comment">#   VG Name               centos_localhost</span></span><br><span class="line"><span class="comment"># pv 加入 vg</span></span><br><span class="line">vgextend centos_localhost /dev/sda4</span><br><span class="line"><span class="comment">#   Volume group &quot;centos_localhost&quot; successfully extended</span></span><br><span class="line"><span class="comment"># 扩展 lv</span></span><br><span class="line">lvextend -l +100%FREE /dev/mapper/centos_localhost-root</span><br><span class="line"><span class="comment">#  Size of logical volume centos_localhost/root changed from 221.11 GiB (56605 extents) to &lt;271.11 GiB (69404 extents).</span></span><br><span class="line"><span class="comment">#  Logical volume centos_localhost/root successfully resized.</span></span><br><span class="line"><span class="comment"># 扩展文件系统， </span></span><br><span class="line">xfs_growfs /dev/mapper/centos_localhost-root</span><br><span class="line"><span class="comment"># 查询磁盘容量</span></span><br><span class="line"><span class="built_in">df</span> -h</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>xfs_growfs</code>用于扩展 <code>xfs</code> 文件系统</p>
+<p><code>resize2fs</code> 是用户扩展<code>ext</code>系统</p>
+</blockquote>
+<h3 id="查询文件系统"><a href="#查询文件系统" class="headerlink" title="查询文件系统"></a>查询文件系统</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lsblk -f</span><br><span class="line">df -Th</span><br></pre></td></tr></table></figure>
+
+<h3 id="切换文件系统"><a href="#切换文件系统" class="headerlink" title="切换文件系统"></a>切换文件系统</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs -t xfs /dev/sdb1</span><br></pre></td></tr></table></figure>
+
+<p>文件系统有 <code>ext2</code>、<code>ext3</code>、<code>ext4</code></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/18a39410/" rel="prev" title="tar压缩文件并分片">
+                  <i class="fa fa-chevron-left"></i> tar压缩文件并分片
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/85a72d31/" rel="next" title="SSH 反向代理端口">
+                  SSH 反向代理端口 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

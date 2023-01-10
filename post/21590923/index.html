@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/21590923/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/21590923/","path":"post/21590923/","title":"Linux普通用户安装RabbitMQ"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux普通用户安装RabbitMQ | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rpm-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">rpm 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#root-%E6%8E%88%E6%9D%83"><span class="nav-number">1.1.</span> <span class="nav-text">root 授权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">1.2.</span> <span class="nav-text">开放防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85erlang"><span class="nav-number">1.3.</span> <span class="nav-text">普通用户安装erlang</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8"><span class="nav-number">2.</span> <span class="nav-text">配置启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85web%E7%AE%A1%E7%90%86%E7%95%8C%E9%9D%A2"><span class="nav-number">2.1.</span> <span class="nav-text">安装web管理界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">2.3.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E7%AE%A1%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">其它管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">2.4.1.</span> <span class="nav-text">用户管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0vhost"><span class="nav-number">2.4.2.</span> <span class="nav-text">添加vhost</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-vhost"><span class="nav-number">2.4.3.</span> <span class="nav-text">删除 vhost</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%9B%AE%E5%BD%95"><span class="nav-number">2.5.</span> <span class="nav-text">日志目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%EF%BC%9Aaddress-cannot-connect-to-host-x2F-port"><span class="nav-number">3.</span> <span class="nav-text">错误：address (cannot connect to host&#x2F;port)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">主要配置</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">333</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">166</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/21590923/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux普通用户安装RabbitMQ | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux普通用户安装RabbitMQ
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-11-02 15:34:08" itemprop="dateModified" datetime="2022-11-02T15:34:08+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/CentOS/" itemprop="url" rel="index"><span itemprop="name">CentOS</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/CentOS/RabbitMQ/" itemprop="url" rel="index"><span itemprop="name">RabbitMQ</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>注意：<code>erlang-24.x</code>已经不支持 <code>CentOS7</code> 了</p>
+</blockquote>
+<h2 id="rpm-安装"><a href="#rpm-安装" class="headerlink" title="rpm 安装"></a><code>rpm</code> 安装</h2><p>安装 <code>RabbitMQ</code>需要安装<code>Erlang</code>。</p>
+<p><code>Erlang</code>：<a href="https://github.com/rabbitmq/erlang-rpm/releases">https://github.com/rabbitmq/erlang-rpm/releases</a><br><code>RabbitMQ</code>：<a href="https://github.com/rabbitmq/rabbitmq-server/releases">https://github.com/rabbitmq/rabbitmq-server/releases</a></p>
+<blockquote>
+<p><code>RabbitMQ</code>与<code>Erlang</code>版本对应关系 <a target="_blank" rel="noopener" href="https://www.rabbitmq.com/which-erlang.html">https://www.rabbitmq.com/which-erlang.html</a></p>
+</blockquote>
+<p>我这里下载了</p>
+<ul>
+<li><a href="https://github.com/rabbitmq/erlang-rpm/releases/download/v23.3.4.11/erlang-23.3.4.11-1.el7.x86_64.rpm"><code>erlang-23.3.4.11-1.el7.x86_64.rpm</code></a></li>
+<li><a href="https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.9.21/rabbitmq-server-generic-unix-3.9.21.tar.xz"><code>rabbitmq-server-generic-unix-3.9.21.tar.xz</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/openssl-libs-1.0.2k-25.el7_9.x86_64.rpm"><code>openssl-libs-1.0.2k-25.el7_9.x86_64.rpm</code></a> 缺少<code>libcrypto.so.10(OPENSSL_1.0.2)(64bit)</code>依赖时，可以到<a target="_blank" rel="noopener" href="https://pkgs.org/%E4%B8%8B%E8%BD%BD">https://pkgs.org/下载</a></li>
+<li><a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/v3.9.x/deps/rabbit/docs/rabbitmq.conf.example">rabbitmq.conf.example</a></li>
+</ul>
+<h3 id="root-授权"><a href="#root-授权" class="headerlink" title="root 授权"></a>root 授权</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">echo</span> <span class="string">&#x27;rabbitmq ALL=(ALL) NOPASSWD:rpm&#x27;</span> &gt;&gt; /etc/sudoers</span><br></pre></td></tr></table></figure>
+
+<h3 id="开放防火墙"><a href="#开放防火墙" class="headerlink" title="开放防火墙"></a>开放防火墙</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=45672/tcp --add-port=45673/tcp  --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="普通用户安装erlang"><a href="#普通用户安装erlang" class="headerlink" title="普通用户安装erlang"></a>普通用户安装erlang</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh openssl-libs-1.0.2k-25.el7_9.x86_64.rpm --force</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装环境</span></span><br><span class="line">sudo rpm -ivh erlang-23.3.4.11-1.el7.x86_64.rpm</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">验证erlang 是否安装成功</span></span><br><span class="line">erl -version</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装 RabbitMQ</span></span><br><span class="line">tar -xf rabbitmq-server-generic-unix-3.9.21.tar.xz</span><br><span class="line">mv rabbitmq_server-3.9.21 rabbitmq-server</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置启动"><a href="#配置启动" class="headerlink" title="配置启动"></a>配置启动</h2><h3 id="安装web管理界面"><a href="#安装web管理界面" class="headerlink" title="安装web管理界面"></a>安装web管理界面</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/rabbitmq-server/sbin/rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"><span class="comment"># 查看所有的插件</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmq-plugins list</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> rabbitmq.conf.example ~/rabbitmq-server/etc/rabbitmq/rabbitmq.conf</span><br><span class="line">sed -i <span class="string">&#x27;s?# listeners.tcp.default = 5672?listeners.tcp.default = 45672?&#x27;</span> ~/rabbitmq-server/etc/rabbitmq/rabbitmq.conf</span><br><span class="line">sed -i <span class="string">&#x27;s?# management.tcp.port = 15672?management.tcp.port = 45673?&#x27;</span>  ~/rabbitmq-server/etc/rabbitmq/rabbitmq.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 后台启动</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmq-server -detached</span><br><span class="line"><span class="comment"># 停机</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl shutdown</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/install-generic-unix.html#running-generic-unix">参考</a></p>
+</blockquote>
+<h3 id="其它管理"><a href="#其它管理" class="headerlink" title="其它管理"></a>其它管理</h3><h4 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改guest的密码</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl list_users</span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl change_password guest guest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建其他管理员账号比如test/test：</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_user maxzhao maxzhao</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl set_user_tags maxzhao administrator</span><br><span class="line"><span class="comment"># /是 vhost的目录  Configure regexp   Write regexp  Read regexp</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl set_permissions -p / maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"><span class="comment"># Sets user topic permissions for an exchange，默认使用 AMQP default 的exchange</span></span><br><span class="line"><span class="comment"># sudo rabbitmqctl set_topic_permissions</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="添加vhost"><a href="#添加vhost" class="headerlink" title="添加vhost"></a>添加vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看帮助</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 查看创建 vhost 的帮助</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_vhost --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 创建</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_vhost maxzhao_vhost</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl list_vhosts</span><br><span class="line"><span class="comment"># 赋权  注意  /maxzhao_vhost 与 maxzhao_vhost  不一样</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl set_permissions -p /maxzhao_vhost maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="删除-vhost"><a href="#删除-vhost" class="headerlink" title="删除 vhost"></a>删除 vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_vhost maxzhaoTest</span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl delete_vhost maxzhaoTest</span><br></pre></td></tr></table></figure>
+
+<h3 id="日志目录"><a href="#日志目录" class="headerlink" title="日志目录"></a>日志目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/rabbitmq-server/var/log/rabbitmq</span><br></pre></td></tr></table></figure>
+
+<h2 id="错误：address-cannot-connect-to-host-x2F-port"><a href="#错误：address-cannot-connect-to-host-x2F-port" class="headerlink" title="错误：address (cannot connect to host&#x2F;port)"></a>错误：address (cannot connect to host&#x2F;port)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;NODENAME=rabbitmq@192.168.14.103&#x27;</span> &gt;&gt; ~/rabbitmq-server/etc/rabbitmq/rabbitmq-env.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="主要配置"><a href="#主要配置" class="headerlink" title="主要配置"></a>主要配置</h2><p>~&#x2F;rabbitmq-server&#x2F;etc&#x2F;rabbitmq&#x2F;rabbitmq.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listeners.tcp.default = 45672</span><br><span class="line">management.tcp.port = 45673</span><br></pre></td></tr></table></figure>
+
+<p>~&#x2F;rabbitmq-server&#x2F;etc&#x2F;rabbitmq&#x2F;rabbitmq-env.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NODENAME=rabbitmq@localhost</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/21590923/">https://github.com/maxzhao-it/blog/post/21590923/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CentOS/" rel="tag"># CentOS</a>
+              <a href="/blog/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/e0916ba3/" rel="prev" title="Filebeat采集nginx日志">
+                  <i class="fa fa-chevron-left"></i> Filebeat采集nginx日志
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/c4ae7068/" rel="next" title="RabbitMQ使用MQTT协议">
+                  RabbitMQ使用MQTT协议 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

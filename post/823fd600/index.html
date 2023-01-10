@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/823fd600/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/823fd600/","path":"post/823fd600/","title":"GoReplay流量复制"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>GoReplay流量复制 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%AD%A3%E5%B8%B8%E6%8E%A5%E6%94%B6%E6%9C%8D%E5%8A%A1%EF%BC%8C%E6%B5%8B%E8%AF%95%E6%9C%8D%E5%8A%A1%E4%B8%8D%E5%AD%98%E5%9C%A8"><span class="nav-number">1.1.</span> <span class="nav-text">1、正常接收服务，测试服务不存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%AD%A3%E5%B8%B8%E6%8E%A5%E6%94%B6%E6%9C%8D%E5%8A%A1%EF%BC%8C%E6%B5%8B%E8%AF%95%E6%9C%8D%E5%8A%A1%E6%8E%89%E7%BA%BF%E5%86%8D%E4%B8%8A%E7%BA%BF"><span class="nav-number">1.2.</span> <span class="nav-text">2、正常接收服务，测试服务掉线再上线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E6%AD%A3%E5%B8%B8%E6%8E%A5%E6%94%B6%E6%9C%8D%E5%8A%A1%EF%BC%8C%E6%B5%8B%E8%AF%95%E6%9C%8D%E5%8A%A1%E4%B8%8A%E4%B8%8B%E6%96%87%E6%94%B9%E5%8F%98"><span class="nav-number">1.3.</span> <span class="nav-text">3、正常接收服务，测试服务上下文改变</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E5%8F%91%E5%85%B6%E5%AE%83%E5%9C%B0%E5%9D%80"><span class="nav-number">2.1.</span> <span class="nav-text">转发其它地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4URL"><span class="nav-number">2.2.</span> <span class="nav-text">过滤URL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Allow-url-regexp"><span class="nav-number">2.2.1.</span> <span class="nav-text">Allow url regexp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Disallow-url-regexp"><span class="nav-number">2.2.2.</span> <span class="nav-text">Disallow url regexp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Filter-based-on-regexp-of-header"><span class="nav-number">2.2.3.</span> <span class="nav-text">Filter based on regexp of header</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Filter-based-on-HTTP-method"><span class="nav-number">2.2.4.</span> <span class="nav-text">Filter based on HTTP method</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">下载</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">333</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">166</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/823fd600/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="GoReplay流量复制 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GoReplay流量复制
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-11-02 15:34:08" itemprop="dateModified" datetime="2022-11-02T15:34:08+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/GoReplay/" itemprop="url" rel="index"><span itemprop="name">GoReplay</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><h3 id="1、正常接收服务，测试服务不存在"><a href="#1、正常接收服务，测试服务不存在" class="headerlink" title="1、正常接收服务，测试服务不存在"></a>1、正常接收服务，测试服务不存在</h3><p>没有问题、没有输出日志</p>
+<h3 id="2、正常接收服务，测试服务掉线再上线"><a href="#2、正常接收服务，测试服务掉线再上线" class="headerlink" title="2、正常接收服务，测试服务掉线再上线"></a>2、正常接收服务，测试服务掉线再上线</h3><p>没有问题、没有日志输出</p>
+<h3 id="3、正常接收服务，测试服务上下文改变"><a href="#3、正常接收服务，测试服务上下文改变" class="headerlink" title="3、正常接收服务，测试服务上下文改变"></a>3、正常接收服务，测试服务上下文改变</h3><p>无法发送到测试服务</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">捕获5673端口的请求和响应输出到stdout(用于调试)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--input-raw-track-response用于捕获response，不加这个参数只捕获请求</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--input-raw-override-snaplen将捕获的snaplen覆盖为64k，避免抓取的流量被截断</span></span><br><span class="line">./gor --input-raw :5673 --output-stdout --input-raw-track-response --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">捕获5673端口的请求和响应并转发到x.x.x.x:5673服务上,output-http可以跟多个，会将相同的流量转发到多个端点</span></span><br><span class="line">./gor --input-raw :5673 --output-http http://x.x.x.x:5673 --input-raw-track-response --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">捕获5673端口的请求和响应输出到文件request.gor</span></span><br><span class="line">./gor --input-raw :5673 --output-file request.gor --input-raw-track-response --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">捕获5673端口的请求和响应输出到文件文件格式以当前日期命名</span></span><br><span class="line">./gor --input-raw :5673 --output-file requests-%Y-%m-%d.log --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">捕获5673端口的请求和响应输出到屏幕，并在请求header中添加‘Real-IP:真实ip’的字段，如果有则覆盖原有值</span></span><br><span class="line">./gor --input-raw :5673 --output-stdout --input-raw-track-response --input-raw-override-snaplen --input-raw-realip-header &quot;Real-IP&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--output-file-append gor默认以块的形式写入文件，默认256块（可以理解为256次请求），使用此参数可以将所有的块写入一个文件，文件大小限制默认32mb</span></span><br><span class="line">./gor --input-raw :5673 --output-file request.gor --input-raw-track-response --input-raw-override-snaplen --output-file-append</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--output-file-size-limit和--output-file-queue-limit选项设置块限制，默认值分别为32mb、256，文件大小可以使用kb、mb、gb限制，只想要大小限制，你可以设置--output-file-queue-limit为0，反之亦然</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置录制的文件大小为40kb,不限制块大小</span></span><br><span class="line">./gor --input-raw :5673 --output-file request.gor --input-raw-override-snaplen --output-file-size-limit 40kb --output-file-queue-limit 0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从request_0.gor文件中回放请求到x.x.x.x:5673服务上</span></span><br><span class="line">./gor --input-file request_0.gor --output-http http://x.x.x.x:5673</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--input-file-loop从request_0.gor文件中回放请求到x.x.x.x:5673服务上，循环回放</span></span><br><span class="line">./gor --input-file request_0.gor --output-http http://x.x.x.x:5673 --input-file-loop</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以2倍的速度从requests-2022-01-18_0.log文件中回放请求到x.x.x.x:5673服务上</span></span><br><span class="line">./gor --input-file &#x27;requests-2022-01-18_0.log|200%&#x27; --output-http http://x.x.x.x:5673</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">模拟从文件requests-2022-01-18_0.log回放查看需要回放需要执行多长时间</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--input-file-dry-run模拟从数据源读取并不真正的回放，可以获得回放的时间、回放的请求数等等</span></span><br><span class="line">./gor --input-file ./gortest/requests-2022-01-18_0.log --output-http http://x.x.x.x:5673 --input-file-dry-run</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">这里使用了通配符*，gor会自动读取匹配的所有文件并按照时间自动排序</span></span><br><span class="line">./gor --input-file &#x27;./gortest/requests-2022-01-18_*&#x27; --output-http http://x.x.x.x:5673 --input-file-dry-run</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>回放模拟<code>--input-file-dry-run</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Records found: 17 # 请求总数据量</span><br><span class="line">Malformed records: &lt;nil&gt; # 不符合标准的请求数量，nil表示没有</span><br><span class="line">Files processed: 1 </span><br><span class="line">Bytes processed: 7564 # 大小</span><br><span class="line">Max wait: 6.024768111s # 请求间最大等待时间</span><br><span class="line">Min wait: 4.197µs  # 请求间最小等待时间</span><br><span class="line">First wait: 118.78604ms # 第一次请求的间隔</span><br><span class="line">It will take `18.078520319s` to replay at current speed.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>回放状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--stats --output-http-stats</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="转发其它地址"><a href="#转发其它地址" class="headerlink" title="转发其它地址"></a>转发其它地址</h3><p><code>--http-rewrite-url</code> expects value in “:” format: “:” is a dilimiter. In &#96;&#96; section you may use captured regexp group values. This works similar to <code>replace</code> method in Javascript or <code>gsub</code> in Ruby.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Rewrites all `/v1/user/&lt;user_id&gt;/ping` requests to `/v2/user/&lt;user_id&gt;/ping`</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-rewrite-url /v1/user/([^\\/]+)/ping:/v2/user/$1/ping</span><br></pre></td></tr></table></figure>
+
+<h3 id="过滤URL"><a href="#过滤URL" class="headerlink" title="过滤URL"></a>过滤URL</h3><h4 id="Allow-url-regexp"><a href="#Allow-url-regexp" class="headerlink" title="Allow url regexp"></a>Allow url regexp</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># only forward requests being sent to the /api endpoint</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-allow-url /api</span><br></pre></td></tr></table></figure>
+
+<h4 id="Disallow-url-regexp"><a href="#Disallow-url-regexp" class="headerlink" title="Disallow url regexp"></a>Disallow url regexp</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># only forward requests NOT being sent to the /api... endpoint</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-disallow-url /api</span><br></pre></td></tr></table></figure>
+
+<h4 id="Filter-based-on-regexp-of-header"><a href="#Filter-based-on-regexp-of-header" class="headerlink" title="Filter based on regexp of header"></a>Filter based on regexp of header</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># only forward requests with an api version of 1.0x</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-allow-header api-version:^1\.0\d</span><br><span class="line"></span><br><span class="line"># only forward requests NOT containing User-Agent header value &quot;Replayed by Gor&quot;</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-disallow-header &quot;User-Agent: Replayed by Gor&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Filter-based-on-HTTP-method"><a href="#Filter-based-on-HTTP-method" class="headerlink" title="Filter based on HTTP method"></a>Filter based on HTTP method</h4><p>Requests not matching a specified whitelist can be filtered out. For example to strip non-nullipotent requests:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gor --input-raw :80 --output-http &quot;http://staging.server&quot; \</span><br><span class="line">    --http-allow-method GET \</span><br><span class="line">    --http-allow-method OPTIONS</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> goreplay &amp;&amp; <span class="built_in">cd</span> goreplay</span><br><span class="line"></span><br><span class="line">wget https://github.com/buger/goreplay/releases/download/1.3.3/gor_1.3.3_x64.tar.gz</span><br><span class="line">tar -zxf  gor_1.3.3_x64.tar.gz</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/GoReplay/" rel="tag"># GoReplay</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/b66e8509/" rel="prev" title="SKywalking部署">
+                  <i class="fa fa-chevron-left"></i> SKywalking部署
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/3ac5f475/" rel="next" title="Sentinel使用">
+                  Sentinel使用 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/907423512/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/907423512/","path":"post/907423512/","title":"Log4j2对接Logstash"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Log4j2对接Logstash | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#logstash"><span class="nav-number">2.1.</span> <span class="nav-text">logstash</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-PIP-%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.1.</span> <span class="nav-text">配置 PIP 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-pipelines-yml%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">2.1.2.</span> <span class="nav-text">配置 pipelines.yml（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-logstash-yml%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">2.1.3.</span> <span class="nav-text">配置 logstash.yml（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8logstash"><span class="nav-number">2.1.4.</span> <span class="nav-text">启动logstash</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.2.</span> <span class="nav-text">项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#log4j2-yml"><span class="nav-number">2.2.1.</span> <span class="nav-text">log4j2.yml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E6%97%A5%E5%BF%97"><span class="nav-number">2.2.2.</span> <span class="nav-text">异步日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">依赖</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84"><span class="nav-number">3.</span> <span class="nav-text">附</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#app-log4j2-conf%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">app-log4j2.conf配置 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#app-kafka-conf%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.</span> <span class="nav-text">app-kafka.conf配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E8%84%9A%E6%9C%AC"><span class="nav-number">3.3.</span> <span class="nav-text">重启脚本</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">333</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">166</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/907423512/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Log4j2对接Logstash | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Log4j2对接Logstash
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-12-23 17:16:30" itemprop="dateModified" datetime="2022-12-23T17:16:30+08:00">2022-12-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/Logstash/" itemprop="url" rel="index"><span itemprop="name">Logstash</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Log4j2</code>对接<code>ELK</code></p>
+<ol>
+<li><code>Log4j2</code> 使用 <code>Socket</code> 向 <code>logstash</code> 推送数据</li>
+<li><code>logstash</code>经过过滤后，把数据保存到 <code>ElasticSearch</code> 中。</li>
+<li><code>log4j2</code>使用<code>socket</code>推送日志到 <code>logstash</code></li>
+</ol>
+<p>环境信息：</p>
+<ul>
+<li>部署路径：<code>/opt/logstash</code></li>
+<li><code>Log4j2</code> 对接方式：<code>Socket</code></li>
+<li>部署地址：<code>192.168.2.8</code></li>
+<li><code>logstash</code>建议使用 <a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>插件</li>
+</ul>
+<blockquote>
+<p><a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>是一个十分强大的<code>logstash filter</code>插件，他可以通过正则解析任意文本，将非结构化日志数据解析成结构化和方便查询的结构。</p>
+<p><a target="_blank" rel="noopener" href="http://grokdebug.herokuapp.com/">在线测试</a>  <a href="https://github.com/elastic/logstash/tree/v1.4.2/patterns">官方<code>pattern</code></a> <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/8.2/working-with-plugins.html#listing-plugins">插件安装</a></p>
+<p>安装插件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin list</span><br><span class="line"><span class="comment"># 在线安装</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin install logstash-filter-grok</span><br><span class="line">vim /opt/logstash/Gemfile </span><br><span class="line"><span class="comment"># 更新</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin update logstash-filter-grok</span><br><span class="line"><span class="built_in">mkdir</span> /opt/logstash/plugins</span><br><span class="line"><span class="built_in">cd</span>  /opt/logstash/plugins</span><br><span class="line">wget https://github.com/logstash-plugins/logstash-filter-grok/archive/refs/tags/v4.4.2.tar.gz</span><br><span class="line">tar -zxvf v4.4.2.tar.gz</span><br><span class="line">vim /opt/logstash/Gemfile</span><br><span class="line"><span class="comment"># 写入</span></span><br><span class="line"><span class="comment"># gem &quot;logstash-filter-grok&quot;, :path =&gt; &quot;path&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+</blockquote>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="logstash"><a href="#logstash" class="headerlink" title="logstash"></a><code>logstash</code></h2><h3 id="配置-PIP-文件"><a href="#配置-PIP-文件" class="headerlink" title="配置 PIP 文件"></a>配置 <code>PIP</code> 文件</h3><p><a href="#app-log4j2">完成实例</a></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">/opt/logstash/config/app-log4j2.conf</span> <span class="string">&lt;&lt;EOF</span></span><br><span class="line"><span class="string">input</span> &#123; </span><br><span class="line">    <span class="string">tcp</span> &#123;</span><br><span class="line">     <span class="string">host</span> <span class="string">=&gt;&quot;192.168.2.8&quot;</span></span><br><span class="line">     <span class="string">port</span> <span class="string">=&gt;</span> <span class="number">9699</span></span><br><span class="line">      <span class="string">codec</span> <span class="string">=&gt;</span> <span class="string">json</span> &#123;</span><br><span class="line">             <span class="string">charset</span> <span class="string">=&gt;</span> <span class="string">&quot;UTF-8&quot;</span></span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="string">stdin</span>&#123;&#125;</span><br><span class="line">&#125; </span><br><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">   <span class="string">json&#123;</span></span><br><span class="line">      <span class="string">source</span> <span class="string">=&gt;</span> <span class="string">&quot;message&quot;</span></span><br><span class="line">   <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">output</span> &#123;</span><br><span class="line">     <span class="string">elasticsearch</span> &#123; </span><br><span class="line">        <span class="comment">#action =&gt; &quot;index&quot;</span></span><br><span class="line">        <span class="comment">#manage_template =&gt; false</span></span><br><span class="line">        <span class="string">hosts</span> <span class="string">=&gt;</span> <span class="string">&quot;192.168.2.8:9200&quot;</span></span><br><span class="line">        <span class="string">index</span> <span class="string">=&gt;</span> <span class="string">&quot;app-logstash&quot;</span></span><br><span class="line">        <span class="comment">#document_type =&gt; &quot;logstash&quot;</span></span><br><span class="line">     &#125;</span><br><span class="line">     <span class="string">stdout</span> &#123; <span class="string">codec=&gt;</span> <span class="string">rubydebug</span> &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-pipelines-yml（可选）"><a href="#配置-pipelines-yml（可选）" class="headerlink" title="配置 pipelines.yml（可选）"></a>配置 <code>pipelines.yml</code>（可选）</h3><p><code>vim /opt/logstash/config/pipelines.yml</code></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">pipeline.id:</span> <span class="string">app-log4j2-processing</span></span><br><span class="line">  <span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/app-log4j2.conf&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-logstash-yml（可选）"><a href="#配置-logstash-yml（可选）" class="headerlink" title="配置 logstash.yml（可选）"></a>配置 <code>logstash.yml</code>（可选）</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/piptlines.yml&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="启动logstash"><a href="#启动logstash" class="headerlink" title="启动logstash"></a>启动<code>logstash</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果 pipelines.yml 与 logstash.yml 没有配置，需要命令行中主动添加配置</span></span><br><span class="line">/opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h2><h3 id="log4j2-yml"><a href="#log4j2-yml" class="headerlink" title="log4j2.yml"></a><code>log4j2.yml</code></h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">  <span class="attr">status:</span> <span class="string">warn</span></span><br><span class="line">  <span class="attr">Appenders:</span></span><br><span class="line">    <span class="attr">Console:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">CONSOLE</span></span><br><span class="line">      <span class="attr">target:</span> <span class="string">SYSTEM_OUT</span></span><br><span class="line">      <span class="attr">PatternLayout:</span></span><br><span class="line">        <span class="attr">pattern:</span> <span class="string">&quot;%clr&#123;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;&#125;&#123;faint&#125;:%clr&#123;%-6p&#125; %clr&#123;$&#123;sys:PID&#125;&#125;&#123;magenta&#125; [thread-%T] %clr&#123;[%t]&#125;&#123;faint&#125; %clr&#123;%-40.40c&#123;1.&#125;:&#125;&#123;cyan&#125; %m%n%xwEx&quot;</span></span><br><span class="line">    <span class="attr">Socket:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LOGSTASH</span></span><br><span class="line">        <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.8</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">9699</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">thresholdFilter:</span></span><br><span class="line">          <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">          <span class="comment"># 大于等于 info 放行</span></span><br><span class="line">          <span class="attr">onMatch:</span> <span class="string">ACCEPT</span></span><br><span class="line">          <span class="comment"># 低于 info 拦截</span></span><br><span class="line">          <span class="attr">onMismatch:</span> <span class="string">DENY</span></span><br><span class="line">        <span class="attr">PatternLayout:</span></span><br><span class="line">          <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%-6p $&#123;sys:PID&#125; [thread-%T] [%t] %-40.40c&#123;1.&#125;: %m%n%xwEx&quot;</span></span><br><span class="line">  <span class="attr">Loggers:</span></span><br><span class="line">    <span class="attr">Root:</span></span><br><span class="line">      <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">      <span class="attr">AppenderRef:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">CONSOLE</span></span><br><span class="line">    <span class="attr">Logger:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">com.skytech</span></span><br><span class="line">        <span class="attr">additivity:</span> <span class="literal">false</span></span><br><span class="line">        <span class="attr">level:</span> <span class="string">DEBUG</span></span><br><span class="line">        <span class="attr">AppenderRef:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">CONSOLE</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">LOGSTASH</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="异步日志"><a href="#异步日志" class="headerlink" title="异步日志"></a>异步日志</h3><h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.lmax<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>disruptor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Springboot</code>配置<code>log4j2.component.properties</code></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Log4jContextSelector</span>=<span class="string">org.apache.logging.log4j.core.async.AsyncLoggerContextSelector</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="app-log4j2-conf配置"><a href="#app-log4j2-conf配置" class="headerlink" title="app-log4j2.conf配置 "></a><code>app-log4j2.conf</code>配置 <span id="app-log4j2"></span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">input &#123; </span><br><span class="line">    tcp &#123;</span><br><span class="line">        host =&gt;&quot;192.168.2.8&quot;</span><br><span class="line">        port =&gt; 9699</span><br><span class="line">        codec =&gt; &quot;plain&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">filter&#123;</span><br><span class="line">    if &quot;c.s.s.l.s.f.StorageApiLogFileServiceImpl&quot; in [message] &#123;</span><br><span class="line">        grok &#123;</span><br><span class="line">            match =&gt; &#123;</span><br><span class="line">                &quot;message&quot; =&gt; &quot;%&#123;TIMESTAMP_ISO8601:logDate&#125;:%&#123;LOGLEVEL:logLevel&#125;%&#123;SPACE&#125;%&#123;INT:pid&#125;%&#123;SPACE&#125;\[%&#123;WORD&#125;-%&#123;INT:thread&#125;\]%&#123;SPACE&#125;\[%&#123;WORD&#125;-%&#123;WORD&#125;-%&#123;INT&#125;-%&#123;WORD&#125;-%&#123;INT&#125;\]%&#123;SPACE&#125;(?&lt;targetClass&gt;.*):%&#123;SPACE&#125;接口日志信息：(?&lt;logData&gt;.*)&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        json &#123;</span><br><span class="line">             source =&gt; &quot;logData&quot;</span><br><span class="line">             target =&gt; &quot;logDataJson&quot;</span><br><span class="line">             remove_field =&gt; [&quot;server&quot;,&quot;timestamp&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">        mutate &#123;</span><br><span class="line">            add_field =&gt; &#123;</span><br><span class="line">                &quot;id&quot; =&gt; &quot;%&#123;[logDataJson][id]&#125;&quot;</span><br><span class="line">                &quot;optType&quot; =&gt; &quot;%&#123;[logDataJson][optType]&#125;&quot;</span><br><span class="line">                &quot;optTime&quot; =&gt; &quot;%&#123;[logDataJson][optTime]&#125;&quot;</span><br><span class="line">                &quot;trackId&quot; =&gt; &quot;%&#123;[logDataJson][trackId]&#125;&quot;</span><br><span class="line">                &quot;spendTime&quot; =&gt; &quot;%&#123;[logDataJson][spendTime]&#125;&quot;</span><br><span class="line">                &quot;optUser&quot; =&gt; &quot;%&#123;[logDataJson][optUser]&#125;&quot;</span><br><span class="line">                &quot;optUserName&quot; =&gt; &quot;%&#123;[logDataJson][optUserName]&#125;&quot;</span><br><span class="line">                &quot;otherValue&quot; =&gt; &quot;%&#123;[logDataJson][otherValue]&#125;&quot;</span><br><span class="line">               </span><br><span class="line">                &quot;optName&quot; =&gt; &quot;%&#123;[logDataJson][optName]&#125;&quot;</span><br><span class="line">                &quot;optDesc&quot; =&gt; &quot;%&#123;[logDataJson][optDesc]&#125;&quot;</span><br><span class="line">                &quot;apiMapping&quot;=&gt; &quot;%&#123;[logDataJson][apiMapping]&#125;&quot;</span><br><span class="line">                &quot;optMethod&quot; =&gt; &quot;%&#123;[logDataJson][optMethod]&#125;&quot;</span><br><span class="line">                &quot;sourceIp&quot; =&gt; &quot;%&#123;[logDataJson][sourceIp]&#125;&quot;</span><br><span class="line">                &quot;successFlag&quot; =&gt; &quot;%&#123;[logDataJson][successFlag]&#125;&quot;</span><br><span class="line">                &quot;requestHeaders&quot; =&gt; &quot;%&#123;[logDataJson][requestHeaders]&#125;&quot;</span><br><span class="line">                &quot;requestParams&quot; =&gt; &quot;%&#123;[logDataJson][requestParams]&#125;&quot;</span><br><span class="line">                &quot;requestBody&quot; =&gt; &quot;%&#123;[logDataJson][requestBody]&#125;&quot;</span><br><span class="line">                &quot;responseHeaders&quot; =&gt; &quot;%&#123;[logDataJson][responseHeaders]&#125;&quot;</span><br><span class="line">                &quot;responseBody&quot; =&gt; &quot;%&#123;[logDataJson][responseBody]&#125;&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if([methodParams])&#123;</span><br><span class="line">            mutate &#123;</span><br><span class="line">                # opt</span><br><span class="line">                add_field =&gt; &#123;</span><br><span class="line">                    &quot;methodParams&quot; =&gt; &quot;%&#123;[logDataJson][methodParams]&#125;&quot;</span><br><span class="line">                    &quot;methodResponse&quot; =&gt; &quot;%&#123;[logDataJson][methodResponse]&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if([authProcess])&#123;</span><br><span class="line">            mutate &#123;</span><br><span class="line">                # sso</span><br><span class="line">                add_field =&gt; &#123;</span><br><span class="line">                    &quot;authType&quot; =&gt; &quot;%&#123;[logDataJson][authType]&#125;&quot;</span><br><span class="line">                    &quot;authProcess&quot; =&gt; &quot;%&#123;[logDataJson][authProcess]&#125;&quot;</span><br><span class="line">                    &quot;authUser&quot; =&gt; &quot;%&#123;[logDataJson][authUser]&#125;&quot;</span><br><span class="line">                    &quot;authStatus&quot; =&gt; &quot;%&#123;[logDataJson][authStatus]&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        mutate &#123;</span><br><span class="line">            remove_field=&gt;[&quot;logData&quot;,&quot;tags&quot;,&quot;_source&quot;,&quot;message&quot;,&quot;logDataJson&quot;,&quot;event&quot;]</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;	</span><br><span class="line">    if([optTime]) &#123;</span><br><span class="line">		date &#123;</span><br><span class="line">		     match =&gt; [&quot;optTime&quot;, &quot;yyyy-MM-dd HH:mm:ss&quot;]</span><br><span class="line">		     target =&gt; &quot;@timestamp&quot;</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    stdout &#123; codec=&gt; rubydebug &#125; </span><br><span class="line">    if &quot;接口日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-api-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;操作日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-opt-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;认证日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-sso-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>对应的<code>log4j2.yml</code>配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">  <span class="attr">Appenders:</span></span><br><span class="line">    <span class="attr">Socket:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LOGSTASH</span></span><br><span class="line">        <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.8</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">9699</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">thresholdFilter:</span></span><br><span class="line">          <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">          <span class="comment"># 大于等于 info 放行</span></span><br><span class="line">          <span class="attr">onMatch:</span> <span class="string">ACCEPT</span></span><br><span class="line">          <span class="comment"># 低于 info 拦截</span></span><br><span class="line">          <span class="attr">onMismatch:</span> <span class="string">DENY</span></span><br><span class="line">        <span class="attr">PatternLayout:</span></span><br><span class="line">          <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%-6p $&#123;sys:PID&#125; [thread-%T] [%t] %c&#123;1.&#125;: %m%n%xwEx&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="app-kafka-conf配置"><a href="#app-kafka-conf配置" class="headerlink" title="app-kafka.conf配置"></a><code>app-kafka.conf</code>配置<span id="app-kafka"></span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">input &#123;</span><br><span class="line">    kafka &#123;</span><br><span class="line">        group_id =&gt; &quot;logstash&quot;</span><br><span class="line">        # 此处的topics_pattern =&gt; 应该是需要和 filebeat 中配置的topic一致。</span><br><span class="line">        topics_pattern =&gt; &quot;TOPIC_LOG_API&quot;</span><br><span class="line">        # 配置Kafka服务器集群地址，多个用,隔开</span><br><span class="line">        bootstrap_servers =&gt; &quot;192.168.2.8:9092&quot;</span><br><span class="line">        auto_offset_reset =&gt; &quot;latest&quot;</span><br><span class="line">        codec =&gt; &quot;json&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="重启脚本"><a href="#重启脚本" class="headerlink" title="重启脚本"></a>重启脚本</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /opt/script/restart-logstash &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">#!/bin/bash</span></span><br><span class="line"><span class="string">pid=\$(ps -ef|grep /opt/logstash  |grep -v grep|awk &#x27;&#123;print \$2&#125;&#x27;)</span></span><br><span class="line"><span class="string">if [ -z &quot;\$pid&quot; ]</span></span><br><span class="line"><span class="string">then</span></span><br><span class="line"><span class="string">        echo &#x27;/opt/logstash not start &#x27;</span></span><br><span class="line"><span class="string">else</span></span><br><span class="line"><span class="string">        kill -9 \$pid</span></span><br><span class="line"><span class="string">        echo &#x27;/opt/logstash shutdown&#x27;</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">cd /opt/</span></span><br><span class="line"><span class="string">nohup /opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf  &gt;nohup-logstash.log 2&gt;&amp;1 &amp;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">echo &#x27;/opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf is start &#x27;</span></span><br><span class="line"><span class="string">tail -f nohup-logstash.log</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="built_in">chmod</span> +x /opt/script/*</span><br><span class="line"><span class="built_in">cat</span>  /opt/script/restart-logstash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：使用 <code>cat</code> 输出到文件中的执行脚本 <code>$</code> 需要改为 <code>\$</code></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/907423512/">https://github.com/maxzhao-it/blog/post/907423512/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/ELK/" rel="tag"># ELK</a>
+              <a href="/blog/tags/Logstash/" rel="tag"># Logstash</a>
+              <a href="/blog/tags/Log4j2/" rel="tag"># Log4j2</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/44534123/" rel="prev" title="Spring中的aspectj注解AOP">
+                  <i class="fa fa-chevron-left"></i> Spring中的aspectj注解AOP
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/post/4e95394/" rel="next" title="MybatisPlus默认最大查询数据量">
+                  MybatisPlus默认最大查询数据量 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

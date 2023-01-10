@@ -150,18 +150,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">289</span>
+          <span class="site-state-item-count">333</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">133</span>
+        <span class="site-state-item-count">138</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">161</span>
+        <span class="site-state-item-count">166</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-12-23 17:16:30" itemprop="dateModified" datetime="2022-12-23T17:16:30+08:00">2022-12-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -274,7 +274,7 @@
     <div class="post-body" itemprop="articleBody">
         <p>Docker 要求 <code>CentOS</code> 系统的内核版本高于 3.10 。</p>
 <p>不要使用 <code>root</code>用户管理 <code>Docker</code>。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -r</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -r</span><br><span class="line">sudo groupadd docker</span><br><span class="line">sudo useradd -g docker docker</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;1&quot;</span> |passwd --stdin docker</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;docker ALL=(ALL)       ALL&quot;</span> &gt;&gt; /etc/sudoers</span><br><span class="line">su docker</span><br></pre></td></tr></table></figure>
 <p>版本底的可以不用向下看了。</p>
 <h2 id="1、基本操作"><a href="#1、基本操作" class="headerlink" title="1、基本操作"></a>1、基本操作</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -qa|grep docker</span><br><span class="line"><span class="comment"># 卸载所有低版本docker以及docker相关</span></span><br><span class="line">sudo yum remove docker  docker-common docker-selinux  docker-client docker-client-latest docker-logrotate docker-engine docker-latest  docker-latest-logrotate</span><br></pre></td></tr></table></figure>
 <h4 id="使用-repository"><a href="#使用-repository" class="headerlink" title="使用 repository"></a>使用 <code>repository</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要挂载 ISO 镜像</span></span><br><span class="line">sudo <span class="built_in">mkdir</span> /mnt/cdrom</span><br><span class="line">sudo mount /dev/cdrom /mnt/cdrom/</span><br><span class="line">sudo yum install -y yum-utils</span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 或者 阿里云</span></span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"><span class="comment"># 或者 清华大学源</span></span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
@@ -282,7 +282,7 @@
 
 
 <h4 id="查看docker版本"><a href="#查看docker版本" class="headerlink" title="查看docker版本"></a>查看docker版本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum list docker-ce --showduplicates | <span class="built_in">sort</span> -r</span><br></pre></td></tr></table></figure>
-<h4 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin</span><br></pre></td></tr></table></figure>
+<h4 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin</span><br></pre></td></tr></table></figure>
 <p>当 <code>GPG key</code> 为 <code>060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35</code> 出入 y 继续.</p>
 <h4 id="启动-Docker"><a href="#启动-Docker" class="headerlink" title="启动 Docker"></a>启动 <code>Docker</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br><span class="line">sudo systemctl status docker</span><br></pre></td></tr></table></figure>
 
@@ -321,7 +321,7 @@
 <h4 id="查看-docker-信息"><a href="#查看-docker-信息" class="headerlink" title="查看 docker 信息"></a>查看 <code>docker</code> 信息</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker info</span><br></pre></td></tr></table></figure>
 
 <p><img src="/blog/uploads/images/Docker/image-20220522214702999.png" alt="image-20220522214702999"></p>
-<h4 id="添加-docker-组用户"><a href="#添加-docker-组用户" class="headerlink" title="添加 docker 组用户"></a>添加 <code>docker</code> 组用户</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd docker</span><br><span class="line">sudo usermod -aG docker <span class="variable">$USER</span></span><br><span class="line">sudo <span class="built_in">mkdir</span> /home/<span class="string">&quot;<span class="variable">$USER</span>&quot;</span>/.docker</span><br><span class="line">sudo <span class="built_in">chown</span> <span class="string">&quot;<span class="variable">$USER</span>&quot;</span>:<span class="string">&quot;<span class="variable">$USER</span>&quot;</span> /home/<span class="string">&quot;<span class="variable">$USER</span>&quot;</span>/.docker -R</span><br><span class="line">sudo <span class="built_in">chmod</span> g+rwx <span class="string">&quot;<span class="variable">$HOME</span>/.docker&quot;</span> -R</span><br></pre></td></tr></table></figure>
+<h4 id="添加-docker-组用户"><a href="#添加-docker-组用户" class="headerlink" title="添加 docker 组用户"></a>添加 <code>docker</code> 组用户</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker <span class="variable">$USER</span></span><br><span class="line">sudo <span class="built_in">mkdir</span> /home/<span class="string">&quot;<span class="variable">$USER</span>&quot;</span>/.docker</span><br><span class="line">sudo <span class="built_in">chown</span> <span class="string">&quot;<span class="variable">$USER</span>&quot;</span>:<span class="string">&quot;<span class="variable">$USER</span>&quot;</span> /home/<span class="string">&quot;<span class="variable">$USER</span>&quot;</span>/.docker -R</span><br><span class="line">sudo <span class="built_in">chmod</span> g+rwx <span class="string">&quot;<span class="variable">$HOME</span>/.docker&quot;</span> -R</span><br></pre></td></tr></table></figure>
 
 <p>完全退出后，重新登录，然后不适用 <code>sudo</code> 测试</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
@@ -416,13 +416,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/post/12074/" rel="prev" title="ArchLinux 下安装 Nexus">
-                  <i class="fa fa-chevron-left"></i> ArchLinux 下安装 Nexus
+                <a href="/blog/post/36399/" rel="prev" title="Lodash操作以及问题">
+                  <i class="fa fa-chevron-left"></i> Lodash操作以及问题
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/blog/post/27685/" rel="next" title="Manjaro中使用GitHub+PicGo做图床">
-                  Manjaro中使用GitHub+PicGo做图床 <i class="fa fa-chevron-right"></i>
+                <a href="/blog/post/55763/" rel="next" title="Tomcat内部署多个应用，实现class隔离与共享">
+                  Tomcat内部署多个应用，实现class隔离与共享 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -444,7 +444,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
