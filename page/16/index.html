@@ -149,18 +149,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">333</span>
+          <span class="site-state-item-count">402</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">154</span>
+        <span class="site-state-item-count">160</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">185</span>
+        <span class="site-state-item-count">201</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -216,7 +216,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/26458/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f9aa9996/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -234,7 +234,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/26458/" class="post-title-link" itemprop="url">Docker安装Nexus</a>
+          <a href="/blog/post/f9aa9996/" class="post-title-link" itemprop="url">分析JVM内存溢出的hprof</a>
         </h2>
 
         <div class="post-meta-container">
@@ -252,7 +252,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
         </span>
     </span>
 
@@ -266,20 +270,31 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>上一篇文章<a href="">Docker从0安装MySql8(Linux)</a>欢迎阅读。</p>
-<p>默认自己已经会用 <code>Docker </code> 并且已经使用了国内源。</p>
-<h2 id="安装-Nexus"><a href="#安装-Nexus" class="headerlink" title="安装 Nexus"></a>安装 Nexus</h2><h3 id="一、镜像安装"><a href="#一、镜像安装" class="headerlink" title="一、镜像安装"></a>一、镜像安装</h3><h4 id="查找-镜像"><a href="#查找-镜像" class="headerlink" title="查找 镜像"></a>查找 镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search nexus</span><br></pre></td></tr></table></figure>
+          <h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><h3 id="手动导出内存快照"><a href="#手动导出内存快照" class="headerlink" title="手动导出内存快照"></a>手动导出内存快照</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:format=b,file=./java_pid6902.hprof 6902</span><br></pre></td></tr></table></figure>
 
-<h4 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull sonatype/nexus3:latest</span><br></pre></td></tr></table></figure>
+<h3 id="自动导出"><a href="#自动导出" class="headerlink" title="自动导出"></a>自动导出</h3><p>添加脚本命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">current=`date &#x27;+%s&#x27;`</span><br><span class="line">java -Xmx1G -XX:+PrintGCDetails  -XX:+PrintGCTimeStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./dump/  -Xloggc:gclog.log-$&#123;current&#125; -XX:+UseGCLogFileRotation  -XX:GCLogFileSize=20M  -XX:NumberOfGCLogFiles=50 -jar  app.jar</span><br></pre></td></tr></table></figure>
 
-<h4 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建容器</span></span><br><span class="line">docker run -p 8081:8081 --name nexus3 -d sonatype/nexus3</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>更多参考<a href="./3c725d5d">JVM参数</a></p>
+</blockquote>
+<h2 id="jhat-查看"><a href="#jhat-查看" class="headerlink" title="jhat 查看"></a><code>jhat</code> 查看</h2><h2 id="打开-hprof"><a href="#打开-hprof" class="headerlink" title="打开 hprof"></a>打开 <code>hprof</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">端口默认 7000 -J-Xmx512m</span></span><br><span class="line">jhat -port 7000 -J-Xmx512m java_pid14827.hprof</span><br></pre></td></tr></table></figure>
 
-<h3 id="获取-密码"><a href="#获取-密码" class="headerlink" title="获取 密码"></a>获取 密码</h3><p>进入容器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it nexus3 /bin/bash</span><br><span class="line"><span class="built_in">cat</span> /nexus-data/admin.password</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/26458/">https://github.com/maxzhao-it/blog/post/26458/</a> </p>
+<ul>
+<li>使用<code>-J-Xmx512m</code>来设置最大堆大小为<code>512M</code>。</li>
+</ul>
+<h2 id="jvisualvm-查看"><a href="#jvisualvm-查看" class="headerlink" title="jvisualvm  查看"></a><code>jvisualvm</code>  查看</h2><p>直接载入文件,选择文件类型 <code>.hprof</code></p>
+<p><img src="/blog/uploads/images/JAVA/JVM/image-20220524103324385.png" alt="image-20220524103324385"></p>
+<blockquote>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=tools-using-hprof-profiler">IBM：使用 <code>HPROF</code> 概要文件分析器</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/sdk-java-technology/7?topic=profiler-explanation-hprof-output-file">IBM：<code>HPROF</code> 输出文件的说明</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/samples/hprof.html"><code>HPROF: A Heap/CPU Profiling Tool</code></a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/276">深入浅出<code>JProfiler</code></a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onmyway20xx/p/3963735.html">使用<code>JProfiler</code>进行内存分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ej-technologies.com/resources/jprofiler/help/doc/main/introduction.html#jprofiler.introduction"><code>Introduction To JProfiler</code></a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f9aa9996/">https://github.com/maxzhao-it/blog/post/f9aa9996/</a> </p>
 
       
     </div>
@@ -306,7 +321,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/11659/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/3c725d5d/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -324,7 +339,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/11659/" class="post-title-link" itemprop="url">Docker安装RabbitMQ</a>
+          <a href="/blog/post/3c725d5d/" class="post-title-link" itemprop="url">JConsole 开启远程连接</a>
         </h2>
 
         <div class="post-meta-container">
@@ -334,7 +349,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -342,7 +357,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
         </span>
     </span>
 
@@ -356,19 +375,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>上一篇文章<a href="">Docker从0安装MySql8(Linux)</a>欢迎阅读。</p>
-<p>默认自己已经会用 <code>Docker </code> 并且已经使用了国内源。</p>
-<h2 id="安装-RabbitMQ"><a href="#安装-RabbitMQ" class="headerlink" title="安装 RabbitMQ"></a>安装 RabbitMQ</h2><h3 id="一、镜像安装"><a href="#一、镜像安装" class="headerlink" title="一、镜像安装"></a>一、镜像安装</h3><h4 id="查找镜像"><a href="#查找镜像" class="headerlink" title="查找镜像"></a>查找镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search rabbitmq</span><br></pre></td></tr></table></figure>
+          <h1 id="JConsole"><a href="#JConsole" class="headerlink" title="JConsole"></a><code>JConsole</code></h1><p>这是一个可视化的 <code>JVM</code> 监视工具 （<code>jvisualvm</code> 一样）。</p>
+<h2 id="JMX"><a href="#JMX" class="headerlink" title="JMX"></a><code>JMX</code></h2><h2 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h2><p>添加启动参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-Xms1024m</span><br><span class="line">-Xmx8192m</span><br><span class="line">-XX:PermSize=256M</span><br><span class="line">-XX:MaxPermSize=1024m</span><br><span class="line">-Djava.rmi.server.hostname=192.168.2.1</span><br><span class="line">-Dfile.encoding=utf-8</span><br><span class="line">-Dcom.sun.management.jmxremote</span><br><span class="line">-Dcom.sun.management.jmxremote.port=50001</span><br><span class="line">-Dcom.sun.management.jmxremote.rmi.port=50002</span><br><span class="line">-Dcom.sun.management.jmxremote.ssl=false</span><br><span class="line">-Dcom.sun.management.jmxremote.authenticate=maxzhao</span><br></pre></td></tr></table></figure>
 
-<h4 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rabbitmq</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建容器</span></span><br><span class="line">docker run --hostname maxzhao-1 --name rabbit- -p 15672:15672 -p 5672:5672  -d rabbitmq:latest</span><br></pre></td></tr></table></figure>
-
-<p>  这里要注意一下，RabbitMQ是基于所谓的“节点名称”来存储数据的，即默认的主机名。</p>
-<p>对于Docker来说，这意味着我们应该为每个守护进程显式指定-h&#x2F;——hostname，这样我们就不会得到一个随机的主机名，从而可以跟踪我们的数据。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/11659/">https://github.com/maxzhao-it/blog/post/11659/</a> </p>
+<h2 id="远程连接"><a href="#远程连接" class="headerlink" title="远程连接"></a>远程连接</h2><p><img src="/blog/uploads/images/JAVA/JVM/image-20220429114218667.png" alt="image-20220429114218667"></p>
+<p>口令就是 <code>maxzhao</code></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/3c725d5d/">https://github.com/maxzhao-it/blog/post/3c725d5d/</a> </p>
 
       
     </div>
@@ -395,7 +408,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/41794/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/848e11b6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -413,7 +426,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/41794/" class="post-title-link" itemprop="url">Docker安装Redis</a>
+          <a href="/blog/post/848e11b6/" class="post-title-link" itemprop="url">Redis集群部署</a>
         </h2>
 
         <div class="post-meta-container">
@@ -423,7 +436,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-07-28 17:42:25" itemprop="dateModified" datetime="2022-07-28T17:42:25+08:00">2022-07-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -431,7 +444,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
         </span>
     </span>
 
@@ -445,17 +462,58 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>上一篇文章<a href="">Docker从0安装MySql8(Linux)</a>欢迎阅读。</p>
-<p>默认自己已经会用 <code>Docker </code> 并且已经使用了国内源。</p>
-<h2 id="安装-Redis"><a href="#安装-Redis" class="headerlink" title="安装 Redis"></a>安装 Redis</h2><h3 id="一、镜像安装"><a href="#一、镜像安装" class="headerlink" title="一、镜像安装"></a>一、镜像安装</h3><h4 id="查找-镜像"><a href="#查找-镜像" class="headerlink" title="查找 镜像"></a>查找 镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search redis</span><br></pre></td></tr></table></figure>
+          <h1 id="Redis集群模式"><a href="#Redis集群模式" class="headerlink" title="Redis集群模式"></a><code>Redis</code>集群模式</h1><p><code>Redis</code>有三种集群模式：</p>
+<ol>
+<li>主从模式：提高可用性，解决了单节点故障</li>
+<li>哨兵（需要<code>Sentinel</code>）模式：在主从复制的基础上实现了主从切换和故障转移</li>
+<li><code>Cluster</code>模式：是官方提供的集群模式，使用 <code>Sharding</code> 技术，实现了高可用、读写分离、分布式存储。</li>
+</ol>
+<blockquote>
+<p>下载 <a target="_blank" rel="noopener" href="https://download.redis.io/redis-stable.tar.gz"><code>Redis source</code></a></p>
+</blockquote>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装方式："><a href="#安装方式：" class="headerlink" title="安装方式："></a>安装方式：</h2><h3 id="1、完全离线安装"><a href="#1、完全离线安装" class="headerlink" title="1、完全离线安装"></a>1、完全离线安装</h3><h4 id="安装关键依赖-gcc、make"><a href="#安装关键依赖-gcc、make" class="headerlink" title="安装关键依赖 gcc、make"></a>安装关键依赖 <code>gcc</code>、<code>make</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接全部安装</span></span><br><span class="line">rpm -ivh *.rpm</span><br><span class="line"><span class="comment"># 全部安装报错时，使用下面的安装找出错误</span></span><br><span class="line">rpm -ivh kernel-headers-3.10.0-1160.el7.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-common-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-headers-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh glibc-devel-2.17-324.el7_9.x86_64.rpm</span><br><span class="line">rpm -ivh make-3.82-24.el7.x86_64.rpm</span><br><span class="line">rpm -ivh binutils-2.27-44.base.el7.x86_64.rpm</span><br><span class="line">rpm -ivh libgcc-4.8.5-44.el7.x86_64.rpm</span><br><span class="line">rpm -ivh mpfr-3.1.1-4.el7.x86_64.rpm</span><br><span class="line">rpm -ivh libmpc-1.0.1-3.el7.x86_64.rpm</span><br><span class="line">rpm -ivh cpp-4.8.5-44.el7.x86_64.rpm</span><br><span class="line">rpm -ivh gcc-4.8.5-44.el7.x86_64.rpm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h4 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull redis</span><br></pre></td></tr></table></figure>
+<h4 id="编译-redis"><a href="#编译-redis" class="headerlink" title="编译 redis"></a>编译 <code>redis</code></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压</span></span><br><span class="line">tar -zxvf redis-stable.tar.gz</span><br><span class="line">cd redis-stable</span><br><span class="line">make</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">结束后</span></span><br><span class="line">make test</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装到 /usr/local/bin</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 
-<h4 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建容器</span></span><br><span class="line">docker run --name redis -p 6379:6379 -d redis</span><br><span class="line"><span class="comment"># 创建持久化Redis实例的容器</span></span><br><span class="line">docker run --name some-redis -d redis redis-server --appendonly <span class="built_in">yes</span> </span><br></pre></td></tr></table></figure>
+<h4 id="下载依赖"><a href="#下载依赖" class="headerlink" title="下载依赖"></a>下载依赖</h4><p>下载依赖需要<strong>注意版本，依赖版本根据当前系统的版本号，特别是 <code>glibc</code></strong></p>
+<blockquote>
+<p>编译所需要的依赖  <a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/gcc-4.8.5-44.el7.x86_64.rpm"><code>gcc</code></a><br>、<a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/make-3.82-24.el7.x86_64.rpm"><code>make</code></a></p>
+<p>下面是<code>gcc</code>依赖：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/cpp-4.8.5-44.el7.x86_64.rpm"><code>cpp</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/libgcc-4.8.5-44.el7.x86_64.rpm"><code>libgcc</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-2.17-324.el7_9.x86_64.rpm"><code>glibc</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-devel-2.17-324.el7_9.x86_64.rpm"><code>glibc-devel</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-headers-2.17-324.el7_9.x86_64.rpm"><code>glibc-headers</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/glibc-common-2.17-324.el7_9.x86_64.rpm"><code>glibc-common</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/kernel-headers-3.10.0-1160.el7.x86_64.rpm"><code>kernel-headers</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/mpfr-3.1.1-4.el7.x86_64.rpm"><code>libmpc</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/mpfr-3.1.1-4.el7.x86_64.rpm"><code>mpfr</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/binutils-2.27-44.base.el7.x86_64.rpm"><code>binutils</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/os/x86_64/Packages/make-3.82-24.el7.x86_64.rpm"><code>make</code></a></li>
+</ul>
+</blockquote>
+<h3 id="2、联网设备安装"><a href="#2、联网设备安装" class="headerlink" title="2、联网设备安装"></a>2、联网设备安装</h3><ol>
+<li><p><a href="#alibabaRepo">配置阿里云镜像</a></p>
+</li>
+<li><p>安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc make</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 <code>Redis</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">wget https://download.redis.io/redis-stable.tar.gz</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压</span></span><br><span class="line">tar -zxvf redis-stable.tar.gz</span><br><span class="line">cd redis-stable</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译</span></span><br><span class="line">make</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">结束后</span></span><br><span class="line">make test</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3、rpm安装-不推荐"><a href="#3、rpm安装-不推荐" class="headerlink" title="3、rpm安装(不推荐)"></a>3、<code>rpm</code>安装(不推荐)</h3><p>联网安装可能会安装旧的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#配置阿里云镜像</span></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="comment"># 配置阿里云 epel </span></span><br><span class="line">wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="line"><span class="comment"># 安装redis</span></span><br><span class="line">yum install -y epel-release</span><br><span class="line">yum install -y redis</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、-snap-安装"><a href="#4、-snap-安装" class="headerlink" title="4、 snap 安装"></a>4、 <code>snap</code> 安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br><span class="line">yum install snapd</span><br><span class="line">systemctl enable --now snapd.socket</span><br><span class="line">ln -s /var/lib/snapd/snap /snap</span><br><span class="line">snap install redis</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">bind * -::*                 </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保护模式，不允许不认证连接</span></span><br><span class="line">protected-mode yes</span><br><span class="line"></span><br><span class="line">port 56379</span><br><span class="line">tcp-backlog 511</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">unixsocket /run/redis.sock</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">unixsocketperm 700</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Close the connection after a client is idle <span class="keyword">for</span> N seconds (0 to <span class="built_in">disable</span>)</span></span><br><span class="line">timeout 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ack 验证client 是否存活</span></span><br><span class="line">tcp-keepalive 300</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">守护进程运行</span></span><br><span class="line">daemonize yes</span><br><span class="line">pidfile /opt/redis56379/redis_56379.pid</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">日志级别 debug verbose notice warning</span></span><br><span class="line">loglevel notice</span><br><span class="line">logfile &quot;/opt/redis56379/redis56379.log&quot;</span><br><span class="line"></span><br><span class="line">databases 16</span><br><span class="line"></span><br><span class="line">always-show-logo no</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启用进程标题</span></span><br><span class="line">set-proc-title yes </span><br><span class="line">proc-title-template &quot;&#123;title&#125; &#123;listen-addr&#125; &#123;server-mode&#125;&#123;port&#125;&quot;</span><br><span class="line"> </span><br><span class="line">dir /opt/redis56379/data/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">密码</span></span><br><span class="line">requirepass maxzhao </span><br></pre></td></tr></table></figure>
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="阿里云镜像"><a href="#阿里云镜像" class="headerlink" title="阿里云镜像"></a>阿里云镜像<span id="alibabaRepo"></span></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置阿里云镜像</span></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">配置阿里云 epel</span> </span><br><span class="line">wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
 
 
 
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/41794/">https://github.com/maxzhao-it/blog/post/41794/</a> </p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/848e11b6/">https://github.com/maxzhao-it/blog/post/848e11b6/</a> </p>
 
       
     </div>
@@ -482,7 +540,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/55324/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/ff3733f2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -500,7 +558,105 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/55324/" class="post-title-link" itemprop="url">Vue使用AES加密</a>
+          <a href="/blog/post/ff3733f2/" class="post-title-link" itemprop="url">SpringEvent事件机制</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Spring Event 机制使用起来比较简单。</p>
+<ul>
+<li>需要一个事件类</li>
+<li>需要监听当前事件类</li>
+<li>需要发布当前事件类的事件</li>
+</ul>
+<h3 id="简单了解一下"><a href="#简单了解一下" class="headerlink" title="简单了解一下"></a>简单了解一下</h3><p><code>ApplicationEventPublisher</code>用来发布事件，默认实现类 <code>AbstractApplicationContext</code>.</p>
+<p><img src="/blog/(/uploads/images/image-20220401143619272.png" alt=" "></p>
+<p>其中 <code>ApplicationEventPublisher</code>有两个 <code>publishEvent</code> 方法，在<code>Spring Context 4.2</code>之后就没有区别了。</p>
+<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StartSpringBootEventDemoApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SpringApplication</span> <span class="variable">application</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringApplication</span>(StartSpringBootEventDemoApplication.class);</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> CommandLineRunner <span class="title function_">test</span><span class="params">(ApplicationEventPublisher applicationEventPublisher)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> args -&gt; &#123;</span><br><span class="line">            <span class="comment">/*发布事件*/</span></span><br><span class="line">            applicationEventPublisher.publishEvent(<span class="keyword">new</span> <span class="title class_">CustomEvent</span>(<span class="number">11111</span>));</span><br><span class="line">            applicationEventPublisher.publishEvent(<span class="keyword">new</span> <span class="title class_">CustomEvent2</span>(<span class="number">22222</span>));</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试自定义事件类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">CustomEvent</span> &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 标识</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> id;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">CustomEvent</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.id = id;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;CustomEvent&#123;&quot;</span> + <span class="string">&quot;id=&quot;</span> + id + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试自定义事件类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">CustomEvent2</span> &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 标识</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> id;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">CustomEvent2</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.id = id;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;CustomEvent2&#123;&quot;</span> + <span class="string">&quot;id=&quot;</span> + id + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 监听事件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@EventListener(value = CustomEvent.class)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener</span><span class="params">(CustomEvent customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener2</span><span class="params">(CustomEvent customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener2=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener(value = CustomEvent2.class)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener3</span><span class="params">(CustomEvent2 customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener3=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener4</span><span class="params">(CustomEvent2 customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener4=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener(value = &#123;CustomEvent.class, CustomEvent2.class&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listener5</span><span class="params">(Object customEvent)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;listener5=&gt;&quot;</span> + customEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面会输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">listener=&gt;CustomEvent&#123;id=11111&#125;</span><br><span class="line">listener5=&gt;CustomEvent&#123;id=11111&#125;</span><br><span class="line">listener2=&gt;CustomEvent&#123;id=11111&#125;</span><br><span class="line">listener3=&gt;CustomEvent2&#123;id=22222&#125;</span><br><span class="line">listener5=&gt;CustomEvent2&#123;id=22222&#125;</span><br><span class="line">listener4=&gt;CustomEvent2&#123;id=22222&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/ff3733f2/">https://github.com/maxzhao-it/blog/post/ff3733f2/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/5a8f92e/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/5a8f92e/" class="post-title-link" itemprop="url">Axios解决响应结果字符串变为数字的问题</a>
         </h2>
 
         <div class="post-meta-container">
@@ -536,7 +692,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这里主要用语对登录帐号的加密</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>axios</p>
 <h1 id="Vue-js-模板语法"><a href="#Vue-js-模板语法" class="headerlink" title="Vue.js 模板语法"></a>Vue.js 模板语法</h1><p>Vue.js 使用了基于 HTML 的模版语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。</p>
 <p>Vue.js 的核心是一个允许你采用简洁的模板语法来声明式的将数据渲染进 DOM 的系统。</p>
 <p>结合响应系统，在应用状态改变时， Vue 能够智能地计算出重新渲染组件的最小代价并应用到 DOM 操作上。</p>
@@ -1261,7 +1417,7 @@
 
 
 
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/55324/">https://github.com/maxzhao-it/blog/post/55324/</a> </p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/5a8f92e/">https://github.com/maxzhao-it/blog/post/5a8f92e/</a> </p>
 
       
     </div>
@@ -1288,7 +1444,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/439bd436/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f034acb2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -1306,7 +1462,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/439bd436/" class="post-title-link" itemprop="url">PostgreSQL使用yum快速安装</a>
+          <a href="/blog/post/f034acb2/" class="post-title-link" itemprop="url">SpringBoot2.6.3使用alibaba-nacos-config</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1324,11 +1480,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/PostgreSql/" itemprop="url" rel="index"><span itemprop="name">PostgreSql</span></a>
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
         </span>
     </span>
 
@@ -1342,1041 +1498,397 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>快速安装</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.postgresql.org/download/linux/redhat/">参考地址</a></p>
-</blockquote>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="yum安装"><a href="#yum安装" class="headerlink" title="yum安装"></a><code>yum</code>安装</h2><p>改变版本只需要把 <code>10</code>改为 <code>11、12、13</code>。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install the repository RPM:</span></span><br><span class="line">yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install PostgreSQL:</span></span><br><span class="line">yum install -y postgresql10-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># Optionally initialize the database and enable automatic start:</span></span><br><span class="line">/usr/pgsql-10/bin/postgresql-10-setup initdb</span><br><span class="line">systemctl <span class="built_in">enable</span> postgresql-10;systemctl start postgresql-10</span><br></pre></td></tr></table></figure>
-
-<h3 id="查看安装的配置路径"><a href="#查看安装的配置路径" class="headerlink" title="查看安装的配置路径"></a>查看安装的配置路径</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">su postgres</span><br><span class="line"><span class="comment"># 查看配置文件</span></span><br><span class="line">psql -U postgres -c <span class="string">&#x27;SHOW config_file&#x27;</span></span><br><span class="line">psql -U postgres</span><br><span class="line">alter user postgres with password <span class="string">&#x27;maxzhao&#x27;</span></span><br><span class="line">\password</span><br></pre></td></tr></table></figure>
-
-<h3 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 退出</span></span><br><span class="line">\q</span><br><span class="line"><span class="comment"># 切换到 root</span></span><br><span class="line">su</span><br></pre></td></tr></table></figure>
-
-<h3 id="添加访问"><a href="#添加访问" class="headerlink" title="添加访问"></a>添加访问</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这个地址会变动的，需要根据当前查看的配置文件</span></span><br><span class="line"><span class="comment"># vim /var/lib/pgsql/10/data/postgresql.conf</span></span><br><span class="line"><span class="comment"># 修改配置监听所有的IP</span></span><br><span class="line">sed -i <span class="string">&quot;s|#listen_addresses = &#x27;localhost&#x27;|listen_addresses = &#x27;*&#x27;|g&quot;</span> /var/lib/pgsql/10/data/postgresql.conf</span><br><span class="line"><span class="comment"># 设置IP登录模式</span></span><br><span class="line"><span class="comment">#vim /var/lib/pgsql/10/data/pg_hba.conf</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;host    all             all             0.0.0.0/0            md5&quot;</span>&gt;&gt;/var/lib/pgsql/10/data/pg_hba.conf</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">systemctl restart postgresql-10</span><br><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">systemctl status postgresql-10</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br></pre></td></tr></table></figure>
-
-<h2 id="备份和恢复"><a href="#备份和恢复" class="headerlink" title="备份和恢复"></a>备份和恢复</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pg_dump --format=t -d db_name -U user_name -h 127.0.0.1 -O -W  &gt; dump.sql</span><br><span class="line">psql -h 127.0.0.1 -U user_name -d db_name &lt; dump.sql</span><br></pre></td></tr></table></figure>
-
-<h2 id="分布式事物"><a href="#分布式事物" class="headerlink" title="分布式事物"></a>分布式事物</h2><p>XA是open group提出的分布式事务处理规范，JTA支持XA规范，JTA只规定了接口，有些应用容器提供实现，也有一些三方的开源实现可用，比如Atomikos。</p>
-<p>如果PostgreSQL参与分布式事务(XA)处理，则需要在配置文件postgres.conf中设置参数，此参数用于指定分布式事务中两步提交准备事务的最大数量。默认值为0，此时不支持分布式事务。</p>
-<p>max_prepared_transactions参数值不应该小于max_connections参数值，这样每一个session都可以至少有一个可用的准备事务。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">max_connections</span>=<span class="string">100</span></span><br><span class="line"><span class="attr">max_prepared_transactions</span>=<span class="string">100</span></span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/439bd436/">https://github.com/maxzhao-it/blog/post/439bd436/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/58472/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/58472/" class="post-title-link" itemprop="url">Angular11+Antd笔记-TabBar</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/" itemprop="url" rel="index"><span itemprop="name">Angular</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/AntD/" itemprop="url" rel="index"><span itemprop="name">AntD</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>笔记：创建一个 <code>tab</code> 切换的主页面。</p>
-<h1 id="antd-构建-home-页面"><a href="#antd-构建-home-页面" class="headerlink" title="antd 构建 home 页面"></a><code>antd</code> 构建 <code>home</code> 页面</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng g ng-zorro-antd-mobile:tab-bar-basic  -p app --path=<span class="string">&quot;src/app/pages&quot;</span> --styleext=<span class="string">&#x27;less&#x27;</span> --name=home</span><br></pre></td></tr></table></figure>
-
-<p>其中 <code>html</code> 中的标签属性，可以参考后面的 文档记录。</p>
-<h1 id="文档记录"><a href="#文档记录" class="headerlink" title="文档记录"></a>文档记录</h1><blockquote>
-<p>建议查询官方文档,下面只是简单的记录<br><a target="_blank" rel="noopener" href="https://angular.cn/">Angular</a></p>
-</blockquote>
-<h3 id="TabBar-属性"><a href="#TabBar-属性" class="headerlink" title="TabBar 属性"></a><span id="properties_TabBar"><code>TabBar</code> 属性</span></h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[activeTab]</code></td>
-<td align="left">当前激活Tab索引</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>0</code></td>
-</tr>
-<tr>
-<td align="left"><code>[barTintColor]</code></td>
-<td align="left">tabbar 背景色</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;white&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[tintColor]</code></td>
-<td align="left">选中的字体颜色</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;#108ee9&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[unselectedTintColor]</code></td>
-<td align="left">未选中的字体颜色</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;#888&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[hidden]</code></td>
-<td align="left">是否隐藏</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[tabBarPosition]</code></td>
-<td align="left">tabbar 位置</td>
-<td align="left">&#96;’top’</td>
-<td align="left">‘bottom’&#96;</td>
-</tr>
-<tr>
-<td align="left"><code>[prerenderingSiblingsNumber]</code></td>
-<td align="left">预加载两侧Tab数量, -1: 加载所有的tab内容, 0: 仅加载当前tab内容, n: 预加载两侧n个Tab</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>-1</code></td>
-</tr>
-<tr>
-<td align="left"><code>(onPress)</code></td>
-<td align="left">bar 点击触发</td>
-<td align="left"><code>EventEmitter&lt;&#123;index: number, title: string, key: string&#125;&gt;</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<h3 id="TabBarItem-属性"><a href="#TabBarItem-属性" class="headerlink" title="TabBarItem 属性"></a><span id="properties_TabBarItem"><code>TabBarItem</code> 属性</span></h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[badge]</code></td>
-<td align="left">徽标数</td>
-<td align="left">&#96;number</td>
-<td align="left">string&#96;</td>
-</tr>
-<tr>
-<td align="left"><code>[dot]</code></td>
-<td align="left">是否在右上角显示小红点（在设置badge的情况下失效）</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[icon]</code></td>
-<td align="left">默认展示的内容</td>
-<td align="left"><code>TemplateRef</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[selectedIcon]</code></td>
-<td align="left">选中后展示的内容</td>
-<td align="left"><code>TemplateRef</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[title]</code></td>
-<td align="left">标题文字</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[key]</code></td>
-<td align="left">唯一标识</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/58472/">https://github.com/maxzhao-it/blog/post/58472/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/530/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/530/" class="post-title-link" itemprop="url">Angular11+Antd笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/" itemprop="url" rel="index"><span itemprop="name">Angular</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/AntD/" itemprop="url" rel="index"><span itemprop="name">AntD</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>笔记：记录组件使用</p>
-<h1 id="antd-构建-home-页面"><a href="#antd-构建-home-页面" class="headerlink" title="antd 构建 home 页面"></a><code>antd</code> 构建 <code>home</code> 页面</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng g ng-zorro-antd-mobile:tab-bar-basic  -p app --path=<span class="string">&quot;src/app/pages&quot;</span> --styleext=<span class="string">&#x27;less&#x27;</span> --name=home</span><br></pre></td></tr></table></figure>
-
-<p>其中 <code>html</code> 中的标签属性，可以参考后面的 文档记录。</p>
-<h1 id="引入其它插件"><a href="#引入其它插件" class="headerlink" title="引入其它插件"></a>引入其它插件</h1><h2 id="引入-Lodash"><a href="#引入-Lodash" class="headerlink" title="引入 Lodash"></a>引入 <code>Lodash</code></h2><h3 id="npm-安装"><a href="#npm-安装" class="headerlink" title="npm 安装"></a><code>npm</code> 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm i lodash --save</span><br><span class="line"><span class="comment"># TypeScript 提醒</span></span><br><span class="line">npm i --save-dev @types/lodash</span><br></pre></td></tr></table></figure>
-
-<h3 id="yarn-安装"><a href="#yarn-安装" class="headerlink" title="yarn 安装"></a><code>yarn</code> 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn add lodash</span><br><span class="line"><span class="comment"># TypeScript 提醒</span></span><br><span class="line">yarn add @types/lodash --dev</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> _ <span class="keyword">from</span> <span class="string">&#x27;lodash&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<p><code>tsconfig.json</code> 中</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;types&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;lodash&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;lib&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;es2018&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;dom&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>angular.json</code> 中</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;builder&quot;</span><span class="punctuation">:</span> <span class="string">&quot;@angular-devkit/build-angular:browser&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;allowedCommonJsDependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;lodash&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="文档记录"><a href="#文档记录" class="headerlink" title="文档记录"></a>文档记录</h1><blockquote>
-<p>建议查询官方文档,下面只是简单的记录<br><a target="_blank" rel="noopener" href="https://angular.cn/">Angular</a></p>
-</blockquote>
-<h3 id="TabBar-属性"><a href="#TabBar-属性" class="headerlink" title="TabBar 属性"></a><span id="properties_TabBar"><code>TabBar</code> 属性</span></h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[activeTab]</code></td>
-<td align="left">当前激活Tab索引</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>0</code></td>
-</tr>
-<tr>
-<td align="left"><code>[barTintColor]</code></td>
-<td align="left">tabbar 背景色</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;white&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[tintColor]</code></td>
-<td align="left">选中的字体颜色</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;#108ee9&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[unselectedTintColor]</code></td>
-<td align="left">未选中的字体颜色</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;#888&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[hidden]</code></td>
-<td align="left">是否隐藏</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[tabBarPosition]</code></td>
-<td align="left">tabbar 位置</td>
-<td align="left">&#96;’top’</td>
-<td align="left">‘bottom’&#96;</td>
-</tr>
-<tr>
-<td align="left"><code>[prerenderingSiblingsNumber]</code></td>
-<td align="left">预加载两侧Tab数量, -1: 加载所有的tab内容, 0: 仅加载当前tab内容, n: 预加载两侧n个Tab</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>-1</code></td>
-</tr>
-<tr>
-<td align="left"><code>(onPress)</code></td>
-<td align="left">bar 点击触发</td>
-<td align="left"><code>EventEmitter&lt;&#123;index: number, title: string, key: string&#125;&gt;</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<h3 id="TabBarItem-属性"><a href="#TabBarItem-属性" class="headerlink" title="TabBarItem 属性"></a><span id="properties_TabBarItem"><code>TabBarItem</code> 属性</span></h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[badge]</code></td>
-<td align="left">徽标数</td>
-<td align="left">&#96;number</td>
-<td align="left">string&#96;</td>
-</tr>
-<tr>
-<td align="left"><code>[dot]</code></td>
-<td align="left">是否在右上角显示小红点（在设置badge的情况下失效）</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[icon]</code></td>
-<td align="left">默认展示的内容</td>
-<td align="left"><code>TemplateRef</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[selectedIcon]</code></td>
-<td align="left">选中后展示的内容</td>
-<td align="left"><code>TemplateRef</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[title]</code></td>
-<td align="left">标题文字</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[key]</code></td>
-<td align="left">唯一标识</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<h3 id="DatePicker"><a href="#DatePicker" class="headerlink" title="DatePicker"></a><span id="properties_DatePicker">DatePicker</span></h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[mode]</code></td>
-<td align="left">日期选择的类型</td>
-<td align="left">&#96;’year’</td>
-<td align="left">‘month’</td>
-</tr>
-<tr>
-<td align="left"><code>[minDate]</code></td>
-<td align="left">最小可选日期</td>
-<td align="left"><code>Date</code></td>
-<td align="left"><code>2000-1-1</code></td>
-</tr>
-<tr>
-<td align="left"><code>[maxDate]</code></td>
-<td align="left">最大可选日期</td>
-<td align="left"><code>Date</code></td>
-<td align="left"><code>2030-1-1</code></td>
-</tr>
-<tr>
-<td align="left"><code>[minuteStep]</code></td>
-<td align="left">分钟数递增步长设置</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>1</code></td>
-</tr>
-<tr>
-<td align="left"><code>[locale]</code></td>
-<td align="left">国际化，可覆盖全局<code>[LocaleProvider](https://ng.mobile.ant.design/components/locale-provider/zh)</code>的配置</td>
-<td align="left"><code>&#123;DatePickerLocale: &#123;year, month, day, hour, minute, am?, pm?&#125;, okText, dismissText &#125;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[disabled]</code></td>
-<td align="left">是否不可用</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[showErrorToast]</code></td>
-<td align="left">显示Toast错误信息</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>true</code></td>
-</tr>
-<tr>
-<td align="left"><code>[showErrorToastInterval]</code></td>
-<td align="left">Toast错误信息显示时间</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>2000</code></td>
-</tr>
-<tr>
-<td align="left"><code>[title]</code></td>
-<td align="left">弹框的标题</td>
-<td align="left">&#96;string</td>
-<td align="left">TemplateRef&#96;</td>
-</tr>
-<tr>
-<td align="left"><code>[(ngModel)]</code></td>
-<td align="left">当前选中时间</td>
-<td align="left"><code>Date</code></td>
-<td align="left"><code>new Date()</code></td>
-</tr>
-<tr>
-<td align="left"><code>(onValueChange)</code></td>
-<td align="left">每列 picker 改变时的回调</td>
-<td align="left"><code>EventEmitter&lt;&#123;date: object, index: string&#125;&gt;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>(onOk)</code></td>
-<td align="left">点击选中时执行的回调</td>
-<td align="left"><code>EventEmitter&lt;Date&gt;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>(onDismiss)</code></td>
-<td align="left">点击取消时执行的回调</td>
-<td align="left"><code>EventEmitter&lt;void&gt;</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<p>注意：日期字符串在不同浏览器有不同的实现，例如 <code>new Date(&#39;2017-1-1&#39;)</code> 在 Safari 上是 Invalid Date，而在 Chrome 上是能正常解析的。</p>
-<p>注意：<code>DatePicker</code> children 建议是 <code>ListItem</code>, 如果不是，需要是自定义组件(组件内需处理 <code>onClick</code> &#x2F; <code>extra</code> &#x2F; <code>children</code> 属性)</p>
-<h3 id="TextareaItem"><a href="#TextareaItem" class="headerlink" title="TextareaItem"></a><span id="properties_TextareaItem"><code>TextareaItem</code></span></h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[value]</code></td>
-<td align="left">value</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[defaultValue]</code></td>
-<td align="left">设置初始默认值</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[placeholder]</code></td>
-<td align="left">placeholder</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[editable]</code></td>
-<td align="left">是否可编辑</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>true</code></td>
-</tr>
-<tr>
-<td align="left"><code>[disabled]</code></td>
-<td align="left">是否禁用</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[clear]</code></td>
-<td align="left">是否带清除功能(仅<code>editable</code>为<code>true</code>,<code>disabled</code>为<code>false</code>才生效)</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[rows]</code></td>
-<td align="left">显示几行</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>1</code></td>
-</tr>
-<tr>
-<td align="left"><code>[count]</code></td>
-<td align="left">计数功能,兼具最大长度,默认为0,代表不开启计数功能</td>
-<td align="left"><code>number</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[error]</code></td>
-<td align="left">报错样式</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[autoHeight]</code></td>
-<td align="left">高度自适应, autoHeight 和 rows 请二选一</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[autoFocus]</code></td>
-<td align="left">初始化自动获得焦点</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[labelNumber]</code></td>
-<td align="left">定宽枚举值：<code>num * @input-label-width: 34px</code>，可用<code>2-7</code>之间的数字，一般(不能保证全部)能对应显示出相应个数的中文文字(不考虑英文字符)</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>5</code></td>
-</tr>
-<tr>
-<td align="left"><code>[name]</code></td>
-<td align="left">textarea 的 name</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[prefixListCls]</code></td>
-<td align="left">列表 className 前缀</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;am-list&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[title]</code></td>
-<td align="left">文案说明</td>
-<td align="left">&#96;string</td>
-<td align="left">TemplateRef&#96;</td>
-</tr>
-<tr>
-<td align="left"><code>[focus]</code></td>
-<td align="left">强制获得焦点</td>
-<td align="left"><code>&#123; focus: boolean &#125;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[(ngModel)]</code></td>
-<td align="left">value</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>(onChange)</code></td>
-<td align="left">change 事件触发的回调函数</td>
-<td align="left"><code>EventEmitter&lt;string&gt;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>(onBlur)</code></td>
-<td align="left">blur 事件触发的回调函数</td>
-<td align="left"><code>EventEmitter&lt;string&gt;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>(onFocus)</code></td>
-<td align="left">focus 事件触发的回调函数</td>
-<td align="left"><code>EventEmitter&lt;string&gt;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>(onErrorClick)</code></td>
-<td align="left">点击报错 icon 触发的回调</td>
-<td align="left"><code>EventEmitter&lt;void&gt;</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a><span id="properties_switch"><code>switch</code></span></h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[checked]</code></td>
-<td align="left">是否默认选中</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[disabled]</code></td>
-<td align="left">是否不可修改</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[color]</code></td>
-<td align="left">开关打开后的颜色</td>
-<td align="left"><code>string</code></td>
-<td align="left"><code>&#39;#4dd865&#39;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[name]</code></td>
-<td align="left">switch 的 name</td>
-<td align="left"><code>string</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[platform]</code></td>
-<td align="left">设定组件的平台特有样式</td>
-<td align="left">&#96;’ios’</td>
-<td align="left">‘android’&#96;</td>
-</tr>
-<tr>
-<td align="left"><code>[(ngModel)]</code></td>
-<td align="left">当前值</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>(onChange)</code></td>
-<td align="left">change 事件触发的回调函数</td>
-<td align="left"><code>EventEmitter&lt;boolean&gt;</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>(onClick)</code></td>
-<td align="left">click事件触发的回调函数，当switch为disabled时，入参的值始终是默认传入的checked值</td>
-<td align="left"><code>EventEmitter&lt;boolean&gt;</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<h3 id="Drawer抽屉"><a href="#Drawer抽屉" class="headerlink" title="Drawer抽屉"></a>Drawer抽屉</h3><table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">说明</th>
-<th align="left">类型</th>
-<th align="left">默认值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>[sidebar]</code></td>
-<td align="left">抽屉里的内容</td>
-<td align="left"><code>TemplateRef</code></td>
-<td align="left">-</td>
-</tr>
-<tr>
-<td align="left"><code>[open]</code></td>
-<td align="left">开关状态</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[position]</code></td>
-<td align="left">抽屉所在位置</td>
-<td align="left">&#96;’left’</td>
-<td align="left">‘right’</td>
-</tr>
-<tr>
-<td align="left"><code>[sidebarStyle]</code></td>
-<td align="left">-</td>
-<td align="left"><code>object</code></td>
-<td align="left"><code>&#123;&#125;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[contentStyle]</code></td>
-<td align="left">-</td>
-<td align="left"><code>object</code></td>
-<td align="left"><code>&#123;&#125;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[overlayStyle]</code></td>
-<td align="left">-</td>
-<td align="left"><code>object</code></td>
-<td align="left"><code>&#123;&#125;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[dragHandleStyle]</code></td>
-<td align="left">-</td>
-<td align="left"><code>object</code></td>
-<td align="left"><code>&#123;&#125;</code></td>
-</tr>
-<tr>
-<td align="left"><code>[touch]</code></td>
-<td align="left">是否开启触摸手势</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>true</code></td>
-</tr>
-<tr>
-<td align="left"><code>[transitions]</code></td>
-<td align="left">是否开启动画</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>true</code></td>
-</tr>
-<tr>
-<td align="left"><code>[docked]</code></td>
-<td align="left">是否嵌入到正常文档流里</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[enableDragHandle]</code></td>
-<td align="left">是否启用 dragHandle</td>
-<td align="left"><code>boolean</code></td>
-<td align="left"><code>false</code></td>
-</tr>
-<tr>
-<td align="left"><code>[dragToggleDistance]</code></td>
-<td align="left">打开&#x2F;关闭抽屉时距 sidebar 的拖动距离</td>
-<td align="left"><code>number</code></td>
-<td align="left"><code>30</code></td>
-</tr>
-<tr>
-<td align="left"><code>(onOpenChange)</code></td>
-<td align="left">open 状态切换时调用</td>
-<td align="left"><code>EventEmitter&lt;boolean&gt;</code></td>
-<td align="left">-</td>
-</tr>
-</tbody></table>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/530/">https://github.com/maxzhao-it/blog/post/530/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/15608/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/15608/" class="post-title-link" itemprop="url">Angular11路由</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/" itemprop="url" rel="index"><span itemprop="name">Angular</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/AntD/" itemprop="url" rel="index"><span itemprop="name">AntD</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这个时候应该已经创建了一个项目并且了解基本的文件结构.</p>
-<h1 id="路由配置"><a href="#路由配置" class="headerlink" title="路由配置"></a>路由配置</h1><h3 id="添加路由依赖"><a href="#添加路由依赖" class="headerlink" title="添加路由依赖"></a>添加路由依赖</h3><p>如果创建 <code>App</code> 时,没有添加路由,可以</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate module app-routing --flat --module=app</span><br></pre></td></tr></table></figure>
-
-<h3 id="src-app-app-routing-module-ts"><a href="#src-app-app-routing-module-ts" class="headerlink" title="src/app/app-routing.module.ts"></a><code>src/app/app-routing.module.ts</code></h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;<span class="title class_">NgModule</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;<span class="title class_">RouterModule</span>, <span class="title class_">Routes</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/router&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;<span class="title class_">LoginComponent</span>&#125; <span class="keyword">from</span> <span class="string">&quot;./login/login.component&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;<span class="title class_">HomeComponent</span>&#125; <span class="keyword">from</span> <span class="string">&quot;./pages/home/home.component&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  <span class="comment">/*重定向 prefix:只要以 path 开头,就会重定向*/</span></span><br><span class="line">  &#123;<span class="attr">path</span>: <span class="string">&#x27;&#x27;</span>, <span class="attr">redirectTo</span>: <span class="string">&#x27;/login&#x27;</span>, <span class="attr">pathMatch</span>: <span class="string">&#x27;full&#x27;</span>&#125;,</span><br><span class="line">  <span class="comment">/*登录*/</span></span><br><span class="line">  &#123;<span class="attr">path</span>: <span class="string">&quot;login&quot;</span>, <span class="attr">component</span>: <span class="title class_">LoginComponent</span>&#125;,</span><br><span class="line">  <span class="comment">/*home*/</span></span><br><span class="line">  &#123;<span class="attr">path</span>: <span class="string">&quot;home&quot;</span>, <span class="attr">component</span>: <span class="title class_">HomeComponent</span>&#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="comment">/*初始化路由器*/</span></span><br><span class="line">  <span class="attr">imports</span>: [<span class="title class_">RouterModule</span>.<span class="title function_">forRoot</span>(routes)],</span><br><span class="line">  <span class="attr">exports</span>: [<span class="title class_">RouterModule</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppRoutingModule</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><a href="#properties_router">router 属性说明</a></p>
-</blockquote>
-<h4 id="引入-app-routing-module-ts-组件"><a href="#引入-app-routing-module-ts-组件" class="headerlink" title="引入 app-routing.module.ts 组件"></a>引入 <code>app-routing.module.ts</code> 组件</h4><p><code>app.module.ts</code> 文件中引入 <code>AppRoutingModule</code>。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;<span class="title class_">AppRoutingModule</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;./app-routing.module&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="attr">declarations</span>: [<span class="comment">/****/</span>],</span><br><span class="line">  <span class="attr">imports</span>: [</span><br><span class="line">    <span class="title class_">AppRoutingModule</span></span><br><span class="line">    <span class="comment">/*****/</span></span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="添加路由出口"><a href="#添加路由出口" class="headerlink" title="添加路由出口"></a>添加路由出口</h4><p><code>AppComponent</code>添加</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- src/app/app.component.html --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">router-outlet</span>&gt;</span><span class="tag">&lt;/<span class="name">router-outlet</span>&gt;</span>   </span><br></pre></td></tr></table></figure>
-
-<h4 id="跳转：Router-路由器"><a href="#跳转：Router-路由器" class="headerlink" title="跳转：Router 路由器"></a>跳转：<code>Router</code> 路由器</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">router</span>.<span class="title function_">navigate</span>([<span class="string">&#x27;/home&#x27;</span>]);</span><br></pre></td></tr></table></figure>
-<h4 id="跳转：RouterLink-路由器链接"><a href="#跳转：RouterLink-路由器链接" class="headerlink" title="跳转：RouterLink 路由器链接"></a>跳转：<code>RouterLink</code> 路由器链接</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a [routerLink]=&quot;[&#x27;/home&#x27;]&quot;&gt;主页&lt;/a&gt;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="重定向路由"><a href="#重定向路由" class="headerlink" title="重定向路由"></a>重定向路由</h3><p>在用户访问一个特定的地址时，将其重定向到另一个指定的地址。 配置重定向路由：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const appRoutes: Routes = [</span><br><span class="line">    &#123;path: &#x27;&#x27;, redirectTo: &#x27;/login&#x27;, pathMatch: &#x27;full&#x27;&#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-<h3 id="子路由"><a href="#子路由" class="headerlink" title="子路由"></a>子路由</h3><p>子路由配置语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const appRoutes: Routes = [</span><br><span class="line">  &#123; </span><br><span class="line">    path: &#x27;home&#x27;, </span><br><span class="line">    component: HomeComponent,</span><br><span class="line">    children: [</span><br><span class="line">      &#123; path: &#x27;&#x27;, component: AComponent&#125;,</span><br><span class="line">      &#123; path: &#x27;b&#x27;, component: BComponent&#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="辅助路由"><a href="#辅助路由" class="headerlink" title="辅助路由"></a>辅助路由</h3><p>辅助路由又兄弟路由，配置语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 路由配置</span><br><span class="line">&#123;path: &#x27;xxx&#x27;, component: XxxComponent, outlet:&#x27;xxxlet&#x27;&#125;,</span><br><span class="line">&#123;path: &#x27;yyy&#x27;, component: XxxComponent, outlet:&#x27;yyylet&#x27;&#125;</span><br><span class="line"></span><br><span class="line">// 使用</span><br><span class="line">&lt;router-outlet&gt;&lt;/router-outlet&gt;</span><br><span class="line">&lt;router-outlet name=&quot;xxxlet&quot;&gt;&lt;/router-outlet&gt;</span><br><span class="line"></span><br><span class="line">// 链接</span><br><span class="line">&lt;a [routerLink]=&quot;[&#x27;/home&#x27;,&#123;outlets:&#123;xxxlet: &#x27;xxx&#x27;&#125;&#125;]&quot;&gt;Xxx&lt;/a&gt;</span><br></pre></td></tr></table></figure>
-
-<p>当点击Xxx链接时，主插座会显示’&#x2F;home’链接所对应的组件，而xxxlet插座会显示xxx对应的组件。</p>
-<h3 id="路由守卫（guard）"><a href="#路由守卫（guard）" class="headerlink" title="路由守卫（guard）"></a>路由守卫（guard）</h3><h4 id="CanActivate-x2F-CanActiveChild：处理导航到某路由的情况"><a href="#CanActivate-x2F-CanActiveChild：处理导航到某路由的情况" class="headerlink" title="CanActivate&#x2F;CanActiveChild：处理导航到某路由的情况"></a>CanActivate&#x2F;CanActiveChild：处理导航到某路由的情况</h4><p>当用户不满足这个守卫的要求时就不能到达指定路由。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">DemoGuard1</span> <span class="keyword">implements</span> <span class="title class_">CanActivate</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">canActivate</span>(<span class="attr">route</span>: <span class="title class_">ActivatedRouteSnapshot</span>, <span class="attr">state</span>: <span class="title class_">RouterStateSnapshot</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="CanDeactivate：处理从当前路由离开的情况"><a href="#CanDeactivate：处理从当前路由离开的情况" class="headerlink" title="CanDeactivate：处理从当前路由离开的情况"></a>CanDeactivate：处理从当前路由离开的情况</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 泛型中 AComponent 代表要守卫的组件。</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">DemoGuard2</span> <span class="keyword">implements</span> <span class="title class_">CanDeactivate</span>&lt;<span class="title class_">AComponent</span>&gt; &#123;</span><br><span class="line"> <span class="title function_">canDeactivate</span>(<span class="attr">component</span>: <span class="title class_">AComponent</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">   <span class="comment">// 根据 component 的信息进行具体操作</span></span><br><span class="line">   <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="Resolve：在路由激活之前获取路由数据"><a href="#Resolve：在路由激活之前获取路由数据" class="headerlink" title="Resolve：在路由激活之前获取路由数据"></a>Resolve：在路由激活之前获取路由数据</h4><p>在进入路由时就可以立刻把数据呈现给用户。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Injectable</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AResolve</span> <span class="keyword">implements</span> <span class="title class_">Resolve</span>&lt;<span class="built_in">any</span>&gt; &#123;</span><br><span class="line">  <span class="title function_">resolve</span>(<span class="params">route: ActivatedRouteSnapshot, state: RouterStateSnapshot</span>) &#123;</span><br><span class="line">     <span class="keyword">const</span> id = route.<span class="property">paramMap</span>.<span class="title function_">get</span>(<span class="string">&#x27;id&#x27;</span>);</span><br><span class="line">     <span class="comment">// 可以根据路由中的信息进行相关操作</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最后，需要将路由守卫添加到路由配置中：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">appRoutes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  &#123; </span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;common/a&#x27;</span>, </span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">AComponent</span>,</span><br><span class="line">    <span class="attr">canActivate</span>: [<span class="title class_">DemoGurad1</span>],</span><br><span class="line">    <span class="attr">canDeactivate</span>: [<span class="title class_">DemoGuard2</span>],</span><br><span class="line">    <span class="attr">resolve</span>: &#123;<span class="attr">data</span>: <span class="title class_">AResolve</span>&#125;</span><br><span class="line">   &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&#x27;common/b/:id&#x27;</span>, <span class="attr">component</span>: <span class="title class_">BComponent</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&#x27;**&#x27;</span>, <span class="attr">component</span>: <span class="title class_">NotFoundComponent</span>&#125;, <span class="comment">// 定义通配符路由</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [<span class="title class_">RouterModule</span>.<span class="title function_">forRoot</span>(routes)],</span><br><span class="line">  <span class="attr">exports</span>: [<span class="title class_">RouterModule</span>],</span><br><span class="line">  ...</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-<h1 id="文档记录"><a href="#文档记录" class="headerlink" title="文档记录"></a>文档记录</h1><blockquote>
-<p>建议查询官方文档,下面只是简单的记录<br><a target="_blank" rel="noopener" href="https://angular.cn/">Angular</a></p>
-</blockquote>
-<h3 id="router-属性"><a href="#router-属性" class="headerlink" title="router 属性"></a><span id="properties_router"><code>router</code> 属性</span></h3><table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>path</td>
-<td>地址栏中的URL</td>
-</tr>
-<tr>
-<td>component</td>
-<td>组建</td>
-</tr>
-<tr>
-<td>redirectTo</td>
-<td>重定向地址</td>
-</tr>
-<tr>
-<td>pathMatch</td>
-<td>重定向匹配方式</td>
-</tr>
-</tbody></table>
-<h4 id="pathMatch"><a href="#pathMatch" class="headerlink" title="pathMatch"></a><code>pathMatch</code></h4><p>one of <code>prefix</code> or <code>full</code></p>
+          <h1 id="Nacos-Config-Example"><a href="#Nacos-Config-Example" class="headerlink" title="Nacos Config Example"></a>Nacos Config Example</h1><h2 id="项目说明"><a href="#项目说明" class="headerlink" title="项目说明"></a>项目说明</h2><p>Spring Boot 2.4.0 版本开始默认不启动 bootstrap 容器，这里添加 Spring Cloud bootstrap</p>
+<p>本项目演示如何在 Spring boot &#x3D; 2.6.3 版本使用启用 spring cloud bootstrap 容器情况下如何使用 nacos</p>
+<p><a href="https://github.com/alibaba/Nacos">Nacos</a> 是阿里巴巴开源的一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="如何接入"><a href="#如何接入" class="headerlink" title="如何接入"></a>如何接入</h3><ol>
+<li>首先，修改 pom.xml 文件，引入 Nacos Config Starter</li>
+<li>Spring-cloud</li>
+<li>Spring-Cloud-alibaba</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Spring Cloud --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.cloud.version</span>&gt;</span>2021.0.1<span class="tag">&lt;/<span class="name">spring.cloud.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-boot-dependencies.version</span>&gt;</span>2.6.3<span class="tag">&lt;/<span class="name">spring-boot-dependencies.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-cloud-alibaba-dependencies.version</span>&gt;</span>2021.0.1.0<span class="tag">&lt;/<span class="name">spring-cloud-alibaba-dependencies.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-boot-dependencies.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.cloud.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud-alibaba-dependencies.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-bootstrap<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在应用的 &#x2F;src&#x2F;main&#x2F;resources&#x2F;<em><strong>bootstrap.yml</strong></em> 配置文件中配置 Nacos Config 元数据</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="comment">#  dataId=$&#123;prefix&#125;-$&#123;spring.profiles.active&#125;.$&#123;file-extension&#125;</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nacos-config-boot-example</span></span><br><span class="line">        <span class="attr">prefix:</span> <span class="string">nacos-config-boot-example</span></span><br><span class="line">        <span class="attr">group:</span> <span class="string">DEFAULT_GROUP</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.230</span><span class="string">:8848</span></span><br><span class="line">        <span class="comment"># 目前只支持 properties 和 yaml 类型。</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span></span><br><span class="line">        <span class="attr">refresh-enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">config:</span></span><br><span class="line">    <span class="attr">import:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">optional:nacos:test.yml</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在应用的 &#x2F;src&#x2F;main&#x2F;resources&#x2F;<em><strong>application.yml</strong></em> 配置文件中配置 Spring boot</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8888</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nacos-config-boot-example</span></span><br><span class="line"><span class="attr">management:</span></span><br><span class="line">  <span class="attr">endpoint:</span></span><br><span class="line">    <span class="attr">health:</span></span><br><span class="line">      <span class="attr">show-details:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>在 nacos 添加配置</li>
+</ol>
+<p>在 nacos 管理端添加，配置管理-&gt;配置列表</p>
+<p><img src="/blog/uploads/asdasdfsljklawerljsd.png" alt="img.png"></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">user:</span></span><br><span class="line">    <span class="attr">age:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">maxzhao</span></span><br><span class="line">    <span class="attr">map:</span></span><br><span class="line">      <span class="attr">hobbies:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">art</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">programming</span></span><br><span class="line">      <span class="attr">intro:</span> <span class="string">Hello</span> <span class="string">world</span></span><br><span class="line">    <span class="attr">users:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">dad</span></span><br><span class="line">        <span class="attr">age:</span> <span class="number">20</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mom</span></span><br><span class="line">        <span class="attr">age:</span> <span class="number">18</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=nacos-config-import-example.yaml&amp;group=DEFAULT_GROUP&amp;content=configdata.user.age=1%0Aconfigdata.user.name=james%0Aconfigdata.user.age=17&quot;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>完成上述操作后，应用会从 Nacos Config 中获取相应的配置，并添加在 Spring Environment 的 PropertySources 中</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@RefreshScope</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserConfig userConfig;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;data.user.name:default&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;data.user.age:25&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;userName=&gt;&quot;</span> + userName + <span class="string">&quot;    \nage=&gt;&quot;</span> + age + <span class="string">&quot;        \nuserConfig=&gt;&quot;</span> + userConfig.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RefreshScope</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;data.user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserConfig</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; map;</span><br><span class="line">    <span class="keyword">private</span> List&lt;User&gt; users;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Integer <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(Integer age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getMap</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMap</span><span class="params">(Map&lt;String, Object&gt; map)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.map = map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">getUsers</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> users;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUsers</span><span class="params">(List&lt;User&gt; users)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.users = users;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line">        <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Integer <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> age;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(Integer age)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.age = age;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;User&#123;&quot;</span> +</span><br><span class="line">                    <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                    <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                    <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;UserConfig&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&quot;, map=&quot;</span> + map +</span><br><span class="line">                <span class="string">&quot;, users=&quot;</span> + users +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><p>验证动态刷新</p>
 <ul>
-<li><code>prefix</code>:只要以 <code>path</code> 开头,就会重定向,比如 <code>path:&#39;test&#39;</code>,则 <code>/test/123</code>会被重定向,但是 <code>/test123/</code>不会被重定向.</li>
-<li><code>full</code>: <code>path</code>全部匹配重定向</li>
+<li>访问 <a target="_blank" rel="noopener" href="http://localhost:8888/">http://localhost:8888</a></li>
+<li>curl <a target="_blank" rel="noopener" href="http://localhost:8888/">http://localhost:8888</a></li>
 </ul>
-<h3 id="路由参数"><a href="#路由参数" class="headerlink" title="路由参数"></a>路由参数</h3><p>ActivatedRoute 激活的路由 当前激活的路由的路径和参数可以通过 ActivateRoute 的路由服务来获取。</p>
-<p>常 用属性：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性</th>
-<th align="left">说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">url</td>
-<td align="left">路由路径的 Observable 对象，是一个由路由路径中的各个部分组成的字符串数组.</td>
-</tr>
-<tr>
-<td align="left">data</td>
-<td align="left">一个 Observable，其中包含提供给路由的 data</td>
-</tr>
-<tr>
-<td align="left">对象。也包含由解析守卫（resolve guard）解析而来的值。</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">paramMap</td>
-<td align="left">一个 Observable，其中包含一个由当前路由的必要参数和可选参数组成的 map 对象。用这个 map</td>
-</tr>
-<tr>
-<td align="left">可以获取来自同名参数的单一值或多重值。</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">queryParamMap</td>
-<td align="left">一个 Observable，其中包含一个对所有路由都有效的查询参数组成的 map 对象。 用这个 map 可以获取来自查询参数的单一值或多重值。</td>
-</tr>
-</tbody></table>
+</li>
+</ol>
+<p>再从 nacos 修改配置, 再次访问即可验证动态配置生效</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f034acb2/">https://github.com/maxzhao-it/blog/post/f034acb2/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/d4a65e31/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/d4a65e31/" class="post-title-link" itemprop="url">Nacos监听配置修改</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/Nacos/" itemprop="url" rel="index"><span itemprop="name">Nacos</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SampleRunner</span> <span class="keyword">implements</span> <span class="title class_">ApplicationRunner</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> NacosConfigManager nacosConfigManager;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">(ApplicationArguments args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        nacosConfigManager.getConfigService().addListener(</span><br><span class="line">            <span class="comment">/* 配置的 dataId ,groupI*/</span></span><br><span class="line">                <span class="string">&quot;nacos-config-boot-example.yaml&quot;</span>, <span class="string">&quot;DEFAULT_GROUP&quot;</span>, <span class="keyword">new</span> <span class="title class_">Listener</span>() &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * Callback with latest config data.</span></span><br><span class="line"><span class="comment">                     * <span class="doctag">@param</span> configInfo latest config data for specific dataId in Nacos</span></span><br><span class="line"><span class="comment">                     * server</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiveConfigInfo</span><span class="params">(String configInfo)</span> &#123;</span><br><span class="line">                        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            properties.load(<span class="keyword">new</span> <span class="title class_">StringReader</span>(configInfo));</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                            e.printStackTrace();</span><br><span class="line">                        &#125;</span><br><span class="line">                        System.out.println(<span class="string">&quot;config changed: &quot;</span> + properties);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> Executor <span class="title function_">getExecutor</span><span class="params">()</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/d4a65e31/">https://github.com/maxzhao-it/blog/post/d4a65e31/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/c314b6f9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/c314b6f9/" class="post-title-link" itemprop="url">Maven全局plugin配置传递子pom</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 17:37:16" itemprop="dateModified" datetime="2022-07-28T17:37:16+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/Maven/" itemprop="url" rel="index"><span itemprop="name">Maven</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们现在有一个多模块的 maven 项目，项目中模块一般会有一个顶级的 parent ，这个 pom.xml 可以管理 dependencies、plugins 。</p>
+<p>但是像每一个包中都会用到的 maven-compiler-plugin 、 maven-surefire-plugin 都会考虑全局配置。</p>
+<h2 id="pom-xml-配置"><a href="#pom-xml-配置" class="headerlink" title="pom.xml 配置"></a>pom.xml 配置</h2><p>plugin 中的 inherited 属性，就是配置是否应该将任何配置传播到子POMs。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;maven-compiler-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--是否应该将任何配置传播到子POMs--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">inherited</span>&gt;</span>true<span class="tag">&lt;/<span class="name">inherited</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;maven-surefire-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--是否应该将任何配置传播到子POMs--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">inherited</span>&gt;</span>true<span class="tag">&lt;/<span class="name">inherited</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">forkCount</span>&gt;</span>1<span class="tag">&lt;/<span class="name">forkCount</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">reuseForks</span>&gt;</span>false<span class="tag">&lt;/<span class="name">reuseForks</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/c314b6f9/">https://github.com/maxzhao-it/blog/post/c314b6f9/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/c314b6f9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/c314b6f9/" class="post-title-link" itemprop="url">Maven全局plugin配置传递子pom</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 17:39:49" itemprop="dateModified" datetime="2022-07-28T17:39:49+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/Maven/" itemprop="url" rel="index"><span itemprop="name">Maven</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们现在有一个多模块的 <code>maven</code> 项目，项目中模块一般会有一个顶级的 <code>parent</code> ，我们想通过 <code>parent</code> 中配置全局的 <code>version</code>，但一般在 <code>&lt;parent&gt;</code> 标签中配置 <code>$&#123;&#125;</code> 变量是会报错的 。</p>
+<p>所以这里引入一个 <code>flatten-maven-plugin</code></p>
+<p>比如我们的模块结构为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gt-boot-parent</span><br><span class="line">└── gt-base</span><br></pre></td></tr></table></figure>
+
+<h2 id="pom-xml-文件配置"><a href="#pom-xml-文件配置" class="headerlink" title="pom.xml 文件配置"></a><code>pom.xml</code> 文件配置</h2><h3 id="gt-boot-parent的pom-xml-配置"><a href="#gt-boot-parent的pom-xml-配置" class="headerlink" title="gt-boot-parent的pom.xml 配置"></a><code>gt-boot-parent</code>的<code>pom.xml</code> 配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.gt.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gt-boot-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;revision&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>gt-base<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">revision</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">revision</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flatten-maven-plugin.version</span>&gt;</span>1.2.7<span class="tag">&lt;/<span class="name">flatten-maven-plugin.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.mojo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flatten-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;flatten-maven-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">updatePomFile</span>&gt;</span>true<span class="tag">&lt;/<span class="name">updatePomFile</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">flattenMode</span>&gt;</span>resolveCiFriendliesOnly<span class="tag">&lt;/<span class="name">flattenMode</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>process-resources<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten.clean<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="gt-base的pom-xml-配置"><a href="#gt-base的pom-xml-配置" class="headerlink" title="gt-base的pom.xml 配置"></a><code>gt-base</code>的<code>pom.xml</code> 配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gt-boot-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.gt.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;revision&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>&gt;</span>../pom.xml<span class="tag">&lt;/<span class="name">relativePath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gt-base<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;revision&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="flatten-插件带来的好处"><a href="#flatten-插件带来的好处" class="headerlink" title="flatten 插件带来的好处"></a><code>flatten</code> 插件带来的好处</h2><ul>
+<li>只需要修改 <code>parent</code> 的 <code>revision</code> 即可完成整个多个项目的版本修改.</li>
+<li>如果我们项目有 <code>Nexus</code>，那么我们依赖中的 <code>$&#123;&#125;</code>，都会自动改为实际的版本号，并且 <code>dependence.scope</code> 未填写时，自动填写默认的<code>scope </code> <code>compile</code></li>
+<li>如果我们使用 <code>Intellij IDEA</code>，那我们还会享有 <code>view -&gt; tool windows -&gt; maven</code> 窗口的树形结构展示。</li>
+<li>构建特定元素被删除</li>
+<li>默认情况下会删除开发特定的元素</li>
+<li>它仅包含您的工件用户所需的元素</li>
+</ul>
+<blockquote>
+<p>这里就没有考虑 <code>mvn versions:set -DnewVersion=</code> 命令了，当前命令也可以完成一键修改版本号<br><a target="_blank" rel="noopener" href="https://www.mojohaus.org/flatten-maven-plugin/">官方介绍</a><br><a target="_blank" rel="noopener" href="http://www.mojohaus.org/flatten-maven-plugin/examples/example-simple-project.html">官方案例</a></p>
+</blockquote>
+<h2 id="配置案例"><a href="#配置案例" class="headerlink" title="配置案例"></a>配置案例</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.mojohaus.org/flatten-maven-plugin/examples/example-simple-project.html">官方案例</a></p>
+<p>项目中查看预览效果可以直接对比查询 <code>pom.xml</code> 与同目录下的 .<code>.flattened-pom.xml</code></p>
+</blockquote>
+<h2 id="Flatten可选配置"><a href="#Flatten可选配置" class="headerlink" title="Flatten可选配置"></a><code>Flatten</code>可选配置</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.mojo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flatten-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;flatten-maven-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">updatePomFile</span>&gt;</span>true<span class="tag">&lt;/<span class="name">updatePomFile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flattenMode</span>&gt;</span>resolveCiFriendliesOnly<span class="tag">&lt;/<span class="name">flattenMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--指定生命周期--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>process-resources<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>flatten<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>flatten.clean<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>clean<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="configuration"><a href="#configuration" class="headerlink" title="configuration"></a><code>configuration</code></h3><ul>
+<li><p><code>flattenMode</code> 不做详细解释，一般使用  <code>resolveCiFriendliesOnly</code>，它可以：</p>
+<ol>
+<li><p>自动从<code>parent</code>获取并插入子<code>pom</code>的</p>
 <ul>
-<li>在查询参数中传递数据</li>
+<li><code>Build</code>、<code>CiManagement</code>、<code>Contributors</code>、<code>Dependencies</code>、<code>DependencyManagement</code>、<code>Description</code></li>
+<li><code>Developers</code>、<code>DistributionManagement</code></li>
+<li><code>InceptionYear</code>、<code>IssueManagement</code>、<code>MailingLists</code></li>
+<li><code>Modules</code>、<code>Name</code>、<code>Organization</code> 、<code>PluginManagement</code>、<code>PluginRepositories</code>、<code>Prerequisites</code></li>
+<li><code>Profiles</code>、<code>Properties</code>、<code>Reporting</code>、<code>Repositories</code>、<code>Scm</code>、<code>Url</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/common/b?id=1&amp;name=2 =&gt; ActivatedRoute.queryParamMap</span><br></pre></td></tr></table></figure>
-
-<p>在路由路径中传递数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;path: /common/b/:id&#125; =&gt; /commo/b/1 =&gt; ActivatedRoute.paramMap</span><br></pre></td></tr></table></figure>
-
-<p>在路由配置中传递数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;path: /common/b, component: BComponent, data: &#123;id:“1”, title: “b”&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>示例</p>
-<pre><code>constructor(
-    private activatedRoute: ActivatedRoute
-) &#123; &#125;
-
-ngOnInit() &#123;
-   // 从参数中获取
-    this.activatedRoute.queryParamMap.subscribe(params =&gt; &#123;
-      this.id = params.get(&#39;id&#39;);
-    &#125;);
-
-   // 或
-  // this.activated.snapshot.queryParamMap.get(&#39;id&#39;);
-// 从路径中获取
-this.activatedRoute.paramMap.subscribe(params =&gt; &#123;
-  this.id = params.get(&#39;id&#39;);
-&#125;);
-
-this.activatedRoute.data.subscribe((&#123;id,title&#125;) =&gt; &#123;
-
-&#125;);
-&#125;
+</li>
+<li><p>会自动处理子 <code>pom</code> 的 <code>Parent</code>、<code>Version</code></p>
+</li>
+<li><p>其它选择</p>
+</li>
+<li><p>|               |                           |                                                              |<br>                | ————- | ————————- | ———————————————————— |<br>| <code>flattenMode</code> | <code>minimum</code>                 | 弃用                                                         |<br>| <code>flattenMode</code> | <code>oss</code>                     | 保留 <code>repositories</code>、 <code>pluginRepositories</code> 外的所有<code>pom</code> 元素 |<br>| <code>flattenMode</code> | <code>ossrh</code>                   | Keeps all {@link FlattenDescriptor optional POM elements} that are required for  <a target="_blank" rel="noopener" href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">OSS  Repository-Hosting</a>. |<br>| <code>flattenMode</code> | <code>bom</code>                     | 像 <code>ossrh</code>,会额外保留 <code>dependencyManagement</code>、<code>Properties</code>   |<br>| <code>flattenMode</code> | <code>defaults</code>                | 删除所有 pom 节点，除了 <code>repositories</code>                       |<br>| <code>flattenMode</code> | <code>clean</code>                   | 删除所有 pom 节点                                            |<br>| <code>flattenMode</code> | <code>fatjar</code>                  | 删除所有 pom 节点 和 dependencies                            |<br>| <code>flattenMode</code> | <code>resolveCiFriendliesOnly</code> | 仅解析 <code>revision</code>、<code>sha1</code>、<code>changelist</code>,                     |</p>
+</li>
+</ol>
+</li>
+<li><p><code>updatePomFile</code> 一般设置为 true</p>
+<ul>
+<li><p><code>true or false</code></p>
+</li>
+<li><pre><code class="java"> /**
+     * The flag to indicate if the generated flattened POM shall be set as POM file to the current project. By default
+     * this is only done for projects with packaging other than &lt;code&gt;pom&lt;/code&gt;. You may want to also do this for
+     * &lt;code&gt;pom&lt;/code&gt; packages projects by setting this parameter to &lt;code&gt;true&lt;/code&gt; or you can use
+     * &lt;code&gt;false&lt;/code&gt; in order to only generate the flattened POM but never set it as POM file. If
+     * &lt;code&gt;flattenMode&lt;/code&gt; is set to bom the default value will be &lt;code&gt;true&lt;/code&gt;.
+     */
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- `pomElements`元素的处理</span><br><span class="line"></span><br><span class="line">    - ```xml</span><br><span class="line">        &lt;pomElement&gt;</span><br><span class="line">            &lt;!-- 以 developers 元素举例--&gt;</span><br><span class="line">            &lt;!--ElementHandling:flatten,expand,resolve,interpolate,keep,remove --&gt; </span><br><span class="line">        	&lt;developers&gt;remove&lt;/developers&gt;</span><br><span class="line">        &lt;/pomElement&gt;</span><br></pre></td></tr></table></figure>
 </code></pre>
-<p><code>snapshot</code>: 参数快照，是一个路由信息的静态快照，抓取自组件刚刚创建完毕之后，不会监听路由信息的变化。如果确定一个组件不会从自身路由到自身的话，可以使用参数快照。</p>
-<p><code>subscribe</code>: 参数订阅，相当于一个监听器，会监听路由信息的变化。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/15608/">https://github.com/maxzhao-it/blog/post/15608/</a> </p>
+</li>
+<li><p><code>flatten</code> 平铺，会删除所有 <code>developers</code></p>
+</li>
+<li><p><code>expand</code> 子 <code>pom.xml</code> 继承第一个 <code>parent</code> 的 <code>developers</code></p>
+</li>
+<li><p><code>resolve</code> 子 <code>pom.xml</code> 继承第一个 <code>parent</code> 的 <code>developers</code></p>
+</li>
+<li><p><code>interpolate</code> 插入</p>
+</li>
+<li><p><code>keep</code> 子 <code>pom.xml</code> 不会继承 <code>parent</code> 的 <code>developers</code></p>
+</li>
+<li><p><code>remove</code> 删除所有 <code>developers</code></p>
+</li>
+</ul>
+</li>
+<li><p>下面一般不配置</p>
+</li>
+<li><p><code>embedBuildProfileDependencies</code></p>
+</li>
+<li><p><code>flattenDependencyMode</code></p>
+</li>
+<li><p><code>flattenedPomFilename</code></p>
+</li>
+<li><p><code>localRepository</code></p>
+</li>
+<li><p><code>mojoExecution</code></p>
+</li>
+<li><p><code>outputDirectory</code></p>
+</li>
+<li><p><code>project</code></p>
+</li>
+<li><p><code>session</code></p>
+</li>
+</ul>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/c314b6f9/">https://github.com/maxzhao-it/blog/post/c314b6f9/</a> </p>
 
       
     </div>
@@ -2403,7 +1915,7 @@ this.activatedRoute.data.subscribe((&#123;id,title&#125;) =&gt; &#123;
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4316/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f2d199a5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -2421,7 +1933,7 @@ this.activatedRoute.data.subscribe((&#123;id,title&#125;) =&gt; &#123;
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/4316/" class="post-title-link" itemprop="url">Angular11跨域问题解决</a>
+          <a href="/blog/post/f2d199a5/" class="post-title-link" itemprop="url">SpringBoot一键部署脚本</a>
         </h2>
 
         <div class="post-meta-container">
@@ -2431,7 +1943,7 @@ this.activatedRoute.data.subscribe((&#123;id,title&#125;) =&gt; &#123;
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-07-28 17:39:49" itemprop="dateModified" datetime="2022-07-28T17:39:49+08:00">2022-07-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -2439,15 +1951,15 @@ this.activatedRoute.data.subscribe((&#123;id,title&#125;) =&gt; &#123;
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/" itemprop="url" rel="index"><span itemprop="name">Angular</span></a>
+          <a href="/blog/categories/Java/util/" itemprop="url" rel="index"><span itemprop="name">util</span></a>
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/AntD/" itemprop="url" rel="index"><span itemprop="name">AntD</span></a>
+          <a href="/blog/categories/Java/util/script/" itemprop="url" rel="index"><span itemprop="name">script</span></a>
         </span>
     </span>
 
@@ -2461,110 +1973,15 @@ this.activatedRoute.data.subscribe((&#123;id,title&#125;) =&gt; &#123;
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><code>package.json</code> 修改</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;start&quot;: &quot;ng serve  --host 0.0.0.0 --port 4100 --proxy-config proxy.config.json &quot;,</span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/4316/">https://github.com/maxzhao-it/blog/post/4316/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了快速更新，这里编写一个一件部署 <code>SpringBoot jar</code> 项目的脚本。</p>
+<p>脚本使用简单：直接启动</p>
+<p>脚本功能全面：一键完成程序关闭、程序备份、程序启动</p>
+<p>脚本智能识别：全面的提醒，比如：程序未启动、待备份的程序不存在等</p>
+<h2 id="window-server"><a href="#window-server" class="headerlink" title="window server"></a><code>window server</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">rem 关闭命令输出</span><br><span class="line">@echo off</span><br><span class="line">rem 启动jar名称</span><br><span class="line">set projectName=demo.jar</span><br><span class="line">rem 部署目录  </span><br><span class="line">set projectDir=D:\develop\script\bat-update</span><br><span class="line">rem 备份路径</span><br><span class="line">set backupDir=D:\develop\script\bat-update\backup</span><br><span class="line"></span><br><span class="line">@set &quot;Ymd=%date:~,4%%date:~5,2%%date:~8,2%&quot;</span><br><span class="line">rem 年月日 分秒毫秒   没有小时,0-9点，前部默认不补零</span><br><span class="line">@set &quot;nowtime=%DATE:~0,4%%DATE:~5,2%%DATE:~8,2%%TIME:~3,2%%TIME:~6,2%&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;   shutdown start  &#x27;</span><br><span class="line">for /F %%i in (&#x27;jps -mvVl ^| findstr %projectName%&#x27;)do ( set commitid=%%i)</span><br><span class="line">if &quot;%commitid%&quot;==&quot;&quot; (echo &#x27;    程序没有启动&#x27;) else (</span><br><span class="line">taskkill /F /PID %commitid%</span><br><span class="line">IF ERRORLEVEL 0 (echo &#x27;   shutdown success  &#x27;)</span><br><span class="line">IF ERRORLEVEL 1 (echo &#x27;   shutdown fail  &#x27;</span><br><span class="line">pause</span><br><span class="line">)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">echo &#x27;   backup start   &#x27;</span><br><span class="line"></span><br><span class="line">if exist %projectDir%\%projectName%  (</span><br><span class="line">copy %projectDir%\%projectName% %backupDir%\%projectName%-%nowtime%</span><br><span class="line">IF ERRORLEVEL 0 (ECHO  &#x27;   backup success    &#x27;)</span><br><span class="line">IF ERRORLEVEL 1 (</span><br><span class="line">ECHO  &#x27;   backup fail    &#x27;</span><br><span class="line">pause</span><br><span class="line">)</span><br><span class="line">) else (echo &#x27; 没有需要备份的 %projectDir%\%projectName% &#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">copy %projectName% %projectDir%\%projectName% </span><br><span class="line">echo &#x27;   move to project dir  success  &#x27;</span><br><span class="line"></span><br><span class="line">echo &#x27;   jar start   &#x27;</span><br><span class="line">java -jar   %projectDir%\%projectName%</span><br><span class="line">pause</span><br></pre></td></tr></table></figure>
 
 
 
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4317/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/4317/" class="post-title-link" itemprop="url">Angular11跨域问题解决</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/" itemprop="url" rel="index"><span itemprop="name">Angular</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%89%8D%E7%AB%AF/Angular/AntD/" itemprop="url" rel="index"><span itemprop="name">AntD</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @angular/cli</span><br></pre></td></tr></table></figure>
-
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><h2 id="添加代理"><a href="#添加代理" class="headerlink" title="添加代理"></a>添加代理</h2><h3 id="创建代理文件"><a href="#创建代理文件" class="headerlink" title="创建代理文件"></a>创建代理文件</h3><p><code>proxy.config.json</code></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;/boot&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://127.0.0.1:8888/boot&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;logLevel&quot;</span><span class="punctuation">:</span> <span class="string">&quot;debug&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;secure&quot;</span><span class="punctuation">:</span> <span class="keyword">false</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;changeOrigin&quot;</span><span class="punctuation">:</span> <span class="keyword">true</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;pathRewrite&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;^/boot&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>/boot</code> 代理的路径<br><code>target</code> 目标暮景<br><code>pathRewrite</code> 重写路径<br>比如代理路径为 <code>/boot/login</code>,则重写的路径为 <code>/login</code> ,<br>最终为 <code>http://127.0.0.1:8888/boot/login</code></p>
-</blockquote>
-<h3 id="启动时添加配置文件"><a href="#启动时添加配置文件" class="headerlink" title="启动时添加配置文件"></a>启动时添加配置文件</h3><p>在 <code>package.json</code> 文件中</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng serve --port 4100 --proxy-config proxy.config.json</span><br></pre></td></tr></table></figure>
-
-<p>启动命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn run start</span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/4317/">https://github.com/maxzhao-it/blog/post/4317/</a> </p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f2d199a5/">https://github.com/maxzhao-it/blog/post/f2d199a5/</a> </p>
 
       
     </div>
@@ -2584,7 +2001,7 @@ this.activatedRoute.data.subscribe((&#123;id,title&#125;) =&gt; &#123;
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/15/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/blog/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/34/">34</a><a class="extend next" rel="next" href="/blog/page/17/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/15/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/blog/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/17/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>
