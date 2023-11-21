@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">402</span>
+          <span class="site-state-item-count">400</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -207,194 +207,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/24424/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/24424/" class="post-title-link" itemprop="url">Centos7挂载的ntfs硬盘为只读，并且修改挂载硬盘权限报错</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-07 10:43:31" itemprop="dateModified" datetime="2023-11-07T10:43:31+08:00">2023-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="首先安装了ntfs-3g，如果没有安装是识别不了的"><a href="#首先安装了ntfs-3g，如果没有安装是识别不了的" class="headerlink" title="首先安装了ntfs-3g，如果没有安装是识别不了的"></a>首先安装了ntfs-3g，如果没有安装是识别不了的</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先判断自己有没有安装</span></span><br><span class="line">rpm -qa|grep ntfs</span><br><span class="line"><span class="comment">#安装ntfs全家桶，这里装了全家桶，下面的就不用重复安装了</span></span><br><span class="line">yum install -y ntfs*</span><br></pre></td></tr></table></figure>
-
-<h5 id="报错提示："><a href="#报错提示：" class="headerlink" title="报错提示："></a>报错提示：</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The disk contains an unclean file system (0, 0).</span><br><span class="line">Falling back to read-only mount because the NTFS partition is <span class="keyword">in</span> an unsafe state. Please resume and shutdown Windows fully (no hibernation or fast restarting.)</span><br></pre></td></tr></table></figure>
-<p>我出现这个情况的原因是：双系统使用中，因为window与linux交替使用就会产生一些系统使用残留。</p>
-<h3 id="解决方案就是修复硬盘"><a href="#解决方案就是修复硬盘" class="headerlink" title="解决方案就是修复硬盘"></a>解决方案就是修复硬盘</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先判断自己有没有安装</span></span><br><span class="line">rpm -qa|grep ntfsprogs</span><br><span class="line"><span class="comment"># 如果没有安装则安装，先搜索一下yum源，查不到就换源</span></span><br><span class="line">yum list |grep ntfsprogs</span><br><span class="line">yum install -y ntfsprogs</span><br><span class="line"><span class="comment"># 输入要修复的ntfs硬盘，Xx是自己的盘符</span></span><br><span class="line">ntfsfix /dev/sdXx</span><br><span class="line"><span class="comment"># 重新挂载over</span></span><br><span class="line">umount /dev/sdXx</span><br><span class="line">mount /dev/sdXx /XX/xx</span><br></pre></td></tr></table></figure>
-
-<p><a target="_blank" rel="noopener" href="https://www.linuxidc.com/Linux/2013-07/87537.htm">无法挂载参考链接</a></p>
-<blockquote>
-<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7648613b4a63">Centos7挂载的ntfs硬盘为只读，并且修改挂载硬盘权限报错</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/24424/">https://github.com/maxzhao-it/blog/post/24424/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/29380/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/29380/" class="post-title-link" itemprop="url">安装wps(Centos7)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/Centos/" itemprop="url" rel="index"><span itemprop="name">Centos</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如果，已经安装了Libre Office，则可以忽略下面的WPS安装（Libre Office是我第二次在安装GNOME的时候，直接勾选的选项，然后系统就默认安装了这个办公软件，不过操作上与WPS有点区别）。</p>
-<p>第一步：首先到wps官网(<a target="_blank" rel="noopener" href="http://linux.wps.cn/)%E4%B8%8B%E8%BD%BD">http://linux.wps.cn/)下载</a> wps for linux，选择合适自己的系统位数的rpm包.<br>第二步： 打开终端，cd进入文件下载的路径(我下载的存放路径是&#x2F;home&#x2F;XXX&#x2F;downloads)，进行软件安装<br>第三步：启动wps,在终端输入“wps”进行启动、通过点击(应用程序–&gt;办公–&gt;wps即可打开wps)<br>第四步：安装WPS For Linux后，打开提示系统缺失字体，因为版权问题，打包时候没有打包进来。</p>
-<p>下面提供解决方案，仅供学习参考。<br>(1) 字体库下载地址：（再次声明：仅供学习使用！） <a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1qW2roDY">http://pan.baidu.com/s/1qW2roDY</a>    提取密码：<code>z610</code><br>(2) 如果下载失效，可以到 <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1pKZnad1%EF%BC%8C">https://pan.baidu.com/s/1pKZnad1，</a> 提取密码： <code>y56i </code>路径下载。<br>首先下载字体，解压后将整个wps_symbol_fonts目录拷贝到&#x2F;usr&#x2F;share&#x2F;fonts目录下，然后赋予可读可执行权限。<br>权限设置操作如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/fonts/</span><br><span class="line"><span class="built_in">chmod</span> 755 wps_symbol_fonts</span><br><span class="line"><span class="built_in">cd</span> /usr/share/fonts/wps_symbol_fonts</span><br><span class="line"><span class="built_in">chmod</span> 644 *  </span><br></pre></td></tr></table></figure>
-
-
-
-<p>接着生存缓存配置信息，具体操作如下：<br>至此，完成所有操作，打开WPS则不会再提示缺失字体。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/share/fonts/wps_symbol_fonts</span><br><span class="line">mkfontdir</span><br><span class="line">mkfontscale</span><br><span class="line">fc-cache</span><br></pre></td></tr></table></figure>
-
-
-
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u010445843/article/details/77828552">https://blog.csdn.net/u010445843/article/details/77828552</a> </p>
-<blockquote>
-<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cb1df1223658">安装wps(Centos7)</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/29380/">https://github.com/maxzhao-it/blog/post/29380/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1773,8 +1585,231 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/53124/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/53124/" class="post-title-link" itemprop="url">SpringBoot+Security+JWT进阶：一、自定义认证</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Security/" itemprop="url" rel="index"><span itemprop="name">Security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Security/JWT/" itemprop="url" rel="index"><span itemprop="name">JWT</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Security/JWT/Authentication/" itemprop="url" rel="index"><span itemprop="name">Authentication</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="这里谈谈自定义认证"><a href="#这里谈谈自定义认证" class="headerlink" title="这里谈谈自定义认证"></a>这里谈谈自定义认证</h3><h4 id="不使用自定义认证的-WebSecurityConfig"><a href="#不使用自定义认证的-WebSecurityConfig" class="headerlink" title="不使用自定义认证的 WebSecurityConfig  "></a>不使用自定义认证的 <code>WebSecurityConfig  </code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="meta">@EnableGlobalMethodSecurity(prePostEnabled = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebSecurityConfig</span> <span class="keyword">extends</span> <span class="title class_">WebSecurityConfigurerAdapter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(WebSecurityConfig.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource(name = &quot;userDetailsService&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</span><br><span class="line">    <span class="meta">@Resource(name = &quot;passwordEncoder&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"><span class="comment">// 略</span></span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> auth</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        auth</span><br><span class="line">                .userDetailsService(userDetailsService)</span><br><span class="line">                .passwordEncoder(passwordEncoder)</span><br><span class="line">        ;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="不使用自定义认证的验证类-AbstractUserDetailsAuthenticationProvider"><a href="#不使用自定义认证的验证类-AbstractUserDetailsAuthenticationProvider" class="headerlink" title="不使用自定义认证的验证类 AbstractUserDetailsAuthenticationProvider"></a>不使用自定义认证的验证类 <code>AbstractUserDetailsAuthenticationProvider</code></h4><p>这里只看 <code>authenticate</code>验证的方法，根据自己的理解，我写上了注释，<code>////</code> 为重点强调</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Authentication <span class="title function_">authenticate</span><span class="params">(Authentication authentication)</span></span><br><span class="line">			<span class="keyword">throws</span> AuthenticationException &#123;</span><br><span class="line">    <span class="comment">// 对 supports 方法的二次校验，为空或不等抛出错误</span></span><br><span class="line">		Assert.isInstanceOf(UsernamePasswordAuthenticationToken.class, authentication,</span><br><span class="line">				() -&gt; messages.getMessage(</span><br><span class="line">						<span class="string">&quot;AbstractUserDetailsAuthenticationProvider.onlySupports&quot;</span>,</span><br><span class="line">						<span class="string">&quot;Only UsernamePasswordAuthenticationToken is supported&quot;</span>));</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Determine username，authentication.getPrincipal()获取的就是UserDetail</span></span><br><span class="line">		<span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> (authentication.getPrincipal() == <span class="literal">null</span>) ? <span class="string">&quot;NONE_PROVIDED&quot;</span></span><br><span class="line">				: authentication.getName();</span><br><span class="line">		<span class="comment">// 默认情况下从缓存中(UserCache接口实现)取出用户信息</span></span><br><span class="line">		<span class="type">boolean</span> <span class="variable">cacheWasUsed</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">		<span class="type">UserDetails</span> <span class="variable">user</span> <span class="operator">=</span> <span class="built_in">this</span>.userCache.getUserFromCache(username);</span><br><span class="line">		<span class="keyword">if</span> (user == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果从缓存中取不到用户，则设置cacheWasUsed 为false，供后面使用</span></span><br><span class="line">			cacheWasUsed = <span class="literal">false</span>;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// retrieveUser是抽象方法，通过子类来实现获取用户的信息,以UserDetails接口形式返回，默认的子类为 DaoAuthenticationProvider</span></span><br><span class="line">				user = retrieveUser(username,</span><br><span class="line">						(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">			&#125;</span><br><span class="line">            <span class="comment">//// 这就是为什么 UsernameNotFoundException 抛出信息却获取不到的原因</span></span><br><span class="line">			<span class="keyword">catch</span> (UsernameNotFoundException notFound) &#123;</span><br><span class="line">				logger.debug(<span class="string">&quot;User &#x27;&quot;</span> + username + <span class="string">&quot;&#x27; not found&quot;</span>);</span><br><span class="line">				<span class="keyword">if</span> (hideUserNotFoundExceptions) &#123;</span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BadCredentialsException</span>(messages.getMessage(<span class="string">&quot;AbstractUserDetailsAuthenticationProvider.badCredentials&quot;</span>,<span class="string">&quot;Bad credentials&quot;</span>));</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">throw</span> notFound;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			Assert.notNull(user,</span><br><span class="line">					<span class="string">&quot;retrieveUser returned null - a violation of the interface contract&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span> &#123;<span class="comment">// 验证帐号是否锁定\是否禁用\帐号是否到期</span></span><br><span class="line">			preAuthenticationChecks.check(user);</span><br><span class="line">            <span class="comment">// 进一步验证凭证 和 密码</span></span><br><span class="line">			additionalAuthenticationChecks(user,</span><br><span class="line">					(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (AuthenticationException exception) &#123;</span><br><span class="line">			<span class="keyword">if</span> (cacheWasUsed) &#123;<span class="comment">// 如果是内存用户，则再次获取并验证</span></span><br><span class="line">				<span class="comment">// There was a problem, so try again after checking</span></span><br><span class="line">				<span class="comment">// we&#x27;re using latest data (i.e. not from the cache)</span></span><br><span class="line">				cacheWasUsed = <span class="literal">false</span>;</span><br><span class="line">				user = retrieveUser(username,</span><br><span class="line">						(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">				preAuthenticationChecks.check(user);</span><br><span class="line">				additionalAuthenticationChecks(user,</span><br><span class="line">						(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">throw</span> exception;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//验证凭证是否已过期</span></span><br><span class="line">		postAuthenticationChecks.check(userDetail);</span><br><span class="line">    <span class="comment">//如果没有缓存则进行缓存,此处的 userCache是 由 NullUserCache 类实现的，名如其义，该类的 putUserInCache 没做任何事</span></span><br><span class="line">        <span class="comment">//也可以使用缓存 比如 EhCacheBasedUserCache  或者 SpringCacheBasedUserCache</span></span><br><span class="line">		<span class="keyword">if</span> (!cacheWasUsed) &#123;</span><br><span class="line">			<span class="built_in">this</span>.userCache.putUserInCache(user);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//以下代码主要是把用户的信息和之前用户提交的认证信息重新组合成一个 authentication 实例返回，返回类是 UsernamePasswordAuthenticationToken 类的实例</span></span><br><span class="line">		<span class="type">Object</span> <span class="variable">principalToReturn</span> <span class="operator">=</span> user;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (forcePrincipalAsString) &#123;</span><br><span class="line">			principalToReturn = user.getUsername();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> createSuccessAuthentication(principalToReturn, authentication, user);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">Title &quot;Authentication类图&quot;</span><br><span class="line">interface Principal</span><br><span class="line">interface Authentication</span><br><span class="line">interface AuthenticationManager</span><br><span class="line">interface AuthenticationProvider</span><br><span class="line">abstract class AbstractUserDetailsAuthenticationProvider</span><br><span class="line">class ProviderManager</span><br><span class="line">class DaoAuthenticationProvider</span><br><span class="line">interface UserDetailsService</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Principal &lt;|-- Authentication</span><br><span class="line">Authentication &lt;.. AuthenticationManager</span><br><span class="line">AuthenticationManager &lt;|-- ProviderManager</span><br><span class="line">ProviderManager  o--&gt; AuthenticationProvider</span><br><span class="line">AuthenticationProvider &lt;|.. AbstractUserDetailsAuthenticationProvider</span><br><span class="line">AbstractUserDetailsAuthenticationProvider &lt;|-- DaoAuthenticationProvider</span><br><span class="line">UserDetailsService &lt;.. AbstractUserDetailsAuthenticationProvider</span><br><span class="line"></span><br><span class="line">interface AuthenticationManager&#123;</span><br><span class="line"># Authentication authenticate(Authentication authentication)</span><br><span class="line">			throws AuthenticationException;</span><br><span class="line">&#125;</span><br><span class="line">abstract class AbstractUserDetailsAuthenticationProvider&#123;</span><br><span class="line">+ public Authentication authenticate(Authentication authentication)</span><br><span class="line">			throws AuthenticationException;</span><br><span class="line">+public boolean supports(Class&lt;?&gt; authentication);</span><br><span class="line">&#125;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="使用自定义认证的-WebSecurityConfig"><a href="#使用自定义认证的-WebSecurityConfig" class="headerlink" title="使用自定义认证的 WebSecurityConfig "></a>使用自定义认证的 <code>WebSecurityConfig </code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="meta">@EnableGlobalMethodSecurity(prePostEnabled = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebSecurityConfig</span> <span class="keyword">extends</span> <span class="title class_">WebSecurityConfigurerAdapter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(WebSecurityConfig.class);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</span><br><span class="line">    <span class="meta">@Resource(name = &quot;authenticationProvider&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> AuthenticationProvider authenticationProvider;</span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"><span class="comment">// 略</span></span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> auth</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        auth</span><br><span class="line">                .authenticationProvider(authenticationProvider)</span><br><span class="line">        ;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义认证类-AuthenticationProviderImpl"><a href="#自定义认证类-AuthenticationProviderImpl" class="headerlink" title="自定义认证类 AuthenticationProviderImpl"></a>自定义认证类 <code>AuthenticationProviderImpl</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * AuthenticationProviderImpl</span></span><br><span class="line"><span class="comment"> * 自定义认证服务</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-05-23 15:43</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service(&quot;authenticationProvider&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthenticationProviderImpl</span> <span class="keyword">implements</span> <span class="title class_">AuthenticationProvider</span> &#123;</span><br><span class="line">    <span class="meta">@Resource(name = &quot;userDetailsService&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource(name = &quot;passwordEncoder&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> authenticate</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> AuthenticationException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Authentication <span class="title function_">authenticate</span><span class="params">(Authentication authenticate)</span> <span class="keyword">throws</span> AuthenticationException &#123;</span><br><span class="line">        <span class="type">UsernamePasswordAuthenticationToken</span> <span class="variable">token</span></span><br><span class="line">                <span class="operator">=</span> (UsernamePasswordAuthenticationToken) authenticate;</span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> token.getName();</span><br><span class="line">        <span class="type">UserDetails</span> <span class="variable">userDetails</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (username != <span class="literal">null</span>) &#123;</span><br><span class="line">            userDetails = userDetailsService.loadUserByUsername(username);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (userDetails == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UsernameNotFoundException</span>(<span class="string">&quot;用户名/密码无效&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isEnabled()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;jinyong用户已被禁用&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">DisabledException</span>(<span class="string">&quot;用户已被禁用&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isAccountNonExpired()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;guoqi账号已过期&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AccountExpiredException</span>(<span class="string">&quot;账号已过期&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isAccountNonLocked()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;suoding账号已被锁定&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">LockedException</span>(<span class="string">&quot;账号已被锁定&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isCredentialsNonExpired()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;pingzheng凭证已过期&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CredentialsExpiredException</span>(<span class="string">&quot;凭证已过期&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> userDetails.getPassword();</span><br><span class="line">        <span class="comment">//与authentication里面的credentials相比较 ; todo 加密 token 中的密码</span></span><br><span class="line">        <span class="keyword">if</span> (!password.equals(token.getCredentials())) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BadCredentialsException</span>(<span class="string">&quot;Invalid username/password&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//授权</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">UsernamePasswordAuthenticationToken</span>(userDetails, password, userDetails.getAuthorities());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">supports</span><span class="params">(Class&lt;?&gt; authentication)</span> &#123;</span><br><span class="line">        <span class="comment">//返回true后才会执行上面的authenticate方法,这步能确保authentication能正确转换类型</span></span><br><span class="line">        <span class="keyword">return</span> UsernamePasswordAuthenticationToken.class.equals(authentication);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>本文地址： <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a></p>
+<p>推荐</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e4371d74248">SpringBoot+Security+JWT基础</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64f840e0f818">SpringBoot+Security+JWT进阶：一、自定义认证</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0dc9c452b40e">SpringBoot+Security+JWT进阶：二、自定义认证实践</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/53124/">https://github.com/maxzhao-it/blog/post/53124/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/64981/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/64981/" class="post-title-link" itemprop="url">SpringBoot的Security中AuthenticationException不能抛出 UsernameNotFoundException问题解决</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Security/" itemprop="url" rel="index"><span itemprop="name">Security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Security/JWT/" itemprop="url" rel="index"><span itemprop="name">JWT</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Security/JWT/Authentication/" itemprop="url" rel="index"><span itemprop="name">Authentication</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>问题：UsernameNotFoundException 不能抛出问题不能获取 问题解决<br>DaoAuthenticationProvider类的retrieveUser 中会重写输出的异常<br>在这个方法会捕获 UsernameNotFoundException 异常，会执行到父抽象类 AbstractUserDetailsAuthenticationProvider的authenticate方法</p>
+<ol>
+<li>解决方案一：自定义异常</li>
+<li>解决方案二：设置 AbstractUserDetailsAuthenticationProvider 的 hideUserNotFoundExceptions 属性为 true</li>
+<li>解决方案三：直接抛出 BadCredentialsException (最终返回的错误,一般为 message ,抛出的错误只为开发识别)</li>
+<li>解决方案四：自定义认证，实现 AuthenticationProvider 接口</li>
+</ol>
+<h3 id="这里谈谈自定义认证"><a href="#这里谈谈自定义认证" class="headerlink" title="这里谈谈自定义认证"></a>这里谈谈自定义认证</h3><h4 id="不使用自定义认证的-WebSecurityConfig"><a href="#不使用自定义认证的-WebSecurityConfig" class="headerlink" title="不使用自定义认证的 WebSecurityConfig  "></a>不使用自定义认证的 <code>WebSecurityConfig  </code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="meta">@EnableGlobalMethodSecurity(prePostEnabled = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebSecurityConfig</span> <span class="keyword">extends</span> <span class="title class_">WebSecurityConfigurerAdapter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(WebSecurityConfig.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource(name = &quot;userDetailsService&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</span><br><span class="line">    <span class="meta">@Resource(name = &quot;passwordEncoder&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"><span class="comment">// 略</span></span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> auth</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        auth</span><br><span class="line">                .userDetailsService(userDetailsService)</span><br><span class="line">                .passwordEncoder(passwordEncoder)</span><br><span class="line">        ;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="不使用自定义认证的验证类-AbstractUserDetailsAuthenticationProvider"><a href="#不使用自定义认证的验证类-AbstractUserDetailsAuthenticationProvider" class="headerlink" title="不使用自定义认证的验证类 AbstractUserDetailsAuthenticationProvider"></a>不使用自定义认证的验证类 <code>AbstractUserDetailsAuthenticationProvider</code></h4><p>这里只看 <code>authenticate</code>验证的方法，根据自己的理解，我写上了注释，<code>////</code> 为重点强调</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Authentication <span class="title function_">authenticate</span><span class="params">(Authentication authentication)</span></span><br><span class="line">			<span class="keyword">throws</span> AuthenticationException &#123;</span><br><span class="line">    <span class="comment">// 对 supports 方法的二次校验，为空或不等抛出错误</span></span><br><span class="line">		Assert.isInstanceOf(UsernamePasswordAuthenticationToken.class, authentication,</span><br><span class="line">				() -&gt; messages.getMessage(</span><br><span class="line">						<span class="string">&quot;AbstractUserDetailsAuthenticationProvider.onlySupports&quot;</span>,</span><br><span class="line">						<span class="string">&quot;Only UsernamePasswordAuthenticationToken is supported&quot;</span>));</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Determine username，authentication.getPrincipal()获取的就是UserDetail</span></span><br><span class="line">		<span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> (authentication.getPrincipal() == <span class="literal">null</span>) ? <span class="string">&quot;NONE_PROVIDED&quot;</span></span><br><span class="line">				: authentication.getName();</span><br><span class="line">		<span class="comment">// 默认情况下从缓存中(UserCache接口实现)取出用户信息</span></span><br><span class="line">		<span class="type">boolean</span> <span class="variable">cacheWasUsed</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">		<span class="type">UserDetails</span> <span class="variable">user</span> <span class="operator">=</span> <span class="built_in">this</span>.userCache.getUserFromCache(username);</span><br><span class="line">		<span class="keyword">if</span> (user == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果从缓存中取不到用户，则设置cacheWasUsed 为false，供后面使用</span></span><br><span class="line">			cacheWasUsed = <span class="literal">false</span>;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// retrieveUser是抽象方法，通过子类来实现获取用户的信息,以UserDetails接口形式返回，默认的子类为 DaoAuthenticationProvider</span></span><br><span class="line">				user = retrieveUser(username,</span><br><span class="line">						(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">			&#125;</span><br><span class="line">            <span class="comment">//// 这就是为什么 UsernameNotFoundException 抛出信息却获取不到的原因</span></span><br><span class="line">			<span class="keyword">catch</span> (UsernameNotFoundException notFound) &#123;</span><br><span class="line">				logger.debug(<span class="string">&quot;User &#x27;&quot;</span> + username + <span class="string">&quot;&#x27; not found&quot;</span>);</span><br><span class="line">				<span class="keyword">if</span> (hideUserNotFoundExceptions) &#123;</span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BadCredentialsException</span>(messages.getMessage(<span class="string">&quot;AbstractUserDetailsAuthenticationProvider.badCredentials&quot;</span>,<span class="string">&quot;Bad credentials&quot;</span>));</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">throw</span> notFound;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			Assert.notNull(user,</span><br><span class="line">					<span class="string">&quot;retrieveUser returned null - a violation of the interface contract&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span> &#123;<span class="comment">// 验证帐号是否锁定\是否禁用\帐号是否到期</span></span><br><span class="line">			preAuthenticationChecks.check(user);</span><br><span class="line">            <span class="comment">// 进一步验证凭证 和 密码</span></span><br><span class="line">			additionalAuthenticationChecks(user,</span><br><span class="line">					(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (AuthenticationException exception) &#123;</span><br><span class="line">			<span class="keyword">if</span> (cacheWasUsed) &#123;<span class="comment">// 如果是内存用户，则再次获取并验证</span></span><br><span class="line">				<span class="comment">// There was a problem, so try again after checking</span></span><br><span class="line">				<span class="comment">// we&#x27;re using latest data (i.e. not from the cache)</span></span><br><span class="line">				cacheWasUsed = <span class="literal">false</span>;</span><br><span class="line">				user = retrieveUser(username,</span><br><span class="line">						(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">				preAuthenticationChecks.check(user);</span><br><span class="line">				additionalAuthenticationChecks(user,</span><br><span class="line">						(UsernamePasswordAuthenticationToken) authentication);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">throw</span> exception;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//验证凭证是否已过期</span></span><br><span class="line">		postAuth<span class="comment">//如果没有缓存则进行缓存,此处的 userCache是 由 NullUserCache 类实现的，名如其义，该类的 putUserInCache 没做任何事</span></span><br><span class="line">        <span class="comment">//也可以使用缓存 比如 EhCacheBasedUserCache  或者 SpringCacheBasedUserCache</span></span><br><span class="line">		<span class="keyword">if</span> (!cacheWasUsed) &#123;</span><br><span class="line">			<span class="built_in">this</span>.userCache.putUserInCache(user);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//以下代码主要是把用户的信息和之前用户提交的认证信息重新组合成一个 authentication 实例返回，返回类是 UsernamePasswordAuthenticationToken 类的实例</span></span><br><span class="line">		<span class="type">Object</span> <span class="variable">principalToReturn</span> <span class="operator">=</span> user;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (forcePrincipalAsString) &#123;</span><br><span class="line">			principalToReturn = user.getUsername();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> createSuccessAuthentication(principalToReturn, authentication, user);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">Title &quot;Authentication类图&quot;</span><br><span class="line">interface Principal</span><br><span class="line">interface Authentication</span><br><span class="line">interface AuthenticationManager</span><br><span class="line">interface AuthenticationProvider</span><br><span class="line">abstract class AbstractUserDetailsAuthenticationProvider</span><br><span class="line">class ProviderManager</span><br><span class="line">class DaoAuthenticationProvider</span><br><span class="line">interface UserDetailsService</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Principal &lt;|-- Authentication</span><br><span class="line">Authentication &lt;.. AuthenticationManager</span><br><span class="line">AuthenticationManager &lt;|-- ProviderManager</span><br><span class="line">ProviderManager  o--&gt; AuthenticationProvider</span><br><span class="line">AuthenticationProvider &lt;|.. AbstractUserDetailsAuthenticationProvider</span><br><span class="line">AbstractUserDetailsAuthenticationProvider &lt;|-- DaoAuthenticationProvider</span><br><span class="line">UserDetailsService &lt;.. AbstractUserDetailsAuthenticationProvider</span><br><span class="line"></span><br><span class="line">interface AuthenticationManager&#123;</span><br><span class="line"># Authentication authenticate(Authentication authentication)</span><br><span class="line">			throws AuthenticationException;</span><br><span class="line">&#125;</span><br><span class="line">abstract class AbstractUserDetailsAuthenticationProvider&#123;</span><br><span class="line">+ public Authentication authenticate(Authentication authentication)</span><br><span class="line">			throws AuthenticationException;</span><br><span class="line">+public boolean supports(Class&lt;?&gt; authentication);</span><br><span class="line">&#125;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="使用自定义认证的-WebSecurityConfig"><a href="#使用自定义认证的-WebSecurityConfig" class="headerlink" title="使用自定义认证的 WebSecurityConfig "></a>使用自定义认证的 <code>WebSecurityConfig </code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="meta">@EnableGlobalMethodSecurity(prePostEnabled = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebSecurityConfig</span> <span class="keyword">extends</span> <span class="title class_">WebSecurityConfigurerAdapter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(WebSecurityConfig.class);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</span><br><span class="line">    <span class="meta">@Resource(name = &quot;authenticationProvider&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> AuthenticationProvider authenticationProvider;</span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"><span class="comment">// 略</span></span><br><span class="line"><span class="comment">//**********************</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> auth</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        auth</span><br><span class="line">                .authenticationProvider(authenticationProvider)</span><br><span class="line">        ;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义认证类-AuthenticationProviderImpl"><a href="#自定义认证类-AuthenticationProviderImpl" class="headerlink" title="自定义认证类 AuthenticationProviderImpl"></a>自定义认证类 <code>AuthenticationProviderImpl</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * AuthenticationProviderImpl</span></span><br><span class="line"><span class="comment"> * 自定义认证服务</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-05-23 15:43</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service(&quot;authenticationProvider&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthenticationProviderImpl</span> <span class="keyword">implements</span> <span class="title class_">AuthenticationProvider</span> &#123;</span><br><span class="line">    <span class="meta">@Resource(name = &quot;userDetailsService&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource(name = &quot;passwordEncoder&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> authenticate</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> AuthenticationException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Authentication <span class="title function_">authenticate</span><span class="params">(Authentication authenticate)</span> <span class="keyword">throws</span> AuthenticationException &#123;</span><br><span class="line">        <span class="type">UsernamePasswordAuthenticationToken</span> <span class="variable">token</span></span><br><span class="line">                <span class="operator">=</span> (UsernamePasswordAuthenticationToken) authenticate;</span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> token.getName();</span><br><span class="line">        <span class="type">UserDetails</span> <span class="variable">userDetails</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (username != <span class="literal">null</span>) &#123;</span><br><span class="line">            userDetails = userDetailsService.loadUserByUsername(username);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (userDetails == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UsernameNotFoundException</span>(<span class="string">&quot;用户名/密码无效&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isEnabled()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;jinyong用户已被禁用&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">DisabledException</span>(<span class="string">&quot;用户已被禁用&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isAccountNonExpired()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;guoqi账号已过期&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AccountExpiredException</span>(<span class="string">&quot;账号已过期&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isAccountNonLocked()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;suoding账号已被锁定&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">LockedException</span>(<span class="string">&quot;账号已被锁定&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!userDetails.isCredentialsNonExpired()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;pingzheng凭证已过期&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CredentialsExpiredException</span>(<span class="string">&quot;凭证已过期&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> userDetails.getPassword();</span><br><span class="line">        <span class="comment">//与authentication里面的credentials相比较 ; todo 加密 token 中的密码</span></span><br><span class="line">        <span class="keyword">if</span> (!password.equals(token.getCredentials())) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BadCredentialsException</span>(<span class="string">&quot;Invalid username/password&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//授权</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">UsernamePasswordAuthenticationToken</span>(userDetails, password, userDetails.getAuthorities());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">supports</span><span class="params">(Class&lt;?&gt; authentication)</span> &#123;</span><br><span class="line">        <span class="comment">//返回true后才会执行上面的authenticate方法,这步能确保authentication能正确转换类型</span></span><br><span class="line">        <span class="keyword">return</span> UsernamePasswordAuthenticationToken.class.equals(authentication);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/64981/">https://github.com/maxzhao-it/blog/post/64981/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/33/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/blog/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/35/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/33/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/blog/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/35/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>

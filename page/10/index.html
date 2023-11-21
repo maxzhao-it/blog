@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">402</span>
+          <span class="site-state-item-count">400</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -207,246 +207,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/b66e8509/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/b66e8509/" class="post-title-link" itemprop="url">Skywalking部署</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Skywalking/" itemprop="url" rel="index"><span itemprop="name">Skywalking</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一个对Java友好的微服务链路监控工具。</p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a target="_blank" rel="noopener" href="https://dlcdn.apache.org/skywalking/9.2.0/apache-skywalking-apm-9.2.0.tar.gz">apache-skywalking-apm-9.2.0.tar.gz</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/tools </span><br><span class="line"><span class="built_in">cd</span> ~/tools</span><br><span class="line">wget https://dlcdn.apache.org/skywalking/9.2.0/apache-skywalking-apm-9.2.0.tar.gz --no-check-certificate</span><br><span class="line">tar -zxf apache-skywalking-apm-9.2.0.tar.gz -C ../</span><br><span class="line"><span class="built_in">cd</span> ../</span><br><span class="line"><span class="built_in">mv</span> apache-skywalking-apm-bin skywalking</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><a target="_blank" rel="noopener" href="https://skywalking.apache.org/docs/main/next/en/setup/backend/backend-setup/">直接参考官方文档</a></p>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><h4 id="服务配置"><a href="#服务配置" class="headerlink" title="服务配置"></a>服务配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/skywalking/config/application.yml</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">core:</span></span><br><span class="line">  <span class="attr">selector:</span> <span class="string">$&#123;SW_CORE:default&#125;</span></span><br><span class="line">  <span class="attr">default:</span></span><br><span class="line">    <span class="comment"># Mixed: Receive agent data, Level 1 aggregate, Level 2 aggregate</span></span><br><span class="line">    <span class="comment"># Receiver: Receive agent data, Level 1 aggregate</span></span><br><span class="line">    <span class="comment"># Aggregator: Level 2 aggregate</span></span><br><span class="line">    <span class="attr">role:</span> <span class="string">$&#123;SW_CORE_ROLE:Mixed&#125;</span> <span class="comment"># Mixed/Receiver/Aggregator</span></span><br><span class="line">    <span class="attr">restHost:</span> <span class="string">$&#123;SW_CORE_REST_HOST:0.0.0.0&#125;</span></span><br><span class="line">    <span class="comment"># 修改非标端口</span></span><br><span class="line">    <span class="attr">restPort:</span> <span class="string">$&#123;SW_CORE_REST_PORT:52800&#125;</span></span><br><span class="line">    <span class="attr">restContextPath:</span> <span class="string">$&#123;SW_CORE_REST_CONTEXT_PATH:/&#125;</span></span><br><span class="line">    <span class="attr">restMaxThreads:</span> <span class="string">$&#123;SW_CORE_REST_MAX_THREADS:200&#125;</span></span><br><span class="line">    <span class="attr">restIdleTimeOut:</span> <span class="string">$&#123;SW_CORE_REST_IDLE_TIMEOUT:30000&#125;</span></span><br><span class="line">    <span class="attr">restAcceptQueueSize:</span> <span class="string">$&#123;SW_CORE_REST_QUEUE_SIZE:0&#125;</span></span><br><span class="line">    <span class="attr">httpMaxRequestHeaderSize:</span> <span class="string">$&#123;SW_CORE_HTTP_MAX_REQUEST_HEADER_SIZE:8192&#125;</span></span><br><span class="line">    <span class="attr">gRPCHost:</span> <span class="string">$&#123;SW_CORE_GRPC_HOST:0.0.0.0&#125;</span></span><br><span class="line">    <span class="attr">gRPCPort:</span> <span class="string">$&#123;SW_CORE_GRPC_PORT:51800&#125;</span></span><br><span class="line"><span class="comment">#**************</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">  <span class="attr">selector:</span> <span class="string">$&#123;SW_STORAGE:mysql&#125;</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">  <span class="comment"># 下面改为自己的数据库配置</span></span><br><span class="line">  <span class="attr">properties:</span> </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><strong>注意：</strong></p>
-<p>需要自己添加lib依赖到  <code>~/skywalking/oap-libs/</code> 目录下。</p>
-<p>比如：</p>
-<ol>
-<li><code>MySQL</code>：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.30/mysql-connector-java-8.0.30.jar"><code>mysql-connector-java-8.0.30.jar</code></a></li>
-<li><code>ES</code>：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/elasticsearch/client/transport/7.17.6/transport-7.17.6.jar"><code>transport-7.17.6.jar</code></a></li>
-</ol>
-</blockquote>
-<h4 id="web服务配置"><a href="#web服务配置" class="headerlink" title="web服务配置"></a><code>web</code>服务配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/skywalking/webapp/webapp.yml</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="comment">#修改非标端口</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">52801</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">oap-route</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://oap-service</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/graphql/**</span></span><br><span class="line">    <span class="attr">discovery:</span></span><br><span class="line">      <span class="attr">client:</span></span><br><span class="line">        <span class="attr">simple:</span></span><br><span class="line">          <span class="attr">instances:</span></span><br><span class="line">            <span class="attr">oap-service:</span></span><br><span class="line">            <span class="comment">#修改非标端口</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">uri:</span> <span class="string">http://127.0.0.1:52800</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h3><p>默认 30 天清理，一个文件 <code>100MB</code>，无需更改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/skywalking/config/log4j2.yml</span><br></pre></td></tr></table></figure>
-
-<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>全部启动服务与<code>web</code></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/skywalking/bin/startup.sh</span><br></pre></td></tr></table></figure>
-
-<p>分开启动</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/skywalking/bin/webappService.sh</span><br><span class="line">~/skywalking/bin/oapService.sh</span><br></pre></td></tr></table></figure>
-
-<h2 id="启动日志"><a href="#启动日志" class="headerlink" title="启动日志"></a>启动日志</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/skywalking/logs/oap.log</span></span><br><span class="line"><span class="comment"># ~/skywalking/logs/skywalking-oap-server.log  </span></span><br><span class="line"><span class="comment"># ~/skywalking/logs/webapp-console.log</span></span><br><span class="line"><span class="built_in">tail</span> -f ~/skywalking/logs/*.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Java-agent"><a href="#Java-agent" class="headerlink" title="Java-agent"></a>Java-agent</h1><p><a target="_blank" rel="noopener" href="https://skywalking.apache.org/docs/skywalking-java/next/en/setup/service-agent/java-agent/readme/">官网文档</a></p>
-<h2 id="下载-1"><a href="#下载-1" class="headerlink" title="下载"></a>下载</h2><p><a target="_blank" rel="noopener" href="https://dlcdn.apache.org/skywalking/java-agent/8.12.0/apache-skywalking-java-agent-8.12.0.tgz">apache-skywalking-java-agent-8.12.0.tgz</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/tools &amp;&amp; <span class="built_in">cd</span> ~/tools</span><br><span class="line">wget https://dlcdn.apache.org/skywalking/java-agent/8.12.0/apache-skywalking-java-agent-8.12.0.tgz --no-check-certificate</span><br><span class="line">tar -xf apache-skywalking-java-agent-8.12.0.tgz -C ../</span><br><span class="line"><span class="built_in">cd</span> ../</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/skywalking-agent/config/agent.config</span><br></pre></td></tr></table></figure>
-
-<p>修改</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The group name is optional only.</span></span><br><span class="line"><span class="attr">agent.service_name</span>=<span class="string">$&#123;SW_AGENT_NAME:maxzhao_group::auth&#125;</span></span><br><span class="line"><span class="comment"># The agent namespace</span></span><br><span class="line"><span class="attr">agent.namespace</span>=<span class="string">$&#123;SW_AGENT_NAMESPACE:maxzhao&#125;</span></span><br><span class="line"><span class="comment"># The agent cluster</span></span><br><span class="line"><span class="attr">agent.cluster</span>=<span class="string">$&#123;SW_AGENT_CLUSTER:maxzhao_cluster&#125;</span></span><br><span class="line"><span class="comment"># 真实的skywalking 地址</span></span><br><span class="line"><span class="attr">collector.backend_service</span>=<span class="string">127.0.0.1:51800</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="启动-1"><a href="#启动-1" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:~/skywalking-agent/skywalking-agent.jar -jar yourApp.jar</span><br></pre></td></tr></table></figure>
-
-<h2 id="其它参考"><a href="#其它参考" class="headerlink" title="其它参考"></a>其它参考</h2><h4 id="监控指标说明："><a href="#监控指标说明：" class="headerlink" title="监控指标说明："></a>监控指标说明：</h4><ul>
-<li>Service Apdex：Apdex是衡量一个服务在网格中的健康程度的指标。Apdex规范推荐了以下Apdex质量评级，将Apdex得分分为优秀（0.94 - 1.00）、良好（0.85 - 0.93）、一般（0.70 - 0.84）、差（0.50 - 0.69）和不可接受（0.00 - 0.49）。</li>
-<li>Success Rate：服务响应成功比率</li>
-<li>Service Load (calls &#x2F; min)：每分钟并发数</li>
-<li>Service Avg Response Time (ms)：应用平均响应时间</li>
-<li>Service Response Time Percentile (ms)：应用在特定毫秒内的响应请求的百分比。</li>
-<li>Message Queue Consuming Count：消息队列消费数量</li>
-<li>Message Queue Avg Consuming Latency (ms)：消息队列平均消费数量每毫秒</li>
-<li>Service Instances Load (calls &#x2F; min)：每个应用实例分流的每分钟并发数</li>
-<li>Slow Service Instance (ms)：慢响应实例排行</li>
-<li>Service Instance Success Rate (%)：应用实例的成功百分比</li>
-<li>Endpoint Load in Current Service (calls &#x2F; min)：当前应用端点（接口）每分钟请求次数</li>
-<li>Slow Endpoints in Current Service (ms)：当前应用端点（接口）慢响应的排行</li>
-<li>Success Rate in Current Service (%)：当前应用端点（接口）响应的成功率</li>
-</ul>
-<h4 id="监控大项："><a href="#监控大项：" class="headerlink" title="监控大项："></a>监控大项：</h4><ul>
-<li>Trace：可以跟踪至JDBC层，可以查看具体的sql执行语句以及耗时，还有应用内抛出的应用信息。</li>
-<li>Topology：拓扑图，可以看到应用间的调用和联系以及繁忙情况</li>
-<li>Instance：各个应用实例的响应情况</li>
-<li>Endpoint：端点接口的响应情况</li>
-</ul>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/b66e8509/">https://github.com/maxzhao-it/blog/post/b66e8509/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/d10ffa56/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/d10ffa56/" class="post-title-link" itemprop="url">kkFileView默认高亮pdf关键字</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/K8S/" itemprop="url" rel="index"><span itemprop="name">K8S</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>需求：需要把关键字传入到<code>pdf</code>预览界面，并高亮展示。</p>
-<p>这里使用的是：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var url = &#x27;http://127.0.0.1:8080/file/test.txt&#x27;; //要预览文件的访问地址</span><br><span class="line">window.open(&#x27;http://127.0.0.1:8012/onlinePreview?url=&#x27;+encodeURIComponent(base64Encode(url)));</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="修改代码："><a href="#修改代码：" class="headerlink" title="修改代码："></a>修改代码：</h2><h3 id="1、修改-onlinePreview-接口"><a href="#1、修改-onlinePreview-接口" class="headerlink" title="1、修改 onlinePreview 接口"></a>1、修改 <code>onlinePreview</code> 接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OnlinePreviewController</span> &#123;</span><br><span class="line">	<span class="meta">@GetMapping( &quot;/onlinePreview&quot;)</span></span><br><span class="line">    <span class="comment">// 添加 keyword 接收高亮关键字</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">onlinePreview</span><span class="params">(String url, String keyword, Model model, HttpServletRequest req)</span> &#123;</span><br><span class="line">       <span class="comment">// *************</span></span><br><span class="line">        model.addAttribute(<span class="string">&quot;file&quot;</span>, fileAttribute);</span><br><span class="line">        <span class="comment">// 高亮关键字返回给前端</span></span><br><span class="line">        model.addAttribute(<span class="string">&quot;keyword&quot;</span>, keyword);</span><br><span class="line">       <span class="comment">// *************</span></span><br><span class="line">        <span class="keyword">return</span> filePreview.filePreviewHandle(fileUrl, model, fileAttribute);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、前端接收参数，并且高亮"><a href="#2、前端接收参数，并且高亮" class="headerlink" title="2、前端接收参数，并且高亮"></a>2、前端接收参数，并且高亮</h3><p>打开 <code>server\src\main\resources\static\pdfjs\web\viewer.js</code> 文件，</p>
-<p>找到 <code>getViewerConfiguration()</code> 方法</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getViewerConfiguration</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> errorWrapper = <span class="literal">null</span>;</span><br><span class="line">  errorWrapper = &#123;</span><br><span class="line">    <span class="attr">container</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorWrapper&quot;</span>),</span><br><span class="line">    <span class="attr">errorMessage</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorMessage&quot;</span>),</span><br><span class="line">    <span class="attr">closeButton</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorClose&quot;</span>),</span><br><span class="line">    <span class="attr">errorMoreInfo</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorMoreInfo&quot;</span>),</span><br><span class="line">    <span class="attr">moreInfoButton</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorShowMore&quot;</span>),</span><br><span class="line">    <span class="attr">lessInfoButton</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorShowLess&quot;</span>)</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="comment">// 获取关键字</span></span><br><span class="line">  <span class="keyword">const</span> queryString = <span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">search</span>.<span class="title function_">slice</span>(<span class="number">1</span>); <span class="comment">//new</span></span><br><span class="line">  <span class="keyword">const</span> m = <span class="regexp">/(^|&amp;)keyword=([^&amp;]*)/</span>.<span class="title function_">exec</span>(queryString);<span class="comment">//new</span></span><br><span class="line">  <span class="keyword">const</span> keyword = m ? <span class="built_in">decodeURIComponent</span>(m[<span class="number">2</span>]) : <span class="string">&quot;&quot;</span>;<span class="comment">//new</span></span><br><span class="line">  <span class="keyword">if</span>(keyword)&#123;<span class="comment">//new</span></span><br><span class="line">  <span class="comment">// 讲关键字放入输入框中，当前 id 可以在 viewer.html 中找到</span></span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;findInput&quot;</span>).<span class="property">value</span> = keyword;<span class="comment">//new</span></span><br><span class="line">  &#125;<span class="comment">//new</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>找到 <code>PDFViewerApplication</code>对象中的 <code>_initializeViewerComponents</code>方法，</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">supportsIntegratedFind</span>) &#123;</span><br><span class="line">     <span class="variable language_">this</span>.<span class="property">findBar</span> = <span class="keyword">new</span> _pdf_find_bar.<span class="title class_">PDFFindBar</span>(appConfig.<span class="property">findBar</span>, eventBus, <span class="variable language_">this</span>.<span class="property">l10n</span>);</span><br><span class="line">       <span class="comment">// 添加打开查询框的操作</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="property">opened</span>) &#123;<span class="comment">//new</span></span><br><span class="line">       <span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="title function_">open</span>();<span class="comment">//new</span></span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;<span class="comment">//new</span></span><br><span class="line">       <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;PDFViewerApplication.findBar.opened&#x27;</span>);<span class="comment">//new</span></span><br><span class="line">       <span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="property">opened</span> = <span class="literal">false</span>;<span class="comment">//new</span></span><br><span class="line">       <span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="title function_">open</span>();<span class="comment">//new</span></span><br><span class="line">     &#125;<span class="comment">//new</span></span><br><span class="line"><span class="comment">// 执行高亮的操作</span></span><br><span class="line">     <span class="keyword">const</span> highLightStr = appConfig.<span class="property">findBar</span>.<span class="property">findField</span>.<span class="property">value</span>;<span class="comment">//new</span></span><br><span class="line">     <span class="title class_">PDFViewerApplication</span>.<span class="property">findController</span>.<span class="title function_">executeCommand</span>(<span class="string">&quot;find&quot;</span>, &#123;<span class="attr">query</span>:highLightStr, <span class="attr">phraseSearch</span>: <span class="literal">false</span>, <span class="attr">caseSensitive</span>: <span class="literal">false</span>, <span class="attr">highlightAll</span>: <span class="literal">true</span>, <span class="attr">findPrevious</span>: <span class="literal">false</span>,&#125;);<span class="comment">//new</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3、使前端修改生效"><a href="#3、使前端修改生效" class="headerlink" title="3、使前端修改生效"></a>3、使前端修改生效</h3><p>一个比较简单的方式，在 <code>viewer.js</code> 同目录下 <code>viewer.js.map</code> 中直接修改。</p>
-<p>因为 <code>viewer.js.map</code> 中的代码为字符串，所以我们需要精确的找到我们修改的位置，把修改的内容复制进去。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/d10ffa56/">https://github.com/maxzhao-it/blog/post/d10ffa56/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1415,8 +1175,148 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/65045/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/65045/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qingyunzong/p/9004509.html">https://www.cnblogs.com/qingyunzong/p/9004509.html</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/65045/">https://github.com/maxzhao-it/blog/post/65045/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/38204/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/38204/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="java-lang-IllegalStateException-Unable-to-read-meta-data-for-class"><a href="#java-lang-IllegalStateException-Unable-to-read-meta-data-for-class" class="headerlink" title="java.lang.IllegalStateException: Unable to read meta-data for class"></a>java.lang.IllegalStateException: Unable to read meta-data for class</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalStateException: Unable to read meta-data for class</span><br></pre></td></tr></table></figure>
+
+<p>一般是由 <code>resources\META-INF\spring.factories</code>文件引起的，检查当前文件。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/38204/">https://github.com/maxzhao-it/blog/post/38204/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/9/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/blog/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/11/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/9/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/blog/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/11/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>

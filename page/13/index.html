@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">402</span>
+          <span class="site-state-item-count">400</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -207,303 +207,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4e95394/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/4e95394/" class="post-title-link" itemprop="url">MybatisPlus默认最大查询数据量</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:51:25" itemprop="dateModified" datetime="2023-01-10T13:51:25+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/MyBatisPlus/" itemprop="url" rel="index"><span itemprop="name">MyBatisPlus</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在持久层使用 <code>MyBatisPlus</code> 的项目开发过程中，开发人员会使用 <code>list</code>、<code>selectList</code> 等 <code>MyBatisPlus</code> 自带函数根据一定条件查询全表数据，由于代码的健壮性不强，部分查询条件不生效时 <code>list</code>、<code>selectList</code> 等函数的查询结果集合过大。</p>
-<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>限制 <code>MyBatisPlus</code> 非分页查询情况下查询的数据量，提高项目稳定性。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
-<li>对 <code>MyBatisPlus</code> 中执行的非分页查询 <code>SQL</code> 进行拦截，添加默认最大查询数据量。</li>
-<li>提供符合 <code>MyBatisPlus</code>规范的 <code>BigPage</code>（允许自定义分页查询的最大数据量），供大数据量查询的业务。</li>
-<li><code>MyBatisPlus</code>  分页查询，设置全局单页最大数据量。</li>
-<li>查询结果集合等于设置的最大数据量时，打印 <code>warn</code> 级别的日志提醒或抛出异常（可配）。</li>
-</ol>
-<h2 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h2><h3 id="支持版本"><a href="#支持版本" class="headerlink" title="支持版本"></a>支持版本</h3><ol>
-<li><code>MyBatisPlus 3.4.x</code></li>
-<li><code>MyBatisPlus 3.5.x</code></li>
-</ol>
-<h3 id="开发限制"><a href="#开发限制" class="headerlink" title="开发限制"></a>开发限制</h3><ol>
-<li>必须使用 <code>MyBatisPlus</code>  分页插件。</li>
-<li>只能对  <code>MyBatisPlus</code>  语法下的 <code>SQL</code> 进行拦截，比如<code>Service函数、Mapper函数、动态SQL</code>。（<span style="color:#dbbb42">自定义实现的 <code>Mapper</code> 函数，暂不考虑兼容测试</span>）</li>
-<li>自定义 <code>SQL</code> 中的分页数据量不能控制（业务相关，不方便兼容）。</li>
-<li>如果因为“程序错误”导致查询数据量过大的问题，比较难以排查。</li>
-</ol>
-<blockquote>
-<p>自定义 <code>SQL</code> 中的分页 与 <code>IPage</code> 一同使用会报错，<code>MyBatisPlus</code>认定为代码逻辑上的错误，这里不做处理。</p>
-</blockquote>
-<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><p>兼容</p>
-<ul>
-<li><code>DB2</code></li>
-<li><code>Dm</code></li>
-<li><code>MySQL</code>（已测试）</li>
-<li><code>Oracle12c</code></li>
-<li><code>Oracle</code></li>
-<li><code>Postgre</code></li>
-<li><code>SQLServer</code></li>
-</ul>
-<p>理论上兼容（未测试）</p>
-<ul>
-<li><code>Gauss（Oracle）</code></li>
-<li><code>GBase（MySQL）</code></li>
-<li><code>H2（Postgre）</code></li>
-<li><code>HSQL（Postgre）</code></li>
-<li><code>Kingbase（Postgre）</code></li>
-<li><code>MariaDB（MySQL）</code></li>
-<li><code>Oscar（MySQL）</code></li>
-<li><code>Phoenixt（Postgre）</code></li>
-<li><code>SQLite（Postgre）</code></li>
-<li><code>XuGu（MySQL）</code></li>
-</ul>
-<p>未兼容（不考虑实现）</p>
-<ul>
-<li><code>SQLServer2005</code></li>
-<li><code>Sybase</code></li>
-</ul>
-<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="1、全表查询SQL限制最大查询数据量"><a href="#1、全表查询SQL限制最大查询数据量" class="headerlink" title="1、全表查询SQL限制最大查询数据量"></a>1、全表查询<code>SQL</code>限制最大查询数据量</h2><h3 id="配置最大查询数量"><a href="#配置最大查询数量" class="headerlink" title="配置最大查询数量"></a>配置最大查询数量</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">maxzhao:</span></span><br><span class="line">  <span class="attr">mybatis-plus:</span></span><br><span class="line">    <span class="comment"># 最大查询条数限制</span></span><br><span class="line">    <span class="attr">limit:</span></span><br><span class="line">      <span class="comment"># 开启限制（默认开启）</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># 分页查询最大条数限制（默认 1w）</span></span><br><span class="line">      <span class="attr">maxPageLimit:</span> <span class="number">10000</span></span><br><span class="line">      <span class="comment"># 全表查询最大条数限制（默认 10w）</span></span><br><span class="line">      <span class="attr">maxListLimit:</span> <span class="number">100000</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="自定义配置分页拦截器"><a href="#自定义配置分页拦截器" class="headerlink" title="自定义配置分页拦截器"></a>自定义配置分页拦截器</h3><p>自定义<code>MyBatisPlus</code>分页拦截器。</p>
-<p>分页拦截器需要做的是在查询之前拦截并处理<code>SQL</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">start=&gt;start: 查询之前</span><br><span class="line">end=&gt;end: 开始查询</span><br><span class="line">nodo=&gt;end: 不做处理</span><br><span class="line">是否包含分页参数=&gt;condition: 是否包含分页参数</span><br><span class="line">SQL中是否包含限制属性=&gt;condition: SQL中是否包含限制属性</span><br><span class="line">构建默认分页参数=&gt;operation: 构建默认分页参数</span><br><span class="line">构建分页SQL=&gt;operation: 构建分页SQL</span><br><span class="line">start-&gt;是否包含分页参数</span><br><span class="line">是否包含分页参数(yes)-&gt;构建分页SQL</span><br><span class="line">是否包含分页参数(no)-&gt;SQL中是否包含限制属性</span><br><span class="line">SQL中是否包含限制属性(yes)-&gt;nodo</span><br><span class="line">SQL中是否包含限制属性(no)-&gt;构建默认分页参数-&gt;构建分页SQL</span><br><span class="line">构建分页SQL-&gt;end</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><strong>分页参数</strong>：指的是主动设置的 <code>IPage</code>。</p>
-<p><strong><code>SQL</code>中是否包含限制属性</strong>：指的是动态<code>SQL</code>中是否包含用于限制查询条数的关键字。</p>
-<p><code>MyBatisPlus</code>分页拦截器：是对 <code>MyBatis</code> 拦截器的一层封装。</p>
-</blockquote>
-<h3 id="注入分页"><a href="#注入分页" class="headerlink" title="注入分页"></a>注入分页</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加 MyBatisPlus 最大查询数据量限制 &lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 默认开启</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> zhaoliansheng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2022-06-29 9:55</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnProperty(value = &quot;maxzhao.mybatis-plus.limit.enabled&quot;, matchIfMissing = true)</span></span><br><span class="line"><span class="meta">@ConditionalOnClass(value = MybatisPlusInterceptor.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisPlusConfig</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(MybatisPlusConfig.class);</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 分页查询最大条数限制 &lt;br&gt;</span></span><br><span class="line"><span class="comment">     * 默认1w</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Value(value = &quot;$&#123;maxzhao.mybatis-plus.limit.maxPageLimit:0&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long maxPageLimit;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 全表查询最大条数限制 &lt;br&gt;</span></span><br><span class="line"><span class="comment">     * 默认10w</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Value(value = &quot;$&#123;maxzhao.mybatis-plus.limit.maxListLimit:0&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long maxListLimit;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置 MyBatisPlus 分页插件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Order(9)</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean(MybatisPlusInterceptor.class)</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line">        <span class="type">PaginationForListInnerInterceptor</span> <span class="variable">paginationForListInnerInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PaginationForListInnerInterceptor</span>();</span><br><span class="line">        <span class="comment">/*分页查询最大数据量限制*/</span></span><br><span class="line">        paginationForListInnerInterceptor.setMaxLimit(maxPageLimit);</span><br><span class="line">        <span class="comment">/*全表查询最大数据了限制*/</span></span><br><span class="line">        paginationForListInnerInterceptor.setMaxListLimit(maxListLimit);</span><br><span class="line">        interceptor.addInnerInterceptor(paginationForListInnerInterceptor);</span><br><span class="line">        log.info(<span class="string">&quot;已开启最大条数限制：分页查询单页数据量限制：&#123;&#125;  ；全表查询数据量限制：&#123;&#125;&quot;</span>, maxPageLimit, maxListLimit);</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*****************************/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2、BigPage实现"><a href="#2、BigPage实现" class="headerlink" title="2、BigPage实现"></a>2、<code>BigPage</code>实现</h2><p><code>MyBatisPlus</code>原分页实现类 <code>com.baomidou.mybatisplus.extension.plugins.pagination.Page</code> 没有 <code>maxLimit</code> 属性的默认值，但是我们可以通过继承 <code>Page</code> 来实现 <code>BigPage</code>，并且给与一个较大的默认值（<code>100W</code>），如果超过这个默认值，我们认为这个业务很可能存在问题（业务上真的超过<code>100W</code>数据量的限制，<code>setMaxLimit</code>就可以了）。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.extension.plugins.pagination.Page;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * MyBatisPlus 大数据量的分页查询</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> zhaoliansheng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2022-06-29 10:38</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BigPage</span>&lt;T&gt; <span class="keyword">extends</span> <span class="title class_">Page</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 默认 100W 数据量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">MAX_LIMIT</span> <span class="operator">=</span> <span class="number">1000000L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*****************************/</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取限制数据量值的时候判断是否需要给与默认值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">maxLimit</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.maxLimit = Optional.ofNullable(<span class="built_in">this</span>.maxLimit).orElse(MAX_LIMIT);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.maxLimit;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取限制数据量值的时候判断是否需要给与默认值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getMaxLimit</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.maxLimit = Optional.ofNullable(<span class="built_in">this</span>.maxLimit).orElse(MAX_LIMIT);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.maxLimit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3、MyBatisPlus-分页查询，设置全局单页最大数据量。"><a href="#3、MyBatisPlus-分页查询，设置全局单页最大数据量。" class="headerlink" title="3、MyBatisPlus  分页查询，设置全局单页最大数据量。"></a>3、<code>MyBatisPlus</code>  分页查询，设置全局单页最大数据量。</h2><h3 id="配置单页最大数据量"><a href="#配置单页最大数据量" class="headerlink" title="配置单页最大数据量"></a>配置单页最大数据量</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">maxzhao:</span></span><br><span class="line">  <span class="attr">mybatis-plus:</span></span><br><span class="line">    <span class="comment"># 最大查询条数限制</span></span><br><span class="line">    <span class="attr">limit:</span></span><br><span class="line">      <span class="comment"># 开启限制（默认开启）</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># 分页查询最大条数限制（默认 1w）</span></span><br><span class="line">      <span class="attr">maxPageLimit:</span> <span class="number">10000</span></span><br><span class="line">      <span class="comment"># 全表查询最大条数限制（默认 10w）</span></span><br><span class="line">      <span class="attr">maxListLimit:</span> <span class="number">100000</span></span><br></pre></td></tr></table></figure>
-
-<p>在 <code>MybatisPlusInterceptor</code> 注入分页拦截器时，设置分页拦截器的单页查询最大数据量。</p>
-<h2 id="4、查询数据量等于最大限制时的处理"><a href="#4、查询数据量等于最大限制时的处理" class="headerlink" title="4、查询数据量等于最大限制时的处理"></a>4、查询数据量等于最大限制时的处理</h2><p>目前有两种推荐的处理方式：</p>
-<ol>
-<li>打印 <code>warn</code> 级别的日志提醒。</li>
-<li>抛出异常。</li>
-</ol>
-<blockquote>
-<p>这两种实现方式可以动态配置。</p>
-</blockquote>
-<p>需要重写 <code>com.baomidou.mybatisplus.core.override.MybatisMapperMethod</code>，<strong>暂时不做处理</strong>。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/4e95394/">https://github.com/maxzhao-it/blog/post/4e95394/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/907423512/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/907423512/" class="post-title-link" itemprop="url">Log4j2对接Logstash</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-12-23 17:16:30" itemprop="dateModified" datetime="2022-12-23T17:16:30+08:00">2022-12-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/ELK/Logstash/" itemprop="url" rel="index"><span itemprop="name">Logstash</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Log4j2</code>对接<code>ELK</code></p>
-<ol>
-<li><code>Log4j2</code> 使用 <code>Socket</code> 向 <code>logstash</code> 推送数据</li>
-<li><code>logstash</code>经过过滤后，把数据保存到 <code>ElasticSearch</code> 中。</li>
-<li><code>log4j2</code>使用<code>socket</code>推送日志到 <code>logstash</code></li>
-</ol>
-<p>环境信息：</p>
-<ul>
-<li>部署路径：<code>/opt/logstash</code></li>
-<li><code>Log4j2</code> 对接方式：<code>Socket</code></li>
-<li>部署地址：<code>192.168.2.8</code></li>
-<li><code>logstash</code>建议使用 <a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>插件</li>
-</ul>
-<blockquote>
-<p><a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>是一个十分强大的<code>logstash filter</code>插件，他可以通过正则解析任意文本，将非结构化日志数据解析成结构化和方便查询的结构。</p>
-<p><a target="_blank" rel="noopener" href="http://grokdebug.herokuapp.com/">在线测试</a>  <a href="https://github.com/elastic/logstash/tree/v1.4.2/patterns">官方<code>pattern</code></a> <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/8.2/working-with-plugins.html#listing-plugins">插件安装</a></p>
-<p>安装插件</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin list</span><br><span class="line"><span class="comment"># 在线安装</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin install logstash-filter-grok</span><br><span class="line">vim /opt/logstash/Gemfile </span><br><span class="line"><span class="comment"># 更新</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin update logstash-filter-grok</span><br><span class="line"><span class="built_in">mkdir</span> /opt/logstash/plugins</span><br><span class="line"><span class="built_in">cd</span>  /opt/logstash/plugins</span><br><span class="line">wget https://github.com/logstash-plugins/logstash-filter-grok/archive/refs/tags/v4.4.2.tar.gz</span><br><span class="line">tar -zxvf v4.4.2.tar.gz</span><br><span class="line">vim /opt/logstash/Gemfile</span><br><span class="line"><span class="comment"># 写入</span></span><br><span class="line"><span class="comment"># gem &quot;logstash-filter-grok&quot;, :path =&gt; &quot;path&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-</blockquote>
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="logstash"><a href="#logstash" class="headerlink" title="logstash"></a><code>logstash</code></h2><h3 id="配置-PIP-文件"><a href="#配置-PIP-文件" class="headerlink" title="配置 PIP 文件"></a>配置 <code>PIP</code> 文件</h3><p><a href="#app-log4j2">完成实例</a></p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">/opt/logstash/config/app-log4j2.conf</span> <span class="string">&lt;&lt;EOF</span></span><br><span class="line"><span class="string">input</span> &#123; </span><br><span class="line">    <span class="string">tcp</span> &#123;</span><br><span class="line">     <span class="string">host</span> <span class="string">=&gt;&quot;192.168.2.8&quot;</span></span><br><span class="line">     <span class="string">port</span> <span class="string">=&gt;</span> <span class="number">9699</span></span><br><span class="line">      <span class="string">codec</span> <span class="string">=&gt;</span> <span class="string">json</span> &#123;</span><br><span class="line">             <span class="string">charset</span> <span class="string">=&gt;</span> <span class="string">&quot;UTF-8&quot;</span></span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="string">stdin</span>&#123;&#125;</span><br><span class="line">&#125; </span><br><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">   <span class="string">json&#123;</span></span><br><span class="line">      <span class="string">source</span> <span class="string">=&gt;</span> <span class="string">&quot;message&quot;</span></span><br><span class="line">   <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">output</span> &#123;</span><br><span class="line">     <span class="string">elasticsearch</span> &#123; </span><br><span class="line">        <span class="comment">#action =&gt; &quot;index&quot;</span></span><br><span class="line">        <span class="comment">#manage_template =&gt; false</span></span><br><span class="line">        <span class="string">hosts</span> <span class="string">=&gt;</span> <span class="string">&quot;192.168.2.8:9200&quot;</span></span><br><span class="line">        <span class="string">index</span> <span class="string">=&gt;</span> <span class="string">&quot;app-logstash&quot;</span></span><br><span class="line">        <span class="comment">#document_type =&gt; &quot;logstash&quot;</span></span><br><span class="line">     &#125;</span><br><span class="line">     <span class="string">stdout</span> &#123; <span class="string">codec=&gt;</span> <span class="string">rubydebug</span> &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="配置-pipelines-yml（可选）"><a href="#配置-pipelines-yml（可选）" class="headerlink" title="配置 pipelines.yml（可选）"></a>配置 <code>pipelines.yml</code>（可选）</h3><p><code>vim /opt/logstash/config/pipelines.yml</code></p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">pipeline.id:</span> <span class="string">app-log4j2-processing</span></span><br><span class="line">  <span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/app-log4j2.conf&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="配置-logstash-yml（可选）"><a href="#配置-logstash-yml（可选）" class="headerlink" title="配置 logstash.yml（可选）"></a>配置 <code>logstash.yml</code>（可选）</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/piptlines.yml&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="启动logstash"><a href="#启动logstash" class="headerlink" title="启动logstash"></a>启动<code>logstash</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果 pipelines.yml 与 logstash.yml 没有配置，需要命令行中主动添加配置</span></span><br><span class="line">/opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h2><h3 id="log4j2-yml"><a href="#log4j2-yml" class="headerlink" title="log4j2.yml"></a><code>log4j2.yml</code></h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">  <span class="attr">status:</span> <span class="string">warn</span></span><br><span class="line">  <span class="attr">Appenders:</span></span><br><span class="line">    <span class="attr">Console:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">CONSOLE</span></span><br><span class="line">      <span class="attr">target:</span> <span class="string">SYSTEM_OUT</span></span><br><span class="line">      <span class="attr">PatternLayout:</span></span><br><span class="line">        <span class="attr">pattern:</span> <span class="string">&quot;%clr&#123;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;&#125;&#123;faint&#125;:%clr&#123;%-6p&#125; %clr&#123;$&#123;sys:PID&#125;&#125;&#123;magenta&#125; [thread-%T] %clr&#123;[%t]&#125;&#123;faint&#125; %clr&#123;%-40.40c&#123;1.&#125;:&#125;&#123;cyan&#125; %m%n%xwEx&quot;</span></span><br><span class="line">    <span class="attr">Socket:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LOGSTASH</span></span><br><span class="line">        <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.8</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">9699</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">thresholdFilter:</span></span><br><span class="line">          <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">          <span class="comment"># 大于等于 info 放行</span></span><br><span class="line">          <span class="attr">onMatch:</span> <span class="string">ACCEPT</span></span><br><span class="line">          <span class="comment"># 低于 info 拦截</span></span><br><span class="line">          <span class="attr">onMismatch:</span> <span class="string">DENY</span></span><br><span class="line">        <span class="attr">PatternLayout:</span></span><br><span class="line">          <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%-6p $&#123;sys:PID&#125; [thread-%T] [%t] %-40.40c&#123;1.&#125;: %m%n%xwEx&quot;</span></span><br><span class="line">  <span class="attr">Loggers:</span></span><br><span class="line">    <span class="attr">Root:</span></span><br><span class="line">      <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">      <span class="attr">AppenderRef:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">CONSOLE</span></span><br><span class="line">    <span class="attr">Logger:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">com.skytech</span></span><br><span class="line">        <span class="attr">additivity:</span> <span class="literal">false</span></span><br><span class="line">        <span class="attr">level:</span> <span class="string">DEBUG</span></span><br><span class="line">        <span class="attr">AppenderRef:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">CONSOLE</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">LOGSTASH</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="异步日志"><a href="#异步日志" class="headerlink" title="异步日志"></a>异步日志</h3><h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.lmax<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>disruptor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>Springboot</code>配置<code>log4j2.component.properties</code></p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Log4jContextSelector</span>=<span class="string">org.apache.logging.log4j.core.async.AsyncLoggerContextSelector</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="app-log4j2-conf配置"><a href="#app-log4j2-conf配置" class="headerlink" title="app-log4j2.conf配置 "></a><code>app-log4j2.conf</code>配置 <span id="app-log4j2"></span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">input &#123; </span><br><span class="line">    tcp &#123;</span><br><span class="line">        host =&gt;&quot;192.168.2.8&quot;</span><br><span class="line">        port =&gt; 9699</span><br><span class="line">        codec =&gt; &quot;plain&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">filter&#123;</span><br><span class="line">    if &quot;c.s.s.l.s.f.StorageApiLogFileServiceImpl&quot; in [message] &#123;</span><br><span class="line">        grok &#123;</span><br><span class="line">            match =&gt; &#123;</span><br><span class="line">                &quot;message&quot; =&gt; &quot;%&#123;TIMESTAMP_ISO8601:logDate&#125;:%&#123;LOGLEVEL:logLevel&#125;%&#123;SPACE&#125;%&#123;INT:pid&#125;%&#123;SPACE&#125;\[%&#123;WORD&#125;-%&#123;INT:thread&#125;\]%&#123;SPACE&#125;\[%&#123;WORD&#125;-%&#123;WORD&#125;-%&#123;INT&#125;-%&#123;WORD&#125;-%&#123;INT&#125;\]%&#123;SPACE&#125;(?&lt;targetClass&gt;.*):%&#123;SPACE&#125;接口日志信息：(?&lt;logData&gt;.*)&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        json &#123;</span><br><span class="line">             source =&gt; &quot;logData&quot;</span><br><span class="line">             target =&gt; &quot;logDataJson&quot;</span><br><span class="line">             remove_field =&gt; [&quot;server&quot;,&quot;timestamp&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">        mutate &#123;</span><br><span class="line">            add_field =&gt; &#123;</span><br><span class="line">                &quot;id&quot; =&gt; &quot;%&#123;[logDataJson][id]&#125;&quot;</span><br><span class="line">                &quot;optType&quot; =&gt; &quot;%&#123;[logDataJson][optType]&#125;&quot;</span><br><span class="line">                &quot;optTime&quot; =&gt; &quot;%&#123;[logDataJson][optTime]&#125;&quot;</span><br><span class="line">                &quot;trackId&quot; =&gt; &quot;%&#123;[logDataJson][trackId]&#125;&quot;</span><br><span class="line">                &quot;spendTime&quot; =&gt; &quot;%&#123;[logDataJson][spendTime]&#125;&quot;</span><br><span class="line">                &quot;optUser&quot; =&gt; &quot;%&#123;[logDataJson][optUser]&#125;&quot;</span><br><span class="line">                &quot;optUserName&quot; =&gt; &quot;%&#123;[logDataJson][optUserName]&#125;&quot;</span><br><span class="line">                &quot;otherValue&quot; =&gt; &quot;%&#123;[logDataJson][otherValue]&#125;&quot;</span><br><span class="line">               </span><br><span class="line">                &quot;optName&quot; =&gt; &quot;%&#123;[logDataJson][optName]&#125;&quot;</span><br><span class="line">                &quot;optDesc&quot; =&gt; &quot;%&#123;[logDataJson][optDesc]&#125;&quot;</span><br><span class="line">                &quot;apiMapping&quot;=&gt; &quot;%&#123;[logDataJson][apiMapping]&#125;&quot;</span><br><span class="line">                &quot;optMethod&quot; =&gt; &quot;%&#123;[logDataJson][optMethod]&#125;&quot;</span><br><span class="line">                &quot;sourceIp&quot; =&gt; &quot;%&#123;[logDataJson][sourceIp]&#125;&quot;</span><br><span class="line">                &quot;successFlag&quot; =&gt; &quot;%&#123;[logDataJson][successFlag]&#125;&quot;</span><br><span class="line">                &quot;requestHeaders&quot; =&gt; &quot;%&#123;[logDataJson][requestHeaders]&#125;&quot;</span><br><span class="line">                &quot;requestParams&quot; =&gt; &quot;%&#123;[logDataJson][requestParams]&#125;&quot;</span><br><span class="line">                &quot;requestBody&quot; =&gt; &quot;%&#123;[logDataJson][requestBody]&#125;&quot;</span><br><span class="line">                &quot;responseHeaders&quot; =&gt; &quot;%&#123;[logDataJson][responseHeaders]&#125;&quot;</span><br><span class="line">                &quot;responseBody&quot; =&gt; &quot;%&#123;[logDataJson][responseBody]&#125;&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if([methodParams])&#123;</span><br><span class="line">            mutate &#123;</span><br><span class="line">                # opt</span><br><span class="line">                add_field =&gt; &#123;</span><br><span class="line">                    &quot;methodParams&quot; =&gt; &quot;%&#123;[logDataJson][methodParams]&#125;&quot;</span><br><span class="line">                    &quot;methodResponse&quot; =&gt; &quot;%&#123;[logDataJson][methodResponse]&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if([authProcess])&#123;</span><br><span class="line">            mutate &#123;</span><br><span class="line">                # sso</span><br><span class="line">                add_field =&gt; &#123;</span><br><span class="line">                    &quot;authType&quot; =&gt; &quot;%&#123;[logDataJson][authType]&#125;&quot;</span><br><span class="line">                    &quot;authProcess&quot; =&gt; &quot;%&#123;[logDataJson][authProcess]&#125;&quot;</span><br><span class="line">                    &quot;authUser&quot; =&gt; &quot;%&#123;[logDataJson][authUser]&#125;&quot;</span><br><span class="line">                    &quot;authStatus&quot; =&gt; &quot;%&#123;[logDataJson][authStatus]&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        mutate &#123;</span><br><span class="line">            remove_field=&gt;[&quot;logData&quot;,&quot;tags&quot;,&quot;_source&quot;,&quot;message&quot;,&quot;logDataJson&quot;,&quot;event&quot;]</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;	</span><br><span class="line">    if([optTime]) &#123;</span><br><span class="line">		date &#123;</span><br><span class="line">		     match =&gt; [&quot;optTime&quot;, &quot;yyyy-MM-dd HH:mm:ss&quot;]</span><br><span class="line">		     target =&gt; &quot;@timestamp&quot;</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    stdout &#123; codec=&gt; rubydebug &#125; </span><br><span class="line">    if &quot;接口日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-api-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;操作日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-opt-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;认证日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-sso-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>对应的<code>log4j2.yml</code>配置</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">  <span class="attr">Appenders:</span></span><br><span class="line">    <span class="attr">Socket:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LOGSTASH</span></span><br><span class="line">        <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.8</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">9699</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">thresholdFilter:</span></span><br><span class="line">          <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">          <span class="comment"># 大于等于 info 放行</span></span><br><span class="line">          <span class="attr">onMatch:</span> <span class="string">ACCEPT</span></span><br><span class="line">          <span class="comment"># 低于 info 拦截</span></span><br><span class="line">          <span class="attr">onMismatch:</span> <span class="string">DENY</span></span><br><span class="line">        <span class="attr">PatternLayout:</span></span><br><span class="line">          <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%-6p $&#123;sys:PID&#125; [thread-%T] [%t] %c&#123;1.&#125;: %m%n%xwEx&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="app-kafka-conf配置"><a href="#app-kafka-conf配置" class="headerlink" title="app-kafka.conf配置"></a><code>app-kafka.conf</code>配置<span id="app-kafka"></span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">input &#123;</span><br><span class="line">    kafka &#123;</span><br><span class="line">        group_id =&gt; &quot;logstash&quot;</span><br><span class="line">        # 此处的topics_pattern =&gt; 应该是需要和 filebeat 中配置的topic一致。</span><br><span class="line">        topics_pattern =&gt; &quot;TOPIC_LOG_API&quot;</span><br><span class="line">        # 配置Kafka服务器集群地址，多个用,隔开</span><br><span class="line">        bootstrap_servers =&gt; &quot;192.168.2.8:9092&quot;</span><br><span class="line">        auto_offset_reset =&gt; &quot;latest&quot;</span><br><span class="line">        codec =&gt; &quot;json&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="重启脚本"><a href="#重启脚本" class="headerlink" title="重启脚本"></a>重启脚本</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /opt/script/restart-logstash &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">#!/bin/bash</span></span><br><span class="line"><span class="string">pid=\$(ps -ef|grep /opt/logstash  |grep -v grep|awk &#x27;&#123;print \$2&#125;&#x27;)</span></span><br><span class="line"><span class="string">if [ -z &quot;\$pid&quot; ]</span></span><br><span class="line"><span class="string">then</span></span><br><span class="line"><span class="string">        echo &#x27;/opt/logstash not start &#x27;</span></span><br><span class="line"><span class="string">else</span></span><br><span class="line"><span class="string">        kill -9 \$pid</span></span><br><span class="line"><span class="string">        echo &#x27;/opt/logstash shutdown&#x27;</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">cd /opt/</span></span><br><span class="line"><span class="string">nohup /opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf  &gt;nohup-logstash.log 2&gt;&amp;1 &amp;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">echo &#x27;/opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf is start &#x27;</span></span><br><span class="line"><span class="string">tail -f nohup-logstash.log</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="built_in">chmod</span> +x /opt/script/*</span><br><span class="line"><span class="built_in">cat</span>  /opt/script/restart-logstash</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意：使用 <code>cat</code> 输出到文件中的执行脚本 <code>$</code> 需要改为 <code>\$</code></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/907423512/">https://github.com/maxzhao-it/blog/post/907423512/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1837,8 +1540,229 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/aa6dc455/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/aa6dc455/" class="post-title-link" itemprop="url">nginx的负载模式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-09-09 08:53:47" itemprop="dateModified" datetime="2022-09-09T08:53:47+08:00">2022-09-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/CentOS/" itemprop="url" rel="index"><span itemprop="name">CentOS</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="多节点负载的配置"><a href="#多节点负载的配置" class="headerlink" title="多节点负载的配置"></a>多节点负载的配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	server 192.168.2.1:20031 weight=1;</span><br><span class="line">	server 192.168.2.1:20011 weight=1;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name 0.0.0.0;</span><br><span class="line">	location / &#123;</span><br><span class="line">		proxy_pass http://client;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="upstream-的分配方式"><a href="#upstream-的分配方式" class="headerlink" title="upstream 的分配方式"></a><code>upstream</code> 的分配方式</h2><ol>
+<li><p>轮询</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	server 192.168.2.1:20031;</span><br><span class="line">	server 192.168.2.1:20011;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>权重</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	server 192.168.2.1:20031 weight=1;</span><br><span class="line">	server 192.168.2.1:20011 weight=1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>ip_hash</code>：每个请求按照访问<code>IP</code>的<code>hash</code>结果分配，这样每个<code>client</code>固定访问一个后端，可以解决<code>session</code>一致的问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	ip_hash;</span><br><span class="line">	server 192.168.2.1:20031 weight=1;</span><br><span class="line">	server 192.168.2.1:20011 weight=1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>url_hash</code>：每个请求按照<code>url</code>的<code>hash</code>结果分配，使得每个<code>url</code>固定访问一个后端，主要用于缓存服务器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	hash $request_uri;</span><br><span class="line">	# 一致性算法</span><br><span class="line">	hash_method crc32;</span><br><span class="line">	server 192.168.2.1:20031 weight=1;</span><br><span class="line">	server 192.168.2.1:20011 weight=1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>fair</code>：根据后端响应时间来分配，即<code>rt</code>越短，有限分配级别越高</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	fair;</span><br><span class="line">	server 192.168.2.1:20031 weight=1;</span><br><span class="line">	server 192.168.2.1:20011 weight=1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="upstream节点参数配置"><a href="#upstream节点参数配置" class="headerlink" title="upstream节点参数配置"></a><code>upstream</code>节点参数配置</h2><h3 id="server-后的参数"><a href="#server-后的参数" class="headerlink" title="server 后的参数"></a><code>server</code> 后的参数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	server 192.168.2.1:20031 weight=1 max_fails=3 fail_timeout=30s;</span><br><span class="line">	server 192.168.2.1:20011 weight=1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>address</code>：地址必须配置</li>
+<li><code>down</code>：标记 <code>server</code> 停用</li>
+<li><code>backup</code>：标记是备用服务器</li>
+<li><code>weight</code>：设置权重</li>
+<li><code>max_fails</code>、<code>fail_timeout</code>：错误次数、达到错误次数多久不再访问</li>
+</ul>
+<h3 id="引用参数"><a href="#引用参数" class="headerlink" title="引用参数"></a>引用参数</h3><p><code>fastcgi.conf</code> 文件里有一些可以使用的参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	proxy_set_header Host $host;</span><br><span class="line">	proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">	proxy_pass http://client;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="一个多节点负载的配置"><a href="#一个多节点负载的配置" class="headerlink" title="一个多节点负载的配置"></a>一个多节点负载的配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  0.0.0.0;</span><br><span class="line">		location / &#123;</span><br><span class="line">			proxy_pass http://client;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	upstream client &#123;</span><br><span class="line">		server 192.168.2.1:20031 weight=1;</span><br><span class="line">		server 192.168.2.1:20011 weight=1;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="校验客户端IP指向固定的集群地址"><a href="#校验客户端IP指向固定的集群地址" class="headerlink" title="校验客户端IP指向固定的集群地址"></a>校验客户端<code>IP</code>指向固定的集群地址</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	# 可以配置多个IP</span><br><span class="line">	if($remote_addr ~&quot;192.168.2.8|9&quot;) &#123;</span><br><span class="line">		proxy_pass http://client2;</span><br><span class="line">	&#125;</span><br><span class="line">	proxy_pass http://client;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="proxy-pass-路径"><a href="#proxy-pass-路径" class="headerlink" title="proxy_pass 路径"></a><code>proxy_pass</code> 路径</h3><p>URL地址：127.0.0.1&#x2F;demo&#x2F;index.html</p>
+<p>实际访问i地址：client&#x2F;demo&#x2F;index.html</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /demo &#123;</span><br><span class="line">    proxy_pass http://client;</span><br><span class="line">&#125;</span><br><span class="line"># 等同于</span><br><span class="line">location / &#123;</span><br><span class="line">    proxy_pass http://client/demo/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="静态地址"><a href="#静态地址" class="headerlink" title="静态地址"></a>静态地址</h3><p>URL地址：127.0.0.1&#x2F;index.html</p>
+<p>实际访问i地址：&#x2F;home&#x2F;front&#x2F;index.html</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    root /home/front/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>安装之前</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="前后端分离的集群-session处理"><a href="#前后端分离的集群-session处理" class="headerlink" title="前后端分离的集群 session处理"></a>前后端分离的集群 session处理</h2><p>后端是一个集群部署，后端路径与前端路径不同，则需要复制 session。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen          10001;</span><br><span class="line">        server_name 0.0.0.0;</span><br><span class="line">        location /auth &#123;</span><br><span class="line">            proxy_pass http://authServer;</span><br><span class="line">            proxy_cookie_path  /auth /;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        location / &#123;</span><br><span class="line">            root /home/maxzhao/auth/frontend/;</span><br><span class="line">            index index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是 java 后端，还需要配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">registry.addMapping(&quot;/**&quot;)</span><br><span class="line">                .allowedOriginPatterns(&quot;*&quot;)</span><br><span class="line">                .allowedHeaders()</span><br><span class="line">                .allowedMethods()</span><br><span class="line">                .exposedHeaders()；</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/aa6dc455/">https://github.com/maxzhao-it/blog/post/aa6dc455/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/e89f3b77/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/e89f3b77/" class="post-title-link" itemprop="url">AES加解密（JAVA）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/AES/" itemprop="url" rel="index"><span itemprop="name">AES</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="加解密JAVA-实现"><a href="#加解密JAVA-实现" class="headerlink" title="加解密JAVA 实现"></a>加解密<code>JAVA</code> 实现</h3><h4 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-codec<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-codec<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.15<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.crypto.Cipher;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.KeyGenerator;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.SecretKey;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.SecretKeySpec;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"><span class="keyword">import</span> java.security.NoSuchAlgorithmException;</span><br><span class="line"><span class="keyword">import</span> java.security.Provider;</span><br><span class="line"><span class="keyword">import</span> java.security.SecureRandom;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"><span class="keyword">import</span> java.util.UUID;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SecretUtil</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(SecretUtil.class);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">AES</span> <span class="operator">=</span> <span class="string">&quot;AES&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">SecretUtil</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 生成 key</span></span><br><span class="line"><span class="comment">     * 返回到前端时：keyStr=Base64.getEncoder().encodeToString(key);</span></span><br><span class="line"><span class="comment">     * 解密时：keyStr.getBytes()</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 密钥（Base64）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">generateAesKey</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> generateAesKey(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 生成 key</span></span><br><span class="line"><span class="comment">     * 返回到前端时：keyStr=Base64.getEncoder().encodeToString(key);</span></span><br><span class="line"><span class="comment">     * 解密时：keyStr.getBytes()</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> word 辅助关键字</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> key</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">generateAesKey</span><span class="params">(String word)</span> &#123;</span><br><span class="line">        <span class="comment">/*随机UUID*/</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建AES的 Key生产者</span></span><br><span class="line">            <span class="type">KeyGenerator</span> <span class="variable">gen</span> <span class="operator">=</span> KeyGenerator.getInstance(AES);</span><br><span class="line">            <span class="comment">// 利用用户密码作为随机数初始化出</span></span><br><span class="line">            gen.init(<span class="number">128</span>, <span class="keyword">new</span> <span class="title class_">SecureRandom</span>((Optional.ofNullable(word).orElse(<span class="string">&quot;&quot;</span>) + UUID.randomUUID()).getBytes()));</span><br><span class="line">            <span class="comment">//加密没关系，SecureRandom 是生成安全随机数序列，password.getBytes()是种子，只要种子相同，序列就一样，所以解密只要有password就行</span></span><br><span class="line">            <span class="comment">// 根据用户密码，生成一个密钥</span></span><br><span class="line">            <span class="type">SecretKey</span> <span class="variable">secretKey</span> <span class="operator">=</span> gen.generateKey();</span><br><span class="line">            <span class="comment">// 返回基本编码格式的密钥，如果此密钥不支持编码，则返</span></span><br><span class="line">            <span class="keyword">return</span> Base64.getEncoder().encodeToString(secretKey.getEncoded());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;生成 AES key 失败：&#123;&#125;&quot;</span>, e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES 加密</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 待加密内容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key     密钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 加密后结果（Base64编码）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">aesEncrypt</span><span class="params">(String content, String key)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> encrypt(content, Base64.getDecoder().decode(key), AES, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AES 解密</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 内容（Base64编码）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key     私钥</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解密后数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">aesDecrypt</span><span class="params">(String content, String key)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> decrypt(content, Base64.getDecoder().decode(key), AES, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">encrypt</span><span class="params">(String content, <span class="type">byte</span>[] key, String algorithm, Provider provider)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> provider == <span class="literal">null</span></span><br><span class="line">                    ? Cipher.getInstance(algorithm)</span><br><span class="line">                    : Cipher.getInstance(algorithm, provider);</span><br><span class="line">            cipher.init(Cipher.ENCRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, algorithm));</span><br><span class="line">            <span class="type">byte</span>[] encryptStr = cipher.doFinal(content.getBytes(StandardCharsets.UTF_8));</span><br><span class="line">            <span class="keyword">return</span> Base64.getEncoder().encodeToString(encryptStr);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;&#123;&#125; 数据加密失败：&#123;&#125;&quot;</span>, algorithm, e.getMessage(), e);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">decrypt</span><span class="params">(String content, <span class="type">byte</span>[] key, String algorithm, Provider provider)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">byte</span>[] encryptByte = Base64.getDecoder().decode(content);</span><br><span class="line">            <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> provider == <span class="literal">null</span></span><br><span class="line">                    ? Cipher.getInstance(algorithm)</span><br><span class="line">                    : Cipher.getInstance(algorithm, provider);</span><br><span class="line">            cipher.init(Cipher.DECRYPT_MODE, <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(key, algorithm));</span><br><span class="line">            <span class="type">byte</span>[] decryptBytes = cipher.doFinal(encryptByte);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(decryptBytes);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;&#123;&#125; 数据解密失败：&#123;&#125;&quot;</span>, algorithm, e.getMessage(), e);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/e89f3b77/">https://github.com/maxzhao-it/blog/post/e89f3b77/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/blog/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/blog/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>

@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">402</span>
+          <span class="site-state-item-count">400</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -207,331 +207,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7552f68d/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/7552f68d/" class="post-title-link" itemprop="url">IM的消息系统架构</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/IM/" itemprop="url" rel="index"><span itemprop="name">IM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如今高度信息化的互联网时代，生活中<code>Instant Messaging</code>与我们息息相关，例如微信、钉钉等以 <code>IM</code> 系统为核心的产品。像一些游戏、社交软件都离不开 <code>IM</code>。</p>
-<p> <code>IM</code> 从早起的 <code>QQ</code>、飞信等发展到现在，软件架构也不断的在迭代，从早期的CS、P2P演变到现在，后台已经成为了一个复杂的分布式系统，涉及网络通讯、移动端、安全、存储、检索等技术。</p>
-<p><code>IM</code>系统中最核心的是消息系统，消息系统的核心功能有消息的同步、存储和检索；</p>
-<p>下面就基于社区比较火的 <code>Timeline</code>模型来构建消息系统（不依赖 <code>TableStore</code>）。</p>
-<h2 id="传统架构VS现代架构"><a href="#传统架构VS现代架构" class="headerlink" title="传统架构VS现代架构"></a>传统架构VS现代架构</h2><p><img src="/blog/uploads/images/4cc3b1ade97b9290c56aeda2e8147b9e.png"></p>
-<p>主要区别就是 现代架构下，消息是先存储后同步，消息不会丢失，多端同步、消息检索都是全量消息存储带来的好处。</p>
-<p>现在架构下最大的挑战就是消息管理和索引。</p>
-<h2 id="基础模型"><a href="#基础模型" class="headerlink" title="基础模型"></a>基础模型</h2><h3 id="Timeline-模型"><a href="#Timeline-模型" class="headerlink" title="Timeline 模型"></a><code>Timeline</code> 模型</h3><p><code>Timeline</code>模型是针对消息数据场景所新创的一个数据模型，它的特色在于能够满足消息数据场景对消息保序、海量消息存储、实时同步的特殊需求。</p>
-<p><img src="/blog/uploads/images/eff4116cb2daa5db6eab53eb72c07e80.png"></p>
-<p><code>Timeline</code>的构成主要包括：</p>
-<ul>
-<li><code>Timeline ID</code>：唯一标识Timeline的ID。</li>
-<li><code>Timeline Meta</code>：<code>Timeline</code>的元数据，元数据内可包含任意键值对属性。</li>
-<li><code>Message Sequence</code>：消息队列，承载该Timeline下的所有消息。消息在队列里有序保存，并且根据写入顺序分配自增的ID。一个消息队列可承载的消息个数无上限，在消息队列内部可根据消息ID随机定位某条消息，并提供正序或者反序扫描。</li>
-<li><code>Message Entry</code>：消息体，包含消息的具体内容，可以包含任意键值对。</li>
-</ul>
-<p><strong>消息同步</strong>可以基于 <code>Timeline</code>实现，搭配 <code>ack</code> 机制，无障碍拉取各端消息。</p>
-<p><strong>消息存储</strong>可以基于 <code>Timeline</code>实现，持久化所有数据。</p>
-<p><strong>消息检索</strong>一般基于消息内容和消息类型来灵活检索。</p>
-<h3 id="消息存储模型"><a href="#消息存储模型" class="headerlink" title="消息存储模型"></a>消息存储模型</h3><p><img src="/blog/uploads/images/3d3c24fc5be76697d79339b459568013.png"></p>
-<p>消息存储要求每个会话都对应一个 <code>Timeline</code>,消息根据会话顺序排序，然后持久化存储。</p>
-<h3 id="消息同步模型"><a href="#消息同步模型" class="headerlink" title="消息同步模型"></a>消息同步模型</h3><p><img src="/blog/uploads/images/176939b469c63765ab0a543c4832f034.png"></p>
-<p>消息同步模型一般有读扩散（也叫拉模式）和写扩散（也叫推模式）两种不同的方式。</p>
-<ul>
-<li><strong>读扩散</strong>：消息存储模型中，每个会话的 <code>Timeline</code> 中保存了这个会话的全量消息。读扩散的消息同步模式下，每个会话中产生的新的消息，只需要写一次到其用于存储的 Timeline 中，接收端从这个 <code>Timeline</code> 中拉取新的消息。优点是消息只需要写一次，相比写扩散的模式，能够大大降低消息写入次数，特别是在群消息这种场景下。但其缺点也比较明显，接收端去同步消息的逻辑会相对复杂和低效。接收端需要对每个会话都拉取一次才能获取全部消息，读被大大的放大，并且会产生很多无效的读，因为并不是每个会话都会有新消息产生。</li>
-</ul>
-<ol>
-<li><strong>写扩散</strong>：写扩散的消息同步模式，需要有一个额外的 <code>Timeline</code> 来专门用于消息同步，通常是每个接收端都会拥有一个独立的同步 <code>Timeline</code>（或者叫收件箱），用于存放需要向这个接收端同步的所有消息。每个会话中的消息，会产生多次写，除了写入用于消息存储的会话 <code>Timeline</code>，还需要写入需要同步到的接收端的同步 <code>Timeline</code>。在个人与个人的会话中，消息会被额外写两次，除了写入这个会话的存储 <code>Timeline</code>，还需要写入参与这个会话的两个接收者的同步 <code>Timeline</code>。而在群这个场景下，写入会被更加的放大，如果这个群拥有 N 个参与者，那每条消息都需要额外的写 N 次。写扩散同步模式的优点是，在接收端消息同步逻辑会非常简单，只需要从其同步 <code>Timeline</code> 中读取一次即可，大大降低了消息同步所需的读的压力。其缺点就是消息写入会被放大，特别是针对群这种场景。</li>
-</ol>
-<p><code>Timeline</code> 模型不会对选择读扩散还是写扩散做约束，而是能同时支持两种模式，因为本质上两种模式的逻辑数据模型并无差别，只是消息数据是用一个 <code>Timeline</code> 来支持多端读还是复制到多个 Timeline 来支持多端读的问题。</p>
-<p><code>IM</code>消息系统用，通常选择<strong>写扩散</strong>，消息一般写入一次，频繁读取，典型的读多写少的场景。大大增加了读的性能，用空间换时间。但是对于万人大群，读扩散又是一个好的选择。</p>
-<h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><p><img src="/blog/uploads/images/image-20220112085735400.png"></p>
-<p>如图是一个典型的消息系统架构，架构中包含几个重要组件：</p>
-<ul>
-<li><strong>接入端</strong>：作为消息的发送和接收端。</li>
-<li><strong>消息服务</strong>：一组无状态的服务器，可水平扩展，处理消息的发送和接收请求，连接后端消息系统。</li>
-<li><strong>消息队列</strong>：新写入消息的缓冲队列，消息系统的前置消息存储，用于削峰填谷以及异步消费。</li>
-<li><strong>消息处理</strong>：一组无状态的消费处理服务器，用于异步消费消息队列中的消息数据，处理消息的持久化和写扩散同步。</li>
-<li><strong>消息存储和索引库</strong>：持久化存储消息，每个会话对应一个 <code>Timeline</code> 进行消息存储，存储的消息建立索引来实现消息检索。</li>
-<li><strong>消息同步库</strong>：写扩散形式同步消息，每个用户的收件箱对应一个 Timeline，同步库内消息不需要永久保存，通常对消息设定一个生命周期。<br>新消息会由端发出，通常消息体中会携带消息 ID（用于去重）、逻辑时间戳（用于排序）、消息类型（控制消息、图片消息或者文本消息等）、消息体等内容。消息会先写入消息队列，作为底层存储的一个临时缓冲区。消息队列中的消息会由消息处理服务器消费，可以允许乱序消费。消息处理服务器对消息先存储后同步，先写入发件箱 Timeline（存储库），后写扩散至各个接收端的收件箱（同步库）。消息数据写入存储库后，会被近实时的构建索引，索引包括文本消息的全文索引以及多字段索引（发送方、消息类型等）。</li>
-</ul>
-<p>对于在线的设备，可以由消息服务器主动推送至在线设备端。对于离线设备，登录后会主动向服务端同步消息。每个设备会在本地保留有最新一条消息的顺序 <code>ID</code>，向服务端同步该顺序 <code>ID</code> 后的所有消息。</p>
-<h2 id="数据库选型"><a href="#数据库选型" class="headerlink" title="数据库选型"></a>数据库选型</h2><h3 id="基于-TableStore"><a href="#基于-TableStore" class="headerlink" title="基于 TableStore"></a>基于 <code>TableStore</code></h3><p>消息系统最核心的两个库是消息同步库和消息存储库，两个库对数据库有不同的要求：</p>
-<table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">消息同步库</th>
-<th align="left">消息存储库</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">数据模型</td>
-<td align="left">Timeline模型</td>
-<td align="left">Timeline模型</td>
-</tr>
-<tr>
-<td align="left">写能力</td>
-<td align="left">高并发写，十万级TPS</td>
-<td align="left">高并发写，少量读，万级TPS</td>
-</tr>
-<tr>
-<td align="left">读能力</td>
-<td align="left">高并发范围读，十万级TPS</td>
-<td align="left">少量范围读，千级TPS</td>
-</tr>
-<tr>
-<td align="left">存储规模</td>
-<td align="left">保存一段时间内的同步消息，TB级。保留千万级的<code>Timeline</code>规模。</td>
-<td align="left">保存全量消息，百TB级。保留亿级的<code>Timeline</code>规模。</td>
-</tr>
-</tbody></table>
-<p>总结下来，对数据库的要求有如下几点：</p>
-<ol>
-<li>表结构设计能够满足<code>Timeline</code>模型的功能要求：不要求关系模型，能够实现队列模型，并能够支持生成自增的<code>SeqId</code>。</li>
-<li>能够支持高并发写和范围读，规模在十万级TPS。</li>
-<li>能够保存海量数据，百TB级。</li>
-<li>能够为数据定义生命周期。</li>
-</ol>
-<p>阿里云表格存储（<code>TableStore</code>）是基于<code>LSM</code>存储引擎的分布式<code>NoSQL</code>数据库，支持百万<code>TPS</code>高并发读写，<code>PB</code>级数据存储，数据支持<code>TTL</code>，能够很好的满足以上需求，并且支持自增列，能够非常完美的设计和实现Timeline的物理模型。</p>
-<h3 id="基于传统数据库"><a href="#基于传统数据库" class="headerlink" title="基于传统数据库"></a>基于传统数据库</h3><table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">消息同步库</th>
-<th align="left">消息存储库</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">数据模型</td>
-<td align="left">MongoDB</td>
-<td align="left">MySQL</td>
-</tr>
-<tr>
-<td align="left">写能力</td>
-<td align="left">高并发写，万级TPS</td>
-<td align="left">高并发写，少量读，千级TPS</td>
-</tr>
-<tr>
-<td align="left">读能力</td>
-<td align="left">高并发范围读，万级TPS</td>
-<td align="left">少量范围读，千级TPS</td>
-</tr>
-<tr>
-<td align="left">存储规模</td>
-<td align="left">保存一段时间内的同步消息，GB级。</td>
-<td align="left">保存全量消息，GB级。</td>
-</tr>
-</tbody></table>
-<p>在写能力与读能力上，基于目前所用服务器的性能标准，在目标上与<code>TableStore</code>存储有巨大差距。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/253242">现代IM系统中消息推送和存储架构的实现</a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/319138"><code>TableStore Timeline</code>：轻松构建千万级IM和Feed流系统</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lovecindywang/archive/2011/03/02/1969324.html">MongoDB亿级数据量的性能测试</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7552f68d/">https://github.com/maxzhao-it/blog/post/7552f68d/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/eb63d0bf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/eb63d0bf/" class="post-title-link" itemprop="url">IM系统分析</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/IM/" itemprop="url" rel="index"><span itemprop="name">IM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>为什么要做一个<code>IM</code>？这个想法是从一个聊天项目开始，公司原来的聊天项目已破败不堪，继续优化不如重构。经过一番了解，决定构建一个即时通讯，并在此基础上扩展聊天功能。</p>
-<p>目前网络上的<code>IM</code>案例数不胜数，参考网络中众多的案例并结合自身业务需要，来构建属于自己的<code>IM</code>系统。</p>
-<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><ol>
-<li>社交</li>
-<li>在线客服</li>
-<li>待办提醒、工作提醒等</li>
-<li>抽奖 </li>
-<li>红包</li>
-</ol>
-<p>举个例子：</p>
-<p>我们年会有红包抽奖活动，有999红包10个 ,888红包20个,88红包50个,8红包1000个，我们需要实时看到每种红包剩余数量。</p>
-<h1 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h1><h2 id="整体目标"><a href="#整体目标" class="headerlink" title="整体目标"></a>整体目标</h2><p>整体项目构建目标：</p>
-<ol>
-<li>即时通讯系统（<code>IM</code>）。</li>
-<li>聊天系统（<code>IM-Chat</code>）</li>
-<li>后端管理平台</li>
-<li>应用管理平台</li>
-</ol>
-<h2 id="技术目标"><a href="#技术目标" class="headerlink" title="技术目标"></a>技术目标</h2><ol>
-<li>小型化</li>
-<li>单节点万人同时在线</li>
-<li>可水平扩展</li>
-<li>多通讯协议</li>
-<li>第三方登录</li>
-<li>服务监控</li>
-</ol>
-<p>在移动端，长连接是未来趋势，并且比<code>Http</code>请求的数据量更小（像<code>WebSocket</code>，连接只需要一个 <code>headers</code>）。</p>
-<h2 id="阶段性目标"><a href="#阶段性目标" class="headerlink" title="阶段性目标"></a>阶段性目标</h2><h3 id="一阶段"><a href="#一阶段" class="headerlink" title="一阶段"></a>一阶段</h3><ol>
-<li>小型化</li>
-<li>单节点万人同时在线</li>
-<li>可水平扩展</li>
-<li>通讯协议：<code>WS</code></li>
-<li>接入端：<code>HTML5</code></li>
-</ol>
-<h3 id="二阶段"><a href="#二阶段" class="headerlink" title="二阶段"></a>二阶段</h3><ol>
-<li>第三方登录</li>
-<li>服务监控</li>
-</ol>
-<h3 id="三阶段"><a href="#三阶段" class="headerlink" title="三阶段"></a>三阶段</h3><ol>
-<li>通讯协议：<code>TCP</code>&#x2F;<code>HTTPS</code></li>
-<li><code>Android</code>&#x2F;<code>IOS</code></li>
-</ol>
-<h3 id="四阶段"><a href="#四阶段" class="headerlink" title="四阶段"></a>四阶段</h3><ol>
-<li>界面美化</li>
-</ol>
-<h2 id="难点目标"><a href="#难点目标" class="headerlink" title="难点目标"></a>难点目标</h2><ol>
-<li><code>Android/IOS</code>离线推送</li>
-<li>多节点时服务治理</li>
-</ol>
-<h1 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h1><p><strong>后台管理系统</strong>：指的是<code>IM</code>全局管理系统，包括租户管理、租户的应用管理等。</p>
-<p><strong>应用管理系统</strong>：指的是<code>IM</code>租户管理当前租户应用的系统。</p>
-<p><strong>应用</strong>：指的是租户创建的<code>IM</code>应用，<code>IM</code>允许跨应用之间的通信，<code>IM-Chat</code>则不允许跨应用添加好友。</p>
-<h1 id="系统功能"><a href="#系统功能" class="headerlink" title="系统功能"></a>系统功能</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><blockquote>
-<p><a href="https://github.com/ChenYilong/iOSBlog/tree/master/Tips/%E5%9F%BA%E4%BA%8EWebsocket%E7%9A%84IM%E5%8D%B3%E6%97%B6%E9%80%9A%E8%AE%AF%E6%8A%80%E6%9C%AF"><strong>基于Websocket的IM即时通讯技术</strong></a></p>
-<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/20837104">软件体系结构分析方法</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/eb63d0bf/">https://github.com/maxzhao-it/blog/post/eb63d0bf/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -863,6 +538,75 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/22610/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/22610/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a target="_blank" rel="noopener" href="https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=28204&amp;from_mid=1&amp;format=json&amp;ie=utf-8&amp;oe=utf-8&amp;query=%E6%88%90%E8%AF%AD%E5%A4%A7%E5%85%A8&amp;sort_type=1&amp;pn=0&amp;rn=90&amp;cb=jQuery110207830149056157827_1618483972393&amp;_=1618483972464">https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=28204&amp;from_mid=1&amp;format=json&amp;ie=utf-8&amp;oe=utf-8&amp;query=%E6%88%90%E8%AF%AD%E5%A4%A7%E5%85%A8&amp;sort_type=1&amp;pn=0&amp;rn=90&amp;cb=jQuery110207830149056157827_1618483972393&amp;_=1618483972464</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/22610/">https://github.com/maxzhao-it/blog/post/22610/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/35851/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -907,75 +651,6 @@
           <p>压力测试工具 wrk</p>
 <p>TODO study</p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/35851/">https://github.com/maxzhao-it/blog/post/35851/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/22610/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/22610/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><a target="_blank" rel="noopener" href="https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=28204&amp;from_mid=1&amp;format=json&amp;ie=utf-8&amp;oe=utf-8&amp;query=%E6%88%90%E8%AF%AD%E5%A4%A7%E5%85%A8&amp;sort_type=1&amp;pn=0&amp;rn=90&amp;cb=jQuery110207830149056157827_1618483972393&amp;_=1618483972464">https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=28204&amp;from_mid=1&amp;format=json&amp;ie=utf-8&amp;oe=utf-8&amp;query=%E6%88%90%E8%AF%AD%E5%A4%A7%E5%85%A8&amp;sort_type=1&amp;pn=0&amp;rn=90&amp;cb=jQuery110207830149056157827_1618483972393&amp;_=1618483972464</a></p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/22610/">https://github.com/maxzhao-it/blog/post/22610/</a> </p>
 
       
     </div>
@@ -1205,8 +880,305 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4e95394/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/4e95394/" class="post-title-link" itemprop="url">MybatisPlus默认最大查询数据量</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:51:25" itemprop="dateModified" datetime="2023-01-10T13:51:25+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/MyBatisPlus/" itemprop="url" rel="index"><span itemprop="name">MyBatisPlus</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在持久层使用 <code>MyBatisPlus</code> 的项目开发过程中，开发人员会使用 <code>list</code>、<code>selectList</code> 等 <code>MyBatisPlus</code> 自带函数根据一定条件查询全表数据，由于代码的健壮性不强，部分查询条件不生效时 <code>list</code>、<code>selectList</code> 等函数的查询结果集合过大。</p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>限制 <code>MyBatisPlus</code> 非分页查询情况下查询的数据量，提高项目稳定性。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
+<li>对 <code>MyBatisPlus</code> 中执行的非分页查询 <code>SQL</code> 进行拦截，添加默认最大查询数据量。</li>
+<li>提供符合 <code>MyBatisPlus</code>规范的 <code>BigPage</code>（允许自定义分页查询的最大数据量），供大数据量查询的业务。</li>
+<li><code>MyBatisPlus</code>  分页查询，设置全局单页最大数据量。</li>
+<li>查询结果集合等于设置的最大数据量时，打印 <code>warn</code> 级别的日志提醒或抛出异常（可配）。</li>
+</ol>
+<h2 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h2><h3 id="支持版本"><a href="#支持版本" class="headerlink" title="支持版本"></a>支持版本</h3><ol>
+<li><code>MyBatisPlus 3.4.x</code></li>
+<li><code>MyBatisPlus 3.5.x</code></li>
+</ol>
+<h3 id="开发限制"><a href="#开发限制" class="headerlink" title="开发限制"></a>开发限制</h3><ol>
+<li>必须使用 <code>MyBatisPlus</code>  分页插件。</li>
+<li>只能对  <code>MyBatisPlus</code>  语法下的 <code>SQL</code> 进行拦截，比如<code>Service函数、Mapper函数、动态SQL</code>。（<span style="color:#dbbb42">自定义实现的 <code>Mapper</code> 函数，暂不考虑兼容测试</span>）</li>
+<li>自定义 <code>SQL</code> 中的分页数据量不能控制（业务相关，不方便兼容）。</li>
+<li>如果因为“程序错误”导致查询数据量过大的问题，比较难以排查。</li>
+</ol>
+<blockquote>
+<p>自定义 <code>SQL</code> 中的分页 与 <code>IPage</code> 一同使用会报错，<code>MyBatisPlus</code>认定为代码逻辑上的错误，这里不做处理。</p>
+</blockquote>
+<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><p>兼容</p>
+<ul>
+<li><code>DB2</code></li>
+<li><code>Dm</code></li>
+<li><code>MySQL</code>（已测试）</li>
+<li><code>Oracle12c</code></li>
+<li><code>Oracle</code></li>
+<li><code>Postgre</code></li>
+<li><code>SQLServer</code></li>
+</ul>
+<p>理论上兼容（未测试）</p>
+<ul>
+<li><code>Gauss（Oracle）</code></li>
+<li><code>GBase（MySQL）</code></li>
+<li><code>H2（Postgre）</code></li>
+<li><code>HSQL（Postgre）</code></li>
+<li><code>Kingbase（Postgre）</code></li>
+<li><code>MariaDB（MySQL）</code></li>
+<li><code>Oscar（MySQL）</code></li>
+<li><code>Phoenixt（Postgre）</code></li>
+<li><code>SQLite（Postgre）</code></li>
+<li><code>XuGu（MySQL）</code></li>
+</ul>
+<p>未兼容（不考虑实现）</p>
+<ul>
+<li><code>SQLServer2005</code></li>
+<li><code>Sybase</code></li>
+</ul>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="1、全表查询SQL限制最大查询数据量"><a href="#1、全表查询SQL限制最大查询数据量" class="headerlink" title="1、全表查询SQL限制最大查询数据量"></a>1、全表查询<code>SQL</code>限制最大查询数据量</h2><h3 id="配置最大查询数量"><a href="#配置最大查询数量" class="headerlink" title="配置最大查询数量"></a>配置最大查询数量</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">maxzhao:</span></span><br><span class="line">  <span class="attr">mybatis-plus:</span></span><br><span class="line">    <span class="comment"># 最大查询条数限制</span></span><br><span class="line">    <span class="attr">limit:</span></span><br><span class="line">      <span class="comment"># 开启限制（默认开启）</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># 分页查询最大条数限制（默认 1w）</span></span><br><span class="line">      <span class="attr">maxPageLimit:</span> <span class="number">10000</span></span><br><span class="line">      <span class="comment"># 全表查询最大条数限制（默认 10w）</span></span><br><span class="line">      <span class="attr">maxListLimit:</span> <span class="number">100000</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="自定义配置分页拦截器"><a href="#自定义配置分页拦截器" class="headerlink" title="自定义配置分页拦截器"></a>自定义配置分页拦截器</h3><p>自定义<code>MyBatisPlus</code>分页拦截器。</p>
+<p>分页拦截器需要做的是在查询之前拦截并处理<code>SQL</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">start=&gt;start: 查询之前</span><br><span class="line">end=&gt;end: 开始查询</span><br><span class="line">nodo=&gt;end: 不做处理</span><br><span class="line">是否包含分页参数=&gt;condition: 是否包含分页参数</span><br><span class="line">SQL中是否包含限制属性=&gt;condition: SQL中是否包含限制属性</span><br><span class="line">构建默认分页参数=&gt;operation: 构建默认分页参数</span><br><span class="line">构建分页SQL=&gt;operation: 构建分页SQL</span><br><span class="line">start-&gt;是否包含分页参数</span><br><span class="line">是否包含分页参数(yes)-&gt;构建分页SQL</span><br><span class="line">是否包含分页参数(no)-&gt;SQL中是否包含限制属性</span><br><span class="line">SQL中是否包含限制属性(yes)-&gt;nodo</span><br><span class="line">SQL中是否包含限制属性(no)-&gt;构建默认分页参数-&gt;构建分页SQL</span><br><span class="line">构建分页SQL-&gt;end</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>分页参数</strong>：指的是主动设置的 <code>IPage</code>。</p>
+<p><strong><code>SQL</code>中是否包含限制属性</strong>：指的是动态<code>SQL</code>中是否包含用于限制查询条数的关键字。</p>
+<p><code>MyBatisPlus</code>分页拦截器：是对 <code>MyBatis</code> 拦截器的一层封装。</p>
+</blockquote>
+<h3 id="注入分页"><a href="#注入分页" class="headerlink" title="注入分页"></a>注入分页</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加 MyBatisPlus 最大查询数据量限制 &lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 默认开启</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> zhaoliansheng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2022-06-29 9:55</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnProperty(value = &quot;maxzhao.mybatis-plus.limit.enabled&quot;, matchIfMissing = true)</span></span><br><span class="line"><span class="meta">@ConditionalOnClass(value = MybatisPlusInterceptor.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisPlusConfig</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(MybatisPlusConfig.class);</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 分页查询最大条数限制 &lt;br&gt;</span></span><br><span class="line"><span class="comment">     * 默认1w</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Value(value = &quot;$&#123;maxzhao.mybatis-plus.limit.maxPageLimit:0&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long maxPageLimit;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 全表查询最大条数限制 &lt;br&gt;</span></span><br><span class="line"><span class="comment">     * 默认10w</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Value(value = &quot;$&#123;maxzhao.mybatis-plus.limit.maxListLimit:0&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long maxListLimit;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置 MyBatisPlus 分页插件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Order(9)</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean(MybatisPlusInterceptor.class)</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line">        <span class="type">PaginationForListInnerInterceptor</span> <span class="variable">paginationForListInnerInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PaginationForListInnerInterceptor</span>();</span><br><span class="line">        <span class="comment">/*分页查询最大数据量限制*/</span></span><br><span class="line">        paginationForListInnerInterceptor.setMaxLimit(maxPageLimit);</span><br><span class="line">        <span class="comment">/*全表查询最大数据了限制*/</span></span><br><span class="line">        paginationForListInnerInterceptor.setMaxListLimit(maxListLimit);</span><br><span class="line">        interceptor.addInnerInterceptor(paginationForListInnerInterceptor);</span><br><span class="line">        log.info(<span class="string">&quot;已开启最大条数限制：分页查询单页数据量限制：&#123;&#125;  ；全表查询数据量限制：&#123;&#125;&quot;</span>, maxPageLimit, maxListLimit);</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*****************************/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2、BigPage实现"><a href="#2、BigPage实现" class="headerlink" title="2、BigPage实现"></a>2、<code>BigPage</code>实现</h2><p><code>MyBatisPlus</code>原分页实现类 <code>com.baomidou.mybatisplus.extension.plugins.pagination.Page</code> 没有 <code>maxLimit</code> 属性的默认值，但是我们可以通过继承 <code>Page</code> 来实现 <code>BigPage</code>，并且给与一个较大的默认值（<code>100W</code>），如果超过这个默认值，我们认为这个业务很可能存在问题（业务上真的超过<code>100W</code>数据量的限制，<code>setMaxLimit</code>就可以了）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.extension.plugins.pagination.Page;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * MyBatisPlus 大数据量的分页查询</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> zhaoliansheng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2022-06-29 10:38</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BigPage</span>&lt;T&gt; <span class="keyword">extends</span> <span class="title class_">Page</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 默认 100W 数据量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">MAX_LIMIT</span> <span class="operator">=</span> <span class="number">1000000L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*****************************/</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取限制数据量值的时候判断是否需要给与默认值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">maxLimit</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.maxLimit = Optional.ofNullable(<span class="built_in">this</span>.maxLimit).orElse(MAX_LIMIT);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.maxLimit;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取限制数据量值的时候判断是否需要给与默认值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getMaxLimit</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.maxLimit = Optional.ofNullable(<span class="built_in">this</span>.maxLimit).orElse(MAX_LIMIT);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.maxLimit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、MyBatisPlus-分页查询，设置全局单页最大数据量。"><a href="#3、MyBatisPlus-分页查询，设置全局单页最大数据量。" class="headerlink" title="3、MyBatisPlus  分页查询，设置全局单页最大数据量。"></a>3、<code>MyBatisPlus</code>  分页查询，设置全局单页最大数据量。</h2><h3 id="配置单页最大数据量"><a href="#配置单页最大数据量" class="headerlink" title="配置单页最大数据量"></a>配置单页最大数据量</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">maxzhao:</span></span><br><span class="line">  <span class="attr">mybatis-plus:</span></span><br><span class="line">    <span class="comment"># 最大查询条数限制</span></span><br><span class="line">    <span class="attr">limit:</span></span><br><span class="line">      <span class="comment"># 开启限制（默认开启）</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># 分页查询最大条数限制（默认 1w）</span></span><br><span class="line">      <span class="attr">maxPageLimit:</span> <span class="number">10000</span></span><br><span class="line">      <span class="comment"># 全表查询最大条数限制（默认 10w）</span></span><br><span class="line">      <span class="attr">maxListLimit:</span> <span class="number">100000</span></span><br></pre></td></tr></table></figure>
+
+<p>在 <code>MybatisPlusInterceptor</code> 注入分页拦截器时，设置分页拦截器的单页查询最大数据量。</p>
+<h2 id="4、查询数据量等于最大限制时的处理"><a href="#4、查询数据量等于最大限制时的处理" class="headerlink" title="4、查询数据量等于最大限制时的处理"></a>4、查询数据量等于最大限制时的处理</h2><p>目前有两种推荐的处理方式：</p>
+<ol>
+<li>打印 <code>warn</code> 级别的日志提醒。</li>
+<li>抛出异常。</li>
+</ol>
+<blockquote>
+<p>这两种实现方式可以动态配置。</p>
+</blockquote>
+<p>需要重写 <code>com.baomidou.mybatisplus.core.override.MybatisMapperMethod</code>，<strong>暂时不做处理</strong>。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/4e95394/">https://github.com/maxzhao-it/blog/post/4e95394/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/907423512/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/907423512/" class="post-title-link" itemprop="url">Log4j2对接Logstash</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-12-23 17:16:30" itemprop="dateModified" datetime="2022-12-23T17:16:30+08:00">2022-12-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/Logstash/" itemprop="url" rel="index"><span itemprop="name">Logstash</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Log4j2</code>对接<code>ELK</code></p>
+<ol>
+<li><code>Log4j2</code> 使用 <code>Socket</code> 向 <code>logstash</code> 推送数据</li>
+<li><code>logstash</code>经过过滤后，把数据保存到 <code>ElasticSearch</code> 中。</li>
+<li><code>log4j2</code>使用<code>socket</code>推送日志到 <code>logstash</code></li>
+</ol>
+<p>环境信息：</p>
+<ul>
+<li>部署路径：<code>/opt/logstash</code></li>
+<li><code>Log4j2</code> 对接方式：<code>Socket</code></li>
+<li>部署地址：<code>192.168.2.8</code></li>
+<li><code>logstash</code>建议使用 <a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>插件</li>
+</ul>
+<blockquote>
+<p><a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>是一个十分强大的<code>logstash filter</code>插件，他可以通过正则解析任意文本，将非结构化日志数据解析成结构化和方便查询的结构。</p>
+<p><a target="_blank" rel="noopener" href="http://grokdebug.herokuapp.com/">在线测试</a>  <a href="https://github.com/elastic/logstash/tree/v1.4.2/patterns">官方<code>pattern</code></a> <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/8.2/working-with-plugins.html#listing-plugins">插件安装</a></p>
+<p>安装插件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin list</span><br><span class="line"><span class="comment"># 在线安装</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin install logstash-filter-grok</span><br><span class="line">vim /opt/logstash/Gemfile </span><br><span class="line"><span class="comment"># 更新</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin update logstash-filter-grok</span><br><span class="line"><span class="built_in">mkdir</span> /opt/logstash/plugins</span><br><span class="line"><span class="built_in">cd</span>  /opt/logstash/plugins</span><br><span class="line">wget https://github.com/logstash-plugins/logstash-filter-grok/archive/refs/tags/v4.4.2.tar.gz</span><br><span class="line">tar -zxvf v4.4.2.tar.gz</span><br><span class="line">vim /opt/logstash/Gemfile</span><br><span class="line"><span class="comment"># 写入</span></span><br><span class="line"><span class="comment"># gem &quot;logstash-filter-grok&quot;, :path =&gt; &quot;path&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+</blockquote>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="logstash"><a href="#logstash" class="headerlink" title="logstash"></a><code>logstash</code></h2><h3 id="配置-PIP-文件"><a href="#配置-PIP-文件" class="headerlink" title="配置 PIP 文件"></a>配置 <code>PIP</code> 文件</h3><p><a href="#app-log4j2">完成实例</a></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">/opt/logstash/config/app-log4j2.conf</span> <span class="string">&lt;&lt;EOF</span></span><br><span class="line"><span class="string">input</span> &#123; </span><br><span class="line">    <span class="string">tcp</span> &#123;</span><br><span class="line">     <span class="string">host</span> <span class="string">=&gt;&quot;192.168.2.8&quot;</span></span><br><span class="line">     <span class="string">port</span> <span class="string">=&gt;</span> <span class="number">9699</span></span><br><span class="line">      <span class="string">codec</span> <span class="string">=&gt;</span> <span class="string">json</span> &#123;</span><br><span class="line">             <span class="string">charset</span> <span class="string">=&gt;</span> <span class="string">&quot;UTF-8&quot;</span></span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="string">stdin</span>&#123;&#125;</span><br><span class="line">&#125; </span><br><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">   <span class="string">json&#123;</span></span><br><span class="line">      <span class="string">source</span> <span class="string">=&gt;</span> <span class="string">&quot;message&quot;</span></span><br><span class="line">   <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">output</span> &#123;</span><br><span class="line">     <span class="string">elasticsearch</span> &#123; </span><br><span class="line">        <span class="comment">#action =&gt; &quot;index&quot;</span></span><br><span class="line">        <span class="comment">#manage_template =&gt; false</span></span><br><span class="line">        <span class="string">hosts</span> <span class="string">=&gt;</span> <span class="string">&quot;192.168.2.8:9200&quot;</span></span><br><span class="line">        <span class="string">index</span> <span class="string">=&gt;</span> <span class="string">&quot;app-logstash&quot;</span></span><br><span class="line">        <span class="comment">#document_type =&gt; &quot;logstash&quot;</span></span><br><span class="line">     &#125;</span><br><span class="line">     <span class="string">stdout</span> &#123; <span class="string">codec=&gt;</span> <span class="string">rubydebug</span> &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-pipelines-yml（可选）"><a href="#配置-pipelines-yml（可选）" class="headerlink" title="配置 pipelines.yml（可选）"></a>配置 <code>pipelines.yml</code>（可选）</h3><p><code>vim /opt/logstash/config/pipelines.yml</code></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">pipeline.id:</span> <span class="string">app-log4j2-processing</span></span><br><span class="line">  <span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/app-log4j2.conf&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-logstash-yml（可选）"><a href="#配置-logstash-yml（可选）" class="headerlink" title="配置 logstash.yml（可选）"></a>配置 <code>logstash.yml</code>（可选）</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/piptlines.yml&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="启动logstash"><a href="#启动logstash" class="headerlink" title="启动logstash"></a>启动<code>logstash</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果 pipelines.yml 与 logstash.yml 没有配置，需要命令行中主动添加配置</span></span><br><span class="line">/opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h2><h3 id="log4j2-yml"><a href="#log4j2-yml" class="headerlink" title="log4j2.yml"></a><code>log4j2.yml</code></h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">  <span class="attr">status:</span> <span class="string">warn</span></span><br><span class="line">  <span class="attr">Appenders:</span></span><br><span class="line">    <span class="attr">Console:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">CONSOLE</span></span><br><span class="line">      <span class="attr">target:</span> <span class="string">SYSTEM_OUT</span></span><br><span class="line">      <span class="attr">PatternLayout:</span></span><br><span class="line">        <span class="attr">pattern:</span> <span class="string">&quot;%clr&#123;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;&#125;&#123;faint&#125;:%clr&#123;%-6p&#125; %clr&#123;$&#123;sys:PID&#125;&#125;&#123;magenta&#125; [thread-%T] %clr&#123;[%t]&#125;&#123;faint&#125; %clr&#123;%-40.40c&#123;1.&#125;:&#125;&#123;cyan&#125; %m%n%xwEx&quot;</span></span><br><span class="line">    <span class="attr">Socket:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LOGSTASH</span></span><br><span class="line">        <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.8</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">9699</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">thresholdFilter:</span></span><br><span class="line">          <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">          <span class="comment"># 大于等于 info 放行</span></span><br><span class="line">          <span class="attr">onMatch:</span> <span class="string">ACCEPT</span></span><br><span class="line">          <span class="comment"># 低于 info 拦截</span></span><br><span class="line">          <span class="attr">onMismatch:</span> <span class="string">DENY</span></span><br><span class="line">        <span class="attr">PatternLayout:</span></span><br><span class="line">          <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%-6p $&#123;sys:PID&#125; [thread-%T] [%t] %-40.40c&#123;1.&#125;: %m%n%xwEx&quot;</span></span><br><span class="line">  <span class="attr">Loggers:</span></span><br><span class="line">    <span class="attr">Root:</span></span><br><span class="line">      <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">      <span class="attr">AppenderRef:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">CONSOLE</span></span><br><span class="line">    <span class="attr">Logger:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">com.skytech</span></span><br><span class="line">        <span class="attr">additivity:</span> <span class="literal">false</span></span><br><span class="line">        <span class="attr">level:</span> <span class="string">DEBUG</span></span><br><span class="line">        <span class="attr">AppenderRef:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">CONSOLE</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">LOGSTASH</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="异步日志"><a href="#异步日志" class="headerlink" title="异步日志"></a>异步日志</h3><h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.lmax<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>disruptor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Springboot</code>配置<code>log4j2.component.properties</code></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Log4jContextSelector</span>=<span class="string">org.apache.logging.log4j.core.async.AsyncLoggerContextSelector</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="app-log4j2-conf配置"><a href="#app-log4j2-conf配置" class="headerlink" title="app-log4j2.conf配置 "></a><code>app-log4j2.conf</code>配置 <span id="app-log4j2"></span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">input &#123; </span><br><span class="line">    tcp &#123;</span><br><span class="line">        host =&gt;&quot;192.168.2.8&quot;</span><br><span class="line">        port =&gt; 9699</span><br><span class="line">        codec =&gt; &quot;plain&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">filter&#123;</span><br><span class="line">    if &quot;c.s.s.l.s.f.StorageApiLogFileServiceImpl&quot; in [message] &#123;</span><br><span class="line">        grok &#123;</span><br><span class="line">            match =&gt; &#123;</span><br><span class="line">                &quot;message&quot; =&gt; &quot;%&#123;TIMESTAMP_ISO8601:logDate&#125;:%&#123;LOGLEVEL:logLevel&#125;%&#123;SPACE&#125;%&#123;INT:pid&#125;%&#123;SPACE&#125;\[%&#123;WORD&#125;-%&#123;INT:thread&#125;\]%&#123;SPACE&#125;\[%&#123;WORD&#125;-%&#123;WORD&#125;-%&#123;INT&#125;-%&#123;WORD&#125;-%&#123;INT&#125;\]%&#123;SPACE&#125;(?&lt;targetClass&gt;.*):%&#123;SPACE&#125;接口日志信息：(?&lt;logData&gt;.*)&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        json &#123;</span><br><span class="line">             source =&gt; &quot;logData&quot;</span><br><span class="line">             target =&gt; &quot;logDataJson&quot;</span><br><span class="line">             remove_field =&gt; [&quot;server&quot;,&quot;timestamp&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">        mutate &#123;</span><br><span class="line">            add_field =&gt; &#123;</span><br><span class="line">                &quot;id&quot; =&gt; &quot;%&#123;[logDataJson][id]&#125;&quot;</span><br><span class="line">                &quot;optType&quot; =&gt; &quot;%&#123;[logDataJson][optType]&#125;&quot;</span><br><span class="line">                &quot;optTime&quot; =&gt; &quot;%&#123;[logDataJson][optTime]&#125;&quot;</span><br><span class="line">                &quot;trackId&quot; =&gt; &quot;%&#123;[logDataJson][trackId]&#125;&quot;</span><br><span class="line">                &quot;spendTime&quot; =&gt; &quot;%&#123;[logDataJson][spendTime]&#125;&quot;</span><br><span class="line">                &quot;optUser&quot; =&gt; &quot;%&#123;[logDataJson][optUser]&#125;&quot;</span><br><span class="line">                &quot;optUserName&quot; =&gt; &quot;%&#123;[logDataJson][optUserName]&#125;&quot;</span><br><span class="line">                &quot;otherValue&quot; =&gt; &quot;%&#123;[logDataJson][otherValue]&#125;&quot;</span><br><span class="line">               </span><br><span class="line">                &quot;optName&quot; =&gt; &quot;%&#123;[logDataJson][optName]&#125;&quot;</span><br><span class="line">                &quot;optDesc&quot; =&gt; &quot;%&#123;[logDataJson][optDesc]&#125;&quot;</span><br><span class="line">                &quot;apiMapping&quot;=&gt; &quot;%&#123;[logDataJson][apiMapping]&#125;&quot;</span><br><span class="line">                &quot;optMethod&quot; =&gt; &quot;%&#123;[logDataJson][optMethod]&#125;&quot;</span><br><span class="line">                &quot;sourceIp&quot; =&gt; &quot;%&#123;[logDataJson][sourceIp]&#125;&quot;</span><br><span class="line">                &quot;successFlag&quot; =&gt; &quot;%&#123;[logDataJson][successFlag]&#125;&quot;</span><br><span class="line">                &quot;requestHeaders&quot; =&gt; &quot;%&#123;[logDataJson][requestHeaders]&#125;&quot;</span><br><span class="line">                &quot;requestParams&quot; =&gt; &quot;%&#123;[logDataJson][requestParams]&#125;&quot;</span><br><span class="line">                &quot;requestBody&quot; =&gt; &quot;%&#123;[logDataJson][requestBody]&#125;&quot;</span><br><span class="line">                &quot;responseHeaders&quot; =&gt; &quot;%&#123;[logDataJson][responseHeaders]&#125;&quot;</span><br><span class="line">                &quot;responseBody&quot; =&gt; &quot;%&#123;[logDataJson][responseBody]&#125;&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if([methodParams])&#123;</span><br><span class="line">            mutate &#123;</span><br><span class="line">                # opt</span><br><span class="line">                add_field =&gt; &#123;</span><br><span class="line">                    &quot;methodParams&quot; =&gt; &quot;%&#123;[logDataJson][methodParams]&#125;&quot;</span><br><span class="line">                    &quot;methodResponse&quot; =&gt; &quot;%&#123;[logDataJson][methodResponse]&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if([authProcess])&#123;</span><br><span class="line">            mutate &#123;</span><br><span class="line">                # sso</span><br><span class="line">                add_field =&gt; &#123;</span><br><span class="line">                    &quot;authType&quot; =&gt; &quot;%&#123;[logDataJson][authType]&#125;&quot;</span><br><span class="line">                    &quot;authProcess&quot; =&gt; &quot;%&#123;[logDataJson][authProcess]&#125;&quot;</span><br><span class="line">                    &quot;authUser&quot; =&gt; &quot;%&#123;[logDataJson][authUser]&#125;&quot;</span><br><span class="line">                    &quot;authStatus&quot; =&gt; &quot;%&#123;[logDataJson][authStatus]&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        mutate &#123;</span><br><span class="line">            remove_field=&gt;[&quot;logData&quot;,&quot;tags&quot;,&quot;_source&quot;,&quot;message&quot;,&quot;logDataJson&quot;,&quot;event&quot;]</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;	</span><br><span class="line">    if([optTime]) &#123;</span><br><span class="line">		date &#123;</span><br><span class="line">		     match =&gt; [&quot;optTime&quot;, &quot;yyyy-MM-dd HH:mm:ss&quot;]</span><br><span class="line">		     target =&gt; &quot;@timestamp&quot;</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    stdout &#123; codec=&gt; rubydebug &#125; </span><br><span class="line">    if &quot;接口日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-api-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;操作日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-opt-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;认证日志&quot; in [optType] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-sso-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>对应的<code>log4j2.yml</code>配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">  <span class="attr">Appenders:</span></span><br><span class="line">    <span class="attr">Socket:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LOGSTASH</span></span><br><span class="line">        <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.8</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">9699</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">thresholdFilter:</span></span><br><span class="line">          <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">          <span class="comment"># 大于等于 info 放行</span></span><br><span class="line">          <span class="attr">onMatch:</span> <span class="string">ACCEPT</span></span><br><span class="line">          <span class="comment"># 低于 info 拦截</span></span><br><span class="line">          <span class="attr">onMismatch:</span> <span class="string">DENY</span></span><br><span class="line">        <span class="attr">PatternLayout:</span></span><br><span class="line">          <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;:%-6p $&#123;sys:PID&#125; [thread-%T] [%t] %c&#123;1.&#125;: %m%n%xwEx&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="app-kafka-conf配置"><a href="#app-kafka-conf配置" class="headerlink" title="app-kafka.conf配置"></a><code>app-kafka.conf</code>配置<span id="app-kafka"></span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">input &#123;</span><br><span class="line">    kafka &#123;</span><br><span class="line">        group_id =&gt; &quot;logstash&quot;</span><br><span class="line">        # 此处的topics_pattern =&gt; 应该是需要和 filebeat 中配置的topic一致。</span><br><span class="line">        topics_pattern =&gt; &quot;TOPIC_LOG_API&quot;</span><br><span class="line">        # 配置Kafka服务器集群地址，多个用,隔开</span><br><span class="line">        bootstrap_servers =&gt; &quot;192.168.2.8:9092&quot;</span><br><span class="line">        auto_offset_reset =&gt; &quot;latest&quot;</span><br><span class="line">        codec =&gt; &quot;json&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="重启脚本"><a href="#重启脚本" class="headerlink" title="重启脚本"></a>重启脚本</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /opt/script/restart-logstash &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">#!/bin/bash</span></span><br><span class="line"><span class="string">pid=\$(ps -ef|grep /opt/logstash  |grep -v grep|awk &#x27;&#123;print \$2&#125;&#x27;)</span></span><br><span class="line"><span class="string">if [ -z &quot;\$pid&quot; ]</span></span><br><span class="line"><span class="string">then</span></span><br><span class="line"><span class="string">        echo &#x27;/opt/logstash not start &#x27;</span></span><br><span class="line"><span class="string">else</span></span><br><span class="line"><span class="string">        kill -9 \$pid</span></span><br><span class="line"><span class="string">        echo &#x27;/opt/logstash shutdown&#x27;</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">cd /opt/</span></span><br><span class="line"><span class="string">nohup /opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf  &gt;nohup-logstash.log 2&gt;&amp;1 &amp;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">echo &#x27;/opt/logstash/bin/logstash -f /opt/logstash/config/app-log4j2.conf is start &#x27;</span></span><br><span class="line"><span class="string">tail -f nohup-logstash.log</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="built_in">chmod</span> +x /opt/script/*</span><br><span class="line"><span class="built_in">cat</span>  /opt/script/restart-logstash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：使用 <code>cat</code> 输出到文件中的执行脚本 <code>$</code> 需要改为 <code>\$</code></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/907423512/">https://github.com/maxzhao-it/blog/post/907423512/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/11/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/blog/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/13/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/11/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/blog/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/13/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>
