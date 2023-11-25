@@ -150,18 +150,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">400</span>
+          <span class="site-state-item-count">407</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">160</span>
+        <span class="site-state-item-count">182</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">201</span>
+        <span class="site-state-item-count">229</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-12-23 17:16:30" itemprop="dateModified" datetime="2022-12-23T17:16:30+08:00">2022-12-23</time>
+      <time title="Modified: 2023-11-21 16:36:38" itemprop="dateModified" datetime="2023-11-21T16:36:38+08:00">2023-11-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -288,11 +288,12 @@
 <blockquote>
 <p><a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>是一个十分强大的<code>logstash filter</code>插件，他可以通过正则解析任意文本，将非结构化日志数据解析成结构化和方便查询的结构。</p>
 <p><a target="_blank" rel="noopener" href="http://grokdebug.herokuapp.com/">在线测试</a>  <a href="https://github.com/elastic/logstash/tree/v1.4.2/patterns">官方<code>pattern</code></a> <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/8.2/working-with-plugins.html#listing-plugins">插件安装</a></p>
+</blockquote>
 <p>安装插件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin list</span><br><span class="line"><span class="comment"># 在线安装</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin install logstash-filter-grok</span><br><span class="line">vim /opt/logstash/Gemfile </span><br><span class="line"><span class="comment"># 更新</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin update logstash-filter-grok</span><br><span class="line"><span class="built_in">mkdir</span> /opt/logstash/plugins</span><br><span class="line"><span class="built_in">cd</span>  /opt/logstash/plugins</span><br><span class="line">wget https://github.com/logstash-plugins/logstash-filter-grok/archive/refs/tags/v4.4.2.tar.gz</span><br><span class="line">tar -zxvf v4.4.2.tar.gz</span><br><span class="line">vim /opt/logstash/Gemfile</span><br><span class="line"><span class="comment"># 写入</span></span><br><span class="line"><span class="comment"># gem &quot;logstash-filter-grok&quot;, :path =&gt; &quot;path&quot;</span></span><br></pre></td></tr></table></figure>
 
 
-</blockquote>
+
 <h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="logstash"><a href="#logstash" class="headerlink" title="logstash"></a><code>logstash</code></h2><h3 id="配置-PIP-文件"><a href="#配置-PIP-文件" class="headerlink" title="配置 PIP 文件"></a>配置 <code>PIP</code> 文件</h3><p><a href="#app-log4j2">完成实例</a></p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">/opt/logstash/config/app-log4j2.conf</span> <span class="string">&lt;&lt;EOF</span></span><br><span class="line"><span class="string">input</span> &#123; </span><br><span class="line">    <span class="string">tcp</span> &#123;</span><br><span class="line">     <span class="string">host</span> <span class="string">=&gt;&quot;192.168.2.8&quot;</span></span><br><span class="line">     <span class="string">port</span> <span class="string">=&gt;</span> <span class="number">9699</span></span><br><span class="line">      <span class="string">codec</span> <span class="string">=&gt;</span> <span class="string">json</span> &#123;</span><br><span class="line">             <span class="string">charset</span> <span class="string">=&gt;</span> <span class="string">&quot;UTF-8&quot;</span></span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="string">stdin</span>&#123;&#125;</span><br><span class="line">&#125; </span><br><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">   <span class="string">json&#123;</span></span><br><span class="line">      <span class="string">source</span> <span class="string">=&gt;</span> <span class="string">&quot;message&quot;</span></span><br><span class="line">   <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">output</span> &#123;</span><br><span class="line">     <span class="string">elasticsearch</span> &#123; </span><br><span class="line">        <span class="comment">#action =&gt; &quot;index&quot;</span></span><br><span class="line">        <span class="comment">#manage_template =&gt; false</span></span><br><span class="line">        <span class="string">hosts</span> <span class="string">=&gt;</span> <span class="string">&quot;192.168.2.8:9200&quot;</span></span><br><span class="line">        <span class="string">index</span> <span class="string">=&gt;</span> <span class="string">&quot;app-logstash&quot;</span></span><br><span class="line">        <span class="comment">#document_type =&gt; &quot;logstash&quot;</span></span><br><span class="line">     &#125;</span><br><span class="line">     <span class="string">stdout</span> &#123; <span class="string">codec=&gt;</span> <span class="string">rubydebug</span> &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
 

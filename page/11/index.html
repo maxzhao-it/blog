@@ -149,18 +149,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">400</span>
+          <span class="site-state-item-count">407</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">160</span>
+        <span class="site-state-item-count">182</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">201</span>
+        <span class="site-state-item-count">229</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,853 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/21590923/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/21590923/" class="post-title-link" itemprop="url">Linux普通用户安装RabbitMQ</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-03-16 19:32:54" itemprop="dateModified" datetime="2023-03-16T19:32:54+08:00">2023-03-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/CentOS/" itemprop="url" rel="index"><span itemprop="name">CentOS</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/CentOS/RabbitMQ/" itemprop="url" rel="index"><span itemprop="name">RabbitMQ</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>注意：<code>erlang-24.x</code>已经不支持 <code>CentOS7</code> 了</p>
+</blockquote>
+<h2 id="rpm-安装"><a href="#rpm-安装" class="headerlink" title="rpm 安装"></a><code>rpm</code> 安装</h2><p>安装 <code>RabbitMQ</code>需要安装<code>Erlang</code>。</p>
+<p><code>Erlang</code>：<a href="https://github.com/rabbitmq/erlang-rpm/releases">https://github.com/rabbitmq/erlang-rpm/releases</a><br><code>RabbitMQ</code>：<a href="https://github.com/rabbitmq/rabbitmq-server/releases">https://github.com/rabbitmq/rabbitmq-server/releases</a></p>
+<blockquote>
+<p><code>RabbitMQ</code>与<code>Erlang</code>版本对应关系 <a target="_blank" rel="noopener" href="https://www.rabbitmq.com/which-erlang.html">https://www.rabbitmq.com/which-erlang.html</a></p>
+</blockquote>
+<p>我这里下载了</p>
+<ul>
+<li><a href="https://github.com/rabbitmq/erlang-rpm/releases/download/v23.3.4.11/erlang-23.3.4.11-1.el7.x86_64.rpm"><code>erlang-23.3.4.11-1.el7.x86_64.rpm</code></a></li>
+<li><a href="https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.9.21/rabbitmq-server-generic-unix-3.9.21.tar.xz"><code>rabbitmq-server-generic-unix-3.9.21.tar.xz</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/openssl-libs-1.0.2k-25.el7_9.x86_64.rpm"><code>openssl-libs-1.0.2k-25.el7_9.x86_64.rpm</code></a> 缺少<code>libcrypto.so.10(OPENSSL_1.0.2)(64bit)</code>依赖时，可以到<a target="_blank" rel="noopener" href="https://pkgs.org/%E4%B8%8B%E8%BD%BD">https://pkgs.org/下载</a></li>
+<li><a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/v3.9.x/deps/rabbit/docs/rabbitmq.conf.example">rabbitmq.conf.example</a></li>
+</ul>
+<h3 id="root-授权"><a href="#root-授权" class="headerlink" title="root 授权"></a>root 授权</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">echo</span> <span class="string">&#x27;rabbitmq ALL=(ALL) NOPASSWD:rpm&#x27;</span> &gt;&gt; /etc/sudoers</span><br></pre></td></tr></table></figure>
+
+<h3 id="开放防火墙"><a href="#开放防火墙" class="headerlink" title="开放防火墙"></a>开放防火墙</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=45672/tcp --add-port=45673/tcp  --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="普通用户安装erlang"><a href="#普通用户安装erlang" class="headerlink" title="普通用户安装erlang"></a>普通用户安装erlang</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh openssl-libs-1.0.2k-25.el7_9.x86_64.rpm --force</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装环境</span></span><br><span class="line">sudo rpm -ivh erlang-23.3.4.11-1.el7.x86_64.rpm</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">验证erlang 是否安装成功</span></span><br><span class="line">erl -version</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装 RabbitMQ</span></span><br><span class="line">tar -xf rabbitmq-server-generic-unix-3.9.21.tar.xz</span><br><span class="line">mv rabbitmq_server-3.9.21 rabbitmq-server</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置启动"><a href="#配置启动" class="headerlink" title="配置启动"></a>配置启动</h2><h3 id="安装web管理界面"><a href="#安装web管理界面" class="headerlink" title="安装web管理界面"></a>安装web管理界面</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/rabbitmq-server/sbin/rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"><span class="comment"># 查看所有的插件</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmq-plugins list</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> rabbitmq.conf.example ~/rabbitmq-server/etc/rabbitmq/rabbitmq.conf</span><br><span class="line">sed -i <span class="string">&#x27;s?# listeners.tcp.default = 5672?listeners.tcp.default = 45672?&#x27;</span> ~/rabbitmq-server/etc/rabbitmq/rabbitmq.conf</span><br><span class="line">sed -i <span class="string">&#x27;s?# management.tcp.port = 15672?management.tcp.port = 45673?&#x27;</span>  ~/rabbitmq-server/etc/rabbitmq/rabbitmq.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 后台启动</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmq-server -detached</span><br><span class="line"><span class="comment"># 停机</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl shutdown</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/install-generic-unix.html#running-generic-unix">参考</a></p>
+</blockquote>
+<h3 id="其它管理"><a href="#其它管理" class="headerlink" title="其它管理"></a>其它管理</h3><h4 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改guest的密码</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl list_users</span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl change_password guest guest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建其他管理员账号比如test/test：</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_user maxzhao maxzhao</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl set_user_tags maxzhao administrator</span><br><span class="line"><span class="comment"># /是 vhost的目录  Configure regexp   Write regexp  Read regexp</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl set_permissions -p / maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"><span class="comment"># Sets user topic permissions for an exchange，默认使用 AMQP default 的exchange</span></span><br><span class="line"><span class="comment"># sudo rabbitmqctl set_topic_permissions</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="添加vhost"><a href="#添加vhost" class="headerlink" title="添加vhost"></a>添加vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看帮助</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 查看创建 vhost 的帮助</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_vhost --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 创建</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_vhost maxzhao_vhost</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl list_vhosts</span><br><span class="line"><span class="comment"># 赋权  注意  /maxzhao_vhost 与 maxzhao_vhost  不一样</span></span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl set_permissions -p /maxzhao_vhost maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="删除-vhost"><a href="#删除-vhost" class="headerlink" title="删除 vhost"></a>删除 vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/rabbitmq-server/sbin/rabbitmqctl add_vhost maxzhaoTest</span><br><span class="line">~/rabbitmq-server/sbin/rabbitmqctl delete_vhost maxzhaoTest</span><br></pre></td></tr></table></figure>
+
+<h3 id="日志目录"><a href="#日志目录" class="headerlink" title="日志目录"></a>日志目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/rabbitmq-server/var/log/rabbitmq</span><br></pre></td></tr></table></figure>
+
+<h2 id="错误：address-cannot-connect-to-host-x2F-port"><a href="#错误：address-cannot-connect-to-host-x2F-port" class="headerlink" title="错误：address (cannot connect to host&#x2F;port)"></a>错误：address (cannot connect to host&#x2F;port)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;NODENAME=rabbitmq@192.168.14.103&#x27;</span> &gt;&gt; ~/rabbitmq-server/etc/rabbitmq/rabbitmq-env.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="主要配置"><a href="#主要配置" class="headerlink" title="主要配置"></a>主要配置</h2><p>~&#x2F;rabbitmq-server&#x2F;etc&#x2F;rabbitmq&#x2F;rabbitmq.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listeners.tcp.default = 45672</span><br><span class="line">management.tcp.port = 45673</span><br></pre></td></tr></table></figure>
+
+<p>~&#x2F;rabbitmq-server&#x2F;etc&#x2F;rabbitmq&#x2F;rabbitmq-env.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NODENAME=rabbitmq@localhost</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>用户 <code>tags</code> 一般授权 <code>monitoring</code>。</p>
+<h3 id="用户角色tags可分为五类："><a href="#用户角色tags可分为五类：" class="headerlink" title="用户角色tags可分为五类："></a>用户角色tags可分为五类：</h3><p>先启用：<code>management plugin</code>。</p>
+<ul>
+<li>超级管理员(administrator)  管理all。</li>
+<li>监控者(monitoring) 查看rabbitmq节点的相关信息(进程数，内存使用情况，磁盘使用情况等)。</li>
+<li>策略制定者(policymaker) 对policy进行管理。但无法查看节点的相关信息(上图红框标识的部分)。 </li>
+<li>普通管理者(management) 仅可登陆管理控制台，无法看到节点信息，也无法对策略进行管理。</li>
+<li>none 无法登陆管理控制台，生产者和消费者。</li>
+</ul>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/21590923/">https://github.com/maxzhao-it/blog/post/21590923/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/e0916ba3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/e0916ba3/" class="post-title-link" itemprop="url">Filebeat采集nginx日志</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-17 21:02:40" itemprop="dateModified" datetime="2023-08-17T21:02:40+08:00">2023-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/Logstash/" itemprop="url" rel="index"><span itemprop="name">Logstash</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/Logstash/Filebeat/" itemprop="url" rel="index"><span itemprop="name">Filebeat</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>2022-01-16：升级 <code>filebeat-8.6.0</code></p>
+</blockquote>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><ul>
+<li>下载 <a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/beats/filebeat">filebeat</a></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.6.0-linux-x86_64.tar.gz </span><br><span class="line">tar -zxf filebeat-8.6.0-linux-x86_64.tar.gz</span><br><span class="line"><span class="built_in">mv</span> filebeat-8.6.0-linux-x86_64 filebeat</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动-nginx-模块"><a href="#启动-nginx-模块" class="headerlink" title="启动 nginx 模块"></a>启动 nginx 模块</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/nginx/filebeat/filebeat modules <span class="built_in">enable</span> nginx -c /home/nginx/filebeat/filebeat.yml</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改-nginx-yml-文件"><a href="#修改-nginx-yml-文件" class="headerlink" title="修改 nginx.yml 文件"></a>修改 nginx.yml 文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /home/nginx/filebeat/modules.d/nginx.yml &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">- module: nginx</span></span><br><span class="line"><span class="string">  # Access logs</span></span><br><span class="line"><span class="string">  access:</span></span><br><span class="line"><span class="string">    enabled: true</span></span><br><span class="line"><span class="string">    var.paths: [&quot;/home/nginx/nginx/logs/access.log*&quot;]</span></span><br><span class="line"><span class="string">  # Error logs</span></span><br><span class="line"><span class="string">  error:</span></span><br><span class="line"><span class="string">    enabled: true</span></span><br><span class="line"><span class="string">    var.paths: [&quot;/home/nginx/nginx/logs/error.log*&quot;]</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="built_in">cat</span> /home/nginx/filebeat/modules.d/nginx.yml</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/beats/filebeat/8.4/filebeat-module-nginx.html">参考地址</a></p>
+</blockquote>
+<p>命令行中指定</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-M <span class="string">&quot;nginx.access.var.paths=[/home/nginx/nginx/logs/access.log*]&quot;</span> -M <span class="string">&quot;nginx.error.var.paths=[/home/nginx/nginx/logs/error.log*]&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="输出到-ES"><a href="#输出到-ES" class="headerlink" title="输出到 ES"></a>输出到 ES</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /home/nginx/filebeat/filebeat.yml /home/nginx/filebeat/filebeat.yml-bak</span><br><span class="line">vim /home/nginx/filebeat/filebeat.yml</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h4><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/beats/filebeat/8.4/setup-kibana-endpoint.html#_setup_kibana_username">参考</a></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">filebeat.inputs:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">filestream</span></span><br><span class="line">  <span class="attr">id:</span> <span class="string">my-filestream-id</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">paths:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/var/log/*.log</span></span><br><span class="line"></span><br><span class="line"><span class="attr">filebeat.config.modules:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">$&#123;path.config&#125;/modules.d/*.yml</span></span><br><span class="line">  <span class="attr">reload.enabled:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">reload.period:</span> <span class="string">60s</span></span><br><span class="line"><span class="attr">setup.template.settings:</span></span><br><span class="line">  <span class="attr">index.number_of_shards:</span> <span class="number">1</span></span><br><span class="line">  <span class="comment">#index.number_of_replicas: 1</span></span><br><span class="line"><span class="attr">setup.template.name:</span> <span class="string">&quot;nginx-log&quot;</span></span><br><span class="line"><span class="attr">setup.template.pattern:</span> <span class="string">&quot;nginx-log-*&quot;</span></span><br><span class="line"><span class="attr">setup.template.overwrite:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">setup.kibana:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">&quot;192.168.14.123:45601&quot;</span></span><br><span class="line">  <span class="attr">protocol:</span> <span class="string">&quot;http&quot;</span></span><br><span class="line">  <span class="attr">username:</span> <span class="string">&quot;maxzhao&quot;</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">&quot;maxzhao.&quot;</span></span><br><span class="line"><span class="attr">output.elasticsearch:</span></span><br><span class="line">  <span class="attr">hosts:</span> [<span class="string">&quot;192.168.14.123:49200&quot;</span>]</span><br><span class="line">  <span class="attr">protocol:</span> <span class="string">&quot;http&quot;</span></span><br><span class="line">  <span class="attr">index:</span> <span class="string">&quot;nginx-log-<span class="template-variable">%&#123;+yyyy.MM.dd&#125;</span>&quot;</span></span><br><span class="line">  <span class="attr">username:</span> <span class="string">&quot;maxzhao&quot;</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">&quot;maxzhao.&quot;</span></span><br><span class="line"><span class="comment"># 这里一定要注释掉</span></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_host_metadata:</span></span><br><span class="line">      <span class="attr">when.not.contains.tags:</span> <span class="string">forwarded</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_cloud_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_docker_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_kubernetes_metadata:</span> <span class="string">~</span></span><br><span class="line"><span class="comment">#migration.6_to_7.enabled: true</span></span><br><span class="line"><span class="comment"># 关闭索引自动管理</span></span><br><span class="line"><span class="comment"># setup.ilm.enabled: false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/nginx/filebeat</span><br><span class="line"><span class="comment"># 测试配置文件</span></span><br><span class="line">./filebeat <span class="built_in">test</span> config -c filebeat.yml -e</span><br><span class="line"><span class="comment"># 创建 index 和 Dashboard</span></span><br><span class="line">./filebeat -c filebeat.yml -e</span><br><span class="line">./filebeat setup -c filebeat.yml --dashboards</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line"><span class="built_in">nohup</span> /home/nginx/filebeat/filebeat -c /home/nginx/filebeat/filebeat.yml -e &gt;&gt; /home/nginx/filebeat/filebeat.log 2&gt;&amp;1 &amp;</span><br><span class="line"><span class="built_in">tail</span> -f /home/nginx/filebeat/filebeat.log</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="启停脚本"><a href="#启停脚本" class="headerlink" title="启停脚本"></a>启停脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;nohup /home/nginx/filebeat/filebeat -c /home/nginx/filebeat/filebeat.yml -e &gt;&gt; /home/nginx/filebeat/filebeat.log 2&gt;&amp;1 &amp;&quot;</span> &gt; /home/nginx/filebeat-start.sh</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;ps -ef|grep &#x27;/filebeat&#x27; | grep -v grep |awk &#x27;&#123;print \$2&#125;&#x27; |xargs -I &#123;&#125; kill &#x27;&#123;&#125;&#x27;&quot;</span> &gt; /home/nginx/filebeat-shutdown.sh</span><br><span class="line"><span class="built_in">chmod</span> +x filebeat-*.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="nginx-配置"><a href="#nginx-配置" class="headerlink" title="nginx 配置"></a><code>nginx</code> 配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">	#日志格式</span><br><span class="line">    log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span><br><span class="line">                      &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span><br><span class="line">                      &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span><br><span class="line">	                  &#x27;$request_time $upstream_response_time $upstream_addr $upstream_status&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="filebeat-配置"><a href="#filebeat-配置" class="headerlink" title="filebeat 配置"></a><code>filebeat</code> 配置</h2><p>filebeat&#x2F;module&#x2F;nginx&#x2F;access&#x2F;ingest&#x2F;pipeline.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br></pre></td><td class="code"><pre><span class="line">description: Pipeline for parsing Nginx access logs. Requires the geoip and user_agent</span><br><span class="line">  plugins.</span><br><span class="line">processors:</span><br><span class="line">- set:</span><br><span class="line">    field: event.ingested</span><br><span class="line">    value: &#x27;&#123;&#123;_ingest.timestamp&#125;&#125;&#x27;</span><br><span class="line">- rename:</span><br><span class="line">    field: message</span><br><span class="line">    target_field: event.original</span><br><span class="line">- grok:</span><br><span class="line">    field: event.original</span><br><span class="line">    patterns:</span><br><span class="line">    - (%&#123;NGINX_HOST&#125; )?&quot;?(?:%&#123;NGINX_ADDRESS_LIST:nginx.access.remote_ip_list&#125;|%&#123;NOTSPACE:source.address&#125;)</span><br><span class="line">      - (-|%&#123;DATA:user.name&#125;) \[%&#123;HTTPDATE:nginx.access.time&#125;\] &quot;%&#123;DATA:nginx.access.info&#125;&quot;</span><br><span class="line">      %&#123;NUMBER:http.response.status_code:long&#125; %&#123;NUMBER:http.response.body.bytes:long&#125;</span><br><span class="line">      &quot;(-|%&#123;DATA:http.request.referrer&#125;)&quot; (-|%&#123;NUMBER:nginx.access.request_time:double&#125;) (-|%&#123;NUMBER:nginx.access.response_time:double&#125;) %&#123;DATA:nginx.access.upstream_addr&#125; (-|%&#123;NUMBER:nginx.access.upstream_status_code:long&#125;) &quot;(-|%&#123;DATA:user_agent.original&#125;)&quot;</span><br><span class="line">    pattern_definitions:</span><br><span class="line">      NGINX_HOST: (?:%&#123;IP:destination.ip&#125;|%&#123;NGINX_NOTSEPARATOR:destination.domain&#125;)(:%&#123;NUMBER:destination.port&#125;)?</span><br><span class="line">      NGINX_NOTSEPARATOR: &quot;[^\t ,:]+&quot;</span><br><span class="line">      NGINX_ADDRESS_LIST: (?:%&#123;IP&#125;|%&#123;WORD&#125;)(&quot;?,?\s*(?:%&#123;IP&#125;|%&#123;WORD&#125;))*</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- grok:</span><br><span class="line">    field: nginx.access.info</span><br><span class="line">    patterns:</span><br><span class="line">    - &#x27;%&#123;WORD:http.request.method&#125; %&#123;DATA:_tmp.url_orig&#125; HTTP/%&#123;NUMBER:http.version&#125;&#x27;</span><br><span class="line">    - &quot;&quot;</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- uri_parts:</span><br><span class="line">    field: _tmp.url_orig</span><br><span class="line">    ignore_failure: true</span><br><span class="line">- set:</span><br><span class="line">    field: url.domain</span><br><span class="line">    value: &quot;&#123;&#123;destination.domain&#125;&#125;&quot;</span><br><span class="line">    if: ctx.url?.domain == null &amp;&amp; ctx.destination?.domain != null</span><br><span class="line">- remove:</span><br><span class="line">    field:</span><br><span class="line">      - nginx.access.info</span><br><span class="line">      - _tmp.url_orig</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- split:</span><br><span class="line">    field: nginx.access.remote_ip_list</span><br><span class="line">    separator: &#x27;&quot;?,?\s+&#x27;</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- split:</span><br><span class="line">    field: nginx.access.origin</span><br><span class="line">    separator: &#x27;&quot;?,?\s+&#x27;</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- set:</span><br><span class="line">    field: source.address</span><br><span class="line">    if: ctx.source?.address == null</span><br><span class="line">    value: &quot;&quot;</span><br><span class="line">- script:</span><br><span class="line">    if: ctx.nginx?.access?.remote_ip_list != null &amp;&amp; ctx.nginx.access.remote_ip_list.length &gt; 0</span><br><span class="line">    lang: painless</span><br><span class="line">    source: &gt;-</span><br><span class="line">      boolean isPrivate(def dot, def ip) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">          StringTokenizer tok = new StringTokenizer(ip, dot);</span><br><span class="line">          int firstByte = Integer.parseInt(tok.nextToken());</span><br><span class="line">          int secondByte = Integer.parseInt(tok.nextToken());</span><br><span class="line">          if (firstByte == 10) &#123;</span><br><span class="line">            return true;</span><br><span class="line">          &#125;</span><br><span class="line">          if (firstByte == 192 &amp;&amp; secondByte == 168) &#123;</span><br><span class="line">            return true;</span><br><span class="line">          &#125;</span><br><span class="line">          if (firstByte == 172 &amp;&amp; secondByte &gt;= 16 &amp;&amp; secondByte &lt;= 31) &#123;</span><br><span class="line">            return true;</span><br><span class="line">          &#125;</span><br><span class="line">          if (firstByte == 127) &#123;</span><br><span class="line">            return true;</span><br><span class="line">          &#125;</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception e) &#123;</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      try &#123;</span><br><span class="line">        ctx.source.address = null;</span><br><span class="line">        if (ctx.nginx.access.remote_ip_list == null) &#123;</span><br><span class="line">          return;</span><br><span class="line">        &#125;</span><br><span class="line">        def found = false;</span><br><span class="line">        for (def item : ctx.nginx.access.remote_ip_list) &#123;</span><br><span class="line">          if (!isPrivate(params.dot, item)) &#123;</span><br><span class="line">            ctx.source.address = item;</span><br><span class="line">            found = true;</span><br><span class="line">            break;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (!found) &#123;</span><br><span class="line">          ctx.source.address = ctx.nginx.access.remote_ip_list[0];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      catch (Exception e) &#123;</span><br><span class="line">        ctx.source.address = null;</span><br><span class="line">      &#125;</span><br><span class="line">    params:</span><br><span class="line">      dot: .</span><br><span class="line">- remove:</span><br><span class="line">    field: source.address</span><br><span class="line">    if: ctx.source.address == null</span><br><span class="line">- grok:</span><br><span class="line">    field: source.address</span><br><span class="line">    patterns:</span><br><span class="line">    - ^%&#123;IP:source.ip&#125;$</span><br><span class="line">    ignore_failure: true</span><br><span class="line">- set:</span><br><span class="line">    copy_from: &#x27;@timestamp&#x27;</span><br><span class="line">    field: event.created</span><br><span class="line">- date:</span><br><span class="line">    field: nginx.access.time</span><br><span class="line">    target_field: &#x27;@timestamp&#x27;</span><br><span class="line">    formats:</span><br><span class="line">    - dd/MMM/yyyy:H:m:s Z</span><br><span class="line">    on_failure:</span><br><span class="line">    - append:</span><br><span class="line">        field: error.message</span><br><span class="line">        value: &#x27;&#123;&#123; _ingest.on_failure_message &#125;&#125;&#x27;</span><br><span class="line">- remove:</span><br><span class="line">    field: nginx.access.time</span><br><span class="line">- user_agent:</span><br><span class="line">    field: user_agent.original</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- geoip:</span><br><span class="line">    field: source.ip</span><br><span class="line">    target_field: source.geo</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- geoip:</span><br><span class="line">    database_file: GeoLite2-ASN.mmdb</span><br><span class="line">    field: source.ip</span><br><span class="line">    target_field: source.as</span><br><span class="line">    properties:</span><br><span class="line">    - asn</span><br><span class="line">    - organization_name</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- rename:</span><br><span class="line">    field: source.as.asn</span><br><span class="line">    target_field: source.as.number</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- rename:</span><br><span class="line">    field: source.as.organization_name</span><br><span class="line">    target_field: source.as.organization.name</span><br><span class="line">    ignore_missing: true</span><br><span class="line">- set:</span><br><span class="line">    field: event.kind</span><br><span class="line">    value: event</span><br><span class="line">- append:</span><br><span class="line">    field: event.category</span><br><span class="line">    value: web</span><br><span class="line">- append:</span><br><span class="line">    field: event.type</span><br><span class="line">    value: access</span><br><span class="line">- set:</span><br><span class="line">    field: event.outcome</span><br><span class="line">    value: success</span><br><span class="line">    if: &quot;ctx?.http?.response?.status_code != null &amp;&amp; ctx.http.response.status_code &lt; 400&quot;</span><br><span class="line">- set:</span><br><span class="line">    field: event.outcome</span><br><span class="line">    value: failure</span><br><span class="line">    if: &quot;ctx?.http?.response?.status_code != null &amp;&amp; ctx.http.response.status_code &gt;= 400&quot;</span><br><span class="line">- append:</span><br><span class="line">    field: related.ip</span><br><span class="line">    value: &quot;&#123;&#123;source.ip&#125;&#125;&quot;</span><br><span class="line">    if: &quot;ctx?.source?.ip != null&quot;</span><br><span class="line">- append:</span><br><span class="line">    field: related.ip</span><br><span class="line">    value: &quot;&#123;&#123;destination.ip&#125;&#125;&quot;</span><br><span class="line">    if: &quot;ctx?.destination?.ip != null&quot;</span><br><span class="line">- append:</span><br><span class="line">    field: related.user</span><br><span class="line">    value: &quot;&#123;&#123;user.name&#125;&#125;&quot;</span><br><span class="line">    if: &quot;ctx?.user?.name != null&quot;</span><br><span class="line">- script:</span><br><span class="line">    lang: painless</span><br><span class="line">    description: This script processor iterates over the whole document to remove fields with null values.</span><br><span class="line">    source: |</span><br><span class="line">      void handleMap(Map map) &#123;</span><br><span class="line">        for (def x : map.values()) &#123;</span><br><span class="line">          if (x instanceof Map) &#123;</span><br><span class="line">              handleMap(x);</span><br><span class="line">          &#125; else if (x instanceof List) &#123;</span><br><span class="line">              handleList(x);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        map.values().removeIf(v -&gt; v == null);</span><br><span class="line">      &#125;</span><br><span class="line">      void handleList(List list) &#123;</span><br><span class="line">        for (def x : list) &#123;</span><br><span class="line">            if (x instanceof Map) &#123;</span><br><span class="line">                handleMap(x);</span><br><span class="line">            &#125; else if (x instanceof List) &#123;</span><br><span class="line">                handleList(x);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      handleMap(ctx);</span><br><span class="line">on_failure:</span><br><span class="line">- set:</span><br><span class="line">    field: error.message</span><br><span class="line">    value: &#x27;&#123;&#123; _ingest.on_failure_message &#125;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>filebeat&#x2F;fields.yml ，在<code>nginx</code> 的结构下添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- name: request_time</span><br><span class="line">  type: double</span><br><span class="line">  description: &gt;</span><br><span class="line">    The request_time.</span><br><span class="line">- name: response_time</span><br><span class="line">  type: double</span><br><span class="line">  description: &gt;</span><br><span class="line">    The upstream_response_time.</span><br><span class="line">- name: upstream_addr</span><br><span class="line">  type: keyword</span><br><span class="line">  description: &gt;</span><br><span class="line">    The upstream_addr.</span><br><span class="line">- name: upstream_status_code</span><br><span class="line">  type: long</span><br><span class="line">  description: &gt;</span><br><span class="line">    The upstream_status.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/e0916ba3/">https://github.com/maxzhao-it/blog/post/e0916ba3/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/793975d1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/793975d1/" class="post-title-link" itemprop="url">前后端分离集群环境下的session策略</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/session/" itemprop="url" rel="index"><span itemprop="name">session</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>使用 <code>Nginx</code> 负载 前后端：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen          10001;</span><br><span class="line">    server_name 0.0.0.0;</span><br><span class="line">    location /seed-auth &#123;</span><br><span class="line">        proxy_pass http://authServer;</span><br><span class="line">        # session 地址</span><br><span class="line">        proxy_cookie_path  /seed-auth /;</span><br><span class="line">    &#125;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root /home/maxzhao/seed-auth/frontend/;</span><br><span class="line">        index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">upstream authServer &#123;</span><br><span class="line">    server 192.168.14.118:20001;</span><br><span class="line">    server 192.168.14.117:20001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/793975d1/">https://github.com/maxzhao-it/blog/post/793975d1/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/15474/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/15474/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-04 17:16:25" itemprop="dateModified" datetime="2023-01-04T17:16:25+08:00">2023-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><a href="https://github.com/alibaba/spring-cloud-alibaba/wiki/Nacos-config">Nacos config 原文地址</a></p>
+<p><code>Github</code>经常抽搐，记录下来。</p>
+<p> 以下内容与<a href="https://github.com/alibaba/spring-cloud-alibaba/wiki/Nacos-config">Nacos config 原文地址</a>内容一样——更新于 2021-04-19</p>
+</blockquote>
+<h2 id="Spring-Cloud-Alibaba-Nacos-Config"><a href="#Spring-Cloud-Alibaba-Nacos-Config" class="headerlink" title="Spring Cloud Alibaba Nacos Config"></a>Spring Cloud Alibaba Nacos Config</h2><p>Nacos 提供用于存储配置和其他元数据的 key&#x2F;value 存储，为分布式系统中的外部化配置提供服务器端和客户端支持。使用 Spring Cloud Alibaba Nacos Config，您可以在 Nacos Server 集中管理你 Spring Cloud 应用的外部属性配置。</p>
+<p>Spring Cloud Alibaba Nacos Config 是 Config Server 和 Client 的替代方案，客户端和服务器上的概念与 Spring Environment 和 PropertySource 有着一致的抽象，在特殊的 bootstrap 阶段，配置被加载到 Spring 环境中。当应用程序通过部署管道从开发到测试再到生产时，您可以管理这些环境之间的配置，并确保应用程序具有迁移时需要运行的所有内容。</p>
+<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h3><h5 id="Nacos-服务端初始化"><a href="#Nacos-服务端初始化" class="headerlink" title="Nacos 服务端初始化"></a>Nacos 服务端初始化</h5><p>1、启动Nacos Server。启动方式可见 <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/quick-start.html">Nacos 官网</a></p>
+<p>2、启动好Nacos之后，在Nacos添加如下的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Data ID:    nacos-config.properties</span><br><span class="line"></span><br><span class="line">Group  :    DEFAULT_GROUP</span><br><span class="line"></span><br><span class="line">配置格式:    Properties</span><br><span class="line"></span><br><span class="line">配置内容：   user.name=nacos-config-properties</span><br><span class="line">            user.age=90</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>注意dataid是以 properties(默认的文件扩展名方式)为扩展名。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h5 id="客户端使用方式"><a href="#客户端使用方式" class="headerlink" title="客户端使用方式"></a>客户端使用方式</h5><p>如果要在您的项目中使用 Nacos 来实现应用的外部化配置，使用 group ID 为 <code>com.alibaba.cloud</code> 和 artifact ID 为 <code>spring-cloud-starter-alibaba-nacos-config</code> 的 starter。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>现在就可以创建一个标准的 Spring Boot 应用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProviderApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> SpringApplication.run(ProviderApplication.class, args);</span><br><span class="line">        <span class="type">String</span> <span class="variable">userName</span> <span class="operator">=</span> applicationContext.getEnvironment().getProperty(<span class="string">&quot;user.name&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">userAge</span> <span class="operator">=</span> applicationContext.getEnvironment().getProperty(<span class="string">&quot;user.age&quot;</span>);</span><br><span class="line">        System.err.println(<span class="string">&quot;user name :&quot;</span>+userName+<span class="string">&quot;; age: &quot;</span>+userAge);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在运行此 Example 之前， <strong>必须使用 bootstrap.properties 配置文件来配置Nacos Server 地址</strong>，例如：</p>
+<p>bootstrap.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">nacos-config</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>注意当你使用域名的方式来访问 Nacos 时，<code>spring.cloud.nacos.config.server-addr</code> 配置的方式为 <code>域名:port</code>。 例如 Nacos 的域名为abc.com.nacos，监听的端口为 80，则 <code>spring.cloud.nacos.config.server-addr=abc.com.nacos:80</code>。 注意 80 端口不能省略。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>启动这个 Example，可以看到如下输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2018-11-02 14:24:51.638  INFO 32700 --- [main] c.a.demo.provider.ProviderApplication    : Started ProviderApplication in 14.645 seconds (JVM running for 15.139)</span><br><span class="line">user name :nacos-config-properties; age: 90</span><br><span class="line">2018-11-02 14:24:51.688  INFO 32700 --- [-127.0.0.1:8848] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@a8c5e74: startup date [Fri Nov 02 14:24:51 CST 2018]; root of context hierarchy</span><br><span class="line">2018-11</span><br></pre></td></tr></table></figure>
+
+<h3 id="基于-dataid-为-yaml-的文件扩展名配置方式"><a href="#基于-dataid-为-yaml-的文件扩展名配置方式" class="headerlink" title="基于 dataid 为 yaml 的文件扩展名配置方式"></a>基于 dataid 为 yaml 的文件扩展名配置方式</h3><p>spring-cloud-starter-alibaba-nacos-config 对于 yaml 格式也是完美支持的。这个时候只需要完成以下两步：</p>
+<p>1、在应用的 bootstrap.properties 配置文件中显示的声明 dataid 文件扩展名。如下所示</p>
+<p>bootstrap.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.cloud.nacos.config.file-extension</span>=<span class="string">yaml</span></span><br></pre></td></tr></table></figure>
+
+<p>2、在 Nacos 的控制台新增一个dataid为yaml为扩展名的配置，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Data ID:        nacos-config.yaml</span><br><span class="line"></span><br><span class="line">Group  :        DEFAULT_GROUP</span><br><span class="line"></span><br><span class="line">配置格式:        YAML</span><br><span class="line"></span><br><span class="line">配置内容:        user.name: nacos-config-yaml</span><br><span class="line">                user.age: 68</span><br></pre></td></tr></table></figure>
+
+<p>这两步完成后，重启测试程序，可以看到如下输出结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2018-11-02 14:59:00.484  INFO 32928 --- [main] c.a.demo.provider.ProviderApplication:Started ProviderApplication in 14.183 seconds (JVM running for 14.671)</span><br><span class="line">user name :nacos-config-yaml; age: 68</span><br><span class="line">2018-11-02 14:59:00.529  INFO 32928 --- [-127.0.0.1:8848] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@265a478e: startup date [Fri Nov 02 14:59:00 CST 2018]; root of context hierarchy</span><br></pre></td></tr></table></figure>
+
+<h3 id="支持配置的动态更新"><a href="#支持配置的动态更新" class="headerlink" title="支持配置的动态更新"></a>支持配置的动态更新</h3><p>spring-cloud-starter-alibaba-nacos-config 也支持配置的动态更新，启动 Spring Boot 应用测试的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProviderApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> SpringApplication.run(ProviderApplication.class, args);</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">//当动态配置刷新时，会更新到 Enviroment中，因此这里每隔一秒中从Enviroment中获取配置</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">userName</span> <span class="operator">=</span> applicationContext.getEnvironment().getProperty(<span class="string">&quot;user.name&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">userAge</span> <span class="operator">=</span> applicationContext.getEnvironment().getProperty(<span class="string">&quot;user.age&quot;</span>);</span><br><span class="line">            System.err.println(<span class="string">&quot;user name :&quot;</span> + userName + <span class="string">&quot;; age: &quot;</span> + userAge);</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如下所示，当变更user.name时，应用程序中能够获取到最新的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">user name :nacos-config-yaml; age: 68</span><br><span class="line">user name :nacos-config-yaml; age: 68</span><br><span class="line">user name :nacos-config-yaml; age: 68</span><br><span class="line">2018-11-02 15:04:25.069  INFO 32957 --- [-127.0.0.1:8848] o.s.boot.SpringApplication               : Started application in 0.144 seconds (JVM running for 71.752)</span><br><span class="line">2018-11-02 15:04:25.070  INFO 32957 --- [-127.0.0.1:8848] s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@10c89124: startup date [Fri Nov 02 15:04:25 CST 2018]; parent: org.springframework.context.annotation.AnnotationConfigApplicationContext@6520af7</span><br><span class="line">2018-11-02 15:04:25.071  INFO 32957 --- [-127.0.0.1:8848] s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@6520af7: startup date [Fri Nov 02 15:04:24 CST 2018]; root of context hierarchy</span><br><span class="line">//从 Enviroment 中 读取到更改后的值</span><br><span class="line">user name :nacos-config-yaml-update; age: 68</span><br><span class="line">user name :nacos-config-yaml-update; age: 68</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>你可以通过配置 <code>spring.cloud.nacos.config.refresh.enabled=false</code> 来关闭动态刷新</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="可支持profile粒度的配置"><a href="#可支持profile粒度的配置" class="headerlink" title="可支持profile粒度的配置"></a>可支持profile粒度的配置</h3><p>spring-cloud-starter-alibaba-nacos-config 在加载配置的时候，不仅仅加载了以 dataid 为 <code>$&#123;spring.application.name&#125;.$&#123;file-extension:properties&#125;</code> 为前缀的基础配置，还加载了dataid为 <code>$&#123;spring.application.name&#125;-$&#123;profile&#125;.$&#123;file-extension:properties&#125;</code> 的基础配置。在日常开发中如果遇到多套环境下的不同配置，可以通过Spring 提供的 <code>$&#123;spring.profiles.active&#125;</code> 这个配置项来配置。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.profiles.active</span>=<span class="string">develop</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>${spring.profiles.active} 当通过配置文件来指定时必须放在 bootstrap.properties 文件中。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Nacos 上新增一个dataid为：nacos-config-develop.yaml的基础配置，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Data ID:        nacos-config-develop.yaml</span><br><span class="line"></span><br><span class="line">Group  :        DEFAULT_GROUP</span><br><span class="line"></span><br><span class="line">配置格式:        YAML</span><br><span class="line"></span><br><span class="line">配置内容:        current.env: develop-env</span><br></pre></td></tr></table></figure>
+
+<p>启动 Spring Boot 应用测试的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProviderApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> SpringApplication.run(ProviderApplication.class, args);</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">userName</span> <span class="operator">=</span> applicationContext.getEnvironment().getProperty(<span class="string">&quot;user.name&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">userAge</span> <span class="operator">=</span> applicationContext.getEnvironment().getProperty(<span class="string">&quot;user.age&quot;</span>);</span><br><span class="line">            <span class="comment">//获取当前部署的环境</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">currentEnv</span> <span class="operator">=</span> applicationContext.getEnvironment().getProperty(<span class="string">&quot;current.env&quot;</span>);</span><br><span class="line">            System.err.println(<span class="string">&quot;in &quot;</span>+currentEnv+<span class="string">&quot; enviroment; &quot;</span>+<span class="string">&quot;user name :&quot;</span> + userName + <span class="string">&quot;; age: &quot;</span> + userAge);</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动后，可见控制台的输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">in develop-env enviroment; user name :nacos-config-yaml-update; age: 68</span><br><span class="line">2018-11-02 15:34:25.013  INFO 33014 --- [ Thread-11] ConfigServletWebServerApplicationContext : Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@6f1c29b7: startup date [Fri Nov 02 15:33:57 CST 2018]; parent: org.springframework.context.annotation.AnnotationConfigApplicationContext@63355449</span><br></pre></td></tr></table></figure>
+
+<p>如果需要切换到生产环境，只需要更改 <code>$&#123;spring.profiles.active&#125;</code> 参数配置即可。如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.profiles.active=product</span><br></pre></td></tr></table></figure>
+
+<p>同时生产环境上 Nacos 需要添加对应 dataid 的基础配置。例如，在生成环境下的 Naocs 添加了dataid为：nacos-config-product.yaml的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Data ID:        nacos-config-product.yaml</span><br><span class="line"></span><br><span class="line">Group  :        DEFAULT_GROUP</span><br><span class="line"></span><br><span class="line">配置格式:        YAML</span><br><span class="line"></span><br><span class="line">配置内容:        current.env: product-env</span><br></pre></td></tr></table></figure>
+
+<p>启动测试程序，输出结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">in product-env enviroment; user name :nacos-config-yaml-update; age: 68</span><br><span class="line">2018-11-02 15:42:14.628  INFO 33024 --- [Thread-11] ConfigServletWebServerApplicationContext : Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@6aa8e115: startup date [Fri Nov 02 15:42:03 CST 2018]; parent: org.springframework.context.annotation.AnnotationConfigApplicationContext@19bb07ed</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>此案例中我们通过 <code>spring.profiles.active=&lt;profilename&gt;</code> 的方式写死在配置文件中，而在真正的项目实施过程中这个变量的值是需要不同环境而有不同的值。这个时候通常的做法是通过 <code>-Dspring.profiles.active=&lt;profile&gt;</code> 参数指定其配置来达到环境间灵活的切换。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="支持自定义-namespace-的配置"><a href="#支持自定义-namespace-的配置" class="headerlink" title="支持自定义 namespace 的配置"></a>支持自定义 namespace 的配置</h3><p>首先看一下 Nacos 的 Namespace 的概念， <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/concepts.html">Nacos 概念</a></p>
+<blockquote>
+<p>用于进行租户粒度的配置隔离。不同的命名空间下，可以存在相同的 Group 或 Data ID 的配置。Namespace 的常用场景之一是不同环境的配置的区分隔离，例如开发测试环境和生产环境的资源（如配置、服务）隔离等。</p>
+</blockquote>
+<p>在没有明确指定 <code>$&#123;spring.cloud.nacos.config.namespace&#125;</code> 配置的情况下， 默认使用的是 Nacos 上 Public 这个namespae。如果需要使用自定义的命名空间，可以通过以下配置来实现：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.cloud.nacos.config.namespace</span>=<span class="string">b3404bc0-d7dc-4855-b519-570ed34b62d7</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>该配置必须放在 bootstrap.properties 文件中。此外 <code>spring.cloud.nacos.config.namespace</code> 的值是 namespace 对应的 id，id 值可以在 Nacos 的控制台获取。并且在添加配置时注意不要选择其他的 namespae，否则将会导致读取不到正确的配置。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="支持自定义-Group-的配置"><a href="#支持自定义-Group-的配置" class="headerlink" title="支持自定义 Group 的配置"></a>支持自定义 Group 的配置</h3><p>在没有明确指定 <code>$&#123;spring.cloud.nacos.config.group&#125;</code> 配置的情况下， 默认使用的是 DEFAULT_GROUP 。如果需要自定义自己的 Group，可以通过以下配置来实现：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.cloud.nacos.config.group</span>=<span class="string">DEVELOP_GROUP</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>该配置必须放在 bootstrap.properties 文件中。并且在添加配置时 Group 的值一定要和 <code>spring.cloud.nacos.config.group</code> 的配置值一致。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="支持自定义扩展的-Data-Id-配置"><a href="#支持自定义扩展的-Data-Id-配置" class="headerlink" title="支持自定义扩展的 Data Id 配置"></a>支持自定义扩展的 Data Id 配置</h3><p>Spring Cloud Alibaba Nacos Config 从 0.2.1 版本后，可支持自定义 Data Id 的配置。关于这部分详细的设计可参考 <a href="https://github.com/spring-cloud-incubator/spring-cloud-alibaba/issues/141">这里</a>。 一个完整的配置案例如下所示：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">opensource-service-provider</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># config external configuration</span></span><br><span class="line"><span class="comment"># 1、Data Id 在默认的组 DEFAULT_GROUP,不支持配置的动态刷新</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.extension-configs[0].data-id</span>=<span class="string">ext-config-common01.properties</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 2、Data Id 不在默认的组，不支持动态刷新</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.extension-configs[1].data-id</span>=<span class="string">ext-config-common02.properties</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.extension-configs[1].group</span>=<span class="string">GLOBALE_GROUP</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 3、Data Id 既不在默认的组，也支持动态刷新</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.extension-configs[2].data-id</span>=<span class="string">ext-config-common03.properties</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.extension-configs[2].group</span>=<span class="string">REFRESH_GROUP</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.extension-configs[2].refresh</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到:</p>
+<ul>
+<li>通过 <code>spring.cloud.nacos.config.extension-configs[n].data-id</code> 的配置方式来支持多个 Data Id 的配置。</li>
+<li>通过 <code>spring.cloud.nacos.config.extension-configs[n].group</code> 的配置方式自定义 Data Id 所在的组，不明确配置的话，默认是 DEFAULT_GROUP。</li>
+<li>通过 <code>spring.cloud.nacos.config.extension-configs[n].refresh</code> 的配置方式来控制该 Data Id 在配置变更时，是否支持应用中可动态刷新， 感知到最新的配置值。默认是不支持的。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th>多个 Data Id 同时配置时，他的优先级关系是 <code>spring.cloud.nacos.config.extension-configs[n].data-id</code> 其中 n 的值越大，优先级越高。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Note</th>
+<th><code>spring.cloud.nacos.config.extension-configs[n].data-id</code> 的值必须带文件扩展名，文件扩展名既可支持 properties，又可以支持 yaml&#x2F;yml。 此时 <code>spring.cloud.nacos.config.file-extension</code> 的配置对自定义扩展配置的 Data Id 文件扩展名没有影响。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>通过自定义扩展的 Data Id 配置，既可以解决多个应用间配置共享的问题，又可以支持一个应用有多个配置文件。</p>
+<p>为了更加清晰的在多个应用间配置共享的 Data Id ，你可以通过以下的方式来配置：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置支持共享的 Data Id</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.shared-configs[0].data-id</span>=<span class="string">common.yaml</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 配置 Data Id 所在分组，缺省默认 DEFAULT_GROUP</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.shared-configs[0].group</span>=<span class="string">GROUP_APP1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 配置Data Id 在配置变更时，是否动态刷新，缺省默认 false</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.shared-configs[0].refresh</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到：</p>
+<ul>
+<li>通过 <code>spring.cloud.nacos.config.shared-configs[n].data-id</code> 来支持多个共享 Data Id 的配置。</li>
+<li>通过 <code>spring.cloud.nacos.config.shared-configs[n].group</code> 来配置自定义 Data Id 所在的组，不明确配置的话，默认是 DEFAULT_GROUP。</li>
+<li>通过 <code>spring.cloud.nacos.config.shared-configs[n].refresh</code> 来控制该Data Id在配置变更时，是否支持应用中动态刷新，默认false。</li>
+</ul>
+<h3 id="配置的优先级"><a href="#配置的优先级" class="headerlink" title="配置的优先级"></a>配置的优先级</h3><p>Spring Cloud Alibaba Nacos Config 目前提供了三种配置能力从 Nacos 拉取相关的配置。</p>
+<ul>
+<li>A: 通过 <code>spring.cloud.nacos.config.shared-configs[n].data-id</code> 支持多个共享 Data Id 的配置</li>
+<li>B: 通过 <code>spring.cloud.nacos.config.extension-configs[n].data-id</code> 的方式支持多个扩展 Data Id 的配置</li>
+<li>C: 通过内部相关规则(应用名、应用名+ Profile )自动生成相关的 Data Id 配置</li>
+</ul>
+<p>当三种方式共同使用时，他们的一个优先级关系是:A &lt; B &lt; C</p>
+<h3 id="完全关闭配置"><a href="#完全关闭配置" class="headerlink" title="完全关闭配置"></a>完全关闭配置</h3><p>通过设置 spring.cloud.nacos.config.enabled &#x3D; false 来完全关闭 Spring Cloud Nacos Config</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/15474/">https://github.com/maxzhao-it/blog/post/15474/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/3276/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/3276/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>直接上代码：</p>
+<p>【1】引入jar</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.solr<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>solr-solrj<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.10.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-logging<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>【测试代码】<br> javabean:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="title">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="comment">//注意：这里的字符串id字段要在scheme.xml中有配置体现</span></span><br><span class="line">    <span class="meta">@Field(<span class="string">&quot;id&quot;</span>)</span></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line">    <span class="meta">@Field(<span class="string">&quot;name&quot;</span>)</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="meta">@Field(<span class="string">&quot;price&quot;</span>)</span></span><br><span class="line">    <span class="keyword">private</span> double price;</span><br><span class="line">    <span class="meta">@Field(<span class="string">&quot;url&quot;</span>)</span></span><br><span class="line">    <span class="keyword">private</span> String url;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Car()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Car(String id, String name, double price,String url)&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.price = price;</span><br><span class="line">        <span class="keyword">this</span>.url = url;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//getter setter方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String toString() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Car&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;id=&#x27;&quot;</span> + id + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, price=&quot;</span> + price +</span><br><span class="line">                <span class="string">&quot;, url=&#x27;&quot;</span> + url + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>testSolr.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Author:lvfang</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Created by mis on 2017/5/24.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SolrTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">baseURL</span> <span class="operator">=</span> <span class="string">&quot;http://192.168.22.128:8081/solr&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> HttpSolrServer server=<span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 创建SolrServer对象</span></span><br><span class="line"><span class="comment">    * 该对象有两个可以使用，都是线程安全的 1、CommonsHttpSolrServer：启动web服务器使用的，通过http请求的 2、</span></span><br><span class="line"><span class="comment">     * EmbeddedSolrServer：内嵌式的，导入solr的jar包就可以使用了 3、solr</span></span><br><span class="line"><span class="comment">     * 4.0之后好像添加了不少东西，其中CommonsHttpSolrServer这个类改名为HttpSolrClient</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="comment">//new HttpSolrClient.Builder(BASE_URL).build()</span></span><br><span class="line">        server=<span class="keyword">new</span> <span class="title class_">HttpSolrServer</span>(baseURL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 基于索引名添加</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testAdd</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">Car</span> <span class="variable">car1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Car</span>(<span class="string">&quot;Audi000A4001&quot;</span>,<span class="string">&quot;奥迪A4L&quot;</span>,<span class="number">295000</span>,<span class="string">&quot;/images/001.jpg&quot;</span>);</span><br><span class="line">        <span class="comment">//Car car1 = new Car(&quot;BMW0000B5001&quot;,&quot;宝马5系&quot;,436800,&quot;/images/002.jpg&quot;);</span></span><br><span class="line">        <span class="type">SolrInputDocument</span> <span class="variable">doc1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SolrInputDocument</span>();</span><br><span class="line">        doc1.addField(<span class="string">&quot;id&quot;</span>,car1.getId());</span><br><span class="line">        doc1.addField(<span class="string">&quot;name&quot;</span>,car1.getName());</span><br><span class="line">        doc1.addField(<span class="string">&quot;price&quot;</span>,car1.getPrice());</span><br><span class="line">        doc1.addField(<span class="string">&quot;url&quot;</span>,car1.getUrl());</span><br><span class="line">		<span class="comment">// 这里也可以传递集合 List&lt;SolrInputDocument&gt; </span></span><br><span class="line">        server.add(doc1);</span><br><span class="line">        <span class="type">UpdateResponse</span> <span class="variable">rspcommit</span> <span class="operator">=</span> server.commit();</span><br><span class="line">        <span class="comment">// 操作完成 0</span></span><br><span class="line">        rspcommit.getStatus();</span><br><span class="line">        System.out.println(<span class="string">&quot;操作完成！！！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 基于bean添加（注意，这里bean的属性要添加solr的注解<span class="doctag">@Field</span>）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testAddBean</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">Car</span> <span class="variable">car1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Car</span>(<span class="string">&quot;BMW0000B5001&quot;</span>,<span class="string">&quot;宝马5系&quot;</span>,<span class="number">436800</span>,<span class="string">&quot;/images/002.jpg&quot;</span>);</span><br><span class="line">        server.addBean(car1);</span><br><span class="line">        <span class="comment">// 添加集合  List&lt;Car&gt;</span></span><br><span class="line">        <span class="comment">// server.addBeans(list);</span></span><br><span class="line">        server.commit();</span><br><span class="line">        System.out.println(<span class="string">&quot;操作完成！！！&quot;</span>);</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Document结果转换bean</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">change</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">SolrDocument</span> <span class="variable">doc1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SolrDocument</span>();</span><br><span class="line">        doc1.addField(<span class="string">&quot;id&quot;</span>,<span class="string">&quot;Siju0032SJ0C8001&quot;</span>);</span><br><span class="line">        doc1.addField(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;世爵C8&quot;</span>);</span><br><span class="line">        doc1.addField(<span class="string">&quot;price&quot;</span>,<span class="number">1370000</span>);</span><br><span class="line">        doc1.addField(<span class="string">&quot;url&quot;</span>,<span class="string">&quot;/images/005.jps&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Car</span> <span class="variable">car</span> <span class="operator">=</span> server.getBinder().getBean(Car.class,doc1);</span><br><span class="line">        System.out.println(car);</span><br><span class="line">        System.out.println(<span class="string">&quot;操作完成！！！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testDel</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="comment">//server.deleteById(&quot;1&quot;);</span></span><br><span class="line">        server.deleteByQuery(<span class="string">&quot;*:*&quot;</span>);</span><br><span class="line">        server.commit();</span><br><span class="line">        System.out.println(<span class="string">&quot;操作完成！！！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 修改（可以理解为重新添加，）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">SolrInputDocument</span> <span class="variable">doc1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SolrInputDocument</span>();</span><br><span class="line">        doc1.addField(<span class="string">&quot;id&quot;</span>,<span class="string">&quot;1&quot;</span>);</span><br><span class="line">        doc1.addField(<span class="string">&quot;title&quot;</span>,<span class="string">&quot;lisi&quot;</span>);</span><br><span class="line">        server.add(doc1);</span><br><span class="line"></span><br><span class="line">        server.commit();</span><br><span class="line">        System.out.println(<span class="string">&quot;操作完成！！！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查询</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testQuery</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">SolrQuery</span> <span class="variable">query</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SolrQuery</span>(<span class="string">&quot;name:*&quot;</span>);</span><br><span class="line">        <span class="comment">//SolrQuery query = new SolrQuery(&quot;*:*&quot;);</span></span><br><span class="line">        query.setStart(<span class="number">0</span>);<span class="comment">//起始页</span></span><br><span class="line">        query.setRows(<span class="number">3</span>);<span class="comment">//每页显示数量</span></span><br><span class="line"></span><br><span class="line">        <span class="type">QueryResponse</span> <span class="variable">rsp</span> <span class="operator">=</span> server.query( query );</span><br><span class="line">        <span class="type">SolrDocumentList</span> <span class="variable">results</span> <span class="operator">=</span> rsp.getResults();</span><br><span class="line">        System.out.println(<span class="string">&quot;总记录数为：&quot;</span> + results.getNumFound());<span class="comment">//查询总条数</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(SolrDocument document : results)&#123;</span><br><span class="line">            System.out.println(document.get(<span class="string">&quot;id&quot;</span>) + <span class="string">&quot; &quot;</span> + document.get(<span class="string">&quot;name&quot;</span>) + <span class="string">&quot; &quot;</span> + document.get(<span class="string">&quot;price&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 多条件查询</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testQueryMulti</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">ModifiableSolrParams</span> <span class="variable">params</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModifiableSolrParams</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//组织查询条件</span></span><br><span class="line">        params.set(<span class="string">&quot;q&quot;</span>,<span class="string">&quot;*:*&quot;</span>);</span><br><span class="line">        params.set(<span class="string">&quot;start&quot;</span>,<span class="number">0</span>);</span><br><span class="line">        params.set(<span class="string">&quot;rows&quot;</span>,<span class="number">10</span>);</span><br><span class="line">        params.set(<span class="string">&quot;sort&quot;</span>,<span class="string">&quot;price desc&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">QueryResponse</span> <span class="variable">response</span> <span class="operator">=</span> server.query(params);</span><br><span class="line">        <span class="type">SolrDocumentList</span> <span class="variable">list</span> <span class="operator">=</span> response.getResults();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(SolrDocument doc : list)&#123;</span><br><span class="line">            System.out.println(server.getBinder().getBean(Car.class,doc));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testQueryCase</span><span class="params">()</span> <span class="keyword">throws</span>  Exception&#123;</span><br><span class="line">        <span class="type">SolrQuery</span> <span class="variable">params</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SolrQuery</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//AND OR NOT条件</span></span><br><span class="line"><span class="comment">//      params.set(&quot;q&quot;,&quot;name:35系 AND price:152880.0&quot;);</span></span><br><span class="line"><span class="comment">//      params.set(&quot;q&quot;,&quot;name:5系 OR price:152880.0&quot;);</span></span><br><span class="line"><span class="comment">//      params.set(&quot;q&quot;,&quot;name:5系 NOT price:152880.0&quot;);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//To 条件  min &lt;= price &lt;= max</span></span><br><span class="line"><span class="comment">//      params.set(&quot;q&quot;,&quot;price:[130000 TO 160000]&quot;);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//To 条件  min &lt; price &lt; max</span></span><br><span class="line"><span class="comment">//      params.set(&quot;q&quot;,&quot;price:&#123;130000 TO 160000&#125;&quot;);</span></span><br><span class="line"><span class="comment">//      params.addFacetQuery(&quot;name:宝马&quot;);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//显示设置</span></span><br><span class="line"><span class="comment">//      params.setHighlight(true);</span></span><br><span class="line"><span class="comment">//      params.addHighlightField(&quot;name&quot;);</span></span><br><span class="line"><span class="comment">//      params.setHighlightSimplePre(&quot;&lt;font color = &#x27;red&#x27;&gt;&quot;);</span></span><br><span class="line"><span class="comment">//      params.setHighlightSimplePost(&quot;&lt;/font&gt;&quot;);</span></span><br><span class="line"><span class="comment">//      params.setHighlightSnippets(1);</span></span><br><span class="line"><span class="comment">//      params.setHighlightFragsize(100);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//      params.set(&quot;start&quot;,0);</span></span><br><span class="line"><span class="comment">//      params.set(&quot;rows&quot;,10);</span></span><br><span class="line">        params.set(<span class="string">&quot;sort&quot;</span>,<span class="string">&quot;price desc&quot;</span>);</span><br><span class="line">        <span class="type">QueryResponse</span> <span class="variable">response</span> <span class="operator">=</span> server.query(params);</span><br><span class="line">        <span class="type">SolrDocumentList</span> <span class="variable">list</span> <span class="operator">=</span> response.getResults();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(SolrDocument doc : list)&#123;</span><br><span class="line">            System.out.println(server.getBinder().getBean(Car.class,doc));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@After</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span>&#123;</span><br><span class="line">        server.shutdown();</span><br><span class="line">        server = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.sunjs.com/article/detail/3c89d0ce0dd14cc09079a02121520d91.html">参考JAVA对Solr的增删查改</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/3276/">https://github.com/maxzhao-it/blog/post/3276/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/65045/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/65045/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qingyunzong/p/9004509.html">https://www.cnblogs.com/qingyunzong/p/9004509.html</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/65045/">https://github.com/maxzhao-it/blog/post/65045/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/38204/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/38204/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="java-lang-IllegalStateException-Unable-to-read-meta-data-for-class"><a href="#java-lang-IllegalStateException-Unable-to-read-meta-data-for-class" class="headerlink" title="java.lang.IllegalStateException: Unable to read meta-data for class"></a>java.lang.IllegalStateException: Unable to read meta-data for class</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalStateException: Unable to read meta-data for class</span><br></pre></td></tr></table></figure>
+
+<p>一般是由 <code>resources\META-INF\spring.factories</code>文件引起的，检查当前文件。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/38204/">https://github.com/maxzhao-it/blog/post/38204/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -475,817 +1322,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4636/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/4636/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Java 自定义序列化时的原理：</p>
-<p><img src="/blog/home/maxzhao/.config/Typora/typora-user-images/image-20200513142244770.png"></p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/4636/">https://github.com/maxzhao-it/blog/post/4636/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7ebd2e5c/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/7ebd2e5c/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="/blog/uploads/images/JAVA/JDK/java.lang/v2-c06e74c4a9480b343c92c849291ba5f5_720w.jpg" alt="img"></p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7ebd2e5c/">https://github.com/maxzhao-it/blog/post/7ebd2e5c/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/8778/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/8778/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>记录自己在Linux上打包APK的过程。</p>
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
-<li>OS: Arch Linux</li>
-<li>Kernel: x86_64 Linux 5.6.13-arch1-1</li>
-<li>SDK: 26.0.3</li>
-<li>签名v2: apksigner\zipalign （我这里的属于SDK29.0.3，可以签名）</li>
-</ul>
-<h3 id="安装SDK"><a href="#安装SDK" class="headerlink" title="安装SDK"></a>安装SDK</h3><p>ArchLinux 下直接可以安装 <code>sudo pacman -S android-sdk</code></p>
-<p>其它发行版百度可以解决;</p>
-<h3 id="安装需要的-版本"><a href="#安装需要的-版本" class="headerlink" title="安装需要的 版本"></a>安装需要的 版本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager <span class="string">&quot;build-tools;26.0.0&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="把签名工具放入环境变量中"><a href="#把签名工具放入环境变量中" class="headerlink" title="把签名工具放入环境变量中"></a>把签名工具放入环境变量中</h3><h3 id="开始打包"><a href="#开始打包" class="headerlink" title="开始打包"></a>开始打包</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cordova platform rm android</span><br><span class="line">cordova platform add android@6.4.0</span><br><span class="line">gulp build:android  </span><br></pre></td></tr></table></figure>
-
-<p><code>gulp build:android</code>是自定义脚本</p>
-<p>主要执行三步操作：</p>
-<ul>
-<li><p>‘cordova-build:android’ 打包</p>
-</li>
-<li><p>‘zipalign’ 签名</p>
-</li>
-<li><p>‘apksigner:sign’ 签名</p>
-</li>
-</ul>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/8778/">https://github.com/maxzhao-it/blog/post/8778/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/18836/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/18836/" class="post-title-link" itemprop="url">Cordova打包Angular项目</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Hybrid/" itemprop="url" rel="index"><span itemprop="name">Hybrid</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Hybrid/Cordova/" itemprop="url" rel="index"><span itemprop="name">Cordova</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>已有 <code>Angular</code> 项目，使用 <code>Cordova</code> 打包成 <code>APP</code>。</p>
-<blockquote>
-<p><code>Angular version = 11.2.10</code><br><code>Cordova version = 10.0.0</code></p>
-</blockquote>
-<h1 id="创建-Cordova-项目"><a href="#创建-Cordova-项目" class="headerlink" title="创建 Cordova 项目"></a>创建 <code>Cordova</code> 项目</h1><h2 id="项目名称与-Angular-项目名称相同"><a href="#项目名称与-Angular-项目名称相同" class="headerlink" title="项目名称与 Angular 项目名称相同"></a>项目名称与 <code>Angular</code> 项目名称相同</h2><h2 id="下载-gradle-6-5-all-zip-timtout"><a href="#下载-gradle-6-5-all-zip-timtout" class="headerlink" title="下载 gradle-6.5-all.zip timtout"></a>下载 <code>gradle-6.5-all.zip timtout</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Downloading https://services.gradle.org/distributions/gradle-6.5-all.zip failed: <span class="built_in">timeout</span></span><br></pre></td></tr></table></figure>
-<p>直接浏览器下载，然后放入路径</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/maxzhao/.gradle/wrapper/dists/gradle-6.5-all/2oz4ud9k3tuxjg84bbf55q0tn</span><br></pre></td></tr></table></figure>
-
-<p><code>GRADLE_USER_HOME</code>可以修改面上的路径。</p>
-<h2 id="gradle-使用-阿里云镜像"><a href="#gradle-使用-阿里云镜像" class="headerlink" title="gradle 使用 阿里云镜像"></a><code>gradle</code> 使用 阿里云镜像</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line">    <span class="keyword">repositories</span> &#123; </span><br><span class="line">      maven &#123; url <span class="string">&#x27;https://maven.aliyun.com/repository/google&#x27;</span> &#125;</span><br><span class="line">      maven &#123; url <span class="string">&#x27;https://maven.aliyun.com/repository/jcenter&#x27;</span> &#125;</span><br><span class="line">      maven &#123; url <span class="string">&#x27;http://maven.aliyun.com/nexus/content/groups/public&#x27;</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">allprojects</span> &#123;</span><br><span class="line">    <span class="keyword">repositories</span> &#123;</span><br><span class="line">      maven &#123; url <span class="string">&#x27;https://maven.aliyun.com/repository/google&#x27;</span> &#125;</span><br><span class="line">      maven &#123; url <span class="string">&#x27;https://maven.aliyun.com/repository/jcenter&#x27;</span> &#125;</span><br><span class="line">      maven &#123; url <span class="string">&#x27;http://maven.aliyun.com/nexus/content/groups/public&#x27;</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>备用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">maven &#123; url &#x27;http://maven.aliyun.com/nexus/content/groups/public/&#x27; &#125;</span><br><span class="line"> maven &#123; url &#x27;http://maven.aliyun.com/nexus/content/repositories/jcenter&#x27; &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/18836/">https://github.com/maxzhao-it/blog/post/18836/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/40242/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/40242/" class="post-title-link" itemprop="url">IOS用H5播放语音（视频）流失败</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E6%B7%B7%E5%90%88%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">混合开发</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E6%B7%B7%E5%90%88%E5%BC%80%E5%8F%91/IOS/" itemprop="url" rel="index"><span itemprop="name">IOS</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E6%B7%B7%E5%90%88%E5%BC%80%E5%8F%91/IOS/IOS%E4%BD%BF%E7%94%A8H5%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91%EF%BC%88%E8%A7%86%E9%A2%91%EF%BC%89%E6%B5%81/" itemprop="url" rel="index"><span itemprop="name">IOS使用H5播放音频（视频）流</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当前主要记录问题的<strong>发现过程</strong>以及<strong>解决过程</strong>，其中包含关键性的<strong>代码（也包含错误代码）</strong>。</p>
-<p>主线任务外的分析过程省略，但会展示部分的分析结果。</p>
-<h2 id="问题的发现"><a href="#问题的发现" class="headerlink" title="问题的发现"></a>问题的发现</h2><h4 id="1-使用文件服务"><a href="#1-使用文件服务" class="headerlink" title="1. 使用文件服务"></a>1. 使用文件服务</h4><p>有一个文件服务，这个文件服务可以对接多种存储，所以我们封装了上传、下载文件的方法。</p>
-<h4 id="2-调用文件服务接口"><a href="#2-调用文件服务接口" class="headerlink" title="2. 调用文件服务接口"></a>2. 调用文件服务接口</h4><p>上传、下载文件是没什么问题的，问题出现在了使用 <strong><audio></strong>   与  <strong><video></strong> 标签上。</p>
-<p>标签的 <code>src</code> 指向音频（视频）文件的下载地址。</p>
-<p><code>备注：如果这里不是通过下载地址返回文件流，下面的叙述就可以不用看了。</code></p>
-<h5 id="下载代码展示"><a href="#下载代码展示" class="headerlink" title="下载代码展示"></a>下载代码展示</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileSystemController</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&#123;&quot;/&#123;id&#125;&quot;&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;org.springframework.core.io.Resource&gt; download(<span class="meta">@PathVariable</span> String id) <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        org.springframework.core.io.<span class="type">Resource</span> <span class="variable">resource</span> <span class="operator">=</span> <span class="built_in">this</span>.fileServerService.downloadAttach(id);</span><br><span class="line">        <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpHeaders</span>();</span><br><span class="line">        <span class="type">long</span> <span class="variable">contentLength</span> <span class="operator">=</span> <span class="number">0L</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            headers.add(<span class="string">&quot;Content-Disposition&quot;</span>, <span class="string">&quot;attachment;filename=&quot;</span> + resource.getFilename());</span><br><span class="line">            contentLength = resource.contentLength();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException var7) &#123;</span><br><span class="line">            log.error(var7.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ((BodyBuilder) ResponseEntity.ok().headers(headers)).contentLength(contentLength).contentType(MediaType.parseMediaType(<span class="string">&quot;application/octet-stream&quot;</span>)).body(resource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>此时会发现，所有的音频（视频）文件流 <code>src</code>都是播放不了的。</p>
-<p>如果仔细探究当前代码，会发现当前会返回”多余的结果”，<strong>由此猜测：</strong>这些”多余的结果”导致无法直接播放音频（视频），图片也是一样的道理。</p>
-<h4 id="3-单独开发音频（视频）文件预览接口"><a href="#3-单独开发音频（视频）文件预览接口" class="headerlink" title="3. 单独开发音频（视频）文件预览接口"></a>3. 单独开发音频（视频）文件预览接口</h4><h5 id="第一个版本比较简陋，这里不做分析。"><a href="#第一个版本比较简陋，这里不做分析。" class="headerlink" title="第一个版本比较简陋，这里不做分析。"></a>第一个版本比较简陋，这里不做分析。</h5><h5 id="代码展示：第二个版本"><a href="#代码展示：第二个版本" class="headerlink" title="代码展示：第二个版本"></a>代码展示：第二个版本</h5><p>第二个版本对音频（视频）文件做了分片处理</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileSystemController</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&#123;&quot;/&#123;id&#125;&quot;&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">download</span><span class="params">(<span class="meta">@PathVariable</span> String id,</span></span><br><span class="line"><span class="params">                         HttpServletRequest request,</span></span><br><span class="line"><span class="params">                         HttpServletResponse response)</span> &#123;</span><br><span class="line">        org.springframework.core.io.Resource resource;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            resource = <span class="built_in">this</span>.fileServerService.downloadAttach(id);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RuntimeException runtimeException) &#123;</span><br><span class="line">            <span class="comment">/*文件不存在*/</span></span><br><span class="line">            log.error(<span class="string">&quot;当前获取的文件不存在 &#123;&#125; &quot;</span>, id);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            response.setHeader(<span class="string">&quot;Content-Disposition&quot;</span>, <span class="string">&quot;attachment;filename=&quot;</span> + resource.getFilename());</span><br><span class="line">            <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> id.toLowerCase();</span><br><span class="line">            <span class="comment">/*获取扩展名*/</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">extName</span> <span class="operator">=</span> fileName.substring(fileName.lastIndexOf(<span class="string">&quot;.&quot;</span>) + <span class="number">1</span>);</span><br><span class="line">            <span class="comment">/*获取 range*/</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">requestRange</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;range&quot;</span>);</span><br><span class="line">            <span class="comment">/*实际长度*/</span></span><br><span class="line">            <span class="type">long</span> <span class="variable">contentLength</span> <span class="operator">=</span> resource.contentLength();</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(requestRange)) &#123;</span><br><span class="line">                <span class="comment">/*获取需要的长度*/</span></span><br><span class="line">                String[] rangeLimit = requestRange.substring(<span class="number">6</span>).split(<span class="string">&quot;-&quot;</span>);</span><br><span class="line">                <span class="type">String</span> <span class="variable">rangeStart</span> <span class="operator">=</span> rangeLimit[<span class="number">0</span>];</span><br><span class="line">                <span class="keyword">if</span> (!StringUtils.hasText(rangeStart)) &#123;</span><br><span class="line">                    rangeStart = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="type">String</span> <span class="variable">rangeEnd</span> <span class="operator">=</span> rangeLimit.length == <span class="number">2</span> ? rangeLimit[<span class="number">1</span>] : <span class="string">&quot;&quot;</span>;</span><br><span class="line">                <span class="keyword">if</span> (StringUtils.hasText(rangeEnd)) &#123;</span><br><span class="line">                    <span class="comment">/*存在结束*/</span></span><br><span class="line">                    response.setHeader(<span class="string">&quot;Content-Range&quot;</span>, <span class="string">&quot;bytes &quot;</span> + rangeStart + <span class="string">&quot;-&quot;</span> + rangeEnd + <span class="string">&quot;/&quot;</span> + resource.contentLength());</span><br><span class="line">                    contentLength = Integer.parseInt(rangeEnd) - Integer.parseInt(rangeStart) + <span class="number">1</span>;</span><br><span class="line">                    response.setHeader(<span class="string">&quot;Accept-Ranges&quot;</span>, <span class="string">&quot;bytes&quot;</span>);</span><br><span class="line">                    response.setHeader(<span class="string">&quot;Last-Modified&quot;</span>, <span class="keyword">new</span> <span class="title class_">Date</span>().toString());</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">/*不存在分片*/</span></span><br><span class="line">                    response.setHeader(<span class="string">&quot;Content-Range&quot;</span>, <span class="string">&quot;bytes &quot;</span> + rangeStart + <span class="string">&quot;-&quot;</span> + resource.contentLength() + <span class="string">&quot;/&quot;</span> + resource.contentLength());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                response.setHeader(<span class="string">&quot;Content-Range&quot;</span>, <span class="string">&quot;bytes 0-&quot;</span> + resource.contentLength() + <span class="string">&quot;/&quot;</span> + resource.contentLength());</span><br><span class="line">            &#125;</span><br><span class="line">            response.setContentLengthLong(contentLength);</span><br><span class="line">            <span class="keyword">if</span> (videoExtNames.contains(extName)) &#123;</span><br><span class="line">                response.setHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;video/&quot;</span> + extName);</span><br><span class="line">                response.setContentType(<span class="string">&quot;video/&quot;</span> + extName);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (audioExtNames.contains(extName)) &#123;</span><br><span class="line">                response.setHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;audio/&quot;</span> + extName);</span><br><span class="line">                response.setContentType(<span class="string">&quot;audio/&quot;</span> + extName);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                response.setContentType(<span class="string">&quot;application/octet-stream&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">BufferedInputStream</span> <span class="variable">bufferedInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedInputStream</span>(resource.getInputStream());</span><br><span class="line">            <span class="type">byte</span>[] b = <span class="keyword">new</span> <span class="title class_">byte</span>[bufferedInputStream.available()];</span><br><span class="line">            bufferedInputStream.read(b);</span><br><span class="line">            <span class="type">ServletOutputStream</span> <span class="variable">outputStream</span> <span class="operator">=</span> response.getOutputStream();</span><br><span class="line">            outputStream.write(b);</span><br><span class="line">            outputStream.flush();</span><br><span class="line">            outputStream.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;获取文件报错:&#123;&#125;&quot;</span>, e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-使用第二个版本的代码"><a href="#4-使用第二个版本的代码" class="headerlink" title="4. 使用第二个版本的代码"></a>4. 使用第二个版本的代码</h4><ol>
-<li>当前代码在<strong>安卓</strong>、<strong>chrome</strong>等苹果外的设备测试正常，图片、音频（视频）展示正常，播放正常；</li>
-<li>当打包<strong>IOS</strong>和<strong>safari</strong>浏览器中使用时，会出现两种现象：<ol>
-<li>视频在网络信号差时会缺少片段；</li>
-<li>音频文件大于 <code>50KB</code>时，会出现异常情况，比如：全是杂音、播放出错；</li>
-</ol>
-</li>
-</ol>
-<h4 id="5-对苹果设备中的现象不断测试"><a href="#5-对苹果设备中的现象不断测试" class="headerlink" title="5. 对苹果设备中的现象不断测试"></a>5. 对苹果设备中的现象不断测试</h4><p>经过长时间的测试，发现了不少现象：</p>
-<ol>
-<li>本地访问不会报错（<code>app</code>与文件服务在同一台设备上）；</li>
-<li>音频大于 <code>50KB</code>时，会出现杂音、播放出错、时长不够、重复播放片段；</li>
-<li>视频播放会缺少部分片段、时长不够；</li>
-</ol>
-<h4 id="6-根据出现的现象，对现象进行分析"><a href="#6-根据出现的现象，对现象进行分析" class="headerlink" title="6. 根据出现的现象，对现象进行分析"></a>6. 根据出现的现象，对现象进行分析</h4><p>这些问题的出现，主要在<code>app</code>与文件服务是否在统一服务器上；</p>
-<ol>
-<li><strong>测试情况1</strong>：<code>app</code>与文件服务部署在同一台服务器上；</li>
-<li><strong>测试情况2</strong>：<code>app</code>与文件服务部署在不同服务器上；</li>
-</ol>
-<p>针对这个相同服务器与不同服务器的请求进行分析，得出几种结论：</p>
-<ol>
-<li>苹果外的设备会<strong>一次获取</strong>整个音频（视频）文件；<ol>
-<li><code>header</code>中的<code>range</code>为 <code>bytes=0-</code>；</li>
-</ol>
-</li>
-<li>苹果设备在<strong>测试情况1</strong>中，会发送两次请求获取文件：<ol>
-<li><code>range 0-1</code>请求当前文件是否存在。</li>
-<li><code>range 0-3000</code> 请求当前文件（<code>3000</code>是文件大小，也就是<code>header</code>中的<code>ContentLength</code>）。</li>
-<li><strong>结果：音频（视频）可以正常播放；</strong></li>
-</ol>
-</li>
-<li>苹果设备在<strong>测试情况2</strong>中，会发送多次请求获取文件：<ol>
-<li><code>range 0-1</code>请求当前文件是否存在。<strong>——请求正常返回</strong></li>
-<li><code>range 0-3000</code> 请求当前文件。<span style="color:red;"><strong>——请求错误</strong></span></li>
-<li><code>range 588-2563</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
-<li><code>range 2563-3000</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
-<li><strong>结果：会出现杂音、播放出错、时长不够、重复播放片段等现象</strong></li>
-</ol>
-</li>
-</ol>
-<h4 id="7-通过现象调整代码"><a href="#7-通过现象调整代码" class="headerlink" title="7. 通过现象调整代码"></a>7. 通过现象调整代码</h4><p>经过一番风雨发现：</p>
-<p>分片操作不对，在分片时，需要根据分片的大小，读取文件不同的片段。</p>
-<p>改动后的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileSystemController</span> &#123;</span><br><span class="line">    <span class="comment">//    ****</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">download</span><span class="params">(<span class="meta">@PathVariable</span> String id,</span></span><br><span class="line"><span class="params">                         HttpServletRequest request,</span></span><br><span class="line"><span class="params">                         HttpServletResponse response)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasText(requestRange)) &#123;</span><br><span class="line">            outputStream.write(b, (<span class="type">int</span>) rangeStart, (<span class="type">int</span>) contentLength);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            outputStream.write(b);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里会把当前<strong>苹果设备</strong>请求的分片大小，写到输出流中。</p>
-<h4 id="8-针对有问题的测试情况2进行测试"><a href="#8-针对有问题的测试情况2进行测试" class="headerlink" title="8. 针对有问题的测试情况2进行测试"></a>8. 针对有问题的<strong>测试情况2</strong>进行测试</h4><p>苹果设备在<strong>测试情况2</strong>中，会发送多次请求获取文件：</p>
-<ol>
-<li><code>range 0-1</code>请求当前文件是否存在。<strong>——请求正常返回</strong></li>
-<li><code>range 0-3000</code> 请求当前文件。<span style="color:red;"><strong>——请求错误</strong></span></li>
-<li><code>range 588-2563</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
-<li><code>range 2563-3000</code> 分片请求当前文件。<strong>——请求正常返回</strong></li>
-<li><strong>结果：语音（视频）</strong>播放正常。</li>
-</ol>
-<h4 id="9-针对正常结果进行分析"><a href="#9-针对正常结果进行分析" class="headerlink" title="9. 针对正常结果进行分析"></a>9. 针对正常结果进行分析</h4><ol>
-<li>对于苹果设备的分片请求，没有正确的分片，会导致苹果设备获取到错误的片段，从而导致杂音。</li>
-<li>苹果设备有一个分片是<strong>请求全部文件</strong>，但是报错了，不影响播放。</li>
-</ol>
-<h4 id="代码中的问题"><a href="#代码中的问题" class="headerlink" title="代码中的问题"></a>代码中的问题</h4><p>这里的问题主要体现在文件分片的逻辑错误，在苹果设备外的其它设备上，是体现不出当前分片效果的。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/40242/">https://github.com/maxzhao-it/blog/post/40242/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7552f68d/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/7552f68d/" class="post-title-link" itemprop="url">IM的消息系统架构</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/IM/" itemprop="url" rel="index"><span itemprop="name">IM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如今高度信息化的互联网时代，生活中<code>Instant Messaging</code>与我们息息相关，例如微信、钉钉等以 <code>IM</code> 系统为核心的产品。像一些游戏、社交软件都离不开 <code>IM</code>。</p>
-<p> <code>IM</code> 从早起的 <code>QQ</code>、飞信等发展到现在，软件架构也不断的在迭代，从早期的CS、P2P演变到现在，后台已经成为了一个复杂的分布式系统，涉及网络通讯、移动端、安全、存储、检索等技术。</p>
-<p><code>IM</code>系统中最核心的是消息系统，消息系统的核心功能有消息的同步、存储和检索；</p>
-<p>下面就基于社区比较火的 <code>Timeline</code>模型来构建消息系统（不依赖 <code>TableStore</code>）。</p>
-<h2 id="传统架构VS现代架构"><a href="#传统架构VS现代架构" class="headerlink" title="传统架构VS现代架构"></a>传统架构VS现代架构</h2><p><img src="/blog/uploads/images/4cc3b1ade97b9290c56aeda2e8147b9e.png"></p>
-<p>主要区别就是 现代架构下，消息是先存储后同步，消息不会丢失，多端同步、消息检索都是全量消息存储带来的好处。</p>
-<p>现在架构下最大的挑战就是消息管理和索引。</p>
-<h2 id="基础模型"><a href="#基础模型" class="headerlink" title="基础模型"></a>基础模型</h2><h3 id="Timeline-模型"><a href="#Timeline-模型" class="headerlink" title="Timeline 模型"></a><code>Timeline</code> 模型</h3><p><code>Timeline</code>模型是针对消息数据场景所新创的一个数据模型，它的特色在于能够满足消息数据场景对消息保序、海量消息存储、实时同步的特殊需求。</p>
-<p><img src="/blog/uploads/images/eff4116cb2daa5db6eab53eb72c07e80.png"></p>
-<p><code>Timeline</code>的构成主要包括：</p>
-<ul>
-<li><code>Timeline ID</code>：唯一标识Timeline的ID。</li>
-<li><code>Timeline Meta</code>：<code>Timeline</code>的元数据，元数据内可包含任意键值对属性。</li>
-<li><code>Message Sequence</code>：消息队列，承载该Timeline下的所有消息。消息在队列里有序保存，并且根据写入顺序分配自增的ID。一个消息队列可承载的消息个数无上限，在消息队列内部可根据消息ID随机定位某条消息，并提供正序或者反序扫描。</li>
-<li><code>Message Entry</code>：消息体，包含消息的具体内容，可以包含任意键值对。</li>
-</ul>
-<p><strong>消息同步</strong>可以基于 <code>Timeline</code>实现，搭配 <code>ack</code> 机制，无障碍拉取各端消息。</p>
-<p><strong>消息存储</strong>可以基于 <code>Timeline</code>实现，持久化所有数据。</p>
-<p><strong>消息检索</strong>一般基于消息内容和消息类型来灵活检索。</p>
-<h3 id="消息存储模型"><a href="#消息存储模型" class="headerlink" title="消息存储模型"></a>消息存储模型</h3><p><img src="/blog/uploads/images/3d3c24fc5be76697d79339b459568013.png"></p>
-<p>消息存储要求每个会话都对应一个 <code>Timeline</code>,消息根据会话顺序排序，然后持久化存储。</p>
-<h3 id="消息同步模型"><a href="#消息同步模型" class="headerlink" title="消息同步模型"></a>消息同步模型</h3><p><img src="/blog/uploads/images/176939b469c63765ab0a543c4832f034.png"></p>
-<p>消息同步模型一般有读扩散（也叫拉模式）和写扩散（也叫推模式）两种不同的方式。</p>
-<ul>
-<li><strong>读扩散</strong>：消息存储模型中，每个会话的 <code>Timeline</code> 中保存了这个会话的全量消息。读扩散的消息同步模式下，每个会话中产生的新的消息，只需要写一次到其用于存储的 Timeline 中，接收端从这个 <code>Timeline</code> 中拉取新的消息。优点是消息只需要写一次，相比写扩散的模式，能够大大降低消息写入次数，特别是在群消息这种场景下。但其缺点也比较明显，接收端去同步消息的逻辑会相对复杂和低效。接收端需要对每个会话都拉取一次才能获取全部消息，读被大大的放大，并且会产生很多无效的读，因为并不是每个会话都会有新消息产生。</li>
-</ul>
-<ol>
-<li><strong>写扩散</strong>：写扩散的消息同步模式，需要有一个额外的 <code>Timeline</code> 来专门用于消息同步，通常是每个接收端都会拥有一个独立的同步 <code>Timeline</code>（或者叫收件箱），用于存放需要向这个接收端同步的所有消息。每个会话中的消息，会产生多次写，除了写入用于消息存储的会话 <code>Timeline</code>，还需要写入需要同步到的接收端的同步 <code>Timeline</code>。在个人与个人的会话中，消息会被额外写两次，除了写入这个会话的存储 <code>Timeline</code>，还需要写入参与这个会话的两个接收者的同步 <code>Timeline</code>。而在群这个场景下，写入会被更加的放大，如果这个群拥有 N 个参与者，那每条消息都需要额外的写 N 次。写扩散同步模式的优点是，在接收端消息同步逻辑会非常简单，只需要从其同步 <code>Timeline</code> 中读取一次即可，大大降低了消息同步所需的读的压力。其缺点就是消息写入会被放大，特别是针对群这种场景。</li>
-</ol>
-<p><code>Timeline</code> 模型不会对选择读扩散还是写扩散做约束，而是能同时支持两种模式，因为本质上两种模式的逻辑数据模型并无差别，只是消息数据是用一个 <code>Timeline</code> 来支持多端读还是复制到多个 Timeline 来支持多端读的问题。</p>
-<p><code>IM</code>消息系统用，通常选择<strong>写扩散</strong>，消息一般写入一次，频繁读取，典型的读多写少的场景。大大增加了读的性能，用空间换时间。但是对于万人大群，读扩散又是一个好的选择。</p>
-<h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><p><img src="/blog/uploads/images/image-20220112085735400.png"></p>
-<p>如图是一个典型的消息系统架构，架构中包含几个重要组件：</p>
-<ul>
-<li><strong>接入端</strong>：作为消息的发送和接收端。</li>
-<li><strong>消息服务</strong>：一组无状态的服务器，可水平扩展，处理消息的发送和接收请求，连接后端消息系统。</li>
-<li><strong>消息队列</strong>：新写入消息的缓冲队列，消息系统的前置消息存储，用于削峰填谷以及异步消费。</li>
-<li><strong>消息处理</strong>：一组无状态的消费处理服务器，用于异步消费消息队列中的消息数据，处理消息的持久化和写扩散同步。</li>
-<li><strong>消息存储和索引库</strong>：持久化存储消息，每个会话对应一个 <code>Timeline</code> 进行消息存储，存储的消息建立索引来实现消息检索。</li>
-<li><strong>消息同步库</strong>：写扩散形式同步消息，每个用户的收件箱对应一个 Timeline，同步库内消息不需要永久保存，通常对消息设定一个生命周期。<br>新消息会由端发出，通常消息体中会携带消息 ID（用于去重）、逻辑时间戳（用于排序）、消息类型（控制消息、图片消息或者文本消息等）、消息体等内容。消息会先写入消息队列，作为底层存储的一个临时缓冲区。消息队列中的消息会由消息处理服务器消费，可以允许乱序消费。消息处理服务器对消息先存储后同步，先写入发件箱 Timeline（存储库），后写扩散至各个接收端的收件箱（同步库）。消息数据写入存储库后，会被近实时的构建索引，索引包括文本消息的全文索引以及多字段索引（发送方、消息类型等）。</li>
-</ul>
-<p>对于在线的设备，可以由消息服务器主动推送至在线设备端。对于离线设备，登录后会主动向服务端同步消息。每个设备会在本地保留有最新一条消息的顺序 <code>ID</code>，向服务端同步该顺序 <code>ID</code> 后的所有消息。</p>
-<h2 id="数据库选型"><a href="#数据库选型" class="headerlink" title="数据库选型"></a>数据库选型</h2><h3 id="基于-TableStore"><a href="#基于-TableStore" class="headerlink" title="基于 TableStore"></a>基于 <code>TableStore</code></h3><p>消息系统最核心的两个库是消息同步库和消息存储库，两个库对数据库有不同的要求：</p>
-<table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">消息同步库</th>
-<th align="left">消息存储库</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">数据模型</td>
-<td align="left">Timeline模型</td>
-<td align="left">Timeline模型</td>
-</tr>
-<tr>
-<td align="left">写能力</td>
-<td align="left">高并发写，十万级TPS</td>
-<td align="left">高并发写，少量读，万级TPS</td>
-</tr>
-<tr>
-<td align="left">读能力</td>
-<td align="left">高并发范围读，十万级TPS</td>
-<td align="left">少量范围读，千级TPS</td>
-</tr>
-<tr>
-<td align="left">存储规模</td>
-<td align="left">保存一段时间内的同步消息，TB级。保留千万级的<code>Timeline</code>规模。</td>
-<td align="left">保存全量消息，百TB级。保留亿级的<code>Timeline</code>规模。</td>
-</tr>
-</tbody></table>
-<p>总结下来，对数据库的要求有如下几点：</p>
-<ol>
-<li>表结构设计能够满足<code>Timeline</code>模型的功能要求：不要求关系模型，能够实现队列模型，并能够支持生成自增的<code>SeqId</code>。</li>
-<li>能够支持高并发写和范围读，规模在十万级TPS。</li>
-<li>能够保存海量数据，百TB级。</li>
-<li>能够为数据定义生命周期。</li>
-</ol>
-<p>阿里云表格存储（<code>TableStore</code>）是基于<code>LSM</code>存储引擎的分布式<code>NoSQL</code>数据库，支持百万<code>TPS</code>高并发读写，<code>PB</code>级数据存储，数据支持<code>TTL</code>，能够很好的满足以上需求，并且支持自增列，能够非常完美的设计和实现Timeline的物理模型。</p>
-<h3 id="基于传统数据库"><a href="#基于传统数据库" class="headerlink" title="基于传统数据库"></a>基于传统数据库</h3><table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">消息同步库</th>
-<th align="left">消息存储库</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">数据模型</td>
-<td align="left">MongoDB</td>
-<td align="left">MySQL</td>
-</tr>
-<tr>
-<td align="left">写能力</td>
-<td align="left">高并发写，万级TPS</td>
-<td align="left">高并发写，少量读，千级TPS</td>
-</tr>
-<tr>
-<td align="left">读能力</td>
-<td align="left">高并发范围读，万级TPS</td>
-<td align="left">少量范围读，千级TPS</td>
-</tr>
-<tr>
-<td align="left">存储规模</td>
-<td align="left">保存一段时间内的同步消息，GB级。</td>
-<td align="left">保存全量消息，GB级。</td>
-</tr>
-</tbody></table>
-<p>在写能力与读能力上，基于目前所用服务器的性能标准，在目标上与<code>TableStore</code>存储有巨大差距。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/253242">现代IM系统中消息推送和存储架构的实现</a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/319138"><code>TableStore Timeline</code>：轻松构建千万级IM和Feed流系统</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lovecindywang/archive/2011/03/02/1969324.html">MongoDB亿级数据量的性能测试</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7552f68d/">https://github.com/maxzhao-it/blog/post/7552f68d/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/eb63d0bf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/eb63d0bf/" class="post-title-link" itemprop="url">IM系统分析</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/IM/" itemprop="url" rel="index"><span itemprop="name">IM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>为什么要做一个<code>IM</code>？这个想法是从一个聊天项目开始，公司原来的聊天项目已破败不堪，继续优化不如重构。经过一番了解，决定构建一个即时通讯，并在此基础上扩展聊天功能。</p>
-<p>目前网络上的<code>IM</code>案例数不胜数，参考网络中众多的案例并结合自身业务需要，来构建属于自己的<code>IM</code>系统。</p>
-<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><ol>
-<li>社交</li>
-<li>在线客服</li>
-<li>待办提醒、工作提醒等</li>
-<li>抽奖 </li>
-<li>红包</li>
-</ol>
-<p>举个例子：</p>
-<p>我们年会有红包抽奖活动，有999红包10个 ,888红包20个,88红包50个,8红包1000个，我们需要实时看到每种红包剩余数量。</p>
-<h1 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h1><h2 id="整体目标"><a href="#整体目标" class="headerlink" title="整体目标"></a>整体目标</h2><p>整体项目构建目标：</p>
-<ol>
-<li>即时通讯系统（<code>IM</code>）。</li>
-<li>聊天系统（<code>IM-Chat</code>）</li>
-<li>后端管理平台</li>
-<li>应用管理平台</li>
-</ol>
-<h2 id="技术目标"><a href="#技术目标" class="headerlink" title="技术目标"></a>技术目标</h2><ol>
-<li>小型化</li>
-<li>单节点万人同时在线</li>
-<li>可水平扩展</li>
-<li>多通讯协议</li>
-<li>第三方登录</li>
-<li>服务监控</li>
-</ol>
-<p>在移动端，长连接是未来趋势，并且比<code>Http</code>请求的数据量更小（像<code>WebSocket</code>，连接只需要一个 <code>headers</code>）。</p>
-<h2 id="阶段性目标"><a href="#阶段性目标" class="headerlink" title="阶段性目标"></a>阶段性目标</h2><h3 id="一阶段"><a href="#一阶段" class="headerlink" title="一阶段"></a>一阶段</h3><ol>
-<li>小型化</li>
-<li>单节点万人同时在线</li>
-<li>可水平扩展</li>
-<li>通讯协议：<code>WS</code></li>
-<li>接入端：<code>HTML5</code></li>
-</ol>
-<h3 id="二阶段"><a href="#二阶段" class="headerlink" title="二阶段"></a>二阶段</h3><ol>
-<li>第三方登录</li>
-<li>服务监控</li>
-</ol>
-<h3 id="三阶段"><a href="#三阶段" class="headerlink" title="三阶段"></a>三阶段</h3><ol>
-<li>通讯协议：<code>TCP</code>&#x2F;<code>HTTPS</code></li>
-<li><code>Android</code>&#x2F;<code>IOS</code></li>
-</ol>
-<h3 id="四阶段"><a href="#四阶段" class="headerlink" title="四阶段"></a>四阶段</h3><ol>
-<li>界面美化</li>
-</ol>
-<h2 id="难点目标"><a href="#难点目标" class="headerlink" title="难点目标"></a>难点目标</h2><ol>
-<li><code>Android/IOS</code>离线推送</li>
-<li>多节点时服务治理</li>
-</ol>
-<h1 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h1><p><strong>后台管理系统</strong>：指的是<code>IM</code>全局管理系统，包括租户管理、租户的应用管理等。</p>
-<p><strong>应用管理系统</strong>：指的是<code>IM</code>租户管理当前租户应用的系统。</p>
-<p><strong>应用</strong>：指的是租户创建的<code>IM</code>应用，<code>IM</code>允许跨应用之间的通信，<code>IM-Chat</code>则不允许跨应用添加好友。</p>
-<h1 id="系统功能"><a href="#系统功能" class="headerlink" title="系统功能"></a>系统功能</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><blockquote>
-<p><a href="https://github.com/ChenYilong/iOSBlog/tree/master/Tips/%E5%9F%BA%E4%BA%8EWebsocket%E7%9A%84IM%E5%8D%B3%E6%97%B6%E9%80%9A%E8%AE%AF%E6%8A%80%E6%9C%AF"><strong>基于Websocket的IM即时通讯技术</strong></a></p>
-<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/20837104">软件体系结构分析方法</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/eb63d0bf/">https://github.com/maxzhao-it/blog/post/eb63d0bf/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/10/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/blog/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/12/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/10/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/blog/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/12/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>

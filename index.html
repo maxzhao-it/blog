@@ -149,18 +149,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">400</span>
+          <span class="site-state-item-count">407</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">160</span>
+        <span class="site-state-item-count">182</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">201</span>
+        <span class="site-state-item-count">229</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -216,6 +216,577 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/af5eafbf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/af5eafbf/" class="post-title-link" itemprop="url">Filebeat-8.x+Logstash采集log4j2日志</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>版本：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/logstash/logstash-8.11.1-linux-x86_64.tar.gz"><code>logstash-8.11.1-linux-x86_64.tar.gz</code></a></li>
+<li><a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.11.1-linux-x86_64.tar.gz">filebeat-8.11.1-linux-x86_64.tar.gz</a></li>
+</ul>
+<p>默认安装路径  <code>/opt/logstash </code> 、 <code>/opt/filebeat </code></p>
+</blockquote>
+<h2 id="Logstash-配置"><a href="#Logstash-配置" class="headerlink" title="Logstash 配置"></a><code>Logstash</code> 配置</h2><h3 id="测试接收-filebeat"><a href="#测试接收-filebeat" class="headerlink" title="测试接收 filebeat"></a>测试接收 <code>filebeat</code></h3><p>新建文件 <code>config/first-pipeline.conf</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">    beats &#123;</span><br><span class="line">        port =&gt; &quot;5044&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">The filter part of this file is commented out to indicate that it is</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">optional.</span></span><br><span class="line">filter &#123;</span><br><span class="line">    grok &#123;</span><br><span class="line">        match =&gt; &#123; &quot;message&quot; =&gt; &quot;(?&lt;year&gt;\d&#123;4&#125;)(?&lt;month&gt;\d&#123;2&#125;)(?&lt;day&gt;\d&#123;2&#125;)(?&lt;hour&gt;\d&#123;2&#125;)(?&lt;minute&gt;\d&#123;2&#125;)(?&lt;second&gt;\d&#123;2&#125;)(?&lt;millisecond&gt;\d&#123;3&#125;):%&#123;LOGLEVEL:logLevel&#125;%&#123;SPACE&#125;\[%&#123;INT:thread&#125;\]%&#123;SPACE&#125;\[%&#123;WORD:projectName&#125;\]%&#123;SPACE&#125;\[(?&lt;cId&gt;.*?|\d&#123;0,&#125;)\]%&#123;SPACE&#125;\[%&#123;DATA:cpId&#125;\]%&#123;SPACE&#125;\[%&#123;DATA:rTId&#125;\]%&#123;SPACE&#125;%&#123;JAVACLASS:java&#125;\(%&#123;INT:javaNum&#125;\)\:%&#123;SPACE&#125;%&#123;JAVALOGMESSAGE:msg&#125;&quot;&#125;</span><br><span class="line">    &#125;       </span><br><span class="line">	mutate &#123;</span><br><span class="line">        add_field =&gt; &#123;</span><br><span class="line">            &quot;timestamp&quot; =&gt; &quot;%&#123;year&#125;%&#123;month&#125;%&#123;day&#125;%&#123;hour&#125;%&#123;minute&#125;%&#123;second&#125;%&#123;millisecond&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">		remove_field =&gt;[&quot;log&quot;,&quot;input&quot;,&quot;ecs&quot;,&quot;event&quot;,&quot;host&quot;,&quot;agent&quot;,&quot;message&quot;]</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line">	date &#123;</span><br><span class="line">		match =&gt; [ &quot;timestamp&quot;, &quot;yyyyMMddHHmmssSSS&quot; ]</span><br><span class="line">		target =&gt; &quot;@timestamp&quot;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    stdout &#123; codec =&gt; rubydebug &#125;</span><br><span class="line">    if &quot;test&quot; in [projectName] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-api-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;y&quot; in [projectName] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-opt-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;x&quot; in [projectName] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-sso-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/logstash -f first-pipeline.conf --config.test_and_exit</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">自动更新 --config.reload.automatic</span></span><br><span class="line">bin/logstash -f first-pipeline.conf --config.reload.automatic</span><br></pre></td></tr></table></figure>
+
+<h3 id="Filebeat-配置"><a href="#Filebeat-配置" class="headerlink" title="Filebeat 配置"></a><code>Filebeat</code> 配置</h3><p><code>Filebeat.yml</code></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">filebeat.inputs:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">filestream</span></span><br><span class="line">  <span class="attr">id:</span> <span class="string">my-filestream-id</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">paths:</span></span><br><span class="line">  <span class="comment"># 日志文件路径修改</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/data/test-log/*.log</span></span><br><span class="line">  <span class="attr">prospector.scanner.exclude_files:</span> [<span class="string">&#x27;\.gz$&#x27;</span>]</span><br><span class="line">  <span class="attr">parsers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">multiline:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">pattern</span></span><br><span class="line">      <span class="comment"># 与模式不匹配的连续行将附加到匹配的上一行</span></span><br><span class="line">      <span class="attr">pattern:</span> <span class="string">&#x27;^\d&#x27;</span></span><br><span class="line">      <span class="attr">negate:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># 与模式匹配的连续行将附加到不匹配的上一行</span></span><br><span class="line">      <span class="comment">#pattern: &#x27;^[[:space:]]+(at|\.&#123;3&#125;)[[:space:]]+\b|^[a-z]&#x27;</span></span><br><span class="line">      <span class="comment">#negate: false</span></span><br><span class="line">      <span class="attr">match:</span> <span class="string">after</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">30s</span></span><br><span class="line">      <span class="attr">max_lines:</span> <span class="number">100</span></span><br><span class="line"><span class="attr">filebeat.config.modules:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">$&#123;path.config&#125;/modules.d/*.yml</span></span><br><span class="line">  <span class="attr">reload.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 不用es 这里要关闭</span></span><br><span class="line"><span class="attr">setup.template.enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">setup.template.settings:</span></span><br><span class="line">  <span class="attr">index.number_of_shards:</span> <span class="number">1</span></span><br><span class="line">  <span class="comment">#index.codec: best_compression</span></span><br><span class="line">  <span class="comment">#_source.enabled: false</span></span><br><span class="line"><span class="comment">#setup.kibana:</span></span><br><span class="line"><span class="attr">output.elasticsearch:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">output.logstash:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hosts:</span> [<span class="string">&quot;127.0.0.1:5044&quot;</span>]</span><br><span class="line">  <span class="attr">compression_level:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_host_metadata:</span></span><br><span class="line">      <span class="attr">when.not.contains.tags:</span> <span class="string">forwarded</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_cloud_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_docker_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_kubernetes_metadata:</span> <span class="string">~</span></span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filebeat -c filebeat.yml -e</span><br></pre></td></tr></table></figure>
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="grok-解析日志"><a href="#grok-解析日志" class="headerlink" title="grok 解析日志"></a><code>grok</code> 解析日志</h2><p>新版本的 <code>logstash</code> 自带 <code>grok</code> 插件</p>
+<p>环境信息：</p>
+<p>- 部署路径：<code>/opt/logstash</code><br>- <code>Log4j2</code> 对接方式：<code>Socket</code><br>- 部署地址：<code>192.168.2.8</code><br>- <code>logstash</code>建议使用 <a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>插件</p>
+<blockquote>
+<p><a href="*https://github.com/logstash-plugins/logstash-filter-grok*"><code>grok</code></a>是一个十分强大的<code>logstash filter</code>插件，他可以通过正则解析任意文本，将非结构化日志数据解析成结构化和方便查询的结构。<br><a target="_blank" rel="noopener" href="https://grokconstructor.appspot.com/do/match">在线测试</a>  <a href="https://github.com/logstash-plugins/logstash-patterns-core/tree/main/patterns">官方<code>pattern</code></a> <a href="*https://www.elastic.co/guide/en/logstash/8.2/working-with-plugins.html#listing-plugins*">插件安装</a><br>安装插件</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看已安装</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin list --verbose</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>离线安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir /opt/logstash/plugins</span><br><span class="line">cd  /opt/logstash/plugins</span><br><span class="line">wget https://github.com/logstash-plugins/logstash-filter-grok/archive/refs/tags/v4.4.3.tar.gz</span><br><span class="line">tar -zxvf v4.4.2.tar.gz</span><br><span class="line">vim /opt/logstash/Gemfile</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">写入</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gem <span class="string">&quot;logstash-filter-grok&quot;</span>, :path =&gt; <span class="string">&quot;path&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在线安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/logstash-plugin install logstash-filter-grok</span><br><span class="line">bin/logstash-plugin update logstash-filter-grok</span><br></pre></td></tr></table></figure>
+
+</blockquote>
+<h2 id="部分-grok-表达式"><a href="#部分-grok-表达式" class="headerlink" title="部分 grok 表达式"></a>部分 <code>grok</code> 表达式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">USERNAME [a-zA-Z0-9._-]+</span><br><span class="line">USER %&#123;USERNAME&#125;</span><br><span class="line">EMAILLOCALPART [a-zA-Z0-9!#$%&amp;&#x27;*+\-/=?^_`&#123;|&#125;~]&#123;1,64&#125;(?:\.[a-zA-Z0-9!#$%&amp;&#x27;*+\-/=?^_`&#123;|&#125;~]&#123;1,62&#125;)&#123;0,63&#125;</span><br><span class="line">EMAILADDRESS %&#123;EMAILLOCALPART&#125;@%&#123;HOSTNAME&#125;</span><br><span class="line">INT (?:[+-]?(?:[0-9]+))</span><br><span class="line">BASE10NUM (?&lt;![0-9.+-])(?&gt;[+-]?(?:(?:[0-9]+(?:\.[0-9]+)?)|(?:\.[0-9]+)))</span><br><span class="line">NUMBER (?:%&#123;BASE10NUM&#125;)</span><br><span class="line">BASE16NUM (?&lt;![0-9A-Fa-f])(?:[+-]?(?:0x)?(?:[0-9A-Fa-f]+))</span><br><span class="line">BASE16FLOAT \b(?&lt;![0-9A-Fa-f.])(?:[+-]?(?:0x)?(?:(?:[0-9A-Fa-f]+(?:\.[0-9A-Fa-f]*)?)|(?:\.[0-9A-Fa-f]+)))\b</span><br><span class="line"></span><br><span class="line">POSINT \b(?:[1-9][0-9]*)\b</span><br><span class="line">NONNEGINT \b(?:[0-9]+)\b</span><br><span class="line">WORD \b\w+\b</span><br><span class="line">NOTSPACE \S+</span><br><span class="line">SPACE \s*</span><br><span class="line">DATA .*?</span><br><span class="line">GREEDYDATA .*</span><br><span class="line">QUOTEDSTRING (?&gt;(?&lt;!\\)(?&gt;&quot;(?&gt;\\.|[^\\&quot;]+)+&quot;|&quot;&quot;|(?&gt;&#x27;(?&gt;\\.|[^\\&#x27;]+)+&#x27;)|&#x27;&#x27;|(?&gt;`(?&gt;\\.|[^\\`]+)+`)|``))</span><br><span class="line">UUID [A-Fa-f0-9]&#123;8&#125;-(?:[A-Fa-f0-9]&#123;4&#125;-)&#123;3&#125;[A-Fa-f0-9]&#123;12&#125;</span><br><span class="line"># URN, allowing use of RFC 2141 section 2.3 reserved characters</span><br><span class="line">URN urn:[0-9A-Za-z][0-9A-Za-z-]&#123;0,31&#125;:(?:%[0-9a-fA-F]&#123;2&#125;|[0-9A-Za-z()+,.:=@;$_!*&#x27;/?#-])+</span><br><span class="line"></span><br><span class="line"># Networking</span><br><span class="line">MAC (?:%&#123;CISCOMAC&#125;|%&#123;WINDOWSMAC&#125;|%&#123;COMMONMAC&#125;)</span><br><span class="line">CISCOMAC (?:(?:[A-Fa-f0-9]&#123;4&#125;\.)&#123;2&#125;[A-Fa-f0-9]&#123;4&#125;)</span><br><span class="line">WINDOWSMAC (?:(?:[A-Fa-f0-9]&#123;2&#125;-)&#123;5&#125;[A-Fa-f0-9]&#123;2&#125;)</span><br><span class="line">COMMONMAC (?:(?:[A-Fa-f0-9]&#123;2&#125;:)&#123;5&#125;[A-Fa-f0-9]&#123;2&#125;)</span><br><span class="line">IPV6 ((([0-9A-Fa-f]&#123;1,4&#125;:)&#123;7&#125;([0-9A-Fa-f]&#123;1,4&#125;|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;6&#125;(:[0-9A-Fa-f]&#123;1,4&#125;|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;)|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;5&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,2&#125;)|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;)|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;4&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,3&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;3&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,4&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,2&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;2&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,5&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,3&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;1&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,6&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,4&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(:(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,7&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,5&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:)))(%.+)?</span><br><span class="line">IPV4 (?&lt;![0-9])(?:(?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5]))(?![0-9])</span><br><span class="line">IP (?:%&#123;IPV6&#125;|%&#123;IPV4&#125;)</span><br><span class="line">HOSTNAME \b(?:[0-9A-Za-z][0-9A-Za-z-]&#123;0,62&#125;)(?:\.(?:[0-9A-Za-z][0-9A-Za-z-]&#123;0,62&#125;))*(\.?|\b)</span><br><span class="line">IPORHOST (?:%&#123;IP&#125;|%&#123;HOSTNAME&#125;)</span><br><span class="line">HOSTPORT %&#123;IPORHOST&#125;:%&#123;POSINT&#125;</span><br><span class="line"></span><br><span class="line"># paths (only absolute paths are matched)</span><br><span class="line">PATH (?:%&#123;UNIXPATH&#125;|%&#123;WINPATH&#125;)</span><br><span class="line">UNIXPATH (/[[[:alnum:]]_%!$@:.,+~-]*)+</span><br><span class="line">TTY (?:/dev/(pts|tty([pq])?)(\w+)?/?(?:[0-9]+))</span><br><span class="line">WINPATH (?&gt;[A-Za-z]+:|\\)(?:\\[^\\?*]*)+</span><br><span class="line">URIPROTO [A-Za-z]([A-Za-z0-9+\-.]+)+</span><br><span class="line">URIHOST %&#123;IPORHOST&#125;(?::%&#123;POSINT&#125;)?</span><br><span class="line"># uripath comes loosely from RFC1738, but mostly from what Firefox doesn&#x27;t turn into %XX</span><br><span class="line">URIPATH (?:/[A-Za-z0-9$.+!*&#x27;()&#123;&#125;,~:;=@#%&amp;_\-]*)+</span><br><span class="line">URIQUERY [A-Za-z0-9$.+!*&#x27;|()&#123;&#125;,~@#%&amp;/=:;_?\-\[\]&lt;&gt;]*</span><br><span class="line"># deprecated (kept due compatibility):</span><br><span class="line">URIPARAM \?%&#123;URIQUERY&#125;</span><br><span class="line">URIPATHPARAM %&#123;URIPATH&#125;(?:\?%&#123;URIQUERY&#125;)?</span><br><span class="line">URI %&#123;URIPROTO&#125;://(?:%&#123;USER&#125;(?::[^@]*)?@)?(?:%&#123;URIHOST&#125;)?(?:%&#123;URIPATH&#125;(?:\?%&#123;URIQUERY&#125;)?)?</span><br><span class="line"></span><br><span class="line"># Months: January, Feb, 3, 03, 12, December</span><br><span class="line">MONTH \b(?:[Jj]an(?:uary|uar)?|[Ff]eb(?:ruary|ruar)?|[Mm](?:a|ä)?r(?:ch|z)?|[Aa]pr(?:il)?|[Mm]a(?:y|i)?|[Jj]un(?:e|i)?|[Jj]ul(?:y|i)?|[Aa]ug(?:ust)?|[Ss]ep(?:tember)?|[Oo](?:c|k)?t(?:ober)?|[Nn]ov(?:ember)?|[Dd]e(?:c|z)(?:ember)?)\b</span><br><span class="line">MONTHNUM (?:0?[1-9]|1[0-2])</span><br><span class="line">MONTHNUM2 (?:0[1-9]|1[0-2])</span><br><span class="line">MONTHDAY (?:(?:0[1-9])|(?:[12][0-9])|(?:3[01])|[1-9])</span><br><span class="line"></span><br><span class="line"># Days: Monday, Tue, Thu, etc...</span><br><span class="line">DAY (?:Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)</span><br><span class="line"></span><br><span class="line"># Years?</span><br><span class="line">YEAR (?&gt;\d\d)&#123;1,2&#125;</span><br><span class="line">HOUR (?:2[0123]|[01]?[0-9])</span><br><span class="line">MINUTE (?:[0-5][0-9])</span><br><span class="line"># &#x27;60&#x27; is a leap second in most time standards and thus is valid.</span><br><span class="line">SECOND (?:(?:[0-5]?[0-9]|60)(?:[:.,][0-9]+)?)</span><br><span class="line">TIME (?!&lt;[0-9])%&#123;HOUR&#125;:%&#123;MINUTE&#125;(?::%&#123;SECOND&#125;)(?![0-9])</span><br><span class="line"># datestamp is YYYY/MM/DD-HH:MM:SS.UUUU (or something like it)</span><br><span class="line">DATE_US %&#123;MONTHNUM&#125;[/-]%&#123;MONTHDAY&#125;[/-]%&#123;YEAR&#125;</span><br><span class="line">DATE_EU %&#123;MONTHDAY&#125;[./-]%&#123;MONTHNUM&#125;[./-]%&#123;YEAR&#125;</span><br><span class="line">ISO8601_TIMEZONE (?:Z|[+-]%&#123;HOUR&#125;(?::?%&#123;MINUTE&#125;))</span><br><span class="line">ISO8601_SECOND %&#123;SECOND&#125;</span><br><span class="line">TIMESTAMP_ISO8601 %&#123;YEAR&#125;-%&#123;MONTHNUM&#125;-%&#123;MONTHDAY&#125;[T ]%&#123;HOUR&#125;:?%&#123;MINUTE&#125;(?::?%&#123;SECOND&#125;)?%&#123;ISO8601_TIMEZONE&#125;?</span><br><span class="line">DATE %&#123;DATE_US&#125;|%&#123;DATE_EU&#125;</span><br><span class="line">DATESTAMP %&#123;DATE&#125;[- ]%&#123;TIME&#125;</span><br><span class="line">TZ (?:[APMCE][SD]T|UTC)</span><br><span class="line">DATESTAMP_RFC822 %&#123;DAY&#125; %&#123;MONTH&#125; %&#123;MONTHDAY&#125; %&#123;YEAR&#125; %&#123;TIME&#125; %&#123;TZ&#125;</span><br><span class="line">DATESTAMP_RFC2822 %&#123;DAY&#125;, %&#123;MONTHDAY&#125; %&#123;MONTH&#125; %&#123;YEAR&#125; %&#123;TIME&#125; %&#123;ISO8601_TIMEZONE&#125;</span><br><span class="line">DATESTAMP_OTHER %&#123;DAY&#125; %&#123;MONTH&#125; %&#123;MONTHDAY&#125; %&#123;TIME&#125; %&#123;TZ&#125; %&#123;YEAR&#125;</span><br><span class="line">DATESTAMP_EVENTLOG %&#123;YEAR&#125;%&#123;MONTHNUM2&#125;%&#123;MONTHDAY&#125;%&#123;HOUR&#125;%&#123;MINUTE&#125;%&#123;SECOND&#125;</span><br><span class="line"></span><br><span class="line"># Syslog Dates: Month Day HH:MM:SS</span><br><span class="line">SYSLOGTIMESTAMP %&#123;MONTH&#125; +%&#123;MONTHDAY&#125; %&#123;TIME&#125;</span><br><span class="line">PROG [\x21-\x5a\x5c\x5e-\x7e]+</span><br><span class="line">SYSLOGPROG %&#123;PROG:[process][name]&#125;(?:\[%&#123;POSINT:[process][pid]:int&#125;\])?</span><br><span class="line">SYSLOGHOST %&#123;IPORHOST&#125;</span><br><span class="line">SYSLOGFACILITY &lt;%&#123;NONNEGINT:[log][syslog][facility][code]:int&#125;.%&#123;NONNEGINT:[log][syslog][priority]:int&#125;&gt;</span><br><span class="line">HTTPDATE %&#123;MONTHDAY&#125;/%&#123;MONTH&#125;/%&#123;YEAR&#125;:%&#123;TIME&#125; %&#123;INT&#125;</span><br><span class="line"></span><br><span class="line"># Shortcuts</span><br><span class="line">QS %&#123;QUOTEDSTRING&#125;</span><br><span class="line"></span><br><span class="line"># Log formats</span><br><span class="line">SYSLOGBASE %&#123;SYSLOGTIMESTAMP:timestamp&#125; (?:%&#123;SYSLOGFACILITY&#125; )?%&#123;SYSLOGHOST:[host][hostname]&#125; %&#123;SYSLOGPROG&#125;:</span><br><span class="line"></span><br><span class="line"># Log Levels</span><br><span class="line">LOGLEVEL ([Aa]lert|ALERT|[Tt]race|TRACE|[Dd]ebug|DEBUG|[Nn]otice|NOTICE|[Ii]nfo?(?:rmation)?|INFO?(?:RMATION)?|[Ww]arn?(?:ing)?|WARN?(?:ING)?|[Ee]rr?(?:or)?|ERR?(?:OR)?|[Cc]rit?(?:ical)?|CRIT?(?:ICAL)?|[Ff]atal|FATAL|[Ss]evere|SEVERE|EMERG(?:ENCY)?|[Ee]merg(?:ency)?)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="部分-grok-java-表达式"><a href="#部分-grok-java-表达式" class="headerlink" title="部分 grok java  表达式"></a>部分 <code>grok java </code> 表达式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">JAVACLASS (?:[a-zA-Z$_][a-zA-Z$_0-9]*\.)*[a-zA-Z$_][a-zA-Z$_0-9]*</span><br><span class="line">#Space is an allowed character to match special cases like &#x27;Native Method&#x27; or &#x27;Unknown Source&#x27;</span><br><span class="line">JAVAFILE (?:[a-zA-Z$_0-9. -]+)</span><br><span class="line">#Allow special &lt;init&gt;, &lt;clinit&gt; methods</span><br><span class="line">JAVAMETHOD (?:(&lt;(?:cl)?init&gt;)|[a-zA-Z$_][a-zA-Z$_0-9]*)</span><br><span class="line">#Line number is optional in special cases &#x27;Native method&#x27; or &#x27;Unknown source&#x27;</span><br><span class="line">JAVASTACKTRACEPART %&#123;SPACE&#125;at %&#123;JAVACLASS:[java][log][origin][class][name]&#125;\.%&#123;JAVAMETHOD:[log][origin][function]&#125;\(%&#123;JAVAFILE:[log][origin][file][name]&#125;(?::%&#123;INT:[log][origin][file][line]:int&#125;)?\)</span><br><span class="line"># Java Logs</span><br><span class="line">JAVATHREAD (?:[A-Z]&#123;2&#125;-Processor[\d]+)</span><br><span class="line">JAVALOGMESSAGE (?:.*)</span><br><span class="line"></span><br><span class="line"># MMM dd, yyyy HH:mm:ss eg: Jan 9, 2014 7:13:13 AM</span><br><span class="line"># matches default logging configuration in Tomcat 4.1, 5.0, 5.5, 6.0, 7.0</span><br><span class="line">CATALINA7_DATESTAMP %&#123;MONTH&#125; %&#123;MONTHDAY&#125;, %&#123;YEAR&#125; %&#123;HOUR&#125;:%&#123;MINUTE&#125;:%&#123;SECOND&#125; (?:AM|PM)</span><br><span class="line">CATALINA7_LOG %&#123;CATALINA7_DATESTAMP:timestamp&#125; %&#123;JAVACLASS:[java][log][origin][class][name]&#125;(?: %&#123;JAVAMETHOD:[log][origin][function]&#125;)?\s*(?:%&#123;LOGLEVEL:[log][level]&#125;:)? %&#123;JAVALOGMESSAGE:message&#125;</span><br><span class="line"></span><br><span class="line"># 31-Jul-2020 16:40:38.578 in Tomcat 8.5/9.0</span><br><span class="line">CATALINA8_DATESTAMP %&#123;MONTHDAY&#125;-%&#123;MONTH&#125;-%&#123;YEAR&#125; %&#123;HOUR&#125;:%&#123;MINUTE&#125;:%&#123;SECOND&#125;</span><br><span class="line">CATALINA8_LOG %&#123;CATALINA8_DATESTAMP:timestamp&#125; %&#123;LOGLEVEL:[log][level]&#125; \[%&#123;DATA:[java][log][origin][thread][name]&#125;\] %&#123;JAVACLASS:[java][log][origin][class][name]&#125;\.(?:%&#123;JAVAMETHOD:[log][origin][function]&#125;)? %&#123;JAVALOGMESSAGE:message&#125;</span><br><span class="line"></span><br><span class="line">CATALINA_DATESTAMP (?:%&#123;CATALINA8_DATESTAMP&#125;)|(?:%&#123;CATALINA7_DATESTAMP&#125;)</span><br><span class="line">CATALINALOG (?:%&#123;CATALINA8_LOG&#125;)|(?:%&#123;CATALINA7_LOG&#125;)</span><br><span class="line"></span><br><span class="line"># in Tomcat 5.5, 6.0, 7.0 it is the same as catalina.out logging format</span><br><span class="line">TOMCAT7_LOG %&#123;CATALINA7_LOG&#125;</span><br><span class="line">TOMCAT8_LOG %&#123;CATALINA8_LOG&#125;</span><br><span class="line"></span><br><span class="line"># NOTE: a weird log we started with - not sure what TC version this should match out of the box (due the | delimiters)</span><br><span class="line">TOMCATLEGACY_DATESTAMP %&#123;YEAR&#125;-%&#123;MONTHNUM&#125;-%&#123;MONTHDAY&#125; %&#123;HOUR&#125;:%&#123;MINUTE&#125;:%&#123;SECOND&#125;(?: %&#123;ISO8601_TIMEZONE&#125;)?</span><br><span class="line">TOMCATLEGACY_LOG %&#123;TOMCATLEGACY_DATESTAMP:timestamp&#125; \| %&#123;LOGLEVEL:[log][level]&#125; \| %&#123;JAVACLASS:[java][log][origin][class][name]&#125; - %&#123;JAVALOGMESSAGE:message&#125;</span><br><span class="line"></span><br><span class="line">TOMCAT_DATESTAMP (?:%&#123;CATALINA8_DATESTAMP&#125;)|(?:%&#123;CATALINA7_DATESTAMP&#125;)|(?:%&#123;TOMCATLEGACY_DATESTAMP&#125;)</span><br><span class="line"></span><br><span class="line">TOMCATLOG (?:%&#123;TOMCAT8_LOG&#125;)|(?:%&#123;TOMCAT7_LOG&#125;)|(?:%&#123;TOMCATLEGACY_LOG&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/af5eafbf/">https://github.com/maxzhao-it/blog/post/af5eafbf/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/374dd8da/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/374dd8da/" class="post-title-link" itemprop="url">Filebeat-8.11配置采集log4j2日志</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/Filebeat/" itemprop="url" rel="index"><span itemprop="name">Filebeat</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这里先将日志直接通过 <code>filebeat</code> 输出到文件用于测试</p>
+<h2 id="log4j2配置日志输出"><a href="#log4j2配置日志输出" class="headerlink" title="log4j2配置日志输出"></a>log4j2配置日志输出</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%d&#123;yyyyMMddHHmmssSSS&#125;:%p [%T] [$&#123;pn&#125;] [%X&#123;cId&#125;] [%X&#123;cpId&#125;] [%X&#123;rTId&#125;] %c&#123;1.&#125;(%L): %m%xwEx%n</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>%X&#123;cId&#125;</code> 在java 中可以使用 <code>ThreadContext.put(&quot;cId&quot;,&quot;test&quot;)</code> 实现</p>
+</blockquote>
+<h2 id="filebeat-yml-配置"><a href="#filebeat-yml-配置" class="headerlink" title="filebeat.yml 配置"></a><code>filebeat.yml</code> 配置</h2><p>这里输出到日志文件测试</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">filebeat.inputs:</span></span><br><span class="line"><span class="comment"># 新版的日志文件采集，不要使用 log</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">filestream</span></span><br><span class="line">  <span class="attr">id:</span> <span class="string">my-filestream-id</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">paths:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/data/test-log/*.log</span></span><br><span class="line">  <span class="comment">#exclude_lines: [&#x27;^DBG&#x27;]</span></span><br><span class="line">  <span class="comment">#include_lines: [&#x27;^ERR&#x27;, &#x27;^WARN&#x27;]</span></span><br><span class="line">  <span class="attr">prospector.scanner.exclude_files:</span> [<span class="string">&#x27;\.gz$&#x27;</span>]</span><br><span class="line">  <span class="comment">#fields:</span></span><br><span class="line">  <span class="comment">#  level: debug</span></span><br><span class="line">  <span class="comment">#  review: 1</span></span><br><span class="line">  <span class="attr">parsers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">multiline:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">pattern</span></span><br><span class="line">      <span class="comment"># 与模式不匹配的连续行将附加到匹配的上一行</span></span><br><span class="line">      <span class="attr">pattern:</span> <span class="string">&#x27;^\d&#x27;</span></span><br><span class="line">      <span class="attr">negate:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># 与模式匹配的连续行将附加到不匹配的上一行，解决日志文件输出到一行的问题</span></span><br><span class="line">      <span class="comment">#pattern: &#x27;^[[:space:]]+(at|\.&#123;3&#125;)[[:space:]]+\b|^[a-z]&#x27;</span></span><br><span class="line">      <span class="comment">#negate: false</span></span><br><span class="line">      <span class="attr">match:</span> <span class="string">after</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">30s</span></span><br><span class="line">      <span class="attr">max_lines:</span> <span class="number">100</span></span><br><span class="line"><span class="comment"># ============================== Filebeat modules ==============================</span></span><br><span class="line"><span class="attr">filebeat.config.modules:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">$&#123;path.config&#125;/modules.d/*.yml</span></span><br><span class="line">  <span class="attr">reload.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 不用es 这里要关闭</span></span><br><span class="line"><span class="attr">setup.template.enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">setup.template.settings:</span></span><br><span class="line">  <span class="attr">index.number_of_shards:</span> <span class="number">1</span></span><br><span class="line">  <span class="comment">#index.codec: best_compression</span></span><br><span class="line">  <span class="comment">#_source.enabled: false</span></span><br><span class="line"><span class="attr">setup.kibana:</span></span><br><span class="line"><span class="comment"># ---------------------------- Elasticsearch Output ----------------------------</span></span><br><span class="line"><span class="attr">output.elasticsearch:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">output.logstash:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">hosts:</span> [<span class="string">&quot;127.0.0.1:5044&quot;</span>]</span><br><span class="line">  <span class="attr">compression_level:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">output.file:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">&quot;/data/filebeat&quot;</span></span><br><span class="line">  <span class="attr">filename:</span> <span class="string">filebeat</span></span><br><span class="line">  <span class="attr">rotate_every_kb:</span> <span class="number">10240</span></span><br><span class="line">  <span class="comment"># 保留的最多文件个数</span></span><br><span class="line">  <span class="attr">number_of_files:</span> <span class="number">7</span></span><br><span class="line">  <span class="comment"># 文件权限</span></span><br><span class="line">  <span class="attr">permissions:</span> <span class="number">0600</span></span><br><span class="line">  <span class="comment"># 写入文件存在则写入新文件</span></span><br><span class="line">  <span class="attr">rotate_on_startup:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 默认输出 json</span></span><br><span class="line">  <span class="comment">#codec</span></span><br><span class="line"><span class="comment"># ================================= Processors =================================</span></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_host_metadata:</span></span><br><span class="line">      <span class="attr">when.not.contains.tags:</span> <span class="string">forwarded</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_cloud_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_docker_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_kubernetes_metadata:</span> <span class="string">~</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/beats/filebeat/8.11/regexp-support.html"><code>multiline.pattern</code>表达式</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/374dd8da/">https://github.com/maxzhao-it/blog/post/374dd8da/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/f7c3a7a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/f7c3a7a/" class="post-title-link" itemprop="url">Logstash-8.x配置多个pipelines</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:32" itemprop="dateModified" datetime="2023-11-25T13:55:32+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/8.11/multiple-pipelines.html">官方文档</a></p>
+<p>默认安装路径  <code>/opt/logstash </code> 、 <code>/opt/filebeat </code></p>
+</blockquote>
+<h2 id="pipelines-yml-配置"><a href="#pipelines-yml-配置" class="headerlink" title="pipelines.yml 配置"></a><code>pipelines.yml</code> 配置</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">pipeline.id:</span> <span class="string">my-pipeline_1</span></span><br><span class="line">  <span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/p1.conf&quot;</span></span><br><span class="line">  <span class="attr">pipeline.workers:</span> <span class="number">3</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">pipeline.id:</span> <span class="string">my-other-pipeline</span></span><br><span class="line">  <span class="attr">path.config:</span> <span class="string">&quot;/opt/logstash/config/p2.conf&quot;</span></span><br><span class="line">  <span class="attr">queue.type:</span> <span class="string">persisted</span></span><br></pre></td></tr></table></figure>
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/f7c3a7a/">https://github.com/maxzhao-it/blog/post/f7c3a7a/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/af1c9197/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/af1c9197/" class="post-title-link" itemprop="url">PVE8安装win11</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/PVE/" itemprop="url" rel="index"><span itemprop="name">PVE</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>virtio-win-0.1.229.iso<br>Win11_23H2_Chinese_Simplified_x64.iso</p>
+<h2 id="上传镜像"><a href="#上传镜像" class="headerlink" title="上传镜像"></a>上传镜像</h2><p>local -&gt; ISO 镜像</p>
+<h2 id="创建虚拟机"><a href="#创建虚拟机" class="headerlink" title="创建虚拟机"></a>创建虚拟机</h2><p>操作系统选择 Microsoft Windows </p>
+<p>机型 q35<br>SCSI VirtIO SCSI single<br>BIOS OVMF (UEFI)<br>添加 TMP<br>格式 QEMU映像格式 (qcow2)</p>
+<p>磁盘:<br>总线 SCSI<br>缓存 Write back (不安全)<br>格式 QEMU映像格式 (qcow2)<br>SSD 仿真 勾选</p>
+<p>CPU：<br>类别 host</p>
+<h3 id="添加ISO"><a href="#添加ISO" class="headerlink" title="添加ISO"></a>添加ISO</h3><p>添加 CD</p>
+<p>IDE</p>
+<p>virtio-win-0.1.229.iso</p>
+<h3 id="选项启动顺序"><a href="#选项启动顺序" class="headerlink" title="选项启动顺序"></a>选项启动顺序</h3><p>scsi0  ide0 ide2  不能使用 ide1 </p>
+<h2 id="跳过登录"><a href="#跳过登录" class="headerlink" title="跳过登录"></a>跳过登录</h2><p>shift + F10</p>
+<p>oobe\bypassnro</p>
+<h2 id="win11"><a href="#win11" class="headerlink" title="win11"></a>win11</h2><p>激活<br>powershell</p>
+<p>irm <a target="_blank" rel="noopener" href="https://massgrave.dev/get">https://massgrave.dev/get</a> | iex<br>选 1</p>
+<p>离线的可以下载  MAS <a href="https://link.zhihu.com/?target=https://github.com/massgravel/Microsoft-Activation-Scripts">https://link.zhihu.com/?target=https%3A//github.com/massgravel/Microsoft-Activation-Scripts</a></p>
+<h2 id="安装驱动"><a href="#安装驱动" class="headerlink" title="安装驱动"></a>安装驱动</h2><p>virtio-win-0.1.229.iso<br>中的 virtio-gt-6x</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/af1c9197/">https://github.com/maxzhao-it/blog/post/af1c9197/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/53db8c2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/53db8c2/" class="post-title-link" itemprop="url">PVE8添加备份存储空间</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/PVE/" itemprop="url" rel="index"><span itemprop="name">PVE</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="找到磁盘"><a href="#找到磁盘" class="headerlink" title="找到磁盘"></a>找到磁盘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsblk -f</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="磁盘分区"><a href="#磁盘分区" class="headerlink" title="磁盘分区"></a>磁盘分区</h2><p>这里只解释用单独硬盘打分区（<code>UEFI+GPT</code>）</p>
+<p>我们选择 2 个分区，</p>
+<ol>
+<li>fat16 为 esp</li>
+<li>ext4 为 系统</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lsblk  <span class="comment"># 查看硬盘</span></span><br><span class="line">fdisk /dev/sda  <span class="comment"># sda是需要甄别的，我的安装硬盘就是 sda</span></span><br><span class="line"><span class="comment"># 这里会提示操作  输入</span></span><br><span class="line">n <span class="comment">#回车</span></span><br><span class="line"><span class="comment">#回车</span></span><br><span class="line">+300M <span class="comment"># 回车 这里是分区的大小 </span></span><br><span class="line"><span class="comment">#输入</span></span><br><span class="line">n <span class="comment">#回车</span></span><br><span class="line"><span class="comment">#回车</span></span><br><span class="line"><span class="comment">#回车</span></span><br><span class="line">w <span class="comment">#保存</span></span><br></pre></td></tr></table></figure>
+
+<p>分区还是很简单的，下面是格式化</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext4 /dev/sda1  <span class="comment"># 多次回车就可以啦</span></span><br><span class="line">lsblk -f <span class="comment"># 查询全部池畔的格式</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="重启自动挂载"><a href="#重启自动挂载" class="headerlink" title="重启自动挂载"></a>重启自动挂载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /mnt/data</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;/dev/sda1 /mnt/data ext4 defaults 0 0&quot;</span> &gt;&gt; /etc/fstab</span><br><span class="line">mount -a</span><br><span class="line"><span class="built_in">df</span> -h</span><br></pre></td></tr></table></figure>
+
+<h2 id="pve备份"><a href="#pve备份" class="headerlink" title="pve备份"></a>pve备份</h2><p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/53db8c2/">https://github.com/maxzhao-it/blog/post/53db8c2/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/e43b11ec/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/e43b11ec/" class="post-title-link" itemprop="url">PVE8给虚拟机添加一整块硬盘</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/PVE/" itemprop="url" rel="index"><span itemprop="name">PVE</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="找到磁盘"><a href="#找到磁盘" class="headerlink" title="找到磁盘"></a>找到磁盘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l /dev/disk/by-id/</span><br><span class="line"><span class="comment"># 给电脑增加磁盘</span></span><br><span class="line">qm <span class="built_in">set</span> 100 -sata3 /dev/disk/by-id/ata-*****</span><br></pre></td></tr></table></figure>
+
+<p>成功后会输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update VM 100：-sata3  /dev/disk/by-id/ata-*****</span><br></pre></td></tr></table></figure>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep ata /etc/pve/qemu-server/100.conf</span><br></pre></td></tr></table></figure>
+<p>有会输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sata3: /dev/disk/by-id/ata-*****</span><br></pre></td></tr></table></figure>
+
+<h2 id="重启虚拟机"><a href="#重启虚拟机" class="headerlink" title="重启虚拟机"></a>重启虚拟机</h2><h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qm <span class="built_in">set</span> 101 -delete sata3</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/e43b11ec/">https://github.com/maxzhao-it/blog/post/e43b11ec/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/fecbe378/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -234,7 +805,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/fecbe378/" class="post-title-link" itemprop="url">PVE配置核显集显</a>
+          <a href="/blog/post/fecbe378/" class="post-title-link" itemprop="url">PVE8配置核显集显</a>
         </h2>
 
         <div class="post-meta-container">
@@ -244,7 +815,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 18:53:00" itemprop="dateModified" datetime="2023-11-17T18:53:00+08:00">2023-11-17</time>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -266,21 +837,31 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="显卡声卡"><a href="#显卡声卡" class="headerlink" title="显卡声卡"></a>显卡声卡</h1><h2 id="禁用显卡"><a href="#禁用显卡" class="headerlink" title="禁用显卡"></a>禁用显卡</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/modprobe.d/blacklist.conf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 独显</span><br><span class="line">blacklist nouveau</span><br><span class="line">blacklist nvidia</span><br><span class="line">blacklist nvidiafb</span><br><span class="line"></span><br><span class="line"># 核显</span><br><span class="line">blacklist snd_hda_intel</span><br><span class="line">blacklist snd_hda_codec_hdmi</span><br><span class="line">blacklist i915</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+          <h1 id="显卡声卡"><a href="#显卡声卡" class="headerlink" title="显卡声卡"></a>显卡声卡</h1><h2 id="IOMMU支持"><a href="#IOMMU支持" class="headerlink" title="IOMMU支持"></a>IOMMU支持</h2><p>vim &#x2F;etc&#x2F;default&#x2F;grub</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on&quot;</span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on iommu=pt video=vesafb:off video=efifb:off video=simplefb:off&quot;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="添加内核模块"><a href="#添加内核模块" class="headerlink" title="添加内核模块"></a>添加内核模块</h2><p>vim &#x2F;etc&#x2F;modules</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vfio</span><br><span class="line">vfio_iommu_type1</span><br><span class="line">vfio_pci</span><br><span class="line">vfio_virqfd</span><br></pre></td></tr></table></figure>
+
+<h2 id="禁用显卡"><a href="#禁用显卡" class="headerlink" title="禁用显卡"></a>禁用显卡</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/modprobe.d/pve-blacklist.conf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="驱动内名单"><a href="#驱动内名单" class="headerlink" title="驱动内名单"></a>驱动内名单</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 独显</span><br><span class="line">blacklist nouveau</span><br><span class="line">blacklist nvidia</span><br><span class="line">blacklist nvidiafb</span><br><span class="line"></span><br><span class="line"># 核显</span><br><span class="line">blacklist snd_hda_intel</span><br><span class="line">blacklist snd_hda_codec_hdmi</span><br><span class="line">blacklist i915</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
 <p>对应的虚拟机添加 硬件-添加-PCI设备-Raw Device</p>
 <p>选择对应的选卡，设置主GPU，显示设置为 <code>无</code></p>
 <h2 id="查询显卡和声卡"><a href="#查询显卡和声卡" class="headerlink" title="查询显卡和声卡"></a>查询显卡和声卡</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lspci -nn |grep VGA </span><br><span class="line">lspci -nn |grep Aud</span><br></pre></td></tr></table></figure>
-<p>最后的 8086:7ad0 是ID</p>
-<p>加入直通</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/modprobe.d/vfio.conf</span><br></pre></td></tr></table></figure>
+<p>最后的 8086:7ad0 是ID 10de:1c03,10de:10f1,8086:7ad0</p>
+<h3 id="加入直通"><a href="#加入直通" class="headerlink" title="加入直通"></a>加入直通</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/modprobe.d/vfio.conf</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options vfio-pci ids=8086:7ad0,10de:10f1,10de:1c03</span><br></pre></td></tr></table></figure>
-<p>更新内核</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">update-initramfs -k all -u</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="防止-VM-死机"><a href="#防止-VM-死机" class="headerlink" title="防止 VM 死机"></a>防止 VM 死机</h3><p>vim &#x2F;etc&#x2F;modprobe.d&#x2F;kvm.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options kvm ignore_msrs=1</span><br></pre></td></tr></table></figure>
+
+<h3 id="更新内核"><a href="#更新内核" class="headerlink" title="更新内核"></a>更新内核</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">update-grub</span><br><span class="line">update-initramfs -k all -u</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
 
 <p>重启后查看</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod |grep vifo</span><br></pre></td></tr></table></figure>
@@ -288,309 +869,15 @@
 
 <h2 id="配置核显输出"><a href="#配置核显输出" class="headerlink" title="配置核显输出"></a>配置核显输出</h2><p>web界面配置</p>
 <p>对应的虚拟机添加 硬件-添加-PCI设备-Raw Device</p>
+<h2 id="配置独显"><a href="#配置独显" class="headerlink" title="配置独显"></a>配置独显</h2><p>添加pcie 选择 独显</p>
+<p>Raw Device</p>
+<p>主GPU 不要选<br>所有功能<br>PCI-Express</p>
+<p>安装显卡驱动</p>
+<h1 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h1><p>&#x2F;etc&#x2F;modprobe.d&#x2F;pve-blacklist.conf</p>
+<p>里面只需要一个参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options vfio_iommu_type1 allow_unsafe_interrupts=1</span><br></pre></td></tr></table></figure>
+
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/fecbe378/">https://github.com/maxzhao-it/blog/post/fecbe378/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/86a90e71/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/86a90e71/" class="post-title-link" itemprop="url">PVE错误集合</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 18:53:00" itemprop="dateModified" datetime="2023-11-17T18:53:00+08:00">2023-11-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/PVE/" itemprop="url" rel="index"><span itemprop="name">PVE</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="无法关闭虚拟机"><a href="#无法关闭虚拟机" class="headerlink" title="无法关闭虚拟机"></a>无法关闭虚拟机</h2><p>qm stop 101  # 编号</p>
-<p>TASK ERROR: can’t lock file ‘&#x2F;var&#x2F;lock&#x2F;qemu-server&#x2F;lock-101.conf’ - received interrupt</p>
-<p>rm &#x2F;var&#x2F;lock&#x2F;qemu-server&#x2F;lock-101.conf</p>
-<h2 id="开机进入-shell"><a href="#开机进入-shell" class="headerlink" title="开机进入 shell"></a>开机进入 shell</h2><p>执行 reset</p>
-<p>系统光盘放在引导的第一位</p>
-<h2 id="swtpm-setup-Not-overwriting-existing-state-file"><a href="#swtpm-setup-Not-overwriting-existing-state-file" class="headerlink" title="swtpm_setup: Not overwriting existing state file."></a>swtpm_setup: Not overwriting existing state file.</h2><p>kvm: -device ide-cd,bus&#x3D;ide.0,unit&#x3D;1,drive&#x3D;drive-ide1,id&#x3D;ide1,bootindex&#x3D;102: Can’t create IDE unit 1, bus supports only 1 units<br>stopping swtpm instance (pid 6199) due to QEMU startup error<br>TASK ERROR: start failed: QEMU exited with code 1</p>
-<p>使用机器类型q35时，只能使用ide0和ide2</p>
-<p>ide0   &#x3D;  ventoy-1.0.96-livecd.iso<br>ide2   &#x3D;  zh-cn_windows_11_business_editions_version_22h2_updated_feb_2023_x64_dvd_632649a2.iso</p>
-<h2 id="安装无法识别硬盘（scsi-无法识别）"><a href="#安装无法识别硬盘（scsi-无法识别）" class="headerlink" title="安装无法识别硬盘（scsi 无法识别）"></a>安装无法识别硬盘（scsi 无法识别）</h2><p><a target="_blank" rel="noopener" href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/">https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/</a></p>
-<p>下载驱动 virtio-win-0.1.229.iso</p>
-<p>挂载iso后，安装时加载驱动  vioscsi\w11\amd64</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/86a90e71/">https://github.com/maxzhao-it/blog/post/86a90e71/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/cd61337e/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/cd61337e/" class="post-title-link" itemprop="url">Python操作文件</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 11:49:43" itemprop="dateModified" datetime="2023-11-21T11:49:43+08:00">2023-11-21</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="操作文件"><a href="#操作文件" class="headerlink" title="操作文件"></a>操作文件</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="built_in">dir</span> = <span class="string">&#x27;/data&#x27;</span></span><br><span class="line">file = <span class="string">&#x27;/data/1.txt&#x27;</span></span><br><span class="line"><span class="comment"># 创建单个目录</span></span><br><span class="line">os.mkdir(<span class="built_in">dir</span>)</span><br><span class="line"><span class="comment"># 创建多层目录</span></span><br><span class="line">os.makedirs(<span class="built_in">dir</span> + <span class="string">&#x27;/123&#x27;</span>)</span><br><span class="line"><span class="comment"># 复制文件</span></span><br><span class="line">shutil.copyfile(<span class="string">&#x27;old&#x27;</span>, <span class="string">&#x27;new&#x27;</span>)</span><br><span class="line"><span class="comment"># 复制文件夹</span></span><br><span class="line">shutil.copytree(<span class="string">&#x27;olddir&#x27;</span>, <span class="string">&#x27;newdir&#x27;</span>)</span><br><span class="line"><span class="comment"># 重命名文件或目录</span></span><br><span class="line">os.rename(<span class="string">&#x27;odl&#x27;</span>, <span class="string">&#x27;new&#x27;</span>)</span><br><span class="line"><span class="comment"># 移动文件或目录</span></span><br><span class="line">shutil.move(<span class="string">&#x27;old&#x27;</span>, <span class="string">&#x27;new&#x27;</span>)</span><br><span class="line"><span class="comment"># 删除空目录</span></span><br><span class="line">os.rmdir(<span class="built_in">dir</span>)</span><br><span class="line"><span class="comment"># 删除空目录</span></span><br><span class="line">os.removedirs(<span class="built_in">dir</span>)</span><br><span class="line"><span class="comment"># 获取路径下的所有文件</span></span><br><span class="line">os.listdir(<span class="built_in">dir</span>)</span><br><span class="line"><span class="comment"># 删除文件</span></span><br><span class="line">os.remove(file)</span><br><span class="line"><span class="comment"># 判断是否存在</span></span><br><span class="line"><span class="keyword">if</span> os.path.exists(<span class="built_in">dir</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="comment"># 判断是否文件</span></span><br><span class="line"><span class="keyword">if</span> os.path.isfile(file):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="comment"># 判断是否目录</span></span><br><span class="line"><span class="keyword">if</span> os.path.isdir(<span class="built_in">dir</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="comment"># 判断是否绝对路径</span></span><br><span class="line"><span class="keyword">if</span> os.path.isabs(<span class="built_in">dir</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="comment"># 获取文件属性</span></span><br><span class="line">os.stat(file)</span><br><span class="line"><span class="comment"># 文件大小</span></span><br><span class="line">os.stat(file).st_size</span><br><span class="line">os.path.getsize(file)</span><br><span class="line"><span class="comment"># 获取文件名</span></span><br><span class="line">os.path.basename(filePath)</span><br><span class="line"><span class="comment"># 获取路径</span></span><br><span class="line">os.path.dirname(filePath)</span><br><span class="line"><span class="comment"># 获取绝对路径</span></span><br><span class="line">os.path.abspath(file)</span><br><span class="line"><span class="comment"># 获取文件的创建时间</span></span><br><span class="line">fromtimestamp = datetime.fromtimestamp(<span class="built_in">int</span>(os.path.getctime(filePath))).date()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">str</span>(fromtimestamp))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取文件后缀</span></span><br><span class="line">basename = os.path.basename(path) <span class="comment"># 获取文件名</span></span><br><span class="line">extension = os.path.splitext(basename)[<span class="number">1</span>] <span class="comment"># 获取文件后缀</span></span><br><span class="line"><span class="comment"># 排序</span></span><br><span class="line"><span class="built_in">sorted</span>(os.listdir(path))</span><br></pre></td></tr></table></figure>
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/3756efb0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/3756efb0/" class="post-title-link" itemprop="url">Python操作视频和音频</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 11:49:43" itemprop="dateModified" datetime="2023-11-21T11:49:43+08:00">2023-11-21</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install moviepy -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">pip install pandas -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">pip3 install pydub -i https://mirrors.aliyun.com/pypi/simple/</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> moviepy.editor <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义最大允许的线程数量</span></span><br><span class="line">max_threads = <span class="number">5</span></span><br><span class="line"><span class="comment"># 创建 Semaphore 对象</span></span><br><span class="line">semaphore = threading.Semaphore(max_threads)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">asyncConcat</span>(<span class="params">startPath, endPath, middlePath, middleAudioPath, outputPath, semaphore</span>):</span><br><span class="line">    <span class="keyword">with</span> semaphore:</span><br><span class="line">        concat(startPath, endPath, middlePath, middleAudioPath, outputPath)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">concat</span>(<span class="params">startPath, endPath, middlePath, middleAudioPath, outputPath</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        start = VideoFileClip(startPath)</span><br><span class="line">        end = VideoFileClip(endPath)</span><br><span class="line">        middleVideo = VideoFileClip(middlePath)</span><br><span class="line">        middleAudio = AudioFileClip(middleAudioPath)</span><br><span class="line">        <span class="comment"># 正文持续时间</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;持续时间=&#x27;</span>, middleVideo.duration)</span><br><span class="line">        <span class="comment"># 音频长度剪切</span></span><br><span class="line">        middleAudio = middleAudio.set_duration(middleVideo.duration)</span><br><span class="line">        <span class="comment"># 替换音频</span></span><br><span class="line">        middleVideo = middleVideo.set_audio(middleAudio)</span><br><span class="line">        <span class="comment"># 分辨率</span></span><br><span class="line">        resolution = middleVideo.size</span><br><span class="line">        width, height = resolution</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;分辨率=&#x27;</span>, resolution)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;分辨率：宽=&#x27;</span>, width, <span class="string">&#x27;高：&#x27;</span>, height)</span><br><span class="line">        <span class="comment"># 等比例放大或缩小</span></span><br><span class="line">        start = start.resize(resolution)</span><br><span class="line">        end = end.resize(resolution)</span><br><span class="line">        <span class="comment"># 上下</span></span><br><span class="line">        <span class="comment"># resultClip = clips_array([[start], [middle], [end]])</span></span><br><span class="line">        <span class="comment"># 左右</span></span><br><span class="line">        <span class="comment"># resultClip = clips_array([[start, middle, end]])</span></span><br><span class="line">        <span class="comment"># 前后</span></span><br><span class="line">        resultClip = concatenate_videoclips([start, middleVideo, end])</span><br><span class="line">        startTime = time.time()</span><br><span class="line">        basename = os.path.basename(middlePath)</span><br><span class="line">        basename = basename.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;-已剪辑.&#x27;</span>)</span><br><span class="line">        resultClip.write_videofile(outputPath + basename, threads=<span class="number">50</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;剪辑使用时间：&#x27;</span>, time.time() - startTime)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;计算视频失败：&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    startPath = <span class="string">&quot;D:\\00-自媒体计划\\AI-start.mp4&quot;</span></span><br><span class="line">    endPath = <span class="string">&quot;D:\\00-自媒体计划\\AI-end.mp4&quot;</span></span><br><span class="line">    middleDir = <span class="string">&quot;f:\\Videos\\4K Tokkit\\\dbxbqm22\\&quot;</span></span><br><span class="line">    middlePath = <span class="string">&quot;f:\\Videos\\4K Tokkit\\dbxbqm22\\7257911883674668289.mp4&quot;</span></span><br><span class="line">    middleAudioPath = <span class="string">&quot;D:\\00-自媒体计划\\AI-背景音乐.MP3&quot;</span></span><br><span class="line">    outputPath = <span class="string">&quot;f:\\Videos\\4K Tokkit\\test1\\&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> outputPath.endswith(<span class="string">&#x27;\\&#x27;</span>):</span><br><span class="line">        outputPath = outputPath + <span class="string">&#x27;\\&#x27;</span></span><br><span class="line">    count = <span class="number">1</span></span><br><span class="line">    fileCount = <span class="number">0</span></span><br><span class="line">    startTime = time.time()</span><br><span class="line">    files = os.listdir(middleDir)</span><br><span class="line">    <span class="comment"># 创建线程</span></span><br><span class="line">    threads = []</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        count = count + <span class="number">1</span></span><br><span class="line">        basename = os.path.basename(file)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;.mp4&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> basename:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;已剪辑&#x27;</span> <span class="keyword">in</span> basename:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> os.path.exists(outputPath + basename.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;-已剪辑.&#x27;</span>)):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;视频已剪辑=&#x27;</span>, middleDir + basename)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;待剪辑视频=&#x27;</span>, middleDir + basename)</span><br><span class="line">        fileCount = fileCount + <span class="number">1</span></span><br><span class="line">        <span class="comment"># concat(startPath, endPath, middleDir + basename, middleAudioPath, outputPath)</span></span><br><span class="line">        thread = threading.Thread(target=asyncConcat, args=(</span><br><span class="line">            startPath, endPath, middleDir + basename, middleAudioPath, outputPath, semaphore))</span><br><span class="line">        threads.append(thread)</span><br><span class="line">        thread.start()</span><br><span class="line">    <span class="comment"># 等待所有线程执行结束</span></span><br><span class="line">    <span class="keyword">for</span> thread <span class="keyword">in</span> threads:</span><br><span class="line">        thread.join()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;共处理视频个数：&#x27;</span>, fileCount, <span class="string">&#x27; 耗时：&#x27;</span>, time.time() - startTime)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/9c485ce3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/9c485ce3/" class="post-title-link" itemprop="url">Python环境变量</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 11:49:43" itemprop="dateModified" datetime="2023-11-21T11:49:43+08:00">2023-11-21</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install python-dotenv -i https://mirrors.aliyun.com/pypi/simple/</span><br></pre></td></tr></table></figure>
-
-<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br></pre></td></tr></table></figure>
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
 
       
     </div>
@@ -645,7 +932,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 18:53:00" itemprop="dateModified" datetime="2023-11-17T18:53:00+08:00">2023-11-17</time>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -677,7 +964,9 @@
 <p>CEPH源更换</p>
 <p>echo “deb <a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy">https://mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy</a> bookworm no-subscription” &gt; &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;ceph.list     #中科大源<br>sed -i.bak “s#<a target="_blank" rel="noopener" href="http://download.proxmox.com/debian#https://mirrors.ustc.edu.cn/proxmox/debian#g&quot;">http://download.proxmox.com/debian#https://mirrors.ustc.edu.cn/proxmox/debian#g&quot;</a> &#x2F;usr&#x2F;share&#x2F;perl5&#x2F;PVE&#x2F;CLI&#x2F;pveceph.pm     #中科大源</p>
 <p>删除订阅弹窗<br>sed -Ezi.bak “s&#x2F;(Ext.Msg.show({\s+title: gettext(‘No valid sub)&#x2F;void({ //\1&#x2F;g” &#x2F;usr&#x2F;share&#x2F;javascript&#x2F;proxmox-widget-toolkit&#x2F;proxmoxlib.js &amp;&amp; systemctl restart pveproxy.service</p>
-<h1 id="执行完成后，浏览器Ctrl-F5强制刷新缓存"><a href="#执行完成后，浏览器Ctrl-F5强制刷新缓存" class="headerlink" title="执行完成后，浏览器Ctrl+F5强制刷新缓存"></a>执行完成后，浏览器Ctrl+F5强制刷新缓存</h1><p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/1226ea39/">https://github.com/maxzhao-it/blog/post/1226ea39/</a> </p>
+<h1 id="执行完成后，浏览器Ctrl-F5强制刷新缓存"><a href="#执行完成后，浏览器Ctrl-F5强制刷新缓存" class="headerlink" title="执行完成后，浏览器Ctrl+F5强制刷新缓存"></a>执行完成后，浏览器Ctrl+F5强制刷新缓存</h1><p>安装常用依赖</p>
+<p>apt install -y vim  net-tools<br>apt install -y gcc </p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/1226ea39/">https://github.com/maxzhao-it/blog/post/1226ea39/</a> </p>
 
       
     </div>
@@ -732,7 +1021,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 18:53:00" itemprop="dateModified" datetime="2023-11-17T18:53:00+08:00">2023-11-17</time>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -756,12 +1045,7 @@
     <div class="post-body" itemprop="articleBody">
           <p>vim &#x2F;etc&#x2F;sysctl.conf</p>
 <p>在末尾添加</p>
-<p>net.ipv6.conf.all.accept_ra&#x3D;2</p>
-<p>net.ipv6.conf.default.accept_ra&#x3D;2</p>
-<p>net.ipv6.conf.vmbr0.accept_ra&#x3D;2</p>
-<p>net.ipv6.conf.all.autoconf&#x3D;1</p>
-<p>net.ipv6.conf.default.autoconf&#x3D;1</p>
-<p>net.ipv6.conf.vmbr0.autoconf&#x3D;1</p>
+<p>net.ipv6.conf.all.accept_ra&#x3D;2<br>net.ipv6.conf.default.accept_ra&#x3D;2<br>net.ipv6.conf.vmbr0.accept_ra&#x3D;2<br>net.ipv6.conf.all.autoconf&#x3D;1<br>net.ipv6.conf.default.autoconf&#x3D;1<br>net.ipv6.conf.vmbr0.autoconf&#x3D;1</p>
 <p>然后执行sysctl -p或者重启主机</p>
 <p>输入</p>
 <p>apt-get install net-tools -y<br>ifconfig</p>
@@ -792,7 +1076,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7e49a571/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/86a90e71/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -810,7 +1094,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/7e49a571/" class="post-title-link" itemprop="url">Python打包</a>
+          <a href="/blog/post/86a90e71/" class="post-title-link" itemprop="url">PVE错误集合</a>
         </h2>
 
         <div class="post-meta-container">
@@ -820,7 +1104,16 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 11:49:43" itemprop="dateModified" datetime="2023-11-21T11:49:43+08:00">2023-11-21</time>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/PVE/" itemprop="url" rel="index"><span itemprop="name">PVE</span></a>
+        </span>
     </span>
 
   
@@ -833,157 +1126,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pip install pyinstaller -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">pyinstaller -F gooeydemo[OpenSeleniumClient.py](py%2FOpenSeleniumClient.py).py -w 打包</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">基于 pyinstaller</span></span><br><span class="line">pip install fbs -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line"></span><br><span class="line">fbs project</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/5fc222/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/5fc222/" class="post-title-link" itemprop="url">Python操作MySQL</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 11:49:43" itemprop="dateModified" datetime="2023-11-21T11:49:43+08:00">2023-11-21</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install mysqlclient -i https://mirrors.aliyun.com/pypi/simple/</span><br></pre></td></tr></table></figure>
-
-<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"><span class="keyword">import</span> m3u8</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> py <span class="keyword">import</span> m3u8Merge</span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br><span class="line">outPath = <span class="string">&#x27;F:/资料文档/zztt/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动提交事务</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getConn</span>():</span><br><span class="line">    <span class="keyword">return</span> MySQLdb.connect(</span><br><span class="line">        host=os.getenv(<span class="string">&quot;db_pic_host&quot;</span>),</span><br><span class="line">        port=<span class="built_in">int</span>(os.getenv(<span class="string">&quot;db_pic_port&quot;</span>)),</span><br><span class="line">        user=os.getenv(<span class="string">&quot;db_pic_user&quot;</span>),</span><br><span class="line">        passwd=os.getenv(<span class="string">&quot;db_pic_password&quot;</span>),</span><br><span class="line">        db=os.getenv(<span class="string">&quot;db_pic_server&quot;</span>),</span><br><span class="line">        autocommit=<span class="literal">True</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">saveInfo</span>(<span class="params"><span class="built_in">id</span>, name, url, href</span>):</span><br><span class="line">    sql = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        insert into z(id,name,url,href) values(&quot;&#123;&#125;&quot;,&quot;&#123;&#125;&quot;,&quot;&#123;&#125;&quot;,&quot;&#123;&#125;&quot;)&#x27;&#x27;&#x27;</span> \</span><br><span class="line">        .<span class="built_in">format</span>(<span class="built_in">id</span>, name, url, href)</span><br><span class="line">    cursor = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        connection = getConn()</span><br><span class="line">        cursor = connection.cursor()</span><br><span class="line">        cursor.execute(sql)</span><br><span class="line">        cursor.fetchall()</span><br><span class="line">        <span class="comment"># connection.commit()</span></span><br><span class="line">        cursor.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cursor.close()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;添加数据库数据失败:&quot;</span>, e, sql)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">listNeedDownload</span>():</span><br><span class="line">    sql = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    select id,name,url from z where download  = 2  limit 10</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        connection = getConn()</span><br><span class="line">        cursor = connection.cursor()</span><br><span class="line">        cursor.execute(sql)</span><br><span class="line">        data = cursor.fetchall()</span><br><span class="line">        <span class="comment"># connection.commit()</span></span><br><span class="line">        result = []</span><br><span class="line">        <span class="keyword">for</span> row <span class="keyword">in</span> data:</span><br><span class="line">            result.append(&#123;</span><br><span class="line">                <span class="string">&#x27;id&#x27;</span>: row[<span class="number">0</span>],</span><br><span class="line">                <span class="string">&#x27;name&#x27;</span>: row[<span class="number">1</span>],</span><br><span class="line">                <span class="string">&#x27;url&#x27;</span>: row[<span class="number">2</span>]</span><br><span class="line">            &#125;)</span><br><span class="line">        cursor.close()</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;listNeedDownload失败:&quot;</span>, e, sql)</span><br><span class="line">        <span class="keyword">return</span> []</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="数据库连接池"><a href="#数据库连接池" class="headerlink" title="数据库连接池"></a>数据库连接池</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install DBUtils -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">pip install pymysql  -i https://mirrors.aliyun.com/pypi/simple/</span><br></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line">from dbutils.pooled_db import PooledDB</span><br><span class="line">from dotenv import load_dotenv</span><br><span class="line">load_dotenv()</span><br><span class="line">pool = PooledDB(</span><br><span class="line">    creator=pymysql,</span><br><span class="line">    maxconnections=20,</span><br><span class="line">    mincached=2,</span><br><span class="line">    maxcached=10,</span><br><span class="line">    blocking=True,</span><br><span class="line">    host=os.getenv(&quot;db_pic_host&quot;),</span><br><span class="line">    port=int(os.getenv(&quot;db_pic_port&quot;)),</span><br><span class="line">    user=os.getenv(&quot;db_pic_user&quot;),</span><br><span class="line">    passwd=os.getenv(&quot;db_pic_password&quot;),</span><br><span class="line">    db=os.getenv(&quot;db_pic_server&quot;),</span><br><span class="line">    charset=&#x27;utf8mb4&#x27;</span><br><span class="line">)</span><br><span class="line">def a():</span><br><span class="line">      sql = &#x27;&#x27;&#x27;</span><br><span class="line">        insert into img(id,name,tab_url,url) values(&quot;&#123;&#125;&quot;,&quot;&#123;&#125;&quot;,&quot;&#123;&#125;&quot;,&quot;&#123;&#125;&quot;)&#x27;&#x27;&#x27; \</span><br><span class="line">        .format(id, name, tab_url, url)</span><br><span class="line">    cursor = 1</span><br><span class="line">    connection = pool.connection()</span><br><span class="line">    try:</span><br><span class="line">        cursor = connection.cursor()</span><br><span class="line">        cursor.execute(sql)</span><br><span class="line">        cursor.fetchall()</span><br><span class="line">        connection.commit()</span><br><span class="line">        close(cursor)</span><br><span class="line">        connection.close()</span><br><span class="line">        return True</span><br><span class="line">    except Exception as e:</span><br><span class="line">        close(cursor)</span><br><span class="line">        print(&quot;添加数据库数据失败:&quot;, e, sql)</span><br><span class="line">        connection.close()</span><br><span class="line">        return False</span><br></pre></td></tr></table></figure>
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4ad1a794/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/4ad1a794/" class="post-title-link" itemprop="url">Python操作字符串</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 11:49:43" itemprop="dateModified" datetime="2023-11-21T11:49:43+08:00">2023-11-21</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="操作JSON"><a href="#操作JSON" class="headerlink" title="操作JSON"></a>操作JSON</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"></span><br><span class="line"><span class="comment"># 包含关系</span></span><br><span class="line">flag = <span class="string">&#x27;.mp4&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> <span class="string">&#x27;1.mp4&#x27;</span></span><br><span class="line"><span class="comment"># 查找</span></span><br><span class="line"><span class="string">&#x27;1.mp4&#x27;</span>.find(<span class="string">&#x27;.mp4&#x27;</span>)</span><br><span class="line"><span class="comment"># 长度</span></span><br><span class="line"><span class="string">&#x27;1.mp4&#x27;</span>.count(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"><span class="comment"># 长度</span></span><br><span class="line"><span class="string">&#x27;1.mp4&#x27;</span>.replace(<span class="string">&#x27;.mp4&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;1.mp4&#x27;</span>.endswith(<span class="string">&#x27;.mp4&#x27;</span>)</span><br><span class="line">downloadUrl = <span class="string">&#x27;http:/test.com/1 2/123&#x27;</span></span><br><span class="line"><span class="comment"># 转换空格</span></span><br><span class="line">downloadUrl = downloadUrl.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;%20&#x27;</span>)</span><br><span class="line"><span class="comment"># 转义</span></span><br><span class="line">urllib.parse.quote(downloadUrl)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/undefined/">https://github.com/maxzhao-it/blog/post/undefined/</a> </p>
+          <h2 id="无法关闭虚拟机"><a href="#无法关闭虚拟机" class="headerlink" title="无法关闭虚拟机"></a>无法关闭虚拟机</h2><p>qm stop 101  # 编号</p>
+<p>TASK ERROR: can’t lock file ‘&#x2F;var&#x2F;lock&#x2F;qemu-server&#x2F;lock-101.conf’ - received interrupt</p>
+<p>rm &#x2F;var&#x2F;lock&#x2F;qemu-server&#x2F;lock-101.conf</p>
+<h2 id="开机进入-shell"><a href="#开机进入-shell" class="headerlink" title="开机进入 shell"></a>开机进入 shell</h2><p>执行 reset</p>
+<p>系统光盘放在引导的第一位</p>
+<h2 id="swtpm-setup-Not-overwriting-existing-state-file"><a href="#swtpm-setup-Not-overwriting-existing-state-file" class="headerlink" title="swtpm_setup: Not overwriting existing state file."></a>swtpm_setup: Not overwriting existing state file.</h2><p>kvm: -device ide-cd,bus&#x3D;ide.0,unit&#x3D;1,drive&#x3D;drive-ide1,id&#x3D;ide1,bootindex&#x3D;102: Can’t create IDE unit 1, bus supports only 1 units<br>stopping swtpm instance (pid 6199) due to QEMU startup error<br>TASK ERROR: start failed: QEMU exited with code 1</p>
+<p>使用机器类型q35时，只能使用ide0和ide2</p>
+<p>ide0   &#x3D;  ventoy-1.0.96-livecd.iso<br>ide2   &#x3D;  zh-cn_windows_11_business_editions_version_22h2_updated_feb_2023_x64_dvd_632649a2.iso</p>
+<h2 id="安装无法识别硬盘（scsi-无法识别）"><a href="#安装无法识别硬盘（scsi-无法识别）" class="headerlink" title="安装无法识别硬盘（scsi 无法识别）"></a>安装无法识别硬盘（scsi 无法识别）</h2><p><a target="_blank" rel="noopener" href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/">https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/</a></p>
+<p>下载驱动 virtio-win-0.1.229.iso</p>
+<p>挂载iso后，安装时加载驱动  vioscsi\w11\amd64</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/86a90e71/">https://github.com/maxzhao-it/blog/post/86a90e71/</a> </p>
 
       
     </div>
@@ -1003,7 +1157,7 @@
 
 
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>

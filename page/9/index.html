@@ -149,18 +149,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">400</span>
+          <span class="site-state-item-count">407</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">160</span>
+        <span class="site-state-item-count">182</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">201</span>
+        <span class="site-state-item-count">229</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,733 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/63856b15/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/63856b15/" class="post-title-link" itemprop="url">RestTemplate忽略ssl</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-12-20 17:32:20" itemprop="dateModified" datetime="2022-12-20T17:32:20+08:00">2022-12-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/RestTemplate/" itemprop="url" rel="index"><span itemprop="name">RestTemplate</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>下面描述三种类型</p>
+<ol>
+<li><code>application/x-www-form-urlencoded</code></li>
+<li><code>multipart/form-data</code>：上传文件</li>
+<li><code>application/json;charset=UTF-8</code></li>
+</ol>
+<h3 id="Post"><a href="#Post" class="headerlink" title="Post"></a><code>Post</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RestTemplateUtils</span> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> RestTemplate REST_TEMPLATE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        REST_TEMPLATE = <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * application/x-www-form-urlencoded</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">post</span><span class="params">(String serverUrl)</span>&#123;</span><br><span class="line">        <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpHeaders</span>();</span><br><span class="line">        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);</span><br><span class="line">        <span class="type">String</span> <span class="variable">bodys</span> <span class="operator">=</span> <span class="string">&quot;id=1&amp;name=maxzhao&quot;</span>;</span><br><span class="line">        HttpEntity&lt;String&gt; httpEntity = <span class="keyword">new</span> <span class="title class_">HttpEntity</span>&lt;&gt;(bodys, headers);</span><br><span class="line">        ResponseEntity&lt;JSONObject&gt; response = REST_TEMPLATE.postForEntity(serverUrl, httpEntity, JSONObject.class);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * multipart/form-data</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">post</span><span class="params">(String serverUrl)</span>&#123;</span><br><span class="line">        <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpHeaders</span>();</span><br><span class="line">        headers.setContentType(MediaType.MULTIPART_FORM_DATA);</span><br><span class="line">         MultiValueMap&lt;String, String&gt; requestBody = <span class="keyword">new</span> <span class="title class_">LinkedMultiValueMap</span>&lt;&gt;();</span><br><span class="line">        requestBody.add(<span class="string">&quot;id&quot;</span>,<span class="string">&quot;1&quot;</span>);</span><br><span class="line">        <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpHeaders</span>();</span><br><span class="line">        headers.setContentType(MediaType.MULTIPART_FORM_DATA);</span><br><span class="line">        HttpEntity&lt;String&gt; httpEntity = <span class="keyword">new</span> <span class="title class_">HttpEntity</span>&lt;&gt;(bodys, headers);</span><br><span class="line">        ResponseEntity&lt;JSONObject&gt; response = REST_TEMPLATE.postForEntity(serverUrl, httpEntity, JSONObject.class);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * application/json;charset=UTF-8</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">post</span><span class="params">(String serverUrl)</span>&#123;</span><br><span class="line">        <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpHeaders</span>();</span><br><span class="line">        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);</span><br><span class="line">         MultiValueMap&lt;String, String&gt; requestBody = <span class="keyword">new</span> <span class="title class_">LinkedMultiValueMap</span>&lt;&gt;();</span><br><span class="line">        requestBody.add(<span class="string">&quot;id&quot;</span>,<span class="string">&quot;1&quot;</span>);</span><br><span class="line">        <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpHeaders</span>();</span><br><span class="line">        headers.setContentType(MediaType.MULTIPART_FORM_DATA);</span><br><span class="line">        HttpEntity&lt;String&gt; httpEntity = <span class="keyword">new</span> <span class="title class_">HttpEntity</span>&lt;&gt;(bodys, headers);</span><br><span class="line">        ResponseEntity&lt;JSONObject&gt; response = REST_TEMPLATE.postForEntity(serverUrl, httpEntity, JSONObject.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="解析结果"><a href="#解析结果" class="headerlink" title="解析结果"></a>解析结果</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">JSONObject</span> <span class="variable">body</span> <span class="operator">=</span> response.getBody();</span><br><span class="line"><span class="keyword">if</span> (HttpStatus.OK.equals(response.getStatusCode()) &amp;&amp; body != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 处理结果</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 错误会抛出异常 HttpServerErrorException</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="自定义异常处理器"><a href="#自定义异常处理器" class="headerlink" title="自定义异常处理器"></a>自定义异常处理器</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">REST_TEMPLATE.setErrorHandler(<span class="keyword">new</span> <span class="title class_">DefaultResponseErrorHandler</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleError</span><span class="params">(ClientHttpResponse response)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="comment">/*错误请求不为 400 时，抛出异常*/</span></span><br><span class="line">        <span class="keyword">if</span> (!HttpStatus.BAD_REQUEST.equals(response.getStatusCode())) &#123;</span><br><span class="line">            <span class="built_in">super</span>.handleError(response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/63856b15/">https://github.com/maxzhao-it/blog/post/63856b15/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/cb38f68c/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/cb38f68c/" class="post-title-link" itemprop="url">Java识别Word文档内容记录</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Word</code> 文档内容识别主要由两部分：<code>doc</code>、<code>docx</code></p>
+<p><code>docx</code> 文档内容识别的难点在于：</p>
+<ol>
+<li>格式不规范。</li>
+<li>内容出现的规律</li>
+</ol>
+<p>下面记录解析段落格式及内容。</p>
+<h1 id="一、docx内容提取"><a href="#一、docx内容提取" class="headerlink" title="一、docx内容提取"></a>一、<code>docx</code>内容提取</h1><h2 id="1、提取全文"><a href="#1、提取全文" class="headerlink" title="1、提取全文"></a>1、提取全文</h2><p>提取全文内容相对简单</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileParsingService</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析 docx 的存文本内容</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> file 文件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 存文本内容</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">parsingWordContent</span><span class="params">(Resource file)</span> &#123;</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">is</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            is = file.getInputStream();</span><br><span class="line">            <span class="type">XWPFDocument</span> <span class="variable">document</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">XWPFDocument</span>(is);</span><br><span class="line">            <span class="comment">/*word 纯文本内容*/</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">XWPFWordExtractor</span>(document).getText();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;解析 word 失败，fileName=&#123;&#125;&quot;</span>, file.getFilename(), e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (is != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    is.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    log.warn(<span class="string">&quot;请关注输出入关闭失败&quot;</span>, e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、提取有格式的内容"><a href="#2、提取有格式的内容" class="headerlink" title="2、提取有格式的内容"></a>2、提取有格式的内容</h2><h3 id="2-1、-基本原理"><a href="#2-1、-基本原理" class="headerlink" title="2.1、 基本原理"></a>2.1、 基本原理</h3><p>提取有格式的内容是按照段的方式提取的。</p>
+<h3 id="2-2、-获取所有段落"><a href="#2-2、-获取所有段落" class="headerlink" title="2.2、 获取所有段落"></a>2.2、 获取所有段落</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileParsingService</span> &#123;</span><br><span class="line">    <span class="comment">/*******************************/</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">parsingWordOpinion</span><span class="params">(Resource file)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">is</span> <span class="operator">=</span> file.getInputStream();</span><br><span class="line">        <span class="type">XWPFDocument</span> <span class="variable">document</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">XWPFDocument</span>(is);</span><br><span class="line">        <span class="comment">/*段落集合*/</span></span><br><span class="line">        List&lt;IBodyElement&gt; bodyElements = document.getBodyElements();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3、-处理段落"><a href="#2-3、-处理段落" class="headerlink" title="2.3、 处理段落"></a>2.3、 处理段落</h3><p>常用的几种段类型：</p>
+<ul>
+<li><code>XWPFSDT</code> 目录</li>
+<li><code>XWPFParagraph</code> 段落</li>
+<li><code>XWPFTable</code> 表格</li>
+</ul>
+<h4 id="2-3-1、XWPFSDT-目录"><a href="#2-3-1、XWPFSDT-目录" class="headerlink" title="2.3.1、XWPFSDT 目录"></a>2.3.1、<code>XWPFSDT</code> 目录</h4><p>对于目录，直接获取目录内容就可以了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((XWPFSDT) bodyElement).getContent().getText()</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-2、XWPFParagraph-段落（重点）"><a href="#2-3-2、XWPFParagraph-段落（重点）" class="headerlink" title="2.3.2、XWPFParagraph 段落（重点）"></a>2.3.2、<code>XWPFParagraph</code> 段落（重点）</h4><p>作为段落的内容，又可以分为：</p>
+<ul>
+<li>标题</li>
+<li>序列（有序列、无序列）</li>
+<li>正文</li>
+</ul>
+<h5 id="2-3-2-1、提取段落正文"><a href="#2-3-2-1、提取段落正文" class="headerlink" title="2.3.2.1、提取段落正文"></a>2.3.2.1、提取段落正文</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileParsingUtil</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">concatenatePhoneticRuns</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 输出超文本链接=false</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">fetchHyperlinks</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 只提取段落内容</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> document  文档</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> paragraph 段落 (XWPFParagraph) bodyElement;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 内容</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">extractParagraphText</span><span class="params">(XWPFDocument document, XWPFParagraph paragraph)</span> &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">text</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="keyword">for</span> (IRunElement run : paragraph.getIRuns()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (run <span class="keyword">instanceof</span> XWPFSDT) &#123;</span><br><span class="line">                text.append(((XWPFSDT) run).getContent().getText());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!concatenatePhoneticRuns &amp;&amp; run <span class="keyword">instanceof</span> XWPFRun) &#123;</span><br><span class="line">                text.append(((XWPFRun) run).text());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                text.append(run);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/*提取超链接的链接*/</span></span><br><span class="line">            <span class="keyword">if</span> (run <span class="keyword">instanceof</span> XWPFHyperlinkRun &amp;&amp; fetchHyperlinks) &#123;</span><br><span class="line">                <span class="type">XWPFHyperlink</span> <span class="variable">link</span> <span class="operator">=</span> ((XWPFHyperlinkRun) run).getHyperlink(document);</span><br><span class="line">                <span class="keyword">if</span> (link != <span class="literal">null</span>)</span><br><span class="line">                    text.append(<span class="string">&quot; &lt;&quot;</span>).append(link.getURL()).append(<span class="string">&quot;&gt;&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> text.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3-2-2、提取段落的格式"><a href="#2-3-2-2、提取段落的格式" class="headerlink" title="2.3.2.2、提取段落的格式"></a>2.3.2.2、提取段落的格式</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">XWPFParagraph paragraphTemp = (XWPFParagraph) bodyElement;</span><br><span class="line">paragraphTemp.getStyleID()</span><br></pre></td></tr></table></figure>
+
+<p>格式有很多，比如：</p>
+<ul>
+<li>标题<ul>
+<li><code>Heading 1</code></li>
+<li><code>Heading 2</code></li>
+<li><code>RegHChG</code></li>
+<li><code>RegH1G</code></li>
+<li><code>RegH2G</code></li>
+</ul>
+</li>
+<li>序列的合适<ul>
+<li><code>ListParagraph</code></li>
+<li><code>RegSingleTxtG</code></li>
+<li><code>RegSingleTxtG2</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>备注：但是需要的判断方式不是序列的格式，因为格式是不固定的。</p>
+<p>格式内容在 <code>wps</code> 的<strong>样式和格式</strong>中都能看到。</p>
+</blockquote>
+<h5 id="2-3-2-3、判断是否为序列"><a href="#2-3-2-3、判断是否为序列" class="headerlink" title="2.3.2.3、判断是否为序列"></a>2.3.2.3、判断是否为序列</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">XWPFParagraph</span> <span class="variable">paragraphTemp</span> <span class="operator">=</span> (XWPFParagraph) bodyElement;</span><br><span class="line"><span class="keyword">if</span>(paragraphTemp.getNumID()!=<span class="literal">null</span>)&#123;</span><br><span class="line"><span class="comment">// 当前为序列</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要有两个重要属性</p>
+<ul>
+<li><code>NumLevelText</code> 序列值的格式化方式<ul>
+<li><code>%1、</code>，根据序列的类型，可以为 <code>1、</code>，<code>一、</code>，<code>a、</code>等</li>
+<li><code>(%1)</code>，根据序列的类型，可以为 <code>(1)</code>，<code>(一)</code>，<code>(a)</code>等</li>
+<li>暂未发现 <code>%1</code>与 <code>%2</code> 的区别——<code>TODO</code></li>
+</ul>
+</li>
+<li><code>NumFmt</code> 序列的类型<ul>
+<li><code>chineseCounting</code> 中文</li>
+<li><code>decimal</code> 数字</li>
+<li><code>decimalEnclosedCircleChinese</code> 圆圈中的数字</li>
+<li><code>upperLetter</code> 大写字母</li>
+<li><code>lowerLetter</code> 小写字母</li>
+<li><code>lowerRoman</code> 小写罗马</li>
+<li><code>upperRoman</code> 大写罗马</li>
+<li><code>bullet</code> 无序（不用识别出方的、圆的和菱形的，没有意义）</li>
+<li>其它</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-3-3、XWPFTable-表格"><a href="#2-3-3、XWPFTable-表格" class="headerlink" title="2.3.3、XWPFTable 表格"></a>2.3.3、<code>XWPFTable</code> 表格</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileParsingUtil</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析表格内容</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> table 表格  (XWPFTable) bodyElement</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 表格内容</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">appendTableText</span><span class="params">(XWPFTable table)</span> &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">text</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="comment">//this works recursively to pull embedded tables from tables</span></span><br><span class="line">        <span class="keyword">for</span> (XWPFTableRow row : table.getRows()) &#123;</span><br><span class="line">            List&lt;ICell&gt; cells = row.getTableICells();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; cells.size(); i++) &#123;</span><br><span class="line">                <span class="type">ICell</span> <span class="variable">cell</span> <span class="operator">=</span> cells.get(i);</span><br><span class="line">                <span class="keyword">if</span> (cell <span class="keyword">instanceof</span> XWPFTableCell) &#123;</span><br><span class="line">                    text.append(((XWPFTableCell) cell).getTextRecursively());</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cell <span class="keyword">instanceof</span> XWPFSDTCell) &#123;</span><br><span class="line">                    text.append(((XWPFSDTCell) cell).getContent().getText());</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (i &lt; cells.size() - <span class="number">1</span>) &#123;</span><br><span class="line">                    text.append(<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            text.append(<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> text.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><p>一段话：</p>
+<p>在识别出内容出现的规律后，对于规范的格式，需要识别的内容也是多种多样的，需要打开 <code>word</code> （<code>docx</code>推荐用<code>wps</code>打开），然后打开<strong>样式和格式</strong>，对每个段落内容进行分析。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/cb38f68c/">https://github.com/maxzhao-it/blog/post/cb38f68c/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/b87a95cb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/b87a95cb/" class="post-title-link" itemprop="url">十进制与罗马数字互转</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 罗马数字与十进制计算工具</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2022-12-19 09:29</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RomanSerialNumberUtil</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 罗马数字对应的十进制</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, Integer&gt; ROMAN_SERIAL_NUMBER_MAP;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数字间隔计算，从大到小</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span>[] DIGITS = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">13</span>];</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数字对应小写的罗马数字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Integer, String&gt; NUM_TO_LOWER_ROMAN_SERIAL_NUMBER = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数字对应大写的罗马数字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Integer, String&gt; NUM_TO_UPPER_ROMAN_SERIAL_NUMBER = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(<span class="number">32</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;I&quot;</span>, <span class="number">1</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;i&quot;</span>, <span class="number">1</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;V&quot;</span>, <span class="number">5</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;v&quot;</span>, <span class="number">5</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;X&quot;</span>, <span class="number">10</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;x&quot;</span>, <span class="number">10</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;L&quot;</span>, <span class="number">50</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;l&quot;</span>, <span class="number">50</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;C&quot;</span>, <span class="number">100</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;c&quot;</span>, <span class="number">100</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;D&quot;</span>, <span class="number">500</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;d&quot;</span>, <span class="number">500</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;M&quot;</span>, <span class="number">1000</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;m&quot;</span>, <span class="number">1000</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;IV&quot;</span>, <span class="number">4</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;iv&quot;</span>, <span class="number">4</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;IX&quot;</span>, <span class="number">9</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;ix&quot;</span>, <span class="number">9</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;XL&quot;</span>, <span class="number">40</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;xl&quot;</span>, <span class="number">40</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;XC&quot;</span>, <span class="number">90</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;xc&quot;</span>, <span class="number">90</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;CD&quot;</span>, <span class="number">400</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;cd&quot;</span>, <span class="number">400</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;CM&quot;</span>, <span class="number">900</span>);</span><br><span class="line">        ROMAN_SERIAL_NUMBER_MAP.put(<span class="string">&quot;cm&quot;</span>, <span class="number">900</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">1</span>, <span class="string">&quot;i&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">5</span>, <span class="string">&quot;v&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">10</span>, <span class="string">&quot;x&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">50</span>, <span class="string">&quot;l&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">100</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">500</span>, <span class="string">&quot;d&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">1000</span>, <span class="string">&quot;m&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">4</span>, <span class="string">&quot;iv&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">9</span>, <span class="string">&quot;ix&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">40</span>, <span class="string">&quot;xl&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">90</span>, <span class="string">&quot;xc&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">400</span>, <span class="string">&quot;cd&quot;</span>);</span><br><span class="line">        NUM_TO_LOWER_ROMAN_SERIAL_NUMBER.put(<span class="number">900</span>, <span class="string">&quot;cm&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">1</span>, <span class="string">&quot;I&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">5</span>, <span class="string">&quot;V&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">10</span>, <span class="string">&quot;X&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">50</span>, <span class="string">&quot;L&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">100</span>, <span class="string">&quot;C&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">500</span>, <span class="string">&quot;D&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">1000</span>, <span class="string">&quot;M&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">4</span>, <span class="string">&quot;IV&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">9</span>, <span class="string">&quot;IX&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">40</span>, <span class="string">&quot;XL&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">90</span>, <span class="string">&quot;XC&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">400</span>, <span class="string">&quot;CD&quot;</span>);</span><br><span class="line">        NUM_TO_UPPER_ROMAN_SERIAL_NUMBER.put(<span class="number">900</span>, <span class="string">&quot;CM&quot;</span>);</span><br><span class="line"></span><br><span class="line">        DIGITS[<span class="number">0</span>] = <span class="number">1000</span>;</span><br><span class="line">        DIGITS[<span class="number">1</span>] = <span class="number">900</span>;</span><br><span class="line">        DIGITS[<span class="number">2</span>] = <span class="number">500</span>;</span><br><span class="line">        DIGITS[<span class="number">3</span>] = <span class="number">400</span>;</span><br><span class="line">        DIGITS[<span class="number">4</span>] = <span class="number">100</span>;</span><br><span class="line">        DIGITS[<span class="number">5</span>] = <span class="number">90</span>;</span><br><span class="line">        DIGITS[<span class="number">6</span>] = <span class="number">50</span>;</span><br><span class="line">        DIGITS[<span class="number">7</span>] = <span class="number">40</span>;</span><br><span class="line">        DIGITS[<span class="number">8</span>] = <span class="number">10</span>;</span><br><span class="line">        DIGITS[<span class="number">9</span>] = <span class="number">9</span>;</span><br><span class="line">        DIGITS[<span class="number">10</span>] = <span class="number">5</span>;</span><br><span class="line">        DIGITS[<span class="number">11</span>] = <span class="number">4</span>;</span><br><span class="line">        DIGITS[<span class="number">12</span>] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数字转小写罗马字符串</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 数字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">toLowerRomanSerialNumber</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> toRomanSerialNumber(num, <span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数字转大写罗马字符串</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 数字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">toUpperRomanSerialNumber</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> toRomanSerialNumber(num, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数字转罗马字符串</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> num 字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 数字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">toRomanSerialNumber</span><span class="params">(<span class="type">int</span> num,<span class="type">boolean</span> lowerChar)</span> &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; chars = lowerChar ? NUM_TO_LOWER_ROMAN_SERIAL_NUMBER : NUM_TO_UPPER_ROMAN_SERIAL_NUMBER;</span><br><span class="line">        <span class="type">String</span> <span class="variable">res</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">while</span> (num &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> digit : DIGITS) &#123;</span><br><span class="line">                <span class="keyword">if</span> (num &gt;= digit) &#123;</span><br><span class="line">                    res += chars.get(digit);</span><br><span class="line">                    num -= digit;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 罗马字符串转 数字</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> roman 字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 数字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getLowerRomanSerialNumber</span><span class="params">(String roman)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (idx &lt; roman.length()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (idx + <span class="number">1</span> &lt; roman.length() &amp;&amp; ROMAN_SERIAL_NUMBER_MAP.containsKey(roman.substring(idx, idx + <span class="number">2</span>))) &#123;</span><br><span class="line">                res += ROMAN_SERIAL_NUMBER_MAP.get(roman.substring(idx, idx + <span class="number">2</span>));</span><br><span class="line">                idx += <span class="number">2</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                res += ROMAN_SERIAL_NUMBER_MAP.get(roman.substring(idx, idx + <span class="number">1</span>));</span><br><span class="line">                idx++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/b87a95cb/">https://github.com/maxzhao-it/blog/post/b87a95cb/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/5fd3d0d2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/5fd3d0d2/" class="post-title-link" itemprop="url">SpringCloudGateway过滤器添加修改请求头</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringCloud/" itemprop="url" rel="index"><span itemprop="name">SpringCloud</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringCloud/Gateway/" itemprop="url" rel="index"><span itemprop="name">Gateway</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><code>SpringCloudGateway</code> 全局过滤器需要实现 <code>org.springframework.cloud.gateway.filter.GlobalFilter</code> 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthFilter</span> <span class="keyword">implements</span> <span class="title class_">GlobalFilter</span>, Ordered &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Mono&lt;Void&gt; <span class="title function_">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> &#123;</span><br><span class="line">        <span class="type">ServerHttpRequest</span> <span class="variable">request</span> <span class="operator">=</span> exchange.getRequest();</span><br><span class="line">        ServerHttpRequest.<span class="type">Builder</span> <span class="variable">mutate</span> <span class="operator">=</span> request.mutate();</span><br><span class="line">        <span class="comment">/*获取请求头*/</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">contentType</span> <span class="operator">=</span> request.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);</span><br><span class="line">        <span class="comment">/*添加、或更新*/</span></span><br><span class="line">        mutate.header(HttpHeaders.CONTENT_TYPE, URLEncoder.encode(MediaType.APPLICATION_JSON_VALUE, Constants.UTF8));</span><br><span class="line">        <span class="comment">/*删除*/</span></span><br><span class="line">        mutate.headers(httpHeaders -&gt; httpHeaders.remove(name)).build();</span><br><span class="line">        <span class="keyword">return</span> chain.filter(exchange.mutate().request(mutate.build()).build());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getOrder</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/5fd3d0d2/">https://github.com/maxzhao-it/blog/post/5fd3d0d2/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/6c42980c/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/6c42980c/" class="post-title-link" itemprop="url">Sentinel修改日志位置</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:43:58" itemprop="dateModified" datetime="2023-01-10T13:43:58+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/Sentinel/" itemprop="url" rel="index"><span itemprop="name">Sentinel</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a target="_blank" rel="noopener" href="https://sentinelguard.io/zh-cn/docs/general-configuration.html"><code>Sentinel</code> 官方配置</a>记录了一部分，在 <code>sentinel-core</code> 的源码里都可以找到。</p>
+<h2 id="配置修改"><a href="#配置修改" class="headerlink" title="配置修改"></a>配置修改</h2><h3 id="sentinel-dashbord-控制台"><a href="#sentinel-dashbord-控制台" class="headerlink" title="sentinel-dashbord  控制台"></a><code>sentinel-dashbord</code>  控制台</h3><blockquote>
+<p>这里使用 <code>sentinel-dashboard-1.8.6.jar</code></p>
+<p><a href="https://github.com/alibaba/Sentinel/wiki/%E6%8E%A7%E5%88%B6%E5%8F%B0">官方参考</a></p>
+</blockquote>
+<p>这里建议使用外部化配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Dcsp.sentinel.config.file=./application.properties -jar sentinel-dashboard.jar</span><br></pre></td></tr></table></figure>
+
+<p>配置文件在 <code>sentinel-dashboard.jar:/BOOT-INF/classes/application.properties</code>，内容如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新增</span></span><br><span class="line"><span class="comment"># 服务端口</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">48080</span></span><br><span class="line"><span class="comment"># 项目名</span></span><br><span class="line"><span class="attr">project.name</span>=<span class="string">sentinel-dashboard</span></span><br><span class="line"><span class="comment"># 客户端发送心跳的地址</span></span><br><span class="line"><span class="attr">csp.sentinel.dashboard.server</span>=<span class="string">localhost:48080</span></span><br><span class="line"><span class="comment"># 日志文件的地址</span></span><br><span class="line"><span class="attr">csp.sentinel.log.dir</span>=<span class="string">./logs/</span></span><br><span class="line"><span class="comment">#spring settings</span></span><br><span class="line"><span class="attr">server.servlet.encoding.force</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">server.servlet.encoding.charset</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="attr">server.servlet.encoding.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">#cookie name setting</span></span><br><span class="line"><span class="attr">server.servlet.session.cookie.name</span>=<span class="string">sentinel_dashboard_cookie</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">#logging settings</span></span><br><span class="line"><span class="attr">logging.level.org.springframework.web</span>=<span class="string">INFO</span></span><br><span class="line"><span class="attr">logging.file.name</span>=<span class="string">./logs/csp/sentinel-dashboard.log</span></span><br><span class="line"><span class="attr">logging.pattern.file</span>= <span class="string">%d&#123;yyyy-MM-dd HH:mm:ss&#125; [%thread] %-5level %logger&#123;36&#125; - %msg%n</span></span><br><span class="line"><span class="comment">#logging.pattern.console= %d&#123;yyyy-MM-dd HH:mm:ss&#125; [%thread] %-5level %logger&#123;36&#125; - %msg%n</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">#auth settings</span></span><br><span class="line"><span class="attr">auth.filter.exclude-urls</span>=<span class="string">/,/auth/login,/auth/logout,/registry/machine,/version</span></span><br><span class="line"><span class="attr">auth.filter.exclude-url-suffixes</span>=<span class="string">htm,html,js,css,map,ico,ttf,woff,png</span></span><br><span class="line"><span class="comment"># If auth.enabled=false, Sentinel console disable login</span></span><br><span class="line"><span class="attr">auth.username</span>=<span class="string">sentinel</span></span><br><span class="line"><span class="attr">auth.password</span>=<span class="string">sentinel</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Inject the dashboard version. It&#x27;s required to enable</span></span><br><span class="line"><span class="comment"># filtering in pom.xml for this resource file.</span></span><br><span class="line"><span class="attr">sentinel.dashboard.version</span>=<span class="string">1.8.6</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="sentinel-客户端"><a href="#sentinel-客户端" class="headerlink" title="sentinel 客户端"></a><code>sentinel</code> 客户端</h3><p>日志配置 <code>sentinel.properties</code> 加载是在 <code>LogConfigLoader</code> 下，加载方式有</p>
+<ul>
+<li>环境变量（<code>CSP_SENTINEL_CONFIG_FILE</code>）指定</li>
+<li>配置属性（<code>csp.sentinel.config.file</code>）指定</li>
+<li>默认（<code>classpath:sentinel.properties</code>）</li>
+</ul>
+<p>我们可以使用默认配置，在 <code>resources</code> 下创建 <code>sentinel.properties</code> 文件：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 没有配置时，默认读取当前文件，可以通过 -Dcsp.sentinel.config.file 配置</span></span><br><span class="line"><span class="comment"># 指定应用的名称</span></span><br><span class="line"><span class="attr">project.name</span>=<span class="string">gateway</span></span><br><span class="line"><span class="comment"># 未指定时，取project.name</span></span><br><span class="line"><span class="attr">csp.sentinel.app.name</span>=<span class="string">gateway</span></span><br><span class="line"><span class="comment"># 指定应用的类型</span></span><br><span class="line"><span class="attr">csp.sentinel.app.type</span>=<span class="string">10</span></span><br><span class="line"><span class="comment"># 单个监控日志文件的大小	long</span></span><br><span class="line"><span class="attr">csp.sentinel.metric.file.single.size</span>=<span class="string">52428800</span></span><br><span class="line"><span class="comment"># 监控日志文件的总数上限	int	6</span></span><br><span class="line"><span class="attr">csp.sentinel.metric.file.total.count</span>=<span class="string">1 6</span></span><br><span class="line"><span class="comment"># 最大的有效响应时长（ms），超出此值则按照此值记录</span></span><br><span class="line"><span class="attr">csp.sentinel.statistic.max.rt</span>=<span class="string">5000</span></span><br><span class="line"><span class="comment"># SPI 加载时使用的 ClassLoader</span></span><br><span class="line"><span class="comment">#csp.sentinel.spi.classloader=context</span></span><br><span class="line"><span class="attr">csp.sentinel.metric.flush.interval</span>=<span class="string">1</span></span><br><span class="line"><span class="comment"># 日志配置</span></span><br><span class="line"><span class="attr">csp.sentinel.log.dir</span>=<span class="string">./logs/sentinel/</span></span><br><span class="line"><span class="comment"># 输出至文件，默认</span></span><br><span class="line"><span class="attr">csp.sentinel.log.output.type</span>=<span class="string">file</span></span><br><span class="line"><span class="comment"># 日志文件 使用进程ID</span></span><br><span class="line"><span class="attr">csp.sentinel.log.use.pid</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果使用 <code>SpringCloudAlibaba</code>，<a href="https://github.com/alibaba/spring-cloud-alibaba/wiki/Sentinel">可以参考官方 <code>Sentinel</code> 说明</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/6c42980c/">https://github.com/maxzhao-it/blog/post/6c42980c/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/8a4e05d0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/8a4e05d0/" class="post-title-link" itemprop="url">Sentinel集成</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:43:59" itemprop="dateModified" datetime="2023-01-10T13:43:59+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/Sentinel/" itemprop="url" rel="index"><span itemprop="name">Sentinel</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这里使用<code>SpringCloud</code>。</p>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>父类依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;spring-cloud.version&gt;2021.0.4&lt;/spring-cloud.version&gt; --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- &lt;spring-cloud-alibaba.version&gt;2021.0.4.0&lt;/spring-cloud-alibaba.version&gt; --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- SpringCloud 微服务 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- SpringCloud Alibaba 微服务 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud-alibaba.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>基础依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- SpringCloud Alibaba Sentinel --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>sentinel</code> 使用 <code>nacos</code> 做配置中心</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Sentinel Datasource Nacos --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.csp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sentinel-datasource-nacos<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>sentinel</code> 与 <code>gateway</code> 依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- SpringCloud Alibaba Sentinel Gateway --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-sentinel-gateway<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="配置文件配置"><a href="#配置文件配置" class="headerlink" title="配置文件配置"></a>配置文件配置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Spring</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">  <span class="comment"># 当前配置可以放在 nacos 中</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">locator:</span></span><br><span class="line">          <span class="attr">lowerCaseServiceId:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="comment"># 认证中心</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">auth</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://auth</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/auth/**</span></span><br><span class="line">          <span class="attr">filters:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">StripPrefix=1</span></span><br><span class="line">      <span class="attr">nacos:</span></span><br><span class="line">        <span class="attr">discovery:</span></span><br><span class="line">          <span class="comment"># nacos 服务注册地址</span></span><br><span class="line">          <span class="attr">server-addr:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:8848</span></span><br><span class="line">        <span class="attr">config:</span></span><br><span class="line">          <span class="comment"># nacos 配置中心地址</span></span><br><span class="line">          <span class="attr">server-addr:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:8848</span></span><br><span class="line">          <span class="comment"># 配置文件格式</span></span><br><span class="line">          <span class="attr">file-extension:</span> <span class="string">yml</span></span><br><span class="line">          <span class="comment"># 共享配置</span></span><br><span class="line">          <span class="attr">shared-configs:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">application-dev.$&#123;spring.cloud.nacos.config.file-extension&#125;</span></span><br><span class="line">    <span class="attr">sentinel:</span></span><br><span class="line">      <span class="comment"># 取消控制台懒加载</span></span><br><span class="line">      <span class="attr">eager:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">transport:</span></span><br><span class="line">        <span class="comment"># 接收限流规则</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">8719</span></span><br><span class="line">        <span class="comment"># 控制台地址</span></span><br><span class="line">        <span class="attr">dashboard:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:48080</span></span><br><span class="line">      <span class="comment"># nacos配置持久化</span></span><br><span class="line">      <span class="attr">datasource:</span></span><br><span class="line">        <span class="comment"># 动态数据源</span></span><br><span class="line">        <span class="attr">ds1:</span></span><br><span class="line">          <span class="comment"># NacosDataSourceProperties</span></span><br><span class="line">          <span class="attr">nacos:</span></span><br><span class="line">            <span class="attr">server-addr:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:8848</span></span><br><span class="line">            <span class="attr">dataId:</span> <span class="string">sentinel-gateway</span></span><br><span class="line">            <span class="attr">groupId:</span> <span class="string">DEFAULT_GROUP</span></span><br><span class="line">            <span class="attr">data-type:</span> <span class="string">json</span></span><br><span class="line">            <span class="attr">rule-type:</span> <span class="string">flow</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="规则的种类-ruleType"><a href="#规则的种类-ruleType" class="headerlink" title="规则的种类(ruleType):"></a>规则的种类(<code>ruleType</code>):</h4><ul>
+<li>flow: 流量控制</li>
+<li>degrade: 熔断降级</li>
+<li>system：系统保护</li>
+<li>authority：访问控制</li>
+<li>param-flow：热点</li>
+</ul>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://sentinelguard.io/zh-cn/docs/basic-api-resource-rule.html">官方规则种类配置说明</a></p>
+</blockquote>
+<h4 id="flow的配置"><a href="#flow的配置" class="headerlink" title="flow的配置"></a><code>flow</code>的配置</h4><p><code>nacos</code>配置中心就可以添加网关流量控制规则：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;auth&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">500</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;limitApp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;default&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;strategy&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;controlBehavior&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>网关限流规则：GatewayFlowRule</p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/8a4e05d0/">https://github.com/maxzhao-it/blog/post/8a4e05d0/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/cbe2108c/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/cbe2108c/" class="post-title-link" itemprop="url">Nginx开启gzip压缩</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在 <code>nginx.conf</code> 的 <code>http</code> 下加入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 开启gzip压缩</span><br><span class="line">gzip on;</span><br><span class="line"># 大于1K的才压缩</span><br><span class="line">gzip_min_length 1k;</span><br><span class="line"># 压缩缓冲区</span><br><span class="line">gzip_buffers 16 64K;</span><br><span class="line"># 压缩版本（默认1.1，前端如果是squid2.5请使用1.0）</span><br><span class="line">gzip_http_version 1.1;</span><br><span class="line"># 压缩级别，1-10，数字越大压缩的越好，时间也越长</span><br><span class="line">gzip_comp_level 5;</span><br><span class="line"># 进行压缩的文件类型</span><br><span class="line">gzip_types text/plain application/x-javascript text/css application/xml application/javascript;</span><br><span class="line"># 跟Squid等缓存服务有关，on的话会在Header里增加&quot;Vary: Accept-Encoding&quot;</span><br><span class="line">gzip_vary on;</span><br><span class="line"># 排除IE6</span><br><span class="line">gzip_disable &quot;MSIE [1-6]\.&quot;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/cbe2108c/">https://github.com/maxzhao-it/blog/post/cbe2108c/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -555,731 +1282,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/48237f93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/48237f93/" class="post-title-link" itemprop="url">Ubuntu20安装RabbitMQ</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/Ubuntu/" itemprop="url" rel="index"><span itemprop="name">Ubuntu</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="直接-apt-安装"><a href="#直接-apt-安装" class="headerlink" title="直接 apt 安装"></a>直接 <code>apt</code> 安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update -y</span><br><span class="line"><span class="comment">## Install Erlang packages</span></span><br><span class="line">sudo apt-get install -y erlang-base \</span><br><span class="line">                        erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \</span><br><span class="line">                        erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \</span><br><span class="line">                        erlang-runtime-tools erlang-snmp erlang-ssl \</span><br><span class="line">                        erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl</span><br><span class="line"></span><br><span class="line"><span class="comment">## Install rabbitmq-server and its dependencies</span></span><br><span class="line">sudo apt-get install rabbitmq-server -y --fix-missing</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="安装-erlang"><a href="#安装-erlang" class="headerlink" title="安装 erlang"></a>安装 erlang</h2><h3 id="deb安装"><a href="#deb安装" class="headerlink" title="deb安装"></a>deb安装</h3><p><a target="_blank" rel="noopener" href="https://www.erlang-solutions.com/downloads/">下载地址</a></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/tools &amp;&amp; <span class="built_in">cd</span> ~/tools</span><br><span class="line">wget https://packages.erlang-solutions.com/erlang/debian/pool/esl-erlang_22.2-1~ubuntu~xenial_amd64.deb</span><br><span class="line">apt install -y libncurses5 libwxbase3.0-0v5 libwxgtk3.0-gtk3-0v5 libsctp1 libssl-dev openssl</span><br><span class="line">apt install -y libwxgtk3.0-gtk3-0v5</span><br><span class="line">sudo dpkg -i esl-erlang_22.2-1_ubuntu_xenial_amd64.deb</span><br></pre></td></tr></table></figure>
-
-<h2 id="RabbitMQ安装"><a href="#RabbitMQ安装" class="headerlink" title="RabbitMQ安装"></a>RabbitMQ安装</h2><h3 id="deb安装-1"><a href="#deb安装-1" class="headerlink" title="deb安装"></a>deb安装</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> </span><br><span class="line">adduser rabbitmq</span><br><span class="line">su rabbitmq</span><br><span class="line"><span class="built_in">mkdir</span> ~/tools &amp;&amp; <span class="built_in">cd</span> ~/tools</span><br><span class="line">apt -y install socat logrotate init-system-helpers adduser wget</span><br><span class="line">wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.2/rabbitmq-server_3.8.2-1_all.deb</span><br><span class="line">sudo dpkg -i rabbitmq-server_3.8.2-1_all.deb</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接停用多路径服务</span></span><br><span class="line">systemctl stop multipathd.socket</span><br><span class="line">systemctl disabled multipathd.socket</span><br><span class="line">sudo systemctl start rabbitmq-server</span><br><span class="line">sudo systemctl status rabbitmq-server</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> rabbitmq-server</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/48237f93/">https://github.com/maxzhao-it/blog/post/48237f93/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/b829b66a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/b829b66a/" class="post-title-link" itemprop="url">Zookeeper</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">yum install -y wget</span><br><span class="line">useradd zk</span><br><span class="line">su zk</span><br><span class="line">mkdir ~/tools &amp;&amp; cd ~/tools</span><br><span class="line">wget https://dlcdn.apache.org/zookeeper/zookeeper-3.8.0/apache-zookeeper-3.8.0-bin.tar.gz</span><br><span class="line">tar -zxf apache-zookeeper-3.8.0-bin.tar.gz -C ../</span><br><span class="line">mv apache-zookeeper-3.7.1-bin zookeeper</span><br></pre></td></tr></table></figure>
-
-<p>单节点</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; ~/zookeeper/conf/zoo.cfg &lt;&lt; EOF</span><br><span class="line">tickTime=2000</span><br><span class="line">initLimit=10</span><br><span class="line">syncLimit=5</span><br><span class="line">dataDir=/home/zk/zookeeper-data</span><br><span class="line">clientPort=22181</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">maxClientCnxns=60</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">autopurge.snapRetainCount=3</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">autopurge.purgeInterval=1</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">metricsProvider.httpPort=7000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">metricsProvider.exportJvmInfo=<span class="literal">true</span></span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-<p>启动</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/zookeeper/bin/zkServer.sh start</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/b829b66a/">https://github.com/maxzhao-it/blog/post/b829b66a/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/aa3ad855/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/aa3ad855/" class="post-title-link" itemprop="url">Linux网络监控工具</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>dstat</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dstat</span><br><span class="line">dstat -n</span><br></pre></td></tr></table></figure>
-
-<p>nload</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nload</span><br><span class="line">nload eth0</span><br></pre></td></tr></table></figure>
-
-<p>nethogs</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nethogs</span><br><span class="line">nethogs -p ens33</span><br></pre></td></tr></table></figure>
-
-<p>slurm</p>
-<p>iperf</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 服务端</span><br><span class="line">iperf -s</span><br><span class="line"># 客户端</span><br><span class="line">iperf -c 192.168.2.2</span><br></pre></td></tr></table></figure>
-
-
-
-<p>speedtest</p>
-<p>网速测试</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/aa3ad855/">https://github.com/maxzhao-it/blog/post/aa3ad855/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/3ac5f475/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/3ac5f475/" class="post-title-link" itemprop="url">Sentinel使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:43:58" itemprop="dateModified" datetime="2023-01-10T13:43:58+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/Sentinel/" itemprop="url" rel="index"><span itemprop="name">Sentinel</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Sentinel： 流量路由、流量控制、流量整形、熔断降级、系统自适应过载保护、热点流量防护等多个维度来帮助开发者保障微服务的稳定性。</p>
-<h1 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h1><p>创建用户</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y wget</span><br><span class="line">groupadd maxzhao</span><br><span class="line">useradd -g maxzhao sentinel</span><br><span class="line">passwd sentinel</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://github.com/alibaba/Sentinel/releases">下载最新</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">su sentinel</span><br><span class="line">mkdir ~/tools &amp;&amp; cd tools</span><br><span class="line">wget https://github.com/alibaba/Sentinel/releases/download/1.8.6/sentinel-dashboard-1.8.6.jar</span><br></pre></td></tr></table></figure>
-
-<p>登录</p>
-<p><a href="192.168.222.190:8080">192.168.222.190:8080</a></p>
-<p>账号密码：sentinel&#x2F;sentinel</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/3ac5f475/">https://github.com/maxzhao-it/blog/post/3ac5f475/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/823fd600/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/823fd600/" class="post-title-link" itemprop="url">GoReplay流量复制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:53:55" itemprop="dateModified" datetime="2023-01-10T13:53:55+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/GoReplay/" itemprop="url" rel="index"><span itemprop="name">GoReplay</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><h3 id="1、正常接收服务，测试服务不存在"><a href="#1、正常接收服务，测试服务不存在" class="headerlink" title="1、正常接收服务，测试服务不存在"></a>1、正常接收服务，测试服务不存在</h3><p>没有问题、没有输出日志</p>
-<h3 id="2、正常接收服务，测试服务掉线再上线"><a href="#2、正常接收服务，测试服务掉线再上线" class="headerlink" title="2、正常接收服务，测试服务掉线再上线"></a>2、正常接收服务，测试服务掉线再上线</h3><p>没有问题、没有日志输出</p>
-<h3 id="3、正常接收服务，测试服务上下文改变"><a href="#3、正常接收服务，测试服务上下文改变" class="headerlink" title="3、正常接收服务，测试服务上下文改变"></a>3、正常接收服务，测试服务上下文改变</h3><p>无法发送到测试服务</p>
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">捕获5673端口的请求和响应输出到stdout(用于调试)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--input-raw-track-response用于捕获response，不加这个参数只捕获请求</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--input-raw-override-snaplen将捕获的snaplen覆盖为64k，避免抓取的流量被截断</span></span><br><span class="line">./gor --input-raw :5673 --output-stdout --input-raw-track-response --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">捕获5673端口的请求和响应并转发到x.x.x.x:5673服务上,output-http可以跟多个，会将相同的流量转发到多个端点</span></span><br><span class="line">./gor --input-raw :5673 --output-http http://x.x.x.x:5673 --input-raw-track-response --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">捕获5673端口的请求和响应输出到文件request.gor</span></span><br><span class="line">./gor --input-raw :5673 --output-file request.gor --input-raw-track-response --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">捕获5673端口的请求和响应输出到文件文件格式以当前日期命名</span></span><br><span class="line">./gor --input-raw :5673 --output-file requests-%Y-%m-%d.log --input-raw-override-snaplen</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">捕获5673端口的请求和响应输出到屏幕，并在请求header中添加‘Real-IP:真实ip’的字段，如果有则覆盖原有值</span></span><br><span class="line">./gor --input-raw :5673 --output-stdout --input-raw-track-response --input-raw-override-snaplen --input-raw-realip-header &quot;Real-IP&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--output-file-append gor默认以块的形式写入文件，默认256块（可以理解为256次请求），使用此参数可以将所有的块写入一个文件，文件大小限制默认32mb</span></span><br><span class="line">./gor --input-raw :5673 --output-file request.gor --input-raw-track-response --input-raw-override-snaplen --output-file-append</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--output-file-size-limit和--output-file-queue-limit选项设置块限制，默认值分别为32mb、256，文件大小可以使用kb、mb、gb限制，只想要大小限制，你可以设置--output-file-queue-limit为0，反之亦然</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置录制的文件大小为40kb,不限制块大小</span></span><br><span class="line">./gor --input-raw :5673 --output-file request.gor --input-raw-override-snaplen --output-file-size-limit 40kb --output-file-queue-limit 0</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从request_0.gor文件中回放请求到x.x.x.x:5673服务上</span></span><br><span class="line">./gor --input-file request_0.gor --output-http http://x.x.x.x:5673</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--input-file-loop从request_0.gor文件中回放请求到x.x.x.x:5673服务上，循环回放</span></span><br><span class="line">./gor --input-file request_0.gor --output-http http://x.x.x.x:5673 --input-file-loop</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以2倍的速度从requests-2022-01-18_0.log文件中回放请求到x.x.x.x:5673服务上</span></span><br><span class="line">./gor --input-file &#x27;requests-2022-01-18_0.log|200%&#x27; --output-http http://x.x.x.x:5673</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">模拟从文件requests-2022-01-18_0.log回放查看需要回放需要执行多长时间</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">--input-file-dry-run模拟从数据源读取并不真正的回放，可以获得回放的时间、回放的请求数等等</span></span><br><span class="line">./gor --input-file ./gortest/requests-2022-01-18_0.log --output-http http://x.x.x.x:5673 --input-file-dry-run</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">这里使用了通配符*，gor会自动读取匹配的所有文件并按照时间自动排序</span></span><br><span class="line">./gor --input-file &#x27;./gortest/requests-2022-01-18_*&#x27; --output-http http://x.x.x.x:5673 --input-file-dry-run</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>回放模拟<code>--input-file-dry-run</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Records found: 17 # 请求总数据量</span><br><span class="line">Malformed records: &lt;nil&gt; # 不符合标准的请求数量，nil表示没有</span><br><span class="line">Files processed: 1 </span><br><span class="line">Bytes processed: 7564 # 大小</span><br><span class="line">Max wait: 6.024768111s # 请求间最大等待时间</span><br><span class="line">Min wait: 4.197µs  # 请求间最小等待时间</span><br><span class="line">First wait: 118.78604ms # 第一次请求的间隔</span><br><span class="line">It will take `18.078520319s` to replay at current speed.</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>回放状态</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--stats --output-http-stats</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="转发其它地址"><a href="#转发其它地址" class="headerlink" title="转发其它地址"></a>转发其它地址</h3><p><code>--http-rewrite-url</code> expects value in “:” format: “:” is a dilimiter. In &#96;&#96; section you may use captured regexp group values. This works similar to <code>replace</code> method in Javascript or <code>gsub</code> in Ruby.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Rewrites all `/v1/user/&lt;user_id&gt;/ping` requests to `/v2/user/&lt;user_id&gt;/ping`</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-rewrite-url /v1/user/([^\\/]+)/ping:/v2/user/$1/ping</span><br></pre></td></tr></table></figure>
-
-<h3 id="过滤URL"><a href="#过滤URL" class="headerlink" title="过滤URL"></a>过滤URL</h3><h4 id="Allow-url-regexp"><a href="#Allow-url-regexp" class="headerlink" title="Allow url regexp"></a>Allow url regexp</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># only forward requests being sent to the /api endpoint</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-allow-url /api</span><br></pre></td></tr></table></figure>
-
-<h4 id="Disallow-url-regexp"><a href="#Disallow-url-regexp" class="headerlink" title="Disallow url regexp"></a>Disallow url regexp</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># only forward requests NOT being sent to the /api... endpoint</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-disallow-url /api</span><br></pre></td></tr></table></figure>
-
-<h4 id="Filter-based-on-regexp-of-header"><a href="#Filter-based-on-regexp-of-header" class="headerlink" title="Filter based on regexp of header"></a>Filter based on regexp of header</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># only forward requests with an api version of 1.0x</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-allow-header api-version:^1\.0\d</span><br><span class="line"></span><br><span class="line"># only forward requests NOT containing User-Agent header value &quot;Replayed by Gor&quot;</span><br><span class="line">gor --input-raw :8080 --output-http staging.com --http-disallow-header &quot;User-Agent: Replayed by Gor&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="Filter-based-on-HTTP-method"><a href="#Filter-based-on-HTTP-method" class="headerlink" title="Filter based on HTTP method"></a>Filter based on HTTP method</h4><p>Requests not matching a specified whitelist can be filtered out. For example to strip non-nullipotent requests:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gor --input-raw :80 --output-http &quot;http://staging.server&quot; \</span><br><span class="line">    --http-allow-method GET \</span><br><span class="line">    --http-allow-method OPTIONS</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> goreplay &amp;&amp; <span class="built_in">cd</span> goreplay</span><br><span class="line"></span><br><span class="line">wget https://github.com/buger/goreplay/releases/download/1.3.3/gor_1.3.3_x64.tar.gz</span><br><span class="line">tar -zxf  gor_1.3.3_x64.tar.gz</span><br></pre></td></tr></table></figure>
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/823fd600/">https://github.com/maxzhao-it/blog/post/823fd600/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/b66e8509/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/b66e8509/" class="post-title-link" itemprop="url">Skywalking部署</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Skywalking/" itemprop="url" rel="index"><span itemprop="name">Skywalking</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一个对Java友好的微服务链路监控工具。</p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a target="_blank" rel="noopener" href="https://dlcdn.apache.org/skywalking/9.2.0/apache-skywalking-apm-9.2.0.tar.gz">apache-skywalking-apm-9.2.0.tar.gz</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/tools </span><br><span class="line"><span class="built_in">cd</span> ~/tools</span><br><span class="line">wget https://dlcdn.apache.org/skywalking/9.2.0/apache-skywalking-apm-9.2.0.tar.gz --no-check-certificate</span><br><span class="line">tar -zxf apache-skywalking-apm-9.2.0.tar.gz -C ../</span><br><span class="line"><span class="built_in">cd</span> ../</span><br><span class="line"><span class="built_in">mv</span> apache-skywalking-apm-bin skywalking</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><a target="_blank" rel="noopener" href="https://skywalking.apache.org/docs/main/next/en/setup/backend/backend-setup/">直接参考官方文档</a></p>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><h4 id="服务配置"><a href="#服务配置" class="headerlink" title="服务配置"></a>服务配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/skywalking/config/application.yml</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">core:</span></span><br><span class="line">  <span class="attr">selector:</span> <span class="string">$&#123;SW_CORE:default&#125;</span></span><br><span class="line">  <span class="attr">default:</span></span><br><span class="line">    <span class="comment"># Mixed: Receive agent data, Level 1 aggregate, Level 2 aggregate</span></span><br><span class="line">    <span class="comment"># Receiver: Receive agent data, Level 1 aggregate</span></span><br><span class="line">    <span class="comment"># Aggregator: Level 2 aggregate</span></span><br><span class="line">    <span class="attr">role:</span> <span class="string">$&#123;SW_CORE_ROLE:Mixed&#125;</span> <span class="comment"># Mixed/Receiver/Aggregator</span></span><br><span class="line">    <span class="attr">restHost:</span> <span class="string">$&#123;SW_CORE_REST_HOST:0.0.0.0&#125;</span></span><br><span class="line">    <span class="comment"># 修改非标端口</span></span><br><span class="line">    <span class="attr">restPort:</span> <span class="string">$&#123;SW_CORE_REST_PORT:52800&#125;</span></span><br><span class="line">    <span class="attr">restContextPath:</span> <span class="string">$&#123;SW_CORE_REST_CONTEXT_PATH:/&#125;</span></span><br><span class="line">    <span class="attr">restMaxThreads:</span> <span class="string">$&#123;SW_CORE_REST_MAX_THREADS:200&#125;</span></span><br><span class="line">    <span class="attr">restIdleTimeOut:</span> <span class="string">$&#123;SW_CORE_REST_IDLE_TIMEOUT:30000&#125;</span></span><br><span class="line">    <span class="attr">restAcceptQueueSize:</span> <span class="string">$&#123;SW_CORE_REST_QUEUE_SIZE:0&#125;</span></span><br><span class="line">    <span class="attr">httpMaxRequestHeaderSize:</span> <span class="string">$&#123;SW_CORE_HTTP_MAX_REQUEST_HEADER_SIZE:8192&#125;</span></span><br><span class="line">    <span class="attr">gRPCHost:</span> <span class="string">$&#123;SW_CORE_GRPC_HOST:0.0.0.0&#125;</span></span><br><span class="line">    <span class="attr">gRPCPort:</span> <span class="string">$&#123;SW_CORE_GRPC_PORT:51800&#125;</span></span><br><span class="line"><span class="comment">#**************</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">  <span class="attr">selector:</span> <span class="string">$&#123;SW_STORAGE:mysql&#125;</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">  <span class="comment"># 下面改为自己的数据库配置</span></span><br><span class="line">  <span class="attr">properties:</span> </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><strong>注意：</strong></p>
-<p>需要自己添加lib依赖到  <code>~/skywalking/oap-libs/</code> 目录下。</p>
-<p>比如：</p>
-<ol>
-<li><code>MySQL</code>：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.30/mysql-connector-java-8.0.30.jar"><code>mysql-connector-java-8.0.30.jar</code></a></li>
-<li><code>ES</code>：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/elasticsearch/client/transport/7.17.6/transport-7.17.6.jar"><code>transport-7.17.6.jar</code></a></li>
-</ol>
-</blockquote>
-<h4 id="web服务配置"><a href="#web服务配置" class="headerlink" title="web服务配置"></a><code>web</code>服务配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/skywalking/webapp/webapp.yml</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="comment">#修改非标端口</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">52801</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">oap-route</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://oap-service</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/graphql/**</span></span><br><span class="line">    <span class="attr">discovery:</span></span><br><span class="line">      <span class="attr">client:</span></span><br><span class="line">        <span class="attr">simple:</span></span><br><span class="line">          <span class="attr">instances:</span></span><br><span class="line">            <span class="attr">oap-service:</span></span><br><span class="line">            <span class="comment">#修改非标端口</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">uri:</span> <span class="string">http://127.0.0.1:52800</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h3><p>默认 30 天清理，一个文件 <code>100MB</code>，无需更改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/skywalking/config/log4j2.yml</span><br></pre></td></tr></table></figure>
-
-<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>全部启动服务与<code>web</code></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/skywalking/bin/startup.sh</span><br></pre></td></tr></table></figure>
-
-<p>分开启动</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/skywalking/bin/webappService.sh</span><br><span class="line">~/skywalking/bin/oapService.sh</span><br></pre></td></tr></table></figure>
-
-<h2 id="启动日志"><a href="#启动日志" class="headerlink" title="启动日志"></a>启动日志</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/skywalking/logs/oap.log</span></span><br><span class="line"><span class="comment"># ~/skywalking/logs/skywalking-oap-server.log  </span></span><br><span class="line"><span class="comment"># ~/skywalking/logs/webapp-console.log</span></span><br><span class="line"><span class="built_in">tail</span> -f ~/skywalking/logs/*.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Java-agent"><a href="#Java-agent" class="headerlink" title="Java-agent"></a>Java-agent</h1><p><a target="_blank" rel="noopener" href="https://skywalking.apache.org/docs/skywalking-java/next/en/setup/service-agent/java-agent/readme/">官网文档</a></p>
-<h2 id="下载-1"><a href="#下载-1" class="headerlink" title="下载"></a>下载</h2><p><a target="_blank" rel="noopener" href="https://dlcdn.apache.org/skywalking/java-agent/8.12.0/apache-skywalking-java-agent-8.12.0.tgz">apache-skywalking-java-agent-8.12.0.tgz</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/tools &amp;&amp; <span class="built_in">cd</span> ~/tools</span><br><span class="line">wget https://dlcdn.apache.org/skywalking/java-agent/8.12.0/apache-skywalking-java-agent-8.12.0.tgz --no-check-certificate</span><br><span class="line">tar -xf apache-skywalking-java-agent-8.12.0.tgz -C ../</span><br><span class="line"><span class="built_in">cd</span> ../</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/skywalking-agent/config/agent.config</span><br></pre></td></tr></table></figure>
-
-<p>修改</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The group name is optional only.</span></span><br><span class="line"><span class="attr">agent.service_name</span>=<span class="string">$&#123;SW_AGENT_NAME:maxzhao_group::auth&#125;</span></span><br><span class="line"><span class="comment"># The agent namespace</span></span><br><span class="line"><span class="attr">agent.namespace</span>=<span class="string">$&#123;SW_AGENT_NAMESPACE:maxzhao&#125;</span></span><br><span class="line"><span class="comment"># The agent cluster</span></span><br><span class="line"><span class="attr">agent.cluster</span>=<span class="string">$&#123;SW_AGENT_CLUSTER:maxzhao_cluster&#125;</span></span><br><span class="line"><span class="comment"># 真实的skywalking 地址</span></span><br><span class="line"><span class="attr">collector.backend_service</span>=<span class="string">127.0.0.1:51800</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="启动-1"><a href="#启动-1" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:~/skywalking-agent/skywalking-agent.jar -jar yourApp.jar</span><br></pre></td></tr></table></figure>
-
-<h2 id="其它参考"><a href="#其它参考" class="headerlink" title="其它参考"></a>其它参考</h2><h4 id="监控指标说明："><a href="#监控指标说明：" class="headerlink" title="监控指标说明："></a>监控指标说明：</h4><ul>
-<li>Service Apdex：Apdex是衡量一个服务在网格中的健康程度的指标。Apdex规范推荐了以下Apdex质量评级，将Apdex得分分为优秀（0.94 - 1.00）、良好（0.85 - 0.93）、一般（0.70 - 0.84）、差（0.50 - 0.69）和不可接受（0.00 - 0.49）。</li>
-<li>Success Rate：服务响应成功比率</li>
-<li>Service Load (calls &#x2F; min)：每分钟并发数</li>
-<li>Service Avg Response Time (ms)：应用平均响应时间</li>
-<li>Service Response Time Percentile (ms)：应用在特定毫秒内的响应请求的百分比。</li>
-<li>Message Queue Consuming Count：消息队列消费数量</li>
-<li>Message Queue Avg Consuming Latency (ms)：消息队列平均消费数量每毫秒</li>
-<li>Service Instances Load (calls &#x2F; min)：每个应用实例分流的每分钟并发数</li>
-<li>Slow Service Instance (ms)：慢响应实例排行</li>
-<li>Service Instance Success Rate (%)：应用实例的成功百分比</li>
-<li>Endpoint Load in Current Service (calls &#x2F; min)：当前应用端点（接口）每分钟请求次数</li>
-<li>Slow Endpoints in Current Service (ms)：当前应用端点（接口）慢响应的排行</li>
-<li>Success Rate in Current Service (%)：当前应用端点（接口）响应的成功率</li>
-</ul>
-<h4 id="监控大项："><a href="#监控大项：" class="headerlink" title="监控大项："></a>监控大项：</h4><ul>
-<li>Trace：可以跟踪至JDBC层，可以查看具体的sql执行语句以及耗时，还有应用内抛出的应用信息。</li>
-<li>Topology：拓扑图，可以看到应用间的调用和联系以及繁忙情况</li>
-<li>Instance：各个应用实例的响应情况</li>
-<li>Endpoint：端点接口的响应情况</li>
-</ul>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/b66e8509/">https://github.com/maxzhao-it/blog/post/b66e8509/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/d10ffa56/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/d10ffa56/" class="post-title-link" itemprop="url">kkFileView默认高亮pdf关键字</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 13:50:18" itemprop="dateModified" datetime="2023-01-10T13:50:18+08:00">2023-01-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/K8S/" itemprop="url" rel="index"><span itemprop="name">K8S</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>需求：需要把关键字传入到<code>pdf</code>预览界面，并高亮展示。</p>
-<p>这里使用的是：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var url = &#x27;http://127.0.0.1:8080/file/test.txt&#x27;; //要预览文件的访问地址</span><br><span class="line">window.open(&#x27;http://127.0.0.1:8012/onlinePreview?url=&#x27;+encodeURIComponent(base64Encode(url)));</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="修改代码："><a href="#修改代码：" class="headerlink" title="修改代码："></a>修改代码：</h2><h3 id="1、修改-onlinePreview-接口"><a href="#1、修改-onlinePreview-接口" class="headerlink" title="1、修改 onlinePreview 接口"></a>1、修改 <code>onlinePreview</code> 接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OnlinePreviewController</span> &#123;</span><br><span class="line">	<span class="meta">@GetMapping( &quot;/onlinePreview&quot;)</span></span><br><span class="line">    <span class="comment">// 添加 keyword 接收高亮关键字</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">onlinePreview</span><span class="params">(String url, String keyword, Model model, HttpServletRequest req)</span> &#123;</span><br><span class="line">       <span class="comment">// *************</span></span><br><span class="line">        model.addAttribute(<span class="string">&quot;file&quot;</span>, fileAttribute);</span><br><span class="line">        <span class="comment">// 高亮关键字返回给前端</span></span><br><span class="line">        model.addAttribute(<span class="string">&quot;keyword&quot;</span>, keyword);</span><br><span class="line">       <span class="comment">// *************</span></span><br><span class="line">        <span class="keyword">return</span> filePreview.filePreviewHandle(fileUrl, model, fileAttribute);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、前端接收参数，并且高亮"><a href="#2、前端接收参数，并且高亮" class="headerlink" title="2、前端接收参数，并且高亮"></a>2、前端接收参数，并且高亮</h3><p>打开 <code>server\src\main\resources\static\pdfjs\web\viewer.js</code> 文件，</p>
-<p>找到 <code>getViewerConfiguration()</code> 方法</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getViewerConfiguration</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> errorWrapper = <span class="literal">null</span>;</span><br><span class="line">  errorWrapper = &#123;</span><br><span class="line">    <span class="attr">container</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorWrapper&quot;</span>),</span><br><span class="line">    <span class="attr">errorMessage</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorMessage&quot;</span>),</span><br><span class="line">    <span class="attr">closeButton</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorClose&quot;</span>),</span><br><span class="line">    <span class="attr">errorMoreInfo</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorMoreInfo&quot;</span>),</span><br><span class="line">    <span class="attr">moreInfoButton</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorShowMore&quot;</span>),</span><br><span class="line">    <span class="attr">lessInfoButton</span>: <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;errorShowLess&quot;</span>)</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="comment">// 获取关键字</span></span><br><span class="line">  <span class="keyword">const</span> queryString = <span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">search</span>.<span class="title function_">slice</span>(<span class="number">1</span>); <span class="comment">//new</span></span><br><span class="line">  <span class="keyword">const</span> m = <span class="regexp">/(^|&amp;)keyword=([^&amp;]*)/</span>.<span class="title function_">exec</span>(queryString);<span class="comment">//new</span></span><br><span class="line">  <span class="keyword">const</span> keyword = m ? <span class="built_in">decodeURIComponent</span>(m[<span class="number">2</span>]) : <span class="string">&quot;&quot;</span>;<span class="comment">//new</span></span><br><span class="line">  <span class="keyword">if</span>(keyword)&#123;<span class="comment">//new</span></span><br><span class="line">  <span class="comment">// 讲关键字放入输入框中，当前 id 可以在 viewer.html 中找到</span></span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;findInput&quot;</span>).<span class="property">value</span> = keyword;<span class="comment">//new</span></span><br><span class="line">  &#125;<span class="comment">//new</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>找到 <code>PDFViewerApplication</code>对象中的 <code>_initializeViewerComponents</code>方法，</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">supportsIntegratedFind</span>) &#123;</span><br><span class="line">     <span class="variable language_">this</span>.<span class="property">findBar</span> = <span class="keyword">new</span> _pdf_find_bar.<span class="title class_">PDFFindBar</span>(appConfig.<span class="property">findBar</span>, eventBus, <span class="variable language_">this</span>.<span class="property">l10n</span>);</span><br><span class="line">       <span class="comment">// 添加打开查询框的操作</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="property">opened</span>) &#123;<span class="comment">//new</span></span><br><span class="line">       <span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="title function_">open</span>();<span class="comment">//new</span></span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;<span class="comment">//new</span></span><br><span class="line">       <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;PDFViewerApplication.findBar.opened&#x27;</span>);<span class="comment">//new</span></span><br><span class="line">       <span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="property">opened</span> = <span class="literal">false</span>;<span class="comment">//new</span></span><br><span class="line">       <span class="title class_">PDFViewerApplication</span>.<span class="property">findBar</span>.<span class="title function_">open</span>();<span class="comment">//new</span></span><br><span class="line">     &#125;<span class="comment">//new</span></span><br><span class="line"><span class="comment">// 执行高亮的操作</span></span><br><span class="line">     <span class="keyword">const</span> highLightStr = appConfig.<span class="property">findBar</span>.<span class="property">findField</span>.<span class="property">value</span>;<span class="comment">//new</span></span><br><span class="line">     <span class="title class_">PDFViewerApplication</span>.<span class="property">findController</span>.<span class="title function_">executeCommand</span>(<span class="string">&quot;find&quot;</span>, &#123;<span class="attr">query</span>:highLightStr, <span class="attr">phraseSearch</span>: <span class="literal">false</span>, <span class="attr">caseSensitive</span>: <span class="literal">false</span>, <span class="attr">highlightAll</span>: <span class="literal">true</span>, <span class="attr">findPrevious</span>: <span class="literal">false</span>,&#125;);<span class="comment">//new</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3、使前端修改生效"><a href="#3、使前端修改生效" class="headerlink" title="3、使前端修改生效"></a>3、使前端修改生效</h3><p>一个比较简单的方式，在 <code>viewer.js</code> 同目录下 <code>viewer.js.map</code> 中直接修改。</p>
-<p>因为 <code>viewer.js.map</code> 中的代码为字符串，所以我们需要精确的找到我们修改的位置，把修改的内容复制进去。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/d10ffa56/">https://github.com/maxzhao-it/blog/post/d10ffa56/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/8/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/blog/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/10/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/8/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/blog/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/10/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/uploads/images/gt.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/images/gt-32.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/images/gt-16.jpg">
+  <link rel="mask-icon" href="/blog/uploads/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"github.com","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://github.com/maxzhao-it/blog/post/af5eafbf/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://github.com/maxzhao-it/blog/post/af5eafbf/","path":"post/af5eafbf/","title":"Filebeat-8.x+Logstash采集log4j2日志"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Filebeat-8.x+Logstash采集log4j2日志 | maxzhao</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/blog/atom.xml" title="maxzhao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">maxzhao</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不要害怕Exception和Error</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-schedule"><a href="/blog/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Logstash-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">Logstash 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%8E%A5%E6%94%B6-filebeat"><span class="nav-number">1.1.</span> <span class="nav-text">测试接收 filebeat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Filebeat-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">Filebeat 配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84"><span class="nav-number"></span> <span class="nav-text">附</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#grok-%E8%A7%A3%E6%9E%90%E6%97%A5%E5%BF%97"><span class="nav-number">1.</span> <span class="nav-text">grok 解析日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E5%88%86-grok-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">部分 grok 表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E5%88%86-grok-java-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">部分 grok java  表达式</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="赵联胜"
+      src="/blog/uploads/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">赵联胜</p>
+  <div class="site-description" itemprop="description">小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">407</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">229</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zhaoliansheng" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;zhaoliansheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/blog/1441439636@qq.com" title="E-Mail → 1441439636@qq.com"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/u/e8c426a6007e" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;e8c426a6007e" rel="noopener" target="_blank">我的简书</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/af5eafbf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Filebeat-8.x+Logstash采集log4j2日志 | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Filebeat-8.x+Logstash采集log4j2日志
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>版本：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/logstash/logstash-8.11.1-linux-x86_64.tar.gz"><code>logstash-8.11.1-linux-x86_64.tar.gz</code></a></li>
+<li><a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.11.1-linux-x86_64.tar.gz">filebeat-8.11.1-linux-x86_64.tar.gz</a></li>
+</ul>
+<p>默认安装路径  <code>/opt/logstash </code> 、 <code>/opt/filebeat </code></p>
+</blockquote>
+<h2 id="Logstash-配置"><a href="#Logstash-配置" class="headerlink" title="Logstash 配置"></a><code>Logstash</code> 配置</h2><h3 id="测试接收-filebeat"><a href="#测试接收-filebeat" class="headerlink" title="测试接收 filebeat"></a>测试接收 <code>filebeat</code></h3><p>新建文件 <code>config/first-pipeline.conf</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">    beats &#123;</span><br><span class="line">        port =&gt; &quot;5044&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">The filter part of this file is commented out to indicate that it is</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">optional.</span></span><br><span class="line">filter &#123;</span><br><span class="line">    grok &#123;</span><br><span class="line">        match =&gt; &#123; &quot;message&quot; =&gt; &quot;(?&lt;year&gt;\d&#123;4&#125;)(?&lt;month&gt;\d&#123;2&#125;)(?&lt;day&gt;\d&#123;2&#125;)(?&lt;hour&gt;\d&#123;2&#125;)(?&lt;minute&gt;\d&#123;2&#125;)(?&lt;second&gt;\d&#123;2&#125;)(?&lt;millisecond&gt;\d&#123;3&#125;):%&#123;LOGLEVEL:logLevel&#125;%&#123;SPACE&#125;\[%&#123;INT:thread&#125;\]%&#123;SPACE&#125;\[%&#123;WORD:projectName&#125;\]%&#123;SPACE&#125;\[(?&lt;cId&gt;.*?|\d&#123;0,&#125;)\]%&#123;SPACE&#125;\[%&#123;DATA:cpId&#125;\]%&#123;SPACE&#125;\[%&#123;DATA:rTId&#125;\]%&#123;SPACE&#125;%&#123;JAVACLASS:java&#125;\(%&#123;INT:javaNum&#125;\)\:%&#123;SPACE&#125;%&#123;JAVALOGMESSAGE:msg&#125;&quot;&#125;</span><br><span class="line">    &#125;       </span><br><span class="line">	mutate &#123;</span><br><span class="line">        add_field =&gt; &#123;</span><br><span class="line">            &quot;timestamp&quot; =&gt; &quot;%&#123;year&#125;%&#123;month&#125;%&#123;day&#125;%&#123;hour&#125;%&#123;minute&#125;%&#123;second&#125;%&#123;millisecond&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">		remove_field =&gt;[&quot;log&quot;,&quot;input&quot;,&quot;ecs&quot;,&quot;event&quot;,&quot;host&quot;,&quot;agent&quot;,&quot;message&quot;]</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line">	date &#123;</span><br><span class="line">		match =&gt; [ &quot;timestamp&quot;, &quot;yyyyMMddHHmmssSSS&quot; ]</span><br><span class="line">		target =&gt; &quot;@timestamp&quot;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    stdout &#123; codec =&gt; rubydebug &#125;</span><br><span class="line">    if &quot;test&quot; in [projectName] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-api-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;y&quot; in [projectName] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-opt-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if &quot;x&quot; in [projectName] &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts =&gt; &quot;192.168.2.8:9200&quot;</span><br><span class="line">            index =&gt; &quot;app-log-sso-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/logstash -f first-pipeline.conf --config.test_and_exit</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">自动更新 --config.reload.automatic</span></span><br><span class="line">bin/logstash -f first-pipeline.conf --config.reload.automatic</span><br></pre></td></tr></table></figure>
+
+<h3 id="Filebeat-配置"><a href="#Filebeat-配置" class="headerlink" title="Filebeat 配置"></a><code>Filebeat</code> 配置</h3><p><code>Filebeat.yml</code></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">filebeat.inputs:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">filestream</span></span><br><span class="line">  <span class="attr">id:</span> <span class="string">my-filestream-id</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">paths:</span></span><br><span class="line">  <span class="comment"># 日志文件路径修改</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/data/test-log/*.log</span></span><br><span class="line">  <span class="attr">prospector.scanner.exclude_files:</span> [<span class="string">&#x27;\.gz$&#x27;</span>]</span><br><span class="line">  <span class="attr">parsers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">multiline:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">pattern</span></span><br><span class="line">      <span class="comment"># 与模式不匹配的连续行将附加到匹配的上一行</span></span><br><span class="line">      <span class="attr">pattern:</span> <span class="string">&#x27;^\d&#x27;</span></span><br><span class="line">      <span class="attr">negate:</span> <span class="literal">true</span></span><br><span class="line">      <span class="comment"># 与模式匹配的连续行将附加到不匹配的上一行</span></span><br><span class="line">      <span class="comment">#pattern: &#x27;^[[:space:]]+(at|\.&#123;3&#125;)[[:space:]]+\b|^[a-z]&#x27;</span></span><br><span class="line">      <span class="comment">#negate: false</span></span><br><span class="line">      <span class="attr">match:</span> <span class="string">after</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">30s</span></span><br><span class="line">      <span class="attr">max_lines:</span> <span class="number">100</span></span><br><span class="line"><span class="attr">filebeat.config.modules:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">$&#123;path.config&#125;/modules.d/*.yml</span></span><br><span class="line">  <span class="attr">reload.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 不用es 这里要关闭</span></span><br><span class="line"><span class="attr">setup.template.enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">setup.template.settings:</span></span><br><span class="line">  <span class="attr">index.number_of_shards:</span> <span class="number">1</span></span><br><span class="line">  <span class="comment">#index.codec: best_compression</span></span><br><span class="line">  <span class="comment">#_source.enabled: false</span></span><br><span class="line"><span class="comment">#setup.kibana:</span></span><br><span class="line"><span class="attr">output.elasticsearch:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">output.logstash:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hosts:</span> [<span class="string">&quot;127.0.0.1:5044&quot;</span>]</span><br><span class="line">  <span class="attr">compression_level:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_host_metadata:</span></span><br><span class="line">      <span class="attr">when.not.contains.tags:</span> <span class="string">forwarded</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_cloud_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_docker_metadata:</span> <span class="string">~</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">add_kubernetes_metadata:</span> <span class="string">~</span></span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filebeat -c filebeat.yml -e</span><br></pre></td></tr></table></figure>
+
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><h2 id="grok-解析日志"><a href="#grok-解析日志" class="headerlink" title="grok 解析日志"></a><code>grok</code> 解析日志</h2><p>新版本的 <code>logstash</code> 自带 <code>grok</code> 插件</p>
+<p>环境信息：</p>
+<p>- 部署路径：<code>/opt/logstash</code><br>- <code>Log4j2</code> 对接方式：<code>Socket</code><br>- 部署地址：<code>192.168.2.8</code><br>- <code>logstash</code>建议使用 <a href="https://github.com/logstash-plugins/logstash-filter-grok"><code>grok</code></a>插件</p>
+<blockquote>
+<p><a href="*https://github.com/logstash-plugins/logstash-filter-grok*"><code>grok</code></a>是一个十分强大的<code>logstash filter</code>插件，他可以通过正则解析任意文本，将非结构化日志数据解析成结构化和方便查询的结构。<br><a target="_blank" rel="noopener" href="https://grokconstructor.appspot.com/do/match">在线测试</a>  <a href="https://github.com/logstash-plugins/logstash-patterns-core/tree/main/patterns">官方<code>pattern</code></a> <a href="*https://www.elastic.co/guide/en/logstash/8.2/working-with-plugins.html#listing-plugins*">插件安装</a><br>安装插件</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看已安装</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin list --verbose</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>离线安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir /opt/logstash/plugins</span><br><span class="line">cd  /opt/logstash/plugins</span><br><span class="line">wget https://github.com/logstash-plugins/logstash-filter-grok/archive/refs/tags/v4.4.3.tar.gz</span><br><span class="line">tar -zxvf v4.4.2.tar.gz</span><br><span class="line">vim /opt/logstash/Gemfile</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">写入</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gem <span class="string">&quot;logstash-filter-grok&quot;</span>, :path =&gt; <span class="string">&quot;path&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在线安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/logstash-plugin install logstash-filter-grok</span><br><span class="line">bin/logstash-plugin update logstash-filter-grok</span><br></pre></td></tr></table></figure>
+
+</blockquote>
+<h2 id="部分-grok-表达式"><a href="#部分-grok-表达式" class="headerlink" title="部分 grok 表达式"></a>部分 <code>grok</code> 表达式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">USERNAME [a-zA-Z0-9._-]+</span><br><span class="line">USER %&#123;USERNAME&#125;</span><br><span class="line">EMAILLOCALPART [a-zA-Z0-9!#$%&amp;&#x27;*+\-/=?^_`&#123;|&#125;~]&#123;1,64&#125;(?:\.[a-zA-Z0-9!#$%&amp;&#x27;*+\-/=?^_`&#123;|&#125;~]&#123;1,62&#125;)&#123;0,63&#125;</span><br><span class="line">EMAILADDRESS %&#123;EMAILLOCALPART&#125;@%&#123;HOSTNAME&#125;</span><br><span class="line">INT (?:[+-]?(?:[0-9]+))</span><br><span class="line">BASE10NUM (?&lt;![0-9.+-])(?&gt;[+-]?(?:(?:[0-9]+(?:\.[0-9]+)?)|(?:\.[0-9]+)))</span><br><span class="line">NUMBER (?:%&#123;BASE10NUM&#125;)</span><br><span class="line">BASE16NUM (?&lt;![0-9A-Fa-f])(?:[+-]?(?:0x)?(?:[0-9A-Fa-f]+))</span><br><span class="line">BASE16FLOAT \b(?&lt;![0-9A-Fa-f.])(?:[+-]?(?:0x)?(?:(?:[0-9A-Fa-f]+(?:\.[0-9A-Fa-f]*)?)|(?:\.[0-9A-Fa-f]+)))\b</span><br><span class="line"></span><br><span class="line">POSINT \b(?:[1-9][0-9]*)\b</span><br><span class="line">NONNEGINT \b(?:[0-9]+)\b</span><br><span class="line">WORD \b\w+\b</span><br><span class="line">NOTSPACE \S+</span><br><span class="line">SPACE \s*</span><br><span class="line">DATA .*?</span><br><span class="line">GREEDYDATA .*</span><br><span class="line">QUOTEDSTRING (?&gt;(?&lt;!\\)(?&gt;&quot;(?&gt;\\.|[^\\&quot;]+)+&quot;|&quot;&quot;|(?&gt;&#x27;(?&gt;\\.|[^\\&#x27;]+)+&#x27;)|&#x27;&#x27;|(?&gt;`(?&gt;\\.|[^\\`]+)+`)|``))</span><br><span class="line">UUID [A-Fa-f0-9]&#123;8&#125;-(?:[A-Fa-f0-9]&#123;4&#125;-)&#123;3&#125;[A-Fa-f0-9]&#123;12&#125;</span><br><span class="line"># URN, allowing use of RFC 2141 section 2.3 reserved characters</span><br><span class="line">URN urn:[0-9A-Za-z][0-9A-Za-z-]&#123;0,31&#125;:(?:%[0-9a-fA-F]&#123;2&#125;|[0-9A-Za-z()+,.:=@;$_!*&#x27;/?#-])+</span><br><span class="line"></span><br><span class="line"># Networking</span><br><span class="line">MAC (?:%&#123;CISCOMAC&#125;|%&#123;WINDOWSMAC&#125;|%&#123;COMMONMAC&#125;)</span><br><span class="line">CISCOMAC (?:(?:[A-Fa-f0-9]&#123;4&#125;\.)&#123;2&#125;[A-Fa-f0-9]&#123;4&#125;)</span><br><span class="line">WINDOWSMAC (?:(?:[A-Fa-f0-9]&#123;2&#125;-)&#123;5&#125;[A-Fa-f0-9]&#123;2&#125;)</span><br><span class="line">COMMONMAC (?:(?:[A-Fa-f0-9]&#123;2&#125;:)&#123;5&#125;[A-Fa-f0-9]&#123;2&#125;)</span><br><span class="line">IPV6 ((([0-9A-Fa-f]&#123;1,4&#125;:)&#123;7&#125;([0-9A-Fa-f]&#123;1,4&#125;|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;6&#125;(:[0-9A-Fa-f]&#123;1,4&#125;|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;)|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;5&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,2&#125;)|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;)|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;4&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,3&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;3&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,4&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,2&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;2&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,5&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,3&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(([0-9A-Fa-f]&#123;1,4&#125;:)&#123;1&#125;(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,6&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,4&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:))|(:(((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;1,7&#125;)|((:[0-9A-Fa-f]&#123;1,4&#125;)&#123;0,5&#125;:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d))&#123;3&#125;))|:)))(%.+)?</span><br><span class="line">IPV4 (?&lt;![0-9])(?:(?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]&#123;1,2&#125;|2[0-4][0-9]|25[0-5]))(?![0-9])</span><br><span class="line">IP (?:%&#123;IPV6&#125;|%&#123;IPV4&#125;)</span><br><span class="line">HOSTNAME \b(?:[0-9A-Za-z][0-9A-Za-z-]&#123;0,62&#125;)(?:\.(?:[0-9A-Za-z][0-9A-Za-z-]&#123;0,62&#125;))*(\.?|\b)</span><br><span class="line">IPORHOST (?:%&#123;IP&#125;|%&#123;HOSTNAME&#125;)</span><br><span class="line">HOSTPORT %&#123;IPORHOST&#125;:%&#123;POSINT&#125;</span><br><span class="line"></span><br><span class="line"># paths (only absolute paths are matched)</span><br><span class="line">PATH (?:%&#123;UNIXPATH&#125;|%&#123;WINPATH&#125;)</span><br><span class="line">UNIXPATH (/[[[:alnum:]]_%!$@:.,+~-]*)+</span><br><span class="line">TTY (?:/dev/(pts|tty([pq])?)(\w+)?/?(?:[0-9]+))</span><br><span class="line">WINPATH (?&gt;[A-Za-z]+:|\\)(?:\\[^\\?*]*)+</span><br><span class="line">URIPROTO [A-Za-z]([A-Za-z0-9+\-.]+)+</span><br><span class="line">URIHOST %&#123;IPORHOST&#125;(?::%&#123;POSINT&#125;)?</span><br><span class="line"># uripath comes loosely from RFC1738, but mostly from what Firefox doesn&#x27;t turn into %XX</span><br><span class="line">URIPATH (?:/[A-Za-z0-9$.+!*&#x27;()&#123;&#125;,~:;=@#%&amp;_\-]*)+</span><br><span class="line">URIQUERY [A-Za-z0-9$.+!*&#x27;|()&#123;&#125;,~@#%&amp;/=:;_?\-\[\]&lt;&gt;]*</span><br><span class="line"># deprecated (kept due compatibility):</span><br><span class="line">URIPARAM \?%&#123;URIQUERY&#125;</span><br><span class="line">URIPATHPARAM %&#123;URIPATH&#125;(?:\?%&#123;URIQUERY&#125;)?</span><br><span class="line">URI %&#123;URIPROTO&#125;://(?:%&#123;USER&#125;(?::[^@]*)?@)?(?:%&#123;URIHOST&#125;)?(?:%&#123;URIPATH&#125;(?:\?%&#123;URIQUERY&#125;)?)?</span><br><span class="line"></span><br><span class="line"># Months: January, Feb, 3, 03, 12, December</span><br><span class="line">MONTH \b(?:[Jj]an(?:uary|uar)?|[Ff]eb(?:ruary|ruar)?|[Mm](?:a|ä)?r(?:ch|z)?|[Aa]pr(?:il)?|[Mm]a(?:y|i)?|[Jj]un(?:e|i)?|[Jj]ul(?:y|i)?|[Aa]ug(?:ust)?|[Ss]ep(?:tember)?|[Oo](?:c|k)?t(?:ober)?|[Nn]ov(?:ember)?|[Dd]e(?:c|z)(?:ember)?)\b</span><br><span class="line">MONTHNUM (?:0?[1-9]|1[0-2])</span><br><span class="line">MONTHNUM2 (?:0[1-9]|1[0-2])</span><br><span class="line">MONTHDAY (?:(?:0[1-9])|(?:[12][0-9])|(?:3[01])|[1-9])</span><br><span class="line"></span><br><span class="line"># Days: Monday, Tue, Thu, etc...</span><br><span class="line">DAY (?:Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)</span><br><span class="line"></span><br><span class="line"># Years?</span><br><span class="line">YEAR (?&gt;\d\d)&#123;1,2&#125;</span><br><span class="line">HOUR (?:2[0123]|[01]?[0-9])</span><br><span class="line">MINUTE (?:[0-5][0-9])</span><br><span class="line"># &#x27;60&#x27; is a leap second in most time standards and thus is valid.</span><br><span class="line">SECOND (?:(?:[0-5]?[0-9]|60)(?:[:.,][0-9]+)?)</span><br><span class="line">TIME (?!&lt;[0-9])%&#123;HOUR&#125;:%&#123;MINUTE&#125;(?::%&#123;SECOND&#125;)(?![0-9])</span><br><span class="line"># datestamp is YYYY/MM/DD-HH:MM:SS.UUUU (or something like it)</span><br><span class="line">DATE_US %&#123;MONTHNUM&#125;[/-]%&#123;MONTHDAY&#125;[/-]%&#123;YEAR&#125;</span><br><span class="line">DATE_EU %&#123;MONTHDAY&#125;[./-]%&#123;MONTHNUM&#125;[./-]%&#123;YEAR&#125;</span><br><span class="line">ISO8601_TIMEZONE (?:Z|[+-]%&#123;HOUR&#125;(?::?%&#123;MINUTE&#125;))</span><br><span class="line">ISO8601_SECOND %&#123;SECOND&#125;</span><br><span class="line">TIMESTAMP_ISO8601 %&#123;YEAR&#125;-%&#123;MONTHNUM&#125;-%&#123;MONTHDAY&#125;[T ]%&#123;HOUR&#125;:?%&#123;MINUTE&#125;(?::?%&#123;SECOND&#125;)?%&#123;ISO8601_TIMEZONE&#125;?</span><br><span class="line">DATE %&#123;DATE_US&#125;|%&#123;DATE_EU&#125;</span><br><span class="line">DATESTAMP %&#123;DATE&#125;[- ]%&#123;TIME&#125;</span><br><span class="line">TZ (?:[APMCE][SD]T|UTC)</span><br><span class="line">DATESTAMP_RFC822 %&#123;DAY&#125; %&#123;MONTH&#125; %&#123;MONTHDAY&#125; %&#123;YEAR&#125; %&#123;TIME&#125; %&#123;TZ&#125;</span><br><span class="line">DATESTAMP_RFC2822 %&#123;DAY&#125;, %&#123;MONTHDAY&#125; %&#123;MONTH&#125; %&#123;YEAR&#125; %&#123;TIME&#125; %&#123;ISO8601_TIMEZONE&#125;</span><br><span class="line">DATESTAMP_OTHER %&#123;DAY&#125; %&#123;MONTH&#125; %&#123;MONTHDAY&#125; %&#123;TIME&#125; %&#123;TZ&#125; %&#123;YEAR&#125;</span><br><span class="line">DATESTAMP_EVENTLOG %&#123;YEAR&#125;%&#123;MONTHNUM2&#125;%&#123;MONTHDAY&#125;%&#123;HOUR&#125;%&#123;MINUTE&#125;%&#123;SECOND&#125;</span><br><span class="line"></span><br><span class="line"># Syslog Dates: Month Day HH:MM:SS</span><br><span class="line">SYSLOGTIMESTAMP %&#123;MONTH&#125; +%&#123;MONTHDAY&#125; %&#123;TIME&#125;</span><br><span class="line">PROG [\x21-\x5a\x5c\x5e-\x7e]+</span><br><span class="line">SYSLOGPROG %&#123;PROG:[process][name]&#125;(?:\[%&#123;POSINT:[process][pid]:int&#125;\])?</span><br><span class="line">SYSLOGHOST %&#123;IPORHOST&#125;</span><br><span class="line">SYSLOGFACILITY &lt;%&#123;NONNEGINT:[log][syslog][facility][code]:int&#125;.%&#123;NONNEGINT:[log][syslog][priority]:int&#125;&gt;</span><br><span class="line">HTTPDATE %&#123;MONTHDAY&#125;/%&#123;MONTH&#125;/%&#123;YEAR&#125;:%&#123;TIME&#125; %&#123;INT&#125;</span><br><span class="line"></span><br><span class="line"># Shortcuts</span><br><span class="line">QS %&#123;QUOTEDSTRING&#125;</span><br><span class="line"></span><br><span class="line"># Log formats</span><br><span class="line">SYSLOGBASE %&#123;SYSLOGTIMESTAMP:timestamp&#125; (?:%&#123;SYSLOGFACILITY&#125; )?%&#123;SYSLOGHOST:[host][hostname]&#125; %&#123;SYSLOGPROG&#125;:</span><br><span class="line"></span><br><span class="line"># Log Levels</span><br><span class="line">LOGLEVEL ([Aa]lert|ALERT|[Tt]race|TRACE|[Dd]ebug|DEBUG|[Nn]otice|NOTICE|[Ii]nfo?(?:rmation)?|INFO?(?:RMATION)?|[Ww]arn?(?:ing)?|WARN?(?:ING)?|[Ee]rr?(?:or)?|ERR?(?:OR)?|[Cc]rit?(?:ical)?|CRIT?(?:ICAL)?|[Ff]atal|FATAL|[Ss]evere|SEVERE|EMERG(?:ENCY)?|[Ee]merg(?:ency)?)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="部分-grok-java-表达式"><a href="#部分-grok-java-表达式" class="headerlink" title="部分 grok java  表达式"></a>部分 <code>grok java </code> 表达式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">JAVACLASS (?:[a-zA-Z$_][a-zA-Z$_0-9]*\.)*[a-zA-Z$_][a-zA-Z$_0-9]*</span><br><span class="line">#Space is an allowed character to match special cases like &#x27;Native Method&#x27; or &#x27;Unknown Source&#x27;</span><br><span class="line">JAVAFILE (?:[a-zA-Z$_0-9. -]+)</span><br><span class="line">#Allow special &lt;init&gt;, &lt;clinit&gt; methods</span><br><span class="line">JAVAMETHOD (?:(&lt;(?:cl)?init&gt;)|[a-zA-Z$_][a-zA-Z$_0-9]*)</span><br><span class="line">#Line number is optional in special cases &#x27;Native method&#x27; or &#x27;Unknown source&#x27;</span><br><span class="line">JAVASTACKTRACEPART %&#123;SPACE&#125;at %&#123;JAVACLASS:[java][log][origin][class][name]&#125;\.%&#123;JAVAMETHOD:[log][origin][function]&#125;\(%&#123;JAVAFILE:[log][origin][file][name]&#125;(?::%&#123;INT:[log][origin][file][line]:int&#125;)?\)</span><br><span class="line"># Java Logs</span><br><span class="line">JAVATHREAD (?:[A-Z]&#123;2&#125;-Processor[\d]+)</span><br><span class="line">JAVALOGMESSAGE (?:.*)</span><br><span class="line"></span><br><span class="line"># MMM dd, yyyy HH:mm:ss eg: Jan 9, 2014 7:13:13 AM</span><br><span class="line"># matches default logging configuration in Tomcat 4.1, 5.0, 5.5, 6.0, 7.0</span><br><span class="line">CATALINA7_DATESTAMP %&#123;MONTH&#125; %&#123;MONTHDAY&#125;, %&#123;YEAR&#125; %&#123;HOUR&#125;:%&#123;MINUTE&#125;:%&#123;SECOND&#125; (?:AM|PM)</span><br><span class="line">CATALINA7_LOG %&#123;CATALINA7_DATESTAMP:timestamp&#125; %&#123;JAVACLASS:[java][log][origin][class][name]&#125;(?: %&#123;JAVAMETHOD:[log][origin][function]&#125;)?\s*(?:%&#123;LOGLEVEL:[log][level]&#125;:)? %&#123;JAVALOGMESSAGE:message&#125;</span><br><span class="line"></span><br><span class="line"># 31-Jul-2020 16:40:38.578 in Tomcat 8.5/9.0</span><br><span class="line">CATALINA8_DATESTAMP %&#123;MONTHDAY&#125;-%&#123;MONTH&#125;-%&#123;YEAR&#125; %&#123;HOUR&#125;:%&#123;MINUTE&#125;:%&#123;SECOND&#125;</span><br><span class="line">CATALINA8_LOG %&#123;CATALINA8_DATESTAMP:timestamp&#125; %&#123;LOGLEVEL:[log][level]&#125; \[%&#123;DATA:[java][log][origin][thread][name]&#125;\] %&#123;JAVACLASS:[java][log][origin][class][name]&#125;\.(?:%&#123;JAVAMETHOD:[log][origin][function]&#125;)? %&#123;JAVALOGMESSAGE:message&#125;</span><br><span class="line"></span><br><span class="line">CATALINA_DATESTAMP (?:%&#123;CATALINA8_DATESTAMP&#125;)|(?:%&#123;CATALINA7_DATESTAMP&#125;)</span><br><span class="line">CATALINALOG (?:%&#123;CATALINA8_LOG&#125;)|(?:%&#123;CATALINA7_LOG&#125;)</span><br><span class="line"></span><br><span class="line"># in Tomcat 5.5, 6.0, 7.0 it is the same as catalina.out logging format</span><br><span class="line">TOMCAT7_LOG %&#123;CATALINA7_LOG&#125;</span><br><span class="line">TOMCAT8_LOG %&#123;CATALINA8_LOG&#125;</span><br><span class="line"></span><br><span class="line"># NOTE: a weird log we started with - not sure what TC version this should match out of the box (due the | delimiters)</span><br><span class="line">TOMCATLEGACY_DATESTAMP %&#123;YEAR&#125;-%&#123;MONTHNUM&#125;-%&#123;MONTHDAY&#125; %&#123;HOUR&#125;:%&#123;MINUTE&#125;:%&#123;SECOND&#125;(?: %&#123;ISO8601_TIMEZONE&#125;)?</span><br><span class="line">TOMCATLEGACY_LOG %&#123;TOMCATLEGACY_DATESTAMP:timestamp&#125; \| %&#123;LOGLEVEL:[log][level]&#125; \| %&#123;JAVACLASS:[java][log][origin][class][name]&#125; - %&#123;JAVALOGMESSAGE:message&#125;</span><br><span class="line"></span><br><span class="line">TOMCAT_DATESTAMP (?:%&#123;CATALINA8_DATESTAMP&#125;)|(?:%&#123;CATALINA7_DATESTAMP&#125;)|(?:%&#123;TOMCATLEGACY_DATESTAMP&#125;)</span><br><span class="line"></span><br><span class="line">TOMCATLOG (?:%&#123;TOMCAT8_LOG&#125;)|(?:%&#123;TOMCAT7_LOG&#125;)|(?:%&#123;TOMCATLEGACY_LOG&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/af5eafbf/">https://github.com/maxzhao-it/blog/post/af5eafbf/</a> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/ELK/" rel="tag"># ELK</a>
+              <a href="/blog/tags/Filebeat/" rel="tag"># Filebeat</a>
+              <a href="/blog/tags/Logstash/" rel="tag"># Logstash</a>
+              <a href="/blog/tags/log4j2/" rel="tag"># log4j2</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/post/374dd8da/" rel="prev" title="Filebeat-8.11配置采集log4j2日志">
+                  <i class="fa fa-chevron-left"></i> Filebeat-8.11配置采集log4j2日志
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赵联胜</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>

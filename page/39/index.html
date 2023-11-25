@@ -149,18 +149,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">400</span>
+          <span class="site-state-item-count">407</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">160</span>
+        <span class="site-state-item-count">182</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">201</span>
+        <span class="site-state-item-count">229</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -216,7 +216,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/26542/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/58264/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -234,7 +234,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/26542/" class="post-title-link" itemprop="url">Centos7 解压安装MYSQL8</a>
+          <a href="/blog/post/58264/" class="post-title-link" itemprop="url">IDEA插件</a>
         </h2>
 
         <div class="post-meta-container">
@@ -244,7 +244,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+      <time title="Modified: 2022-11-02 15:34:08" itemprop="dateModified" datetime="2022-11-02T15:34:08+08:00">2022-11-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -252,11 +252,11 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+          <a href="/blog/categories/DevelopTools/IDEA/" itemprop="url" rel="index"><span itemprop="name">IDEA</span></a>
         </span>
     </span>
 
@@ -270,69 +270,117 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>都说MySql8.x比5.7快两倍，可以<a target="_blank" rel="noopener" href="https://www.oschina.net/news/95325/mysql-8-0-ga-released">参考</a>一下。<br>但不支持从 MySQL 8.0 降级到 MySQL 5.7（或从某个 MySQL 8.0 版本降级到任意一个更早的 MySQL 8.0 版本）。数据备份方式还是可以的。</p>
-<ul>
-<li>注意MySql8 的用户安全策略的改变</li>
-<li>注意MySql8 编码格式</li>
-</ul>
-<h2 id="这里安装的是MySql-8"><a href="#这里安装的是MySql-8" class="headerlink" title="这里安装的是MySql 8"></a>这里安装的是MySql 8</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/8.0.html">https://dev.mysql.com/downloads/mysql/8.0.html</a></p>
-<p>我这里下载的是mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz</p>
-<h4 id="一、解压mysql-8-0-13-linux-glibc2-12-x86-64-tar-xz"><a href="#一、解压mysql-8-0-13-linux-glibc2-12-x86-64-tar-xz" class="headerlink" title="一、解压mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz"></a>一、解压mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz</h4><p>首先解压，输入mysql按tab补齐，&#x2F;home&#x2F;mysql是自己想要安装的目录.</p>
-<p>没有权限用<code>su</code>输入root密码，用root执行。</p>
-<p>tar -xvf报gz错误，就用tar -zxvf 解压命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /opt/db</span><br><span class="line"><span class="built_in">cd</span> /opt/db</span><br><span class="line">wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-8.0.26-el7-x86_64.tar</span><br><span class="line">tar -xvf mysql-8.0.26-el7-x86_64.tar</span><br><span class="line">tar -zxvf mysql-8.0.26-el7-x86_64.tar.gz</span><br><span class="line"><span class="comment">#tar -xvf mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz</span></span><br><span class="line"><span class="comment">#mv mysql-8.0.13-linux-glibc2.12-x86_64 /home/mysql</span></span><br><span class="line"><span class="built_in">cd</span> /home/mysql</span><br></pre></td></tr></table></figure>
-
-<h4 id="二、可以先把mariadb卸载了"><a href="#二、可以先把mariadb卸载了" class="headerlink" title="二、可以先把mariadb卸载了"></a>二、可以先把mariadb卸载了</h4><p>mariadb其实与mysql是一样的，只不过mysql之父离开了Oracle，觉得依靠Oracle不靠谱，想做一个完全开源的数据库，这就是mariadb，mariadb的端口还是3306。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep mariadb</span><br><span class="line"><span class="comment">#mariadb-libs-5.5.60-1.el7_5.x86_64</span></span><br><span class="line">rpm -e --nodeps mariadb-libs  <span class="comment">#tab补齐</span></span><br><span class="line"><span class="comment">#删除etc目录下的my.cnf文件</span></span><br><span class="line"><span class="comment">#可以先看一下my.cnf文件里面写的什么</span></span><br><span class="line"><span class="built_in">cat</span> /etc/my.cnf</span><br><span class="line"><span class="comment">#如果mariadb没有启动过，里面的文件夹和文件都不用看了，都是不存在的(也可以不删除，后面还会创建)</span></span><br><span class="line"><span class="built_in">rm</span> /etc/my.cnf</span><br><span class="line"><span class="comment">#检查mysql有没有安装</span></span><br><span class="line">rpm -qa | grep mysql</span><br></pre></td></tr></table></figure>
-
-<h4 id="三、检查mysql组和用户是否存在，如无创建"><a href="#三、检查mysql组和用户是否存在，如无创建" class="headerlink" title="三、检查mysql组和用户是否存在，如无创建"></a>三、检查mysql组和用户是否存在，如无创建</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/group | grep mysql </span><br><span class="line"><span class="built_in">cat</span> /etc/passwd | grep mysql</span><br><span class="line"><span class="comment">#没有就u添加</span></span><br><span class="line">groupadd mysql</span><br><span class="line">useradd -g mysql mysql </span><br><span class="line">passwd mysql</span><br></pre></td></tr></table></figure>
-
-<h4 id="四、在-x2F-etc下创建my-cnf"><a href="#四、在-x2F-etc下创建my-cnf" class="headerlink" title="四、在&#x2F;etc下创建my.cnf"></a>四、在&#x2F;etc下创建my.cnf</h4><p>编码在<code>5.5.3</code>以上都会支持<code>utf8mb4（utf8 most byte 8）</code>，意思是支持<code>4byte</code>的不常用汉字和<code>Emoji</code>表情，毕竟<code>65535</code>还真的是不够用。</p>
-<p>对于 <code>CHAR</code> 类型数据，<code>utf8mb4</code> 会多消耗一些空间，根据 <code>Mysql</code> 官方建议，使用 <code>VARCHAR</code> 替代 <code>CHAR</code>。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure>
-
-<p>删除所有内容，添加下面内容</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[mysql]</span><br><span class="line"><span class="comment"># 设置mysql客户端默认字符集</span></span><br><span class="line">default-character-set=utf8mb4</span><br><span class="line">socket=/opt/db/mysql_data/mysql.sock</span><br><span class="line">[mysqld]</span><br><span class="line">skip-name-resolve</span><br><span class="line"><span class="comment">#设置3306端口</span></span><br><span class="line">port = 3335</span><br><span class="line">datadir=/opt/db/mysql_data</span><br><span class="line">socket=/opt/db/mysql_data/mysql.sock</span><br><span class="line">log-error=/opt/db/mysql_log/mysqld.log</span><br><span class="line">pid-file=/opt/db/mysqld/mysqld.pid</span><br><span class="line"><span class="comment"># 允许最大连接数</span></span><br><span class="line">max_connections=200</span><br><span class="line"><span class="comment"># 服务端使用的字符集默认为8比特编码的latin1字符集</span></span><br><span class="line">character-set-server=utf8mb4</span><br><span class="line"><span class="comment">#排序规则</span></span><br><span class="line">collation-server=utf8mb4_0900_ai_ci</span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  排序规则：ai 口音不敏感  ci 不区分大小写  ,默认支持表情符号</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  属于 utf8mb4_unicode_ci 中的一种</span></span><br><span class="line"><span class="comment">#utf8mb4_general_ci  没有实现utf8mb4_unicode_ci 的排序规则。没有utf8mb4_unicode_ci 准备。但是比较和排序的时候更快</span></span><br><span class="line"><span class="comment"># 创建新表时将使用的默认存储引擎,innodb支持事物</span></span><br><span class="line">default-storage-engine=INNODB </span><br><span class="line">lower_case_table_names=1</span><br><span class="line">max_allowed_packet=16M</span><br><span class="line">lc-messages-dir=/opt/db/mysql8/share</span><br></pre></td></tr></table></figure>
-
-<h4 id="五、安装"><a href="#五、安装" class="headerlink" title="五、安装"></a>五、安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/db/</span><br><span class="line"><span class="built_in">mv</span> mysql-8.0.26-el7-x86_64  mysql8</span><br><span class="line"><span class="built_in">cd</span> mysql8</span><br><span class="line"><span class="comment">#在mysql中添加data文件夹，init失败时，从这里开始</span></span><br><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysql/</span><br><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysqld/</span><br><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysql_data</span><br><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysql_log</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysql/</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysqld/</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysql_data</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysql_log</span><br><span class="line"><span class="built_in">chown</span> mysql:mysql /opt/db/ -R</span><br><span class="line"><span class="built_in">chmod</span> 777 -R /opt/db/mysqld</span><br><span class="line"><span class="comment"># 已经不用的命令</span></span><br><span class="line"><span class="comment">#bin/mysql_install_db --user=mysql --basedir=/home/mysql/ --datadir=/home/mysql/data/</span></span><br><span class="line"><span class="comment"># yum -y install numactl</span></span><br><span class="line">bin/mysqld --initialize --user=mysql  --datadir=/home/mysql-8.0.26-el7-x86_64/</span><br><span class="line"><span class="comment"># 查看错误日志</span></span><br><span class="line"><span class="built_in">cat</span> /opt/db/mysql_log/mysqld.log |grep ERROR</span><br></pre></td></tr></table></figure>
-
-<p>安装失败，可以看一下<code>mysql</code> 账户对<code>/opt/db/mysql</code>下的文件有没有读写权限</p>
-<p>如果执行报错<code>UTF8MB4</code>，就把<code>/etc/my.cn</code>f的<code>utf8</code>换成<code>UTF8MB4</code></p>
-<h4 id="六、连接"><a href="#六、连接" class="headerlink" title="六、连接"></a>六、连接</h4><h5 id="查看密码"><a href="#查看密码" class="headerlink" title="查看密码"></a>查看密码</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /opt/db/mysql_log/mysqld.log |grep password</span><br></pre></td></tr></table></figure>
-
-<p>启动(&amp;是放在后台执行)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/mysqld_safe --user=mysql &amp;</span><br><span class="line">bin/mysql -uroot -p</span><br></pre></td></tr></table></figure>
-
-<p>然后执行(但是如果使用无密码的方式登陆，就不可以使用下面令名)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">alter user <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified  by <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"><span class="comment"># alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified WITH caching_sha2_password by &quot;123456&quot;;</span></span><br><span class="line"><span class="comment">#创建远程连接</span></span><br><span class="line">create user root@<span class="string">&#x27;%&#x27;</span> identified by <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line">grant all privileges on *.* to root@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<h5 id="无密码的方式，可用于找回密码。"><a href="#无密码的方式，可用于找回密码。" class="headerlink" title="无密码的方式，可用于找回密码。"></a>无密码的方式，可用于找回密码。</h5><p>配置文件 MySQL 免密码登录</p>
-<p>编辑 MySQL 的配置文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure>
-
-<p>在 <code>[mysqld]</code>下添加</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在 [mysqld] 开头的下面一行加入下面这句</span></span><br><span class="line"><span class="attr">skip-grant-tables</span></span><br></pre></td></tr></table></figure>
-
-<p>修改密码(记得删除<code>my.cnf</code>文件的东西)</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里需要先刷新权限，不然会报错。</span></span><br><span class="line">flush privileges;</span><br><span class="line">alter user <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified  by <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"><span class="comment"># alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified WITH caching_sha2_password by &quot;123456&quot;;</span></span><br><span class="line"><span class="comment">#创建远程连接</span></span><br><span class="line">create user root@<span class="string">&#x27;%&#x27;</span> identified by <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line">grant all privileges on *.* to root@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
+          <h3 id="常用工具支持"><a href="#常用工具支持" class="headerlink" title="常用工具支持"></a>常用工具支持</h3><p>Java日常开发需要接触到很多常用的工具，为了便于使用，很多工具也有IDEA插件供开发使用，其中大部分已经在IDEA中默认集成了。例如maven、git、svn、tomcat、jetty、jrebel、Gradle等。</p>
+<h3 id="框架集成"><a href="#框架集成" class="headerlink" title="框架集成"></a>框架集成</h3><p>集成框架主要是为了提供框架定制的代码和配置的生成，以及快速的访问框架提供的功能。例如集成Spring框架，Mybatis框架等。</p>
+<h3 id="UI-定制化及优化"><a href="#UI-定制化及优化" class="headerlink" title="UI 定制化及优化"></a>UI 定制化及优化</h3><p>UI定制化相关的插件主要提供一下个性化需求定制，例如修改编辑区的背景图片插件、修改代码颜色等。</p>
+<h3 id="其他编程语言支持"><a href="#其他编程语言支持" class="headerlink" title="其他编程语言支持"></a>其他编程语言支持</h3><p>IDEA主要支持Java，为了使用其他语言，可以使用一些支持其他语言的插件，通过这些插件可以实现语法分析，配色主题，代码格式化和提示等功能。例如Go语言的支持的插件。</p>
+<h3 id="IDEA插件安装"><a href="#IDEA插件安装" class="headerlink" title="IDEA插件安装"></a>IDEA插件安装</h3><p>IDEA的插件安装非常简单，对于很多插件来说，只要你知道插件的名字就可以在IDEA里面直接安装。</p>
+<p>Preferences—&gt;Plugins—&gt;查找所需插件—&gt;Install</p>
 <p>或者</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/mysql </span><br><span class="line">use mysql;</span><br><span class="line">update user SET Password = <span class="string">&#x27;new-password&#x27;</span> WHERE User = <span class="string">&#x27;root&#x27;</span>; </span><br></pre></td></tr></table></figure>
-
-<h4 id="七、后续操作"><a href="#七、后续操作" class="headerlink" title="七、后续操作"></a>七、后续操作</h4><h5 id="创建软连接"><a href="#创建软连接" class="headerlink" title="创建软连接"></a>创建软连接</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /home/mysql/bin/* /usr/local/bin/</span><br></pre></td></tr></table></figure>
-
-<p><code>/usr/local/bin</code>目录是给用户放置自己的可执行程序的地方，推荐放在这里，不会被系统升级而覆盖同名文件。</p>
-<h5 id="添加系统环境变量"><a href="#添加系统环境变量" class="headerlink" title="添加系统环境变量"></a>添加系统环境变量</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
-
-<p>加入配置</p>
-<p><img src="/blog/uploads/images/image-20210820164908567.png"></p>
-<h5 id="添加服务"><a href="#添加服务" class="headerlink" title="添加服务"></a>添加服务</h5><p>将服务文件拷贝到init.d下，并重命名为mysqld<br><code>cp support-files/mysql.server /etc/init.d/mysqld</code><br>赋予可执行权限<br><code>chmod +x /etc/init.d/mysqld</code><br>添加服务<br><code>chkconfig --add mysqld</code><br>关闭firewall,安装iptables可选（比如服务器就需要开放3306）</p>
+<p>Preferences—&gt;Plugins—&gt;Install plug from disk —&gt;选择下载好的插件安装</p>
+<p>安装之后重启IDEA即可生效</p>
+<h3 id="IDEA插件仓库"><a href="#IDEA插件仓库" class="headerlink" title="IDEA插件仓库"></a>IDEA插件仓库</h3><p>IntelliJ<br>IDEA激发了许多Java开发人员编写插件，<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/?idea">IntelliJ IDEA Plugins</a>中目前包含1597个插件并且还在不断增长，可以到这里查看IDEA插件。</p>
+<h2 id="实用插件介绍"><a href="#实用插件介绍" class="headerlink" title="实用插件介绍"></a>实用插件介绍</h2><p>这里简单介绍一些日常开发中使用到的插件。</p>
+<h3 id="Maven-Helper"><a href="#Maven-Helper" class="headerlink" title="Maven Helper"></a>Maven Helper</h3><p>我一般用这款插件来查看maven的依赖树。 在不使用此插件的情况下，要想查看maven的依赖树就要使用Maven命令<code>maven dependency:tree</code> 来查看依赖。<br>想要查看是否有依赖冲突也可以使用<code>mvn dependency:tree -Dverbose -Dincludes=&lt;groupId&gt;:&lt;artifactId&gt;</code><br>只查看关心的jar包，但是这样还是需要我执行命令，并且当项目比较复杂的时候，这个过程是比较漫长的。maven helper就能很好的解决这个问题。</p>
+<p>一旦安装了<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/7179?pr=idea">Maven Helper</a>插件，只要打开pom文件，就可以打开该pom文件的<strong>Dependency Analyzer视图</strong><br>（在 文件打开之后，文件下面会多出这样一个tab），进入Dependency Analyzer视图之后有三个查看选项，分别是Conflicts(冲突)、All Dependencies as List(列表形式查看所有依赖)、All<br>Dependencies as Tree(树结构查看所有依赖)。并且这个页面还支持搜索。很方便！并且使用该插件还能快速的执行maven命令。</p>
+<p>来一张maven helper提供的图片感受一下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-9a2bad2418dc1693.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/704/format/webp"></p>
+<h3 id="FindBugs-IDEA"><a href="#FindBugs-IDEA" class="headerlink" title="FindBugs-IDEA"></a>FindBugs-IDEA</h3><p><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/3847?pr=idea">FindBugs</a>很多人都并不陌生，Eclipse中有插件可以帮助查找代码中隐藏的bug，IDEA中也有这款插件。</p>
+<p>分析完之后会有一个视图进行提示，详细的说明是哪种问题。</p>
+<p>按照提示解决完问题之后再执行findbug查看情况即可。</p>
+<p>使用方法很简单，就是可以对多种级别的内容进行finbugs</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-f102ce6e01061a55.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/600/format/webp"></p>
+<h3 id="Alibaba-java-coding-guidelines"><a href="#Alibaba-java-coding-guidelines" class="headerlink" title="Alibaba java coding guidelines"></a>Alibaba java coding guidelines</h3><p>阿里巴巴的代码规范</p>
+<h3 id="CheckStyle-IDEA"><a href="#CheckStyle-IDEA" class="headerlink" title="CheckStyle-IDEA"></a>CheckStyle-IDEA</h3><p>通过检查对代码编码格式，命名约定，Javadoc，类设计等方面进行代码规范和风格的检查，从而有效约束开发人员更好地遵循代码编写规范。 软件安装成功之后，首先要设置规则。可以通过</p>
+<p>Preferences—&gt;Other Settings —&gt;CheckStyles</p>
+<p>进行设置，可以直接将文件添加进来，然后就可以对具体的文件进行检查了。</p>
+<p>同样，该插件也有个单独的视图，该视图可以展示检查结果。</p>
+<h3 id="GsonFormat"><a href="#GsonFormat" class="headerlink" title="GsonFormat"></a>GsonFormat</h3><p>Java开发中，经常有把json格式的内容转成Object的需求，<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/7654?pr=">GsonFormat</a>这款插件可以实现该功能。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-913e604437b85780.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/600/format/webp"></p>
+<h3 id="Jrebel"><a href="#Jrebel" class="headerlink" title="Jrebel"></a>Jrebel</h3><p><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/4441">JRebel for IntelliJ</a><br>是一款<a target="_blank" rel="noopener" href="http://www.hollischuang.com/archives/category/%E7%BB%BC%E5%90%88%E5%BA%94%E7%94%A8/%E7%83%AD%E9%83%A8%E7%BD%B2">热部署</a><br>插件。由于我们团队有内部的热部署方案，所以该插件我没用过，但是这个插件和我们内部的插件差不多，所以在这也推荐一下。</p>
+<h3 id="AceJump"><a href="#AceJump" class="headerlink" title="AceJump"></a>AceJump</h3><p>AceJump其实是一款能够代替鼠标的软件，只要安装了这款插件，可以在代码中跳转到任意位置。按快捷键进入 AceJump 模式后（默认是<br>Ctrl+J），再按任一个字符，插件就会在屏幕中这个字符的所有出现位置都打上标签，你只要再按一下标签的字符，就能把光标移到该位置上。换言之，你要 移动光标时，眼睛一直看着目标位置就行了，根本不用管光标的当前位置。</p>
+<p>这个自己安装一下实践起来就知道了，我平时其实不怎么用，可能是没用习惯吧。</p>
+<h3 id="markdown"><a href="#markdown" class="headerlink" title="markdown"></a>markdown</h3><p>安装这个插件之后，打开<code>.md</code>文件就可以通过一个支持md的视图查看和编辑内容。一般用于写README.md文件。但是这个插件我不太用，因为他对md语法支持的并不是很好。还是习惯用<code>macdown</code>这款软件。</p>
+<h3 id="Key-promoter"><a href="#Key-promoter" class="headerlink" title="Key promoter"></a>Key promoter</h3><p>很多开发都是从Eclipse转到Idea的。用习惯了Eclipse的快捷键之后在使用IDEA真的非常不习惯。<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/1003?pr=idea">Key promoter</a><br>这款插件适合新手使用。当你点击鼠标一个功能的时候，可以提示你这个功能快捷键是什么。</p>
+<h3 id="ignore"><a href="#ignore" class="headerlink" title="ignore"></a><strong>ignore</strong></h3><p>经常使用git的同学对于ignore一定不会陌生，我们可以在该文件中设置一些忽略提交的规则。</p>
+<p>通过该插件可以生成各种ignore文件，一键创建git ignore文件的模板，解决了手动去配置的麻烦。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-345309b0b7552fc6.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/600/format/webp"></p>
+<h3 id="lombok"><a href="#lombok" class="headerlink" title="lombok"></a><strong>lombok</strong></h3><p><strong>当我们创建一个实体时，通常对每个字段去生成GET&#x2F;SET方法，但是万一后面需要增加或者减少字段时，又要重新的去生成GET&#x2F;SET方法，非常麻烦。</strong></p>
+<p>可以通过该插件，通过注解的形式去解决这些麻烦，同时还可以通过注解去完成构造函数等;</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-efb326a21a6fdf54.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/600/format/webp"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-e7a07421f1d7ca9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp"></p>
+<h3 id="VisualVM-Launcher"><a href="#VisualVM-Launcher" class="headerlink" title="VisualVM Launcher"></a><strong>VisualVM Launcher</strong></h3><p><strong>运行java程序的时候启动visualvm，方便查看jvm的情况 比如堆内存大小的分配</strong></p>
+<p>某个对象占用了多大的内存，jvm调优必备工具;</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-4963bd845e3a6b17.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/600/format/webp"></p>
+<h3 id="GenerateAllSetter"><a href="#GenerateAllSetter" class="headerlink" title="GenerateAllSetter"></a><strong>GenerateAllSetter</strong></h3><p><strong>一键调用一个对象的所有set方法并且赋予默认值 在对象字段多的时候非常方便;</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4724335-d95e73ed413b2676.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/600/format/webp"></p>
+<h3 id="MyBatisX"><a href="#MyBatisX" class="headerlink" title="MyBatisX"></a><strong>MyBatisX</strong></h3><p>当前是收费的，可以用 <code>MybatisX</code>代替</p>
+<p>mybatis代码自动生成插件，大部分<strong>单表操作</strong>的代码可自动生成 减少重复劳动 大幅提升效率;</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-0a8790981348d06e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h3 id="Translation"><a href="#Translation" class="headerlink" title="Translation"></a><strong>Translation</strong></h3><p>最好用的翻译插件，功能很强大，界面很漂亮;</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-31bc2fb03ae6c155.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<hr>
+<p>翻译更推荐 <code>ECtranslation</code>,因为上面这个需要 AppKey 初识者不容易弄.</p>
+<h3 id="SonarLint-Sonar-代码质量管理"><a href="#SonarLint-Sonar-代码质量管理" class="headerlink" title="SonarLint(Sonar) 代码质量管理"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lzb1096101803/p/4945844.html">SonarLint(Sonar) 代码质量管理</a></h3><p><img src="https://upload-images.jianshu.io/upload_images/9787847-5a5aa17a70790831.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h3 id="Rainbow-Brackets"><a href="#Rainbow-Brackets" class="headerlink" title="Rainbow Brackets"></a><strong>Rainbow Brackets</strong></h3><p>彩虹颜色的括号 看着很舒服 敲代码效率变高。</p>
+<h3 id="Statistic统计代码"><a href="#Statistic统计代码" class="headerlink" title="Statistic统计代码"></a>Statistic统计代码</h3><p>代码行数、注释量、空行量统计插件。</p>
+<h3 id="Background-Image-Plus-背景图片插件"><a href="#Background-Image-Plus-背景图片插件" class="headerlink" title="Background Image Plus 背景图片插件"></a>Background Image Plus 背景图片插件</h3><h3 id="CodeGlance-预览插件"><a href="#CodeGlance-预览插件" class="headerlink" title="CodeGlance 预览插件"></a>CodeGlance 预览插件</h3><p>类似 <code>Sublime</code> 的右侧导航栏。</p>
+<h3 id="CamelCase-坨峰命名神器"><a href="#CamelCase-坨峰命名神器" class="headerlink" title="CamelCase 坨峰命名神器"></a>CamelCase 坨峰命名神器</h3><p><code>SHIFT + ALT + U </code></p>
+<h3 id="log插件三连"><a href="#log插件三连" class="headerlink" title="log插件三连"></a>log插件三连</h3><ol>
+<li><p>ANSI Highlighter</p>
 <blockquote>
-<p>本文地址： <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9a5e4fea031c">Centos7 解压安装MYSQL8</a></p>
-<p>推荐</p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br>[官方介绍]([<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts</a></p>
+<p>log文件高亮支持</p>
 </blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/26542/">https://github.com/maxzhao-it/blog/post/26542/</a> </p>
+</li>
+<li><p>Catdea</p>
+</li>
+<li><p>Ideolog</p>
+<blockquote>
+<p>快速跳转到日志文件中Error位置等</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="流式编程调试插件-Java-Stream-Debugger"><a href="#流式编程调试插件-Java-Stream-Debugger" class="headerlink" title="流式编程调试插件 Java Stream Debugger"></a>流式编程调试插件 Java Stream Debugger</h3><p>对Stream API 的调试IDEA 官方开发了一个Plugin──Java Stream Debugger来扩展IDEA中的Debug工具。安装完该插件后在Debug的工具栏上增加了Trace Current Stream<br>Chain按钮</p>
+<h3 id="Flutter-Dart-VUE"><a href="#Flutter-Dart-VUE" class="headerlink" title="Flutter Dart VUE"></a>Flutter Dart VUE</h3><h3 id="CMD-Support"><a href="#CMD-Support" class="headerlink" title="CMD Support"></a><strong>CMD Support</strong></h3><blockquote>
+<p>CMD文件支持</p>
+</blockquote>
+<h3 id="Batch-Scripts-Support"><a href="#Batch-Scripts-Support" class="headerlink" title="Batch Scripts Support"></a><strong>Batch Scripts Support</strong></h3><blockquote>
+<p>Windows批处理脚本支持</p>
+</blockquote>
+<h3 id="RestfulToolkit"><a href="#RestfulToolkit" class="headerlink" title="RestfulToolkit"></a><strong>RestfulToolkit</strong></h3><blockquote>
+<p>Restful工具集，支持SpringMVC下的URL导航到对应方法等。</p>
+</blockquote>
+<h3 id="Mongo-Plugin"><a href="#Mongo-Plugin" class="headerlink" title="Mongo Plugin"></a>Mongo Plugin</h3><blockquote>
+<p>MongoDB客户端</p>
+</blockquote>
+<h3 id="Easy-Code"><a href="#Easy-Code" class="headerlink" title="Easy Code"></a>Easy Code</h3><blockquote>
+<p>基于IntelliJ IDEA开发的代码生成插件，支持自定义任意模板（Java，html，js，xml）。</p>
+</blockquote>
+<h3 id="IDEA-Mind-Map"><a href="#IDEA-Mind-Map" class="headerlink" title="IDEA Mind Map"></a>IDEA Mind Map</h3><blockquote>
+<p>IDEA 思维导图工具</p>
+</blockquote>
+<h3 id="SequenceDiagram"><a href="#SequenceDiagram" class="headerlink" title="SequenceDiagram"></a>SequenceDiagram</h3><blockquote>
+<p>生成方法调用的时序图</p>
+</blockquote>
+<h3 id="Material-Theme-UI"><a href="#Material-Theme-UI" class="headerlink" title="Material Theme UI"></a><strong>Material Theme UI</strong></h3><blockquote>
+<p>眼睛舒适的主题</p>
+</blockquote>
+<h3 id="String-Manipulation"><a href="#String-Manipulation" class="headerlink" title="String Manipulation"></a><strong>String Manipulation</strong></h3><blockquote>
+<p>字符串处理，提供驼峰、下划线，base64、md5</p>
+</blockquote>
+<h3 id="JUnit-Generator-V2-0"><a href="#JUnit-Generator-V2-0" class="headerlink" title="JUnit Generator V2.0"></a><strong>JUnit Generator V2.0</strong></h3><blockquote>
+<p>快捷生成单元测试类</p>
+<p>快速配置：</p>
+<p>Output Path：${SOURCEPATH}&#x2F;..&#x2F;..&#x2F;test&#x2F;java&#x2F;${PACKAGE}&#x2F;test&#x2F;${FILENAME}</p>
+<p>Default Template：Junit 4</p>
+</blockquote>
+<h3 id="big-data-tools"><a href="#big-data-tools" class="headerlink" title="big data tools"></a>big data tools</h3><blockquote>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1f87b0dd597">IDEA好用的插件</a></p>
+<p>推荐：<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/90ed3d890f61">IDEA使用技巧</a></p>
+</blockquote>
+<h3 id="ASM-Bytecode-Outline"><a href="#ASM-Bytecode-Outline" class="headerlink" title="ASM Bytecode Outline"></a><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/5918-asm-bytecode-outline/">ASM Bytecode Outline</a></h3><p>字节码</p>
+<h3 id="Alibaba-Cloud-AI-Coding-Assistant"><a href="#Alibaba-Cloud-AI-Coding-Assistant" class="headerlink" title="Alibaba Cloud AI Coding Assistant"></a>Alibaba Cloud AI Coding Assistant</h3><p>cosy - <a target="_blank" rel="noopener" href="https://toolkit.aliyun.com/idea/cosy-intellij-beta-latest-all-in-one.zip">https://toolkit.aliyun.com/idea/cosy-intellij-beta-latest-all-in-one.zip</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/58264/">https://github.com/maxzhao-it/blog/post/58264/</a> </p>
 
       
     </div>
@@ -359,7 +407,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/26543/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/5058/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -377,7 +425,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/26543/" class="post-title-link" itemprop="url">Centos7 RPM安装MYSQL8</a>
+          <a href="/blog/post/5058/" class="post-title-link" itemprop="url">IDEA使用技巧和快捷键</a>
         </h2>
 
         <div class="post-meta-container">
@@ -387,7 +435,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-16 18:55:47" itemprop="dateModified" datetime="2023-11-16T18:55:47+08:00">2023-11-16</time>
+      <time title="Modified: 2022-12-12 10:33:35" itemprop="dateModified" datetime="2022-12-12T10:33:35+08:00">2022-12-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -395,11 +443,15 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+          <a href="/blog/categories/DevelopTools/IDEA/" itemprop="url" rel="index"><span itemprop="name">IDEA</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/IDEA/%E6%8A%80%E5%B7%A7/" itemprop="url" rel="index"><span itemprop="name">技巧</span></a>
         </span>
     </span>
 
@@ -413,64 +465,154 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>都说<code>MySql8.x</code>比<code>5.7</code>快两倍，可以<a target="_blank" rel="noopener" href="https://www.oschina.net/news/95325/mysql-8-0-ga-released">参考</a>一下。<br>但不支持从 <code>MySQL 8.0</code> 降级到 <code>MySQL 5.7</code>（或从某个 <code>MySQL 8.0</code> 版本降级到任意一个更早的 <code>MySQL 8.0</code> 版本）。数据备份方式还是可以的。</p>
+          <h1 id="IDEA使用技巧"><a href="#IDEA使用技巧" class="headerlink" title="IDEA使用技巧"></a>IDEA使用技巧</h1><p>我这里的快捷键方式是<code>GNOME</code>。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-6fefd03c58d1175c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h3 id="快捷键查询"><a href="#快捷键查询" class="headerlink" title="快捷键查询"></a>快捷键查询</h3><p>菜单栏HELP—–&gt;keymap reference</p>
+<p>Help—–&gt;find action (ctrl+shift+a)</p>
+<h3 id="跳转"><a href="#跳转" class="headerlink" title="跳转"></a>跳转</h3><ol>
+<li><p>项目跳转：菜单栏window—-&gt;next project window(ctrl+alt+])</p>
+</li>
+<li><p>文件跳转：action搜索recent files（ctrl+e）,recently changed files(ctrl+shift+e)</p>
+</li>
+<li><p>类跳转：go to class(ctrl+n)</p>
+</li>
+<li><p>万能搜索：search everywhere(连续按两次shift)</p>
+</li>
+<li><p>上次编辑：菜单栏navigate—-&gt;last edit location(ctrl+shift+backspace)</p>
+</li>
+<li><p>浏览跳转：菜单栏navigate—-&gt;back(ctrl+alt+左箭头or→)</p>
+</li>
+<li><p>标签跳转：select next tab(alt+左箭头or→)</p>
+</li>
+<li><p>书签跳转：</p>
 <ul>
-<li>注意<code>MySql8</code> 的用户安全策略的改变</li>
-<li>注意<code>MySql8</code> 编码格式</li>
-<li>支撑内网服务器安装</li>
+<li><p>toggle bookmark(F11),</p>
+</li>
+<li><p>toggle bookmark with mnemonic(ctrl+F11) 就是添加快捷键，按了会出现快捷标识,</p>
+</li>
+<li><p>go to bookmark 2(ctrl+2)跳转到有助记符的书签</p>
+</li>
 </ul>
-<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打包下载</span></span><br><span class="line">wget https://cdn.mysql.com//Downloads/MySQL-8.2/mysql-8.2.0-1.el7.x86_64.rpm-bundle.tar</span><br><span class="line">tar -xvf mysql-8.2.0-1.el7.x86_64.rpm-bundle.tar</span><br><span class="line"><span class="comment"># 单独下载</span></span><br><span class="line">wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-server-8.2.0-1.el7.x86_64.rpm</span><br><span class="line">wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-libs-8.2.0-1.el7.x86_64.rpm</span><br><span class="line">wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-client-8.2.0-1.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>收藏：favorites(alt+2),add to favorites(alt+shift+f)</p>
+</li>
+<li><p>跳转到任何一个单词：安装插件IdeaVim或emacsIDEAs（ctrl + alt + ; 然后按想要跳转的字符，会提示快捷跳转方式）</p>
+</li>
+<li><p>项目区与工作区跳转：（alt+1,ESC）</p>
+</li>
+<li><p>打开<code>run</code>控制台：(alt + 4)</p>
+</li>
+<li><p>打开<code>debug</code>控制台：(alt + 5)</p>
+<ul>
+<li><p>设置debug (ctrl+f8)</p>
+</li>
+<li><p>到下一个断点(f9)</p>
+</li>
+<li><p>到下一行(f8)</p>
+</li>
+<li><p>不同的案件方式，有差别</p>
+</li>
+</ul>
+</li>
+<li><p>查看待做注解(alt+6)</p>
+<p>注释中标有<code>todo</code>or<code>TODO</code>的代码。</p>
+</li>
+</ol>
+<h3 id="列操作"><a href="#列操作" class="headerlink" title="列操作"></a>列操作</h3><p>选中需要操作的字符</p>
+<p>ctrl + alt +shift + J</p>
+<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><ol>
+<li><p>类：（ctrl+n）</p>
+</li>
+<li><p>文件：(ctrl+shift+n) 文件名字前加&#x2F;可搜目录</p>
+</li>
+<li><p>函数：symbol(ctrl+shift+alt+n)</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-797266af75ec69bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="如果版本高的话会出现这个查询框"></p>
+</li>
+<li><p>字符串：</p>
+</li>
+</ol>
+<ul>
+<li>全局查询 find in path(ctrl+shift+f)</li>
+<li>文件中查询 find (ctrl+f)</li>
+<li>全局替换 replace in path(ctrl+shift+r)</li>
+<li>文件中替换 replace (ctrl+r)</li>
+</ul>
+<ol start="5">
+<li>万能查询：(shift+shift)</li>
+</ol>
+<h3 id="live-templates-代码模板"><a href="#live-templates-代码模板" class="headerlink" title="live templates 代码模板"></a>live templates 代码模板</h3><ol>
+<li><p>插入自己创建的模板:(ctrl+j)</p>
+</li>
+<li><p>surround with live template:(ctrl+shift+j) 会减少代码行数，自己尝试一下效果</p>
+</li>
+<li><p>创建自定义模板</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-ca5ca46ec7acec3a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><code>$END$</code> 是插入当前模板之后的光标的位置。</p>
+<p>需要配置模板可以使用的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * $NAME$</span><br><span class="line"> * $END$</span><br><span class="line"> * @author $USER$</span><br><span class="line"> * @since $DATE$</span><br><span class="line"> */</span><br></pre></td></tr></table></figure>
 
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h3 id="先查看有没有-mariadb"><a href="#先查看有没有-mariadb" class="headerlink" title="先查看有没有 mariadb"></a>先查看有没有 <code>mariadb</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa | grep mariadb</span><br></pre></td></tr></table></figure>
+<p>变量配置 <code>Edit variables</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NAME className()</span><br><span class="line">USER user()</span><br><span class="line">DATE date(&#x27;yyyy-MM-dd HH:mm:ss&#x27;)</span><br></pre></td></tr></table></figure>
 
-<h3 id="有就强制卸载"><a href="#有就强制卸载" class="headerlink" title="有就强制卸载"></a>有就强制卸载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -e --nodeps mariadb-libs-5.5.56-2.el7.x86_64</span><br></pre></td></tr></table></figure>
 
-<h3 id="强制安装"><a href="#强制安装" class="headerlink" title="强制安装"></a>强制安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh mysql-community-common-8.2.0-1.el7.x86_64.rpm --nodeps --force</span><br><span class="line">rpm -ivh mysql-community-server-8.2.0-1.el7.x86_64.rpm --nodeps --force</span><br><span class="line">rpm -ivh mysql-community-libs-8.2.0-1.el7.x86_64.rpm --nodeps --force</span><br><span class="line"><span class="comment"># 可选安装</span></span><br><span class="line">rpm -ivh mysql-community-client-8.2.0-1.el7.x86_64.rpm --nodeps --force</span><br><span class="line">rpm -ivh mysql-community-devel-8.2.0-1.el7.x86_64.rpm --nodeps --force</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插入自定义模板</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-5cb42239b7f7f767.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>直接输入自己的模板名称，就会出现自定义模板内容了。</p>
+<p>这种注释建议直接设置 修改注释模板，下面有介绍。</p>
+</li>
+</ol>
+<h3 id="postfix"><a href="#postfix" class="headerlink" title="postfix"></a>postfix</h3><h4 id="1-fori"><a href="#1-fori" class="headerlink" title="1.fori"></a>1.fori</h4><h5 id="before"><a href="#before" class="headerlink" title="before"></a>before</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foo.fori</span><br></pre></td></tr></table></figure>
 
-<h3 id="这时候查看安装"><a href="#这时候查看安装" class="headerlink" title="这时候查看安装"></a>这时候查看安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep mysql</span><br><span class="line">mysql-community-server-8.2.0-1.el7.x86_64</span><br><span class="line">mysql-community-client-8.2.0-1.el7.x86_64</span><br><span class="line">mysql-community-libs-8.2.0-1.el7.x86_64</span><br></pre></td></tr></table></figure>
+<h5 id="after"><a href="#after" class="headerlink" title="after"></a>after</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;foo; i++)&#123;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="初始化配置"><a href="#初始化配置" class="headerlink" title="初始化配置"></a>初始化配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure>
+<h4 id="2-field"><a href="#2-field" class="headerlink" title="2.field"></a>2.field</h4><h5 id="before-1"><a href="#before-1" class="headerlink" title="before"></a>before</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Foo</span><span class="params">(<span class="type">int</span> arg)</span> &#123;</span><br><span class="line">        arg.field</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>配置路径 <code>/opt/db/</code></p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mysql]</span></span><br><span class="line"><span class="comment"># 设置mysql客户端默认字符集</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="attr">socket</span>=<span class="string">/opt/db/mysql_data/mysql.sock</span></span><br><span class="line"><span class="attr">[mysqld]</span></span><br><span class="line"><span class="attr">skip-name-resolve</span></span><br><span class="line"><span class="comment">#设置3306端口</span></span><br><span class="line"><span class="attr">port</span>=<span class="string">3331 </span></span><br><span class="line"><span class="attr">datadir</span>=<span class="string">/opt/db/mysql_data</span></span><br><span class="line"><span class="attr">socket</span>=<span class="string">/opt/db/mysql_data/mysql.sock</span></span><br><span class="line"><span class="attr">log-error</span>=<span class="string">/opt/db/mysql_log/mysqld.log</span></span><br><span class="line"><span class="attr">pid-file</span>=<span class="string">/opt/db/mysqld/mysqld.pid</span></span><br><span class="line"><span class="comment"># 允许最大连接数</span></span><br><span class="line"><span class="attr">max_connections</span>=<span class="string">200</span></span><br><span class="line"><span class="comment"># 服务端使用的字符集默认为8比特编码的latin1字符集</span></span><br><span class="line"><span class="attr">character-set-server</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="comment">#排序规则</span></span><br><span class="line"><span class="attr">collation-server</span>=<span class="string">utf8mb4_0900_ai_ci</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  排序规则：ai 口音不敏感  ci 不区分大小写  ,默认支持表情符号</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  属于 utf8mb4_unicode_ci 中的一种</span></span><br><span class="line"><span class="comment">#utf8mb4_general_ci  没有实现utf8mb4_unicode_ci 的排序规则。没有utf8mb4_unicode_ci 准备。但是比较和排序的时候更快</span></span><br><span class="line"><span class="comment"># 创建新表时将使用的默认存储引擎,innodb支持事物</span></span><br><span class="line"><span class="attr">default-storage-engine</span>=<span class="string">INNODB </span></span><br><span class="line"><span class="attr">lower_case_table_names</span>=<span class="string">1</span></span><br><span class="line"><span class="attr">max_allowed_packet</span>=<span class="string">16M</span></span><br><span class="line"><span class="attr">lc-messages-dir</span>=<span class="string">/usr/share/mysql-8.0</span></span><br></pre></td></tr></table></figure>
+<h5 id="after-1"><a href="#after-1" class="headerlink" title="after"></a>after</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> foo;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Foo</span><span class="params">(<span class="type">int</span> arg)</span> &#123;</span><br><span class="line">        foo = arg;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysql/</span><br><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysqld/</span><br><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysql_data</span><br><span class="line"><span class="built_in">rm</span> -rf /opt/db/mysql_log</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysql/</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysqld/</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysql_data</span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/db/mysql_log</span><br><span class="line"><span class="built_in">chown</span> mysql:mysql /opt/db/ -R</span><br><span class="line"><span class="built_in">chmod</span> 777 -R /opt/db/mysqld</span><br><span class="line"></span><br><span class="line">sudo mysqld --initialize --user=mysql --basedir=/usr</span><br><span class="line">setenforce 0</span><br><span class="line">systemctl start mysqld.service</span><br><span class="line">systemctl status mysqld.service</span><br><span class="line"><span class="comment"># 权限</span></span><br><span class="line"><span class="comment"># chmod 777 /opt/db/mysqld/mysqld.pid</span></span><br><span class="line"><span class="comment"># chmod 777 /opt/db/mysql_log/mysqld.log</span></span><br><span class="line"><span class="comment"># 开机自起</span></span><br><span class="line">systemctl <span class="built_in">enable</span> mysqld</span><br><span class="line"><span class="built_in">cat</span> /opt/db/mysql_log/mysqld.log</span><br></pre></td></tr></table></figure>
+<h5 id="3-try"><a href="#3-try" class="headerlink" title="3.try"></a>3.try</h5><h5 id="before-2"><a href="#before-2" class="headerlink" title="before"></a>before</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m().<span class="keyword">try</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="报错解决"><a href="#报错解决" class="headerlink" title="报错解决"></a>报错解决</h3><p><code>mysqld: error while loading shared libraries: libaio.so.1</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install libaio </span><br></pre></td></tr></table></figure>
+<h5 id="after-2"><a href="#after-2" class="headerlink" title="after"></a>after</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">        m();</span><br><span class="line">        &#125;<span class="keyword">catch</span>(CheckedException e)&#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>Can&#39;t find error-message file &#39;/usr/share/mysql-8.0/errmsg.sys&#39;. Check error-message file location and &#39;lc-messages-dir&#39; configuration directive.</code></p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">lc-messages-dir</span>=<span class="string">/usr/share/mysql-8.0</span></span><br></pre></td></tr></table></figure>
+<h3 id="alter-enter"><a href="#alter-enter" class="headerlink" title="alter+enter"></a>alter+enter</h3><ol>
+<li>自动补全代码</li>
+<li>单词拼写</li>
+<li>导包</li>
+<li>实现接口</li>
+<li>list replace</li>
+<li>字符串format或build</li>
+<li>inject language(如JSON)</li>
+</ol>
+<h3 id="git"><a href="#git" class="headerlink" title="git"></a>git</h3><p>1.annotate</p>
+<p>2.revert(ctrl+alt+z)</p>
+<p>3.右键—-&gt;local history—-&gt;show history或put label</p>
+<h3 id="File"><a href="#File" class="headerlink" title="File"></a>File</h3><p>1.copy(F5)</p>
+<p>2.MOVE(F6)</p>
+<p>3.剪贴板(ctrl+shift+v)</p>
+<p>4.file structure(ctrl+F12)</p>
+<p>5.查看类继承关系图(ctrl+shift+alt+u,ctrl+alt+u)</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9787847-bb72cbab5393703d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>6.type hierarchy(ctrl+h)</p>
+<h3 id="函数调用层次关系call-hierarchy-ctrl-alt-h"><a href="#函数调用层次关系call-hierarchy-ctrl-alt-h" class="headerlink" title="函数调用层次关系call hierarchy(ctrl+alt+h)"></a>函数调用层次关系call hierarchy(ctrl+alt+h)</h3><h3 id="隐藏-idea文件夹和-iml等文件"><a href="#隐藏-idea文件夹和-iml等文件" class="headerlink" title="隐藏.idea文件夹和.iml等文件"></a>隐藏.idea文件夹和.iml等文件</h3><p>在File-&gt;Settings-&gt;Editor-&gt;File Types下的”Ignore files and folders”一栏添加 <em>.idea;</em>.iml;等配置如下图所示 ,不建议使用，你想隐藏的文件都还是有用的。</p>
+<h3 id="修改注释模板"><a href="#修改注释模板" class="headerlink" title="修改注释模板"></a>修改注释模板</h3><p>File-&gt;Settings-&gt;Editor-&gt;File and Code Templates下分别修改Class，Interface，Enum等注释模板</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">if</span>($&#123;PACKAGE_NAME&#125;&amp;&amp;$&#123;PACKAGE_NAME&#125;!=<span class="string">&quot;&quot;</span>)<span class="keyword">package</span> $&#123;PACKAGE_NAME&#125;;#end</span><br><span class="line">        #parse(<span class="string">&quot;File Header.java&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * $&#123;NAME&#125;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> $&#123;USER&#125;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> $&#123;YEAR&#125;-$&#123;MONTH&#125;-$&#123;DAY&#125; $&#123;HOUR&#125;:$&#123;MINUTE&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">$</span> &#123;NAME&#125; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>ERROR 2002 (HY000): Can&#39;t connect to local MySQL server through socket &#39;/var/lib/mysql/mysql.sock&#39; (2)</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /var/lib/mysql/mysql.sock</span><br><span class="line">systemctl restart mysqld</span><br></pre></td></tr></table></figure>
-
-<h3 id="查看安装日志中的密码"><a href="#查看安装日志中的密码" class="headerlink" title="查看安装日志中的密码"></a>查看安装日志中的密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /opt/db/mysql_log/mysqld.log | grep password</span><br></pre></td></tr></table></figure>
-
-<h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br></pre></td></tr></table></figure>
-
-<p>比如这个<code>uQ3sw%Cu;IKk</code>复制粘贴就可以了。</p>
-<h3 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">flush privileges;</span><br><span class="line">alter user <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified  by <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"><span class="comment"># alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified WITH caching_sha2_password by &quot;123456&quot;;</span></span><br><span class="line"><span class="comment">#创建远程连接</span></span><br><span class="line">create user root@<span class="string">&#x27;%&#x27;</span> identified by <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line">grant all privileges on *.* to root@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<h3 id="无密码的方式，可用于找回密码。"><a href="#无密码的方式，可用于找回密码。" class="headerlink" title="无密码的方式，可用于找回密码。"></a>无密码的方式，可用于找回密码。</h3><p>输入一百次也输入不对默认密码 配置文件 MySQL 免密码登录 编辑 MySQL 的配置文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure>
-
-<p>在 <code>[mysqld]</code>下添加</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在 [mysqld] 开头的下面一行加入下面这句</span></span><br><span class="line"><span class="attr">skip-grant-tables</span></span><br></pre></td></tr></table></figure>
-
-<p>修改密码(记得删除<code>my.cnf</code>文件的东西)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 这里需要先刷新权限，不然会报错。</span><br><span class="line">flush privileges;</span><br><span class="line">alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified  by &quot;123456&quot;;</span><br><span class="line"># alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified WITH caching_sha2_password by &quot;123456&quot;;</span><br><span class="line">#创建远程连接</span><br><span class="line">create user root@&#x27;%&#x27; identified by &#x27;123456&#x27;;</span><br><span class="line">grant all privileges on *.* to root@&#x27;%&#x27;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/mysql </span><br><span class="line">use mysql;</span><br><span class="line">update user SET Password = &#x27;new-password&#x27; WHERE User = &#x27;root&#x27;; </span><br></pre></td></tr></table></figure>
-
-<h3 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[mysql]</span><br><span class="line"><span class="comment"># 设置mysql客户端默认字符集</span></span><br><span class="line">default-character-set=utf8mb4</span><br><span class="line">socket=/opt/db/mysql_data/mysql.sock</span><br><span class="line">[mysqld]</span><br><span class="line">skip-name-resolve</span><br><span class="line"><span class="comment">#设置3306端口</span></span><br><span class="line">port = 3331 </span><br><span class="line">datadir=/opt/db/mysql_data</span><br><span class="line">socket=/opt/db/mysql_data/mysql.sock</span><br><span class="line">log-error=/opt/db/mysql_log/mysqld.log</span><br><span class="line">pid-file=/opt/db/mysqld/mysqld.pid</span><br><span class="line"><span class="comment"># 允许最大连接数</span></span><br><span class="line">max_connections=200</span><br><span class="line"><span class="comment"># 服务端使用的字符集默认为8比特编码的latin1字符集</span></span><br><span class="line">character-set-server=utf8mb4</span><br><span class="line"><span class="comment">#排序规则</span></span><br><span class="line">collation-server=utf8mb4_0900_ai_ci</span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  排序规则：ai 口音不敏感  ci 不区分大小写  ,默认支持表情符号</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  属于 utf8mb4_unicode_ci 中的一种</span></span><br><span class="line"><span class="comment">#utf8mb4_general_ci  没有实现utf8mb4_unicode_ci 的排序规则。没有utf8mb4_unicode_ci 准备。但是比较和排序的时候更快</span></span><br><span class="line"><span class="comment"># 创建新表时将使用的默认存储引擎,innodb支持事物</span></span><br><span class="line">default-storage-engine=INNODB </span><br><span class="line">lower_case_table_names=1</span><br><span class="line">max_allowed_packet=16M</span><br><span class="line">lc-messages-dir=/usr/share/mysql-8.0</span><br><span class="line"><span class="comment"># 不使用密码进入</span></span><br><span class="line"><span class="comment"># skip-grant-tables</span></span><br></pre></td></tr></table></figure>
-
+<p>添加serialVersionUID</p>
+<p>Atl＋Enter键就会提示生成serialVersionUID了</p>
+<h2 id="快捷键操作"><a href="#快捷键操作" class="headerlink" title="快捷键操作"></a>快捷键操作</h2><h3 id="Ctrl相关"><a href="#Ctrl相关" class="headerlink" title="Ctrl相关"></a>Ctrl相关</h3><p>快捷键 介绍<br>Ctrl + B 进入光标所在的方法&#x2F;变量的接口或是定义处，等效于Ctrl + 左键单击<br>Ctrl + D 复制光标所在行或复制选择内容，并把复制内容插入光标位置下面<br>Ctrl + F 在当前文件进行文本查找<br>Ctrl + H 查看类的继承结构<br>Ctrl + N 通过类名定位文件<br>Ctrl + O 快速重写父类方法<br>Ctrl + P 方法参数提示<br>Ctrl + Y 删除光标所在行或删除选中的行<br>Ctrl + W 递进式选择代码块<br>Ctrl + Z 撤销<br>Ctrl + 1,2,3…9 定位到对应数值的书签位置 结合Ctrl + Shift + 1,2,3…9使用<br>Ctrl + F1 在光标所在的错误代码出显示错误信息<br>Ctrl + F12 弹出当前文件结构层，可以在弹出的层上直接输入进行筛选<br>Ctrl + Space 基础代码补全默认在Windows系统上被输入法占用，需要进行修改，建议修改为Ctrl + 逗号<br>Ctrl + &#x2F; 注释光标所在行代码，会根据当前不同文件类型使用不同的注释符号</p>
+<h3 id="Alt相关"><a href="#Alt相关" class="headerlink" title="Alt相关"></a>Alt相关</h3><p>快捷键 介绍<br>Alt + Q 弹出一个提示，显示当前类的声明&#x2F;上下文信息<br>Alt + Enter 根据光标所在问题，提供快速修复选择</p>
+<h3 id="Shift相关"><a href="#Shift相关" class="headerlink" title="Shift相关"></a>Shift相关</h3><p>快捷键 介绍<br>Shift + F3 在查找模式下，定位到上一个匹配处</p>
+<h3 id="Ctrl-Alt相关"><a href="#Ctrl-Alt相关" class="headerlink" title="Ctrl+Alt相关"></a>Ctrl+Alt相关</h3><p>快捷键 介绍<br>Ctrl + Alt + B 在某个调用的方法名上使用会跳到具体的实现处<br>Ctrl + Alt + L 格式化代码 可以对当前文件和整个包目录使用<br>Ctrl + Alt + M 快速抽取方法<br>Ctrl + Alt + O 优化导入的类和包 可以对当前文件和整个包目录使用<br>Ctrl + Alt + T 对选中的代码弹出环绕选项弹出层<br>Ctrl + Alt + V 快速引进变量<br>Ctrl + Alt + F7 寻找类或是变量被调用的地方，以弹出框的方式显示<br>Ctrl + Alt + 左方向键 退回到上一个操作的地方<br>Ctrl + Alt + 右方向键 前进到上一个操作的地方<br>Ctrl + Alt +空格 列出最近使用的对象</p>
+<h3 id="Ctrl-Shift相关"><a href="#Ctrl-Shift相关" class="headerlink" title="Ctrl+Shift相关"></a>Ctrl+Shift相关</h3><p>快捷键 介绍<br>Ctrl + Shift + F 根据输入内容查找整个项目或指定目录内文件<br>Ctrl + Shift + H 查看方法的继承结构<br>Ctrl + Shift + J 自动将下一行合并到当前行末尾<br>Ctrl + Shift + N 通过文件名定位打开文件&#x2F;目录，打开目录需要在输入的内容后面多加一个正斜杠<br>Ctrl + Shift + R 根据输入内容替换对应内容，范围为整个项目或指定目录内文件<br>Ctrl + Shift + U 对选中的代码进行大&#x2F;小写轮流转换<br>Ctrl + Shift + W 递进式取消选择代码块<br>Ctrl + Shift + Z 取消撤销<br>Ctrl + Shift + &#x2F; 代码块注释<br>Ctrl + Shift + + 展开所有代码<br>Ctrl + Shift + - 折叠所有代码<br>Ctrl + Shift + 1,2,3…9 快速添加指定数值的书签<br>Ctrl + Shift + F7 高亮显示所有该选中文本，按Esc高亮消失<br>Ctrl + Shift + Space 智能代码提示<br>Ctrl + Shift + Enter 自动结束代码，行末自动添加分号<br>Ctrl + Shift + 方向键左&#x2F;右 切换多个字符串的顺序</p>
+<h3 id="Alt-Shift相关"><a href="#Alt-Shift相关" class="headerlink" title="Alt+Shift相关"></a>Alt+Shift相关</h3><p>快捷键 介绍</p>
+<p>Alt+Shift + 鼠标左键 选中多个光标定位并编辑</p>
+<p>Alt+Shift + 7 查询当前对象使用的地方（Usages of xxx in project and libraries）</p>
+<h3 id="Ctrl-Alt-Shift相关"><a href="#Ctrl-Alt-Shift相关" class="headerlink" title="Ctrl+Alt+Shift相关"></a>Ctrl+Alt+Shift相关</h3><p>快捷键 介绍</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>快捷键 介绍<br>F2 跳转到下一个高亮错误或警告位置<br>F3 在查找模式下，定位到下一个匹配处<br>F4 编辑源</p>
 <blockquote>
-<p>推荐</p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br>[官方介绍]([<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts</a></p>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/90ed3d890f61">IDEA使用技巧和快捷键</a><br>推荐：<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1f87b0dd597">IDEA好用的插件</a></p>
 </blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/26543/">https://github.com/maxzhao-it/blog/post/26543/</a> </p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/5058/">https://github.com/maxzhao-it/blog/post/5058/</a> </p>
 
       
     </div>
@@ -497,7 +639,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/64934/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/44004/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -515,7 +657,404 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/64934/" class="post-title-link" itemprop="url">MySQL8.0新特性-新的索引方式</a>
+          <a href="/blog/post/44004/" class="post-title-link" itemprop="url">git基本操作整理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-11-02 15:34:08" itemprop="dateModified" datetime="2022-11-02T15:34:08+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>git基本操作整理</p>
+<p>之前用的svn，很少使用命令，如今要使用gitlab，所以整理一下 git 的简单用法。</p>
+<h2 id="基本快照"><a href="#基本快照" class="headerlink" title="基本快照"></a>基本快照</h2><p>Git 的工作就是创建和保存你的项目的快照及与之后的快照进行对比。</p>
+<h3 id="查看git配置信息"><a href="#查看git配置信息" class="headerlink" title="查看git配置信息"></a>查看git配置信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br></pre></td></tr></table></figure>
+
+<h3 id="git-status-查看状态"><a href="#git-status-查看状态" class="headerlink" title="git status 查看状态"></a>git status 查看状态</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git-status - Show the working tree status</span></span><br><span class="line"><span class="comment"># git status --help 帮助</span></span><br><span class="line"><span class="comment"># git status -s 简约查看</span></span><br><span class="line">git status -s</span><br><span class="line">$ A  .gitignore</span><br><span class="line">$ AM  README.md</span><br><span class="line">$ A  pom.xml</span><br><span class="line">$ ??  root.md</span><br><span class="line">$ ?? .attach_pid24604</span><br><span class="line"><span class="comment"># A 是新添加的文件 AM 是添加之后又有改动  M 是commit 之后有修改  ??是未操作的文件  </span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git-add-添加文件进缓存"><a href="#git-add-添加文件进缓存" class="headerlink" title="git add 添加文件进缓存"></a>git add 添加文件进缓存</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git add root.md</span><br><span class="line">git status -s</span><br><span class="line">$ A  .gitignore</span><br><span class="line">$ AM  README.md</span><br><span class="line">$ A  pom.xml</span><br><span class="line">$ A  root.md</span><br><span class="line">$ ?? .attach_pid24604</span><br><span class="line"></span><br><span class="line">git add README.md</span><br><span class="line">$ A  .gitignore</span><br><span class="line">$ A  README.md</span><br><span class="line">$ A  pom.xml</span><br><span class="line">$ A  root.md</span><br><span class="line">$ ?? .attach_pid24604</span><br></pre></td></tr></table></figure>
+
+<h3 id="git-reset-HEAD-取消-git-add-添加的文件"><a href="#git-reset-HEAD-取消-git-add-添加的文件" class="headerlink" title="git reset HEAD 取消 git add 添加的文件"></a>git reset HEAD 取消 git add 添加的文件</h3><h3 id="git-commit-将缓存内容添加到仓库中"><a href="#git-commit-将缓存内容添加到仓库中" class="headerlink" title="git commit 将缓存内容添加到仓库中"></a>git commit 将缓存内容添加到仓库中</h3><p>如果新安装git，需要添加名称和邮箱</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;maxzhao&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;1441439636@qq.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&#x27;first commit&#x27;</span>;</span><br><span class="line">git status -s</span><br><span class="line">$ ?? .attach_pid24604</span><br></pre></td></tr></table></figure>
+
+<p>修改 README.md</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span>  <span class="string">&#x27;xxx&#x27;</span> &gt; README.md</span><br><span class="line">git status -s</span><br><span class="line">$ M README.md</span><br></pre></td></tr></table></figure>
+
+<h4 id="git-commit-a-直接提交缓存"><a href="#git-commit-a-直接提交缓存" class="headerlink" title="git commit -a 直接提交缓存"></a>git commit -a 直接提交缓存</h4><p>上面修改了文件，想直接添加到仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -am <span class="string">&#x27;modify readme.md&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git-rm-删除文件"><a href="#git-rm-删除文件" class="headerlink" title="git rm 删除文件"></a>git rm 删除文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 简单删除，文件就没有了</span></span><br><span class="line">git <span class="built_in">rm</span> &lt;file&gt;</span><br><span class="line"><span class="comment"># 如果把文件从暂存区域移除，文件还在</span></span><br><span class="line">git <span class="built_in">rm</span> --cached &lt;file&gt;</span><br><span class="line"><span class="comment"># 递归删除</span></span><br><span class="line">git <span class="built_in">rm</span> –r *</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看提交历史"><a href="#查看提交历史" class="headerlink" title="查看提交历史"></a>查看提交历史</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span></span><br><span class="line"><span class="comment">## 简约查看</span></span><br><span class="line">git <span class="built_in">log</span> --oneline</span><br><span class="line"><span class="comment">## --graph 选项，查看历史中什么时候出现了分支、合并。</span></span><br><span class="line">git <span class="built_in">log</span> --oneline --graph</span><br><span class="line"><span class="comment">## --reverse 参数来逆向显示所有日志。</span></span><br><span class="line"><span class="comment">## --author 参数来查看指定用户所有日志。</span></span><br><span class="line">git <span class="built_in">log</span> --oneline --author=maxzhao</span><br><span class="line"><span class="comment">## --before=&#123;3.weeks.ago&#125; --after=&#123;2010-04-18&#125; 三周前且在四月十八日之后的所有提交  --no-merges 隐藏合并提交</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看提交记录详情"><a href="#查看提交记录详情" class="headerlink" title="查看提交记录详情"></a>查看提交记录详情</h3><ul>
+<li><p>查看commitId <code>git log --oneline</code></p>
+</li>
+<li><p>查看最新的commit <code>git show</code></p>
+</li>
+<li><p>查看指定commit hashID的所有修改：<code>git show commitId</code></p>
+</li>
+<li><p>查看某次commit中具体某个文件的修改： <code>git show commitId fileName </code></p>
+</li>
+</ul>
+<h2 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h2><h3 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add [shortname] [url]</span><br></pre></td></tr></table></figure>
+
+<h4 id="设置公钥"><a href="#设置公钥" class="headerlink" title="设置公钥"></a>设置公钥</h4><p>添加之前，需要设置公钥：</p>
+<p>需要3次回车，两次是输入密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;1441439636@qq.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看公钥</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>然后根据不同网站的设置公钥的方式，设置好公钥。</p>
+<h4 id="添加仓库"><a href="#添加仓库" class="headerlink" title="添加仓库"></a>添加仓库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@gitee.com:&lt;名称&gt;/&lt;项目名称&gt;.git</span><br><span class="line">git pull origin master --allow-unrelated-histories</span><br><span class="line">git push -u origin master</span><br><span class="line"><span class="comment"># -f 覆盖</span></span><br><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看仓库"><a href="#查看仓库" class="headerlink" title="查看仓库"></a>查看仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote</span><br><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取远程仓库代码"><a href="#获取远程仓库代码" class="headerlink" title="获取远程仓库代码"></a>获取远程仓库代码</h3><p>1、从远程仓库下载新分支与数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br></pre></td></tr></table></figure>
+
+<p>该命令执行完后需要执行git merge 远程分支到你所在的分支。</p>
+<p>2、从远端仓库提取数据并尝试合并到当前分支：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge</span><br></pre></td></tr></table></figure>
+
+<p>该命令就是在执行 git fetch 之后紧接着执行 git merge 远程分支到你所在的任意分支。</p>
+<p>假设你配置好了一个远程仓库，并且你想要提取更新的数据，你可以首先执行 <strong>git fetch [alias]</strong> 告诉 Git 去获取它有你没有的数据，然后你可以执行 <strong>git merge [alias]&#x2F;[branch]</strong><br>以将服务器上的任何更新（假设有人这时候推送到服务器了）合并到你的当前分支。</p>
+<h3 id="推送到远程仓库"><a href="#推送到远程仓库" class="headerlink" title="推送到远程仓库"></a>推送到远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git push [<span class="built_in">alias</span>] [branch]</span><br><span class="line"><span class="comment"># 推送到origin 的 master 分支</span></span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+
+<h4 id="推送之前："><a href="#推送之前：" class="headerlink" title="推送之前："></a>推送之前：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3ceeb5a (HEAD -&gt; master) modify readme.md</span><br><span class="line">e66d82e create readme.md</span><br><span class="line">bc5a5d8 (origin/master) first commit</span><br></pre></td></tr></table></figure>
+
+<h4 id="推送之后："><a href="#推送之后：" class="headerlink" title="推送之后："></a>推送之后：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3ceeb5a (HEAD -&gt; master, origin/master) modify readme.md</span><br><span class="line">e66d82e create readme.md</span><br><span class="line">bc5a5d8 first commit</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除远程仓库"><a href="#删除远程仓库" class="headerlink" title="删除远程仓库"></a>删除远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote <span class="built_in">rm</span> xxx</span><br></pre></td></tr></table></figure>
+
+<h2 id="协作开发"><a href="#协作开发" class="headerlink" title="协作开发"></a>协作开发</h2><ul>
+<li>创建开发分支</li>
+<li>fork项目</li>
+<li>clone 项目(注意要有自己的地址和团队地址,自己的地址用来提交自己的修改,团队地址用来获取更新 <code>git remote add 自己库名 仓库地址</code>)</li>
+<li>使用 <code>git branch</code> 命令查看本地分支</li>
+<li>使用 <code>git branch -a</code> 查看项目所有分支</li>
+<li>创建并 clone 仓库开发分支</li>
+<li><code>git checkout -b dev origin/dev</code> 创建（-b）dev分支，clone 远程dev分支（origin&#x2F;dev）的内容。切换到该分支（checkout）</li>
+<li>切换分支<code> git checkout master</code></li>
+<li>获取最新版本<code>git fetch origin </code></li>
+<li>合并 <code>git merge origin/dev</code></li>
+<li>解决冲突</li>
+</ul>
+<h3 id="强制解决合并冲突"><a href="#强制解决合并冲突" class="headerlink" title="强制解决合并冲突"></a>强制解决合并冲突</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf .git/MERGE*</span><br></pre></td></tr></table></figure>
+
+<h2 id="退出账号"><a href="#退出账号" class="headerlink" title="退出账号"></a>退出账号</h2><p>清除配置中纪录的用户名和密码，下次提交代码时会让重新输入账号密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --system --<span class="built_in">unset</span> credential.helper</span><br></pre></td></tr></table></figure>
+
+
+<p>执行命令之后，再次pull或push时会缓存输入的用户名和密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.helper store</span><br></pre></td></tr></table></figure>
+
+<p>清除git缓存中的用户名的密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git credential-manager uninstall</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>本文地址： <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/630f675d4762">git基本操作整理</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/44004/">https://github.com/maxzhao-it/blog/post/44004/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/58808/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/58808/" class="post-title-link" itemprop="url">Maven安装(Linux)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 18:30:52" itemprop="dateModified" datetime="2022-07-28T18:30:52+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/" itemprop="url" rel="index"><span itemprop="name">DevelopTools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/DevelopTools/Maven/" itemprop="url" rel="index"><span itemprop="name">Maven</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>下载地址:<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">https://maven.apache.org/download.cgi</a></p>
+<p>1.在&#x2F;usr&#x2F;local下面下载maven安装包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://apache.opencas.org/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>2.解压maven安装包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/local/maven</span><br><span class="line">tar -zxvf apache-maven-3.3.9-bin.tar.gz -C /usr/local/maven/</span><br></pre></td></tr></table></figure>
+
+<p>3.配置环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line"></span><br><span class="line">MAVEN_HOME=/usr/local/maven/apache-maven-3.3.9</span><br><span class="line">export MAVEN_HOME</span><br><span class="line">PATH=$MAVEN_HOME/bin:$PATH</span><br><span class="line">export PATH</span><br></pre></td></tr></table></figure>
+
+<p>4.编译环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>5.验证是否成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn -version</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1d1fb7d96d69">Maven安装(Linux)</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/58808/">https://github.com/maxzhao-it/blog/post/58808/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/29880/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/29880/" class="post-title-link" itemprop="url">SpringBoot开启定时任务、异步任务.md</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Task/" itemprop="url" rel="index"><span itemprop="name">Task</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Task/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">定时任务</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/Task/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">异步任务</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h2><ul>
+<li><p>使用注解<code>@EnableScheduling</code> 启动定时任务</p>
+</li>
+<li><p>定义<code>Component</code>让任务被扫描到</p>
+</li>
+<li><p><code>@Scheduled(fixedRate = 5000)</code> ：上一次开始执行时间点之后5秒再执行</p>
+</li>
+<li><p><code>@Scheduled(fixedDelay = 5000)</code> ：上一次执行完毕时间点之后5秒再执行</p>
+</li>
+<li><p><code>@Scheduled(initialDelay=1000, fixedRate=5000)</code> ：第一次延迟1秒后执行，之后按fixedRate的规则每5秒执行一次</p>
+</li>
+<li><p><code>@Scheduled(cron=&quot;*/5 * * * * *&quot;)</code> ：通过 <a target="_blank" rel="noopener" href="http://cron.qqe2.com/">cron</a> 表达式定义规则</p>
+</li>
+</ul>
+<h2 id="异步任务"><a href="#异步任务" class="headerlink" title="异步任务"></a>异步任务</h2><ul>
+<li>使用注解<code>@EnableAsync</code></li>
+<li>定义<code>Component</code>让异步任务被扫描到，<code>@Async</code>定义在方法上，作为异步方法。</li>
+<li>异步任务的调用是同时执行的。</li>
+</ul>
+<h3 id="异步任务使用场景"><a href="#异步任务使用场景" class="headerlink" title="异步任务使用场景"></a>异步任务使用场景</h3><ul>
+<li>发送短信、邮件</li>
+<li>App消息推送</li>
+</ul>
+<h4 id="异步使用实例"><a href="#异步使用实例" class="headerlink" title="异步使用实例"></a>异步使用实例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Async</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dealNoReturnTask</span><span class="params">()</span> &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;返回值为void的异步调用开始&quot;</span> + Thread.currentThread().getName());</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        logger.info(<span class="string">&quot;返回值为void的异步调用结束&quot;</span> + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">// Future&lt;String&gt; 回调函数</span></span><br><span class="line">    <span class="meta">@Async</span></span><br><span class="line">    <span class="keyword">public</span> Future&lt;String&gt; <span class="title function_">dealHaveReturnTask</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;asyncInvokeReturnFuture, parementer=&quot;</span> + i);</span><br><span class="line">        Future&lt;String&gt; future;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000</span> * i);</span><br><span class="line">            future = <span class="keyword">new</span> <span class="title class_">AsyncResult</span>&lt;String&gt;(<span class="string">&quot;success:&quot;</span> + i);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            future = <span class="keyword">new</span> <span class="title class_">AsyncResult</span>&lt;String&gt;(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> future;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="判断是否执行结束"><a href="#判断是否执行结束" class="headerlink" title="判断是否执行结束"></a>判断是否执行结束</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;String&gt; f = Future&lt;String&gt;(<span class="number">1</span>);</span><br><span class="line">f.isDone()</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用多线程和MQ实现异步任务。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>一般来说，实际项目中，为了提高服务的响应能力，我们一般会通过负载均衡的方式，或者反向代理多个节点的方式来进行。 如果我们将定时任务写在我们的项目中，那么在同一个时间点，定时任务会一起执行，也就是会执行多次，这样很可能会导致我们的业务出现错误。</p>
+<p>建议使用逻辑分离的方式来解决这个问题。就是我们将真正要定时任务处理的逻辑，写成rest或者rpc服务， 然后我们可以新建一个单独的定时任务项目，这个项目应该是没有任何的业务代码的，他纯粹只有定时任务功能， 几点启动，或者每隔多少时间启动。启动后，通过rest或者rpc的方式，调用真正处理逻辑的服务。 <a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/07/12/spring/sb-schedule.html">摘自：SpringBoot系列 - 定时任务</a></p>
+<blockquote>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f45bac4131ce">https://www.jianshu.com/p/f45bac4131ce</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/29880/">https://github.com/maxzhao-it/blog/post/29880/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/5476/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/5476/" class="post-title-link" itemprop="url">MySQL8.0新特性-InnoDB增强</a>
         </h2>
 
         <div class="post-meta-container">
@@ -551,41 +1090,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="三种新的索引方式"><a href="#三种新的索引方式" class="headerlink" title="三种新的索引方式"></a>三种新的索引方式</h1><h2 id="1、隐藏索引"><a href="#1、隐藏索引" class="headerlink" title="1、隐藏索引"></a>1、隐藏索引</h2><ul>
-<li>MySQL8.0 支持隐藏索引（invisible index），不可见索引</li>
-<li>隐藏索引不会被优化器使用，但需要维护。</li>
-<li>应用场景：软删除、灰度发布。<ul>
-<li>软删除：不确定当前索引是否需要删除的时候，软删除，不会彻底删除，可以恢复索引，不需要重新创建，但需要维护。</li>
-<li>灰度发布：测试索引，对当前数据库不会参生太多影响，确认有效后，可以取消隐藏，改变为正常索引。</li>
-</ul>
-</li>
-</ul>
-<p>操作：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">create table app_user (</span><br><span class="line">pkid int,</span><br><span class="line">age int</span><br><span class="line">);</span><br><span class="line">-- 正常索引</span><br><span class="line">create index age_idx on app_user(age) ;</span><br><span class="line">-- 隐藏索引 ，主键不可以设置尾隐藏索引</span><br><span class="line">create index id_idx on app_user(pkid) invisible;</span><br><span class="line">-- 有一个参数Visible为NO</span><br><span class="line">show index from app_user;</span><br><span class="line">-- 查询优化器对索引的使用情况</span><br><span class="line">-- 会使用索引</span><br><span class="line">explain select * from app_user where age=18;</span><br><span class="line">-- 不会使用索引</span><br><span class="line">explain select * from app_user where pkid=1;</span><br><span class="line">-- 查询优化器的隐藏索引的开关</span><br><span class="line">select @@optimizer_switch\G</span><br><span class="line">-- 查询优化器使用隐藏索引，在当前会话中</span><br><span class="line">set session optimizer_switch=&quot;use_invisible_indexes=on&quot;;</span><br><span class="line">-- 打开之后可以使用索引</span><br><span class="line">explain select * from app_user where pkid=1;</span><br><span class="line">-- 设置索引可见</span><br><span class="line">alter table app_user index id_idx visiblle;</span><br><span class="line">-- 设置索引隐藏</span><br><span class="line">alter table app_user index id_idx invisiblle;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2、降序索引"><a href="#2、降序索引" class="headerlink" title="2、降序索引"></a>2、降序索引</h2><ul>
-<li><p>MySQL8.0真正支持降序索引（descending index）。</p>
-</li>
-<li><p>只有InnoDB存储引擎支持降序索引，只支持<code>BTREE</code>降序索引。</p>
-</li>
-<li><p>MySQL8.0不再对<code>GROUP BY</code>操作进行隐式排序，也就是说，排序必须要使用<code>ORDER BY</code>。</p>
-</li>
-</ul>
-<p>操作：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">create table app_dept</span><br><span class="line">(</span><br><span class="line">pkid int,</span><br><span class="line">num int,</span><br><span class="line">cou int,</span><br><span class="line">index idx1(num asc,cou desc)</span><br><span class="line">);</span><br><span class="line">-- 在5.7中是没有desc的，只有8.0才会有desc</span><br><span class="line">show cteate table app_dept\G</span><br><span class="line">insert into app_dept values(1,1,300),(2,6,500),(5,1,256),(3,4,400);</span><br><span class="line">-- 查询优化器使用索引的情况，会发现使用当前索引，但不用额外的排序（using filesort）操作</span><br><span class="line">explain select * from app_dept order by num,cou desc;</span><br><span class="line">-- 反顺序查询，只会出现反向索引扫描（backward index scan），不会重新排序</span><br><span class="line">explain select * from app_dept order by num desc,cou ;</span><br><span class="line">-- GROUP BY 没有默认排序</span><br><span class="line">select count(*) ,cou from app_dept group by cou;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="3、函数索引"><a href="#3、函数索引" class="headerlink" title="3、函数索引"></a>3、函数索引</h2><ul>
-<li>MySQL8.0支持在索引中使用函数（表达式）的值。</li>
-<li>支持降序索引，支持JSON数据索引。</li>
-<li>函数索引基于虚拟列功能实现。</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">create table t1(</span><br><span class="line">c1 varchar(100),</span><br><span class="line">c2 varchar(100)</span><br><span class="line">);</span><br><span class="line">create index idx1 on t1(c1);</span><br><span class="line">-- 创建函数索引</span><br><span class="line">create index fun_idx2 on t1(UPPER(c1);</span><br><span class="line">show index from t1\G</span><br><span class="line">-- 当使用函数时候，就不会走当前普通索引</span><br><span class="line">explain select * from t1 where upper(c1)=&#x27;A&#x27;;</span><br><span class="line">-- 走当前函数索引</span><br><span class="line">explain select * from t1 where upper(c2)=&#x27;A&#x27;;</span><br><span class="line">-- 添加一个 计算列,并未该列实现索引，虚拟列实现函数索引，</span><br><span class="line">alter table t1 add column c3 varchar(100) generated always as (upper(c1));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-- 创建JSON数据索引测试，data-&gt;&gt;&#x27;$.name&#x27; as char(30) 意思是取当前name值，类型尾char</span><br><span class="line">create table emp(</span><br><span class="line">data json,</span><br><span class="line"><span class="meta prompt_">index((CAST(data-&gt;</span><span class="language-bash">&gt;<span class="string">&#x27;$.name&#x27;</span> as char(30))))</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">show index from emp\G</span><br><span class="line">-- 当前就会使用JSON索引</span><br><span class="line">explain select * from emp where CAST(data-&gt;&gt;&#x27;$.name&#x27; as char(30))=&#x27;A&#x27;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a></p>
+          <blockquote>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a></p>
 <p>推荐<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br><a href="%5Bhttps://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts%5D(https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">官方介绍</a></p>
 </blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/64934/">https://github.com/maxzhao-it/blog/post/64934/</a> </p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/5476/">https://github.com/maxzhao-it/blog/post/5476/</a> </p>
 
       
     </div>
@@ -612,7 +1121,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/33720/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/53163/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -630,7 +1139,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/33720/" class="post-title-link" itemprop="url">MySQL8.0新特性-窗口函数</a>
+          <a href="/blog/post/53163/" class="post-title-link" itemprop="url">MySQL8.0新特性-JSON增强</a>
         </h2>
 
         <div class="post-meta-container">
@@ -666,441 +1175,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>窗口函数与分组聚合函数类似，但是每行数据都生成一个结果。</p>
-<p>聚合窗口函数： <code>SUM、AVG、COUNT、MAX、MIN</code> ……</p>
-<h1 id=""><a href="#" class="headerlink" title=""></a></h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-- 创建表</span><br><span class="line">create table sales</span><br><span class="line">(</span><br><span class="line">year int,</span><br><span class="line">country varchar(20),</span><br><span class="line">goods varchar(50),</span><br><span class="line">profit int</span><br><span class="line">);</span><br><span class="line">insert into sales values(2018,<span class="string">&#x27;c1&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,314),(2016,<span class="string">&#x27;c1&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,33),</span><br><span class="line">(2017,<span class="string">&#x27;c1&#x27;</span>,<span class="string">&#x27;g2&#x27;</span>,31),</span><br><span class="line">(2016,<span class="string">&#x27;c2&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,331),</span><br><span class="line">(2017,<span class="string">&#x27;c2&#x27;</span>,<span class="string">&#x27;g2&#x27;</span>,343),</span><br><span class="line">(2018,<span class="string">&#x27;c2&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,32),</span><br><span class="line">(2016,<span class="string">&#x27;c3&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,52),</span><br><span class="line">(2017,<span class="string">&#x27;c3&#x27;</span>,<span class="string">&#x27;g2&#x27;</span>,312),</span><br><span class="line">(2018,<span class="string">&#x27;c3&#x27;</span>,<span class="string">&#x27;g1&#x27;</span>,53);</span><br></pre></td></tr></table></figure>
-
-<h3 id="普通函数"><a href="#普通函数" class="headerlink" title="普通函数"></a>普通函数</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">--正常情况下的计算不同国家的总利润：</span><br><span class="line">select country,<span class="built_in">sum</span>(profit) as all_profit</span><br><span class="line">from sales group by country</span><br><span class="line">order by country;</span><br><span class="line">-- 分组聚合函数的写法，不需要手动分组</span><br><span class="line">select year,country,goods,profit,</span><br><span class="line"><span class="built_in">sum</span>(profit) OVER (partition by country) as all_profit</span><br><span class="line">from sales</span><br><span class="line">order by country,year,goods,profit;</span><br></pre></td></tr></table></figure>
-
-<h3 id="专用窗口函数"><a href="#专用窗口函数" class="headerlink" title="专用窗口函数"></a>专用窗口函数</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- 准备数据</span><br><span class="line">create table numbers(val int);</span><br><span class="line">insert into numbers values(1),(2),(3),(3),(3),(3),(4),(5),(5),(6),(6),(7),(8),(8),(9);</span><br></pre></td></tr></table></figure>
-
-<h4 id="序号函数"><a href="#序号函数" class="headerlink" title="序号函数"></a>序号函数</h4><p>显示当前行号</p>
-<ul>
-<li>ROW_NUMBER()：排序</li>
-<li>RANK()</li>
-<li>DENSE_RANK()</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 正常排序</span><br><span class="line">select val,row_number() over (order by val) as <span class="string">&#x27;row_number&#x27;</span> from numbers;</span><br><span class="line">-- 如果val相同，则排序相同，下一个排序号会出现间隙，步长不一定为1</span><br><span class="line">select val,rank() over (order by val) as <span class="string">&#x27;rank&#x27;</span> from numbers;</span><br><span class="line">-- 如果val相同，则排序相同，排序号之间没有间隙，步长为1</span><br><span class="line">select val,dense_rank() over (order by val) as <span class="string">&#x27;dense_rank&#x27;</span> from numbers;</span><br></pre></td></tr></table></figure>
-
-<h4 id="头尾-前后函数"><a href="#头尾-前后函数" class="headerlink" title="头尾\前后函数"></a>头尾\前后函数</h4><ul>
-<li>FIRST_VALUE()</li>
-<li>LAST_VALUE()</li>
-<li>LEAD()</li>
-<li>LAG()</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select val,first_value(val) over (order by val) as <span class="string">&#x27;first&#x27;</span></span><br><span class="line">,last_value(val)  over (order by val) as <span class="string">&#x27;last&#x27;</span></span><br><span class="line">,lead(val,1) over (order by val) as <span class="string">&#x27;lead&#x27;</span></span><br><span class="line">,lag(val,1) over (order by val)  as  <span class="string">&#x27;lag&#x27;</span></span><br><span class="line">from numbers;</span><br></pre></td></tr></table></figure>
-
-<h4 id="分布函数"><a href="#分布函数" class="headerlink" title="分布函数"></a>分布函数</h4><ul>
-<li><p>CUME_DIST()</p>
-<ul>
-<li>用途：分组内小于等于当前rank值的行数&#x2F;分组内总行数，这个函数比percen_rank使用场景更多。</li>
-<li>应用场景：大于等于当前val的记录比例有多少。</li>
-</ul>
-</li>
-<li><p>PERCENT_RANK()</p>
-<ul>
-<li>用法：和之前的RANK()函数相关，每行按照如下公式进行计算： <code>(rank - 1) / (rows - 1)</code> 其中，rank为RANK()函数产生的序号，rows为当前窗口的记录总行数。</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select val,rank() over (order by val) as <span class="string">&#x27;rank&#x27;</span></span><br><span class="line">,percent_rank() over (order by val) as <span class="string">&#x27;percent_rank&#x27;</span></span><br><span class="line">,cume_dist() over (order by val)  as <span class="string">&#x27;cume_dist&#x27;</span></span><br><span class="line">from numbers;</span><br></pre></td></tr></table></figure>
-
-<h4 id="数据区间函数"><a href="#数据区间函数" class="headerlink" title="数据区间函数"></a>数据区间函数</h4><ul>
-<li>NTH_VALUE(expr,n)<ul>
-<li>用途：返回窗口中第N个expr的值，expr可以是表达式，也可以是列名。</li>
-<li>应用场景：每个用户订单中显示本用户金额排名第二和第三的订单金额。</li>
-</ul>
-</li>
-<li>NTILE()<ul>
-<li>用途：将分区中的有序数据分为n个桶，记录桶号。</li>
-<li>应用场景：将每个用户的订单按照订单金额分成3组。</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">select year,profit,nth_value(profit,1)  over w as <span class="string">&#x27;nth_1&#x27;</span></span><br><span class="line">,nth_value(profit,2) over w as <span class="string">&#x27;nth_2&#x27;</span></span><br><span class="line">,nth_value(profit,3) over w as <span class="string">&#x27;nth_3&#x27;</span></span><br><span class="line">from sales</span><br><span class="line">WINDOW w as (partition by year order by profit)</span><br><span class="line">order by year,profit;</span><br><span class="line"></span><br><span class="line">select year,profit,ntile(1)  over w as <span class="string">&#x27;ntile_1&#x27;</span></span><br><span class="line">,ntile(2) over w as <span class="string">&#x27;ntile_2&#x27;</span></span><br><span class="line">,ntile(3) over w as <span class="string">&#x27;ntile_3&#x27;</span></span><br><span class="line">,ntile(5) over w as <span class="string">&#x27;ntile_3&#x27;</span></span><br><span class="line">from sales</span><br><span class="line">WINDOW w as (partition by year order by profit)</span><br><span class="line">order by year,profit;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a></p>
+          <blockquote>
+<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a></p>
 <p>推荐<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br><a href="%5Bhttps://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts%5D(https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">官方介绍</a></p>
 </blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/33720/">https://github.com/maxzhao-it/blog/post/33720/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/41258/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/41258/" class="post-title-link" itemprop="url">MySQL8.0新特性-通用表表达式（CTE）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>通用表表达式与派生表类似。</p>
-<p>CTE可以多次引用，并且可以引用其它CTE，可以递归。</p>
-<p>CTE支持SIUD等语句。</p>
-<h2 id="1、非递归的CTE"><a href="#1、非递归的CTE" class="headerlink" title="1、非递归的CTE"></a>1、非递归的CTE</h2><h3 id="通过一个简单的实例来了解一下："><a href="#通过一个简单的实例来了解一下：" class="headerlink" title="通过一个简单的实例来了解一下："></a>通过一个简单的实例来了解一下：</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select  * from (select 1) as cte1;</span><br><span class="line">-- CTE 形式</span><br><span class="line">with cte1 as (select 1)</span><br><span class="line">select * from cte1;</span><br><span class="line">-- CTE 更复杂的方式</span><br><span class="line">with cte1(<span class="built_in">id</span>) as (select 1)</span><br><span class="line">cte2(<span class="built_in">id</span>) as (select <span class="built_in">id</span>+1 from cte1)</span><br><span class="line">select * from cte1 <span class="built_in">join</span> cte2;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2、递归CTE"><a href="#2、递归CTE" class="headerlink" title="2、递归CTE"></a>2、递归CTE</h2><h3 id="通过一个简单的实例来了解一下：-1"><a href="#通过一个简单的实例来了解一下：-1" class="headerlink" title="通过一个简单的实例来了解一下："></a>通过一个简单的实例来了解一下：</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">with recursive cte(n) as</span><br><span class="line">(</span><br><span class="line">select 1 union all</span><br><span class="line">select n+1 from cte <span class="built_in">where</span> n&lt;5</span><br><span class="line">)</span><br><span class="line">select * from cte;</span><br></pre></td></tr></table></figure>
-
-<p>如图所示：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/9787847-432cbeca6005f091.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<h3 id="实例演示："><a href="#实例演示：" class="headerlink" title="实例演示："></a>实例演示：</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-- 初始化</span><br><span class="line">create table app_user</span><br><span class="line">(</span><br><span class="line"><span class="built_in">id</span> int,</span><br><span class="line">name varchar(10),</span><br><span class="line">parent_id int</span><br><span class="line">);</span><br><span class="line">insert into app_user values(12,<span class="string">&#x27;jack&#x27;</span>,15),(32,<span class="string">&#x27;luc&#x27;</span>,15),(416,<span class="string">&#x27;halun&#x27;</span>,12),(15,<span class="string">&#x27;susan&#x27;</span>,61),(61,<span class="string">&#x27;mack&#x27;</span>,NULL);</span><br><span class="line">select * from app_user order by <span class="built_in">id</span>;</span><br><span class="line">-- 管理关系</span><br><span class="line">with recursive app_user_path(<span class="built_in">id</span>,name,path) as</span><br><span class="line">(</span><br><span class="line">select <span class="built_in">id</span>,name,cast(<span class="built_in">id</span> as char(200)) from app_user</span><br><span class="line">    <span class="built_in">where</span> parent_id is null</span><br><span class="line">    union all</span><br><span class="line">    select u.id,u.name,concat(up.path,<span class="string">&#x27;,&#x27;</span>,u.id)</span><br><span class="line">    from app_user_path as up <span class="built_in">join</span> app_user as u</span><br><span class="line">    on up.id = u.parent_id</span><br><span class="line">)</span><br><span class="line">select * from app_user_path order by path;</span><br></pre></td></tr></table></figure>
-
-<h3 id="限制参数"><a href="#限制参数" class="headerlink" title="限制参数"></a>限制参数</h3><ul>
-<li><code>cte_max_recursion_depth</code> 递归深度</li>
-<li><code>max_execution_time</code> 最大执行时间</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-- 一个死循环的sql</span><br><span class="line">with recursive cte(n) as</span><br><span class="line">(</span><br><span class="line">select 1 union all</span><br><span class="line">select n+1 from cte</span><br><span class="line">)</span><br><span class="line">select * from cte;</span><br><span class="line">-- ERROR 3636 (HY000): Recursive query aborted after 1001 iterations. Try increasing @@cte_max_recursion_depth to a larger value.</span><br><span class="line">-- 系统默认限制为1000次</span><br><span class="line">show variables like <span class="string">&#x27;cte_max%&#x27;</span>;</span><br><span class="line">-- 设置会话级别的参数</span><br><span class="line"><span class="built_in">set</span> session cte_max_recursion_depth=100;</span><br><span class="line">-- 当前会生效，重启后失效</span><br><span class="line"><span class="built_in">set</span> global cte_max_recursion_depth=100;</span><br><span class="line">-- 8.0之后，会把环境变量持久话，重启后不会失效</span><br><span class="line">-- MySQL8.0的持久化操作实现很简单，会把当前持久化的边境变量写入/var/lib/mysql/mysqld-auto.cnf中。</span><br><span class="line"><span class="built_in">set</span> persist cte_max_recursion_depth=100;</span><br></pre></td></tr></table></figure>
-
-<h2 id="简单的测试：实现斐波那契"><a href="#简单的测试：实现斐波那契" class="headerlink" title="简单的测试：实现斐波那契"></a>简单的测试：实现斐波那契</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">with recursive cte(n,m) as</span><br><span class="line">(</span><br><span class="line">select 1,1 union all</span><br><span class="line">select n+m,n from cte</span><br><span class="line">    <span class="built_in">where</span> m&lt;20</span><br><span class="line">)</span><br><span class="line">select m from cte;</span><br></pre></td></tr></table></figure>
-
-<p>是不是感觉很简单，我第一次写这个的时候用了1分钟，大家呢？</p>
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a></p>
-<p>推荐<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br><a href="%5Bhttps://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts%5D(https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">官方介绍</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/41258/">https://github.com/maxzhao-it/blog/post/41258/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/14082/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/14082/" class="post-title-link" itemprop="url">MySQL8.0创建用户及其配置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="基本配置文件-my-cnf"><a href="#基本配置文件-my-cnf" class="headerlink" title="基本配置文件 my.cnf"></a>基本配置文件 <code>my.cnf</code></h1><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mysqld]</span></span><br><span class="line"><span class="attr">basedir</span>=<span class="string">D:\mysql</span></span><br><span class="line"><span class="attr">datadir</span>=<span class="string">D:\mysql\data</span></span><br><span class="line"><span class="attr">port</span>=<span class="string">3336</span></span><br><span class="line"><span class="attr">character-set-server</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="comment"># 下面这个选项是可以选择的</span></span><br><span class="line"><span class="comment">#default_authentication_plugin=mysql_native_password</span></span><br><span class="line"><span class="comment">#排序规则</span></span><br><span class="line"><span class="attr">collation-server</span>=<span class="string">utf8mb4_0900_ai_ci</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  排序规则：ai 口音不敏感  ci 不区分大小写  ,默认支持表情符号</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  属于 utf8mb4_unicode_ci 中的一种</span></span><br><span class="line"><span class="comment">#utf8mb4_general_ci  没有实现utf8mb4_unicode_ci 的排序规则。没有utf8mb4_unicode_ci 准备。但是比较和排序的时候更快</span></span><br><span class="line"><span class="attr">[mysql]</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8mb4</span></span><br><span class="line"><span class="comment"># 不使用密码进入</span></span><br><span class="line"><span class="comment"># skip-grant-table</span></span><br><span class="line"><span class="attr">[client]</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8mb4</span></span><br></pre></td></tr></table></figure>
-
-<p>数据库初始化：<code>mysqld --initialize</code></p>
-<p><code>libicuuc.so.63</code>最后说;</p>
-<p>数据库初始化后随机密码在日志文件中<code>hostname.err</code>，需要使用该密码登录并修改密码。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alter user <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified by <span class="string">&quot;maxzhao&quot;</span>;</span><br><span class="line">alter user <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified with mysql_native_password by <span class="string">&quot;maxzhao&quot;</span>;</span><br><span class="line">alter user <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified with caching_sha2_password by <span class="string">&quot;maxzhao&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>MySQL8默认的认证插件是<code> caching_sha2_password</code>，很多客户端都不支持，可将默认的认证插件修改为<code>mysql_native_password</code>，在配置文件<code>/etc/my.cnf</code><br>中配置<code>default_authentication_plugin=mysql_native_password</code>。也有一部分linux配置文件在<code>/etc/mysql/my.cnf</code>。</p>
-<h1 id="1、用户创建和授权（分离）"><a href="#1、用户创建和授权（分离）" class="headerlink" title="1、用户创建和授权（分离）"></a>1、用户创建和授权（分离）</h1><h2 id="创建账号、分配权限"><a href="#创建账号、分配权限" class="headerlink" title="创建账号、分配权限"></a>创建账号、分配权限</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">grant all privileges on *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> WITH GRANT OPTION;</span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span> WITH GRANT OPTION;</span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">GRANT RELOAD,PROCESS ON *.* TO <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">Flush privileges;</span><br><span class="line">-- <span class="comment">#显示账号及权限相关信息</span></span><br><span class="line">SHOW GRANTS FOR <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"></span><br><span class="line">SHOW CREATE USER <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"></span><br><span class="line">-- 查看用户</span><br><span class="line">select host,user from mysql.user;</span><br><span class="line"></span><br><span class="line">-- mysql8添加的新的默认用户</span><br><span class="line">-- mysql.infoschema</span><br></pre></td></tr></table></figure>
-
-<h1 id="2、认证插件更新"><a href="#2、认证插件更新" class="headerlink" title="2、认证插件更新"></a>2、认证插件更新</h1><p>MySQL8.0 中默认的身份认证插件是<code>  caching_sha2_password</code>，替代类之前的<code>mysql_native_password</code> 。</p>
-<p>具体配置开篇降讲到了。</p>
-<p>查看：</p>
-<ul>
-<li><code>show variables like ‘default_authentication_plugin;</code></li>
-<li><code>select user,host,plugin from mysql.user;</code></li>
-</ul>
-<p>更新：</p>
-<ul>
-<li>在配置文件中修改（如上）</li>
-<li><code>alter user &#39;maxzhao&#39;@&#39;%&#39; identified with mysql_native_password by &#39;maxzhao&#39;;</code></li>
-</ul>
-<h1 id="3、密码管理"><a href="#3、密码管理" class="headerlink" title="3、密码管理"></a>3、密码管理</h1><p>MySQL8.0允许限制重复使用以前的密码，当用root权限修改密码时，不受权限&#96;&#96;限制。</p>
-<h3 id="配置文件-etc-mysql-my-cnf或者-etc-my-cnf-中的参数（需要重启服务器生效）："><a href="#配置文件-etc-mysql-my-cnf或者-etc-my-cnf-中的参数（需要重启服务器生效）：" class="headerlink" title="配置文件/etc/mysql/my.cnf或者 /etc/my.cnf/中的参数（需要重启服务器生效）："></a>配置文件<code>/etc/mysql/my.cnf</code>或者<code> /etc/my.cnf/</code>中的参数（需要重启服务器生效）：</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不能与以前3次密码重复。</span></span><br><span class="line"><span class="attr">password_history</span>=<span class="string">3   </span></span><br><span class="line"><span class="comment"># 不能与3天内密码重复。</span></span><br><span class="line"><span class="attr">password_reuse_interval</span>=<span class="string">3</span></span><br><span class="line"><span class="comment"># 默认为`off`，在修改密码时，是否需要当前密码。</span></span><br><span class="line"><span class="attr">password_require_current</span>=<span class="string">ON</span></span><br></pre></td></tr></table></figure>
-
-<p>当<code>password_require_current=ON</code>的时候，修改密码的SQL语句为：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter user maxzhao identified by <span class="string">&#x27;maxzhao&#x27;</span> replace <span class="string">&#x27;maxzhao&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="在环境变量中配置："><a href="#在环境变量中配置：" class="headerlink" title="在环境变量中配置："></a>在环境变量中配置：</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 当前会生效，重启后失效</span><br><span class="line"><span class="built_in">set</span> global</span><br><span class="line">-- 8.0之后，会把环境变量持久话，重启后不会失效</span><br><span class="line"><span class="built_in">set</span> persist password_history=4</span><br><span class="line">-- 查看变量</span><br><span class="line">show variables like <span class="string">&#x27;password_history&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>MySQL8.0的持久化操作实现很简单，会把当前持久化的边境变量写入<code>/var/lib/mysql/mysqld-auto.cnf</code>中。</p>
-<h3 id="用户级别的变量"><a href="#用户级别的变量" class="headerlink" title="用户级别的变量"></a>用户级别的变量</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">alter user <span class="string">&#x27;maxzhao&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> password <span class="built_in">history</span> 5;</span><br><span class="line">-- 查看表结构</span><br><span class="line">desc mysql.user;</span><br><span class="line">-- 查看当前用户策略</span><br><span class="line">select user,host,Password_reuse_history from mysql.user;</span><br><span class="line">-- 查看mysql密码历史记录</span><br><span class="line">desc mysql.password_history;</span><br></pre></td></tr></table></figure>
-
-<p>二进制日志</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- log_bin</span><br><span class="line">-- 查看变量</span><br><span class="line">show variables like <span class="string">&#x27;%log_bin%&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4、角色管理（新功能）"><a href="#4、角色管理（新功能）" class="headerlink" title="4、角色管理（新功能）"></a>4、角色管理（新功能）</h1><p>极大的简化了用户授权的管理。</p>
-<h3 id="授权命令"><a href="#授权命令" class="headerlink" title="授权命令"></a>授权命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">-- 创建角色</span><br><span class="line">create role <span class="string">&#x27;role_w&#x27;</span>;</span><br><span class="line">select host,user,authentication_string from mysql.user ;</span><br><span class="line">-- 给角色授权</span><br><span class="line">grant insert,update,delete,select on *.* to <span class="string">&#x27;role_w&#x27;</span>;</span><br><span class="line">-- 创建用户</span><br><span class="line">create user <span class="string">&#x27;maxzhao_1&#x27;</span> identified by <span class="string">&#x27;maxzhao&#x27;</span>;</span><br><span class="line">-- 授角色权限</span><br><span class="line">grant <span class="string">&#x27;role_w&#x27;</span>  to <span class="string">&#x27;maxzhao_1&#x27;</span>;</span><br><span class="line">-- 查看用户权限</span><br><span class="line">show grants from <span class="string">&#x27;maxzhao_1&#x27;</span>;</span><br><span class="line">show grants from <span class="string">&#x27;maxzhao_1&#x27;</span> using <span class="string">&#x27;role_w&#x27;</span>;</span><br><span class="line">-- 用户：查询用户的当前角色，会发现当前尾NONE</span><br><span class="line">select currnt_role();</span><br><span class="line">-- 用户：我们需要设置当前角色</span><br><span class="line"><span class="built_in">set</span> role <span class="string">&#x27;role_w&#x27;</span>;</span><br><span class="line">-- 为用户设置默认角色</span><br><span class="line"><span class="built_in">set</span> default role <span class="string">&#x27;role_w&#x27;</span> to <span class="string">&#x27;maxzhao_1&#x27;</span>;</span><br><span class="line"><span class="built_in">set</span> default tole all to <span class="string">&#x27;maxzhao_1&#x27;</span>;</span><br><span class="line">-- 查看用户角色关联信息</span><br><span class="line">select * from mysql.default_role;</span><br><span class="line">-- 用户所授予的角色信息</span><br><span class="line">select * from mysql.role_edges;</span><br></pre></td></tr></table></figure>
-
-<p>撤销权限命令：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">revoke insert,update on *.* from ‘role_w<span class="string">&#x27;;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="基本操作语句"><a href="#基本操作语句" class="headerlink" title="基本操作语句"></a>基本操作语句</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- 添加字段</span><br><span class="line">alter table app_user add app_role_ids varchar(2000);</span><br><span class="line">-- 修改字段</span><br><span class="line">alter table app_user modify app_role_ids varchar(2000) null comment <span class="string">&#x27;用户角色表&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a></p>
-<p>推荐<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br><a href="%5Bhttps://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts%5D(https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">官方介绍</a></p>
-</blockquote>
-<h1 id="ArchLinux下安装的问题"><a href="#ArchLinux下安装的问题" class="headerlink" title="ArchLinux下安装的问题"></a>ArchLinux下安装的问题</h1><h2 id="libicuuc-so-63问题"><a href="#libicuuc-so-63问题" class="headerlink" title="libicuuc.so.63问题"></a>libicuuc.so.63问题</h2><p>这里在 <code> arch linux</code><br>下有可能会出现 <code>mysqld: error while loading shared libraries: libicuuc.so.63: cannot open shared object file: No such file or directory</code><br>，需要下载 <code>icu63</code>，用软件管理器下载很方便，或者添加 <code>yaourt</code>下载也很方便。</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d586b476c4cd"><em>arch-gnome 编程环境和其它环境安装</em></a></p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.icu-project.org/files/icu4c/63.1/icu4c-63_1-src.tgz</span><br><span class="line">tar -zxvf icu4c-63_1-src.tgz</span><br><span class="line"><span class="built_in">cd</span> icu/source</span><br><span class="line">./configure --prefix=/usr          </span><br><span class="line">make</span><br><span class="line"><span class="comment"># make 需要 sudo pacman -S make</span></span><br><span class="line"><span class="built_in">cd</span> lib</span><br><span class="line"><span class="built_in">cp</span> libicuuc.so.63*  /usr/lib</span><br><span class="line"><span class="built_in">cp</span> libicui18n.so.63* /usr/lib</span><br><span class="line"><span class="built_in">cp</span> libicudata.so.63* /usr/lib</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="文件报错问题"><a href="#文件报错问题" class="headerlink" title="文件报错问题"></a>文件报错问题</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/lib/mysql/</span><br><span class="line"><span class="built_in">rm</span> *</span><br><span class="line">mysqld --initialize-insecure</span><br></pre></td></tr></table></figure>
-
-<h2 id="启动报错"><a href="#启动报错" class="headerlink" title="启动报错"></a><strong>启动报错</strong></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># [InnoDB] The innodb_system data file &#x27;ibdata1&#x27; must be writable</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">chown</span> -R mysql:mysql  /usr/lib/mysql</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/14082/">https://github.com/maxzhao-it/blog/post/14082/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/24766/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/24766/" class="post-title-link" itemprop="url">解压安装MySQL5.7（Linux）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/" itemprop="url" rel="index"><span itemprop="name">DB</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>1.安装mysql之前需要确保系统中有libaio依赖，使用如下命令：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa |grep libaio</span><br><span class="line">yum install libaio -y </span><br></pre></td></tr></table></figure>
-
-<p>2.进入centos终端操作界面，使用wget命令下载mysql5.7 64位安装文件，或者手动下载：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -c https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-5.7.18-linux-glibc2.5-x86_64.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>3.将mysql安装包解压到指定目录，命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf mysql-5.7.18-linux-glibc2.5-x86_64.tar.gz -C /var/soft</span><br></pre></td></tr></table></figure>
-
-<p>4.进入&#x2F;var&#x2F;soft目录：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/soft</span><br></pre></td></tr></table></figure>
-
-<p>5.为mysql安装目录创建软链接:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s mysql-5.7.18-linux-glibc2.5-x86_64 mysql</span><br></pre></td></tr></table></figure>
-
-<p>6.进入安装mysql软件的目录，命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/soft/mysql</span><br></pre></td></tr></table></figure>
-
-<p>7.安装mysql，命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mysqld --user=mysql --basedir=/var/soft/mysql --datadir=/var/soft/mysql/data --initialize</span><br></pre></td></tr></table></figure>
-
-<p>安装完成，将随机生成的登录密码记录下来：</p>
-<p>7.创建快捷指令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /var/soft/mysql /usr/bin/mysql</span><br></pre></td></tr></table></figure>
-
-<p>8.开启mysql服务，命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./support-files/mysql.server start</span><br></pre></td></tr></table></figure>
-
-<p>这里会失败，因为为不是安装在默认目录&#x2F;usr&#x2F;local&#x2F;mysql下，这里修改配置文件,在basedir加入上面安装时的目录：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /var/soft/mysql/support-files/mysql.server</span><br><span class="line"></span><br><span class="line">basedir=/var/soft/mysql</span><br><span class="line">datadir=/var/soft/mysql/data</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>9.将mysql进程放入系统进程中，命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> support-files/mysql.server /etc/init.d/mysqld</span><br></pre></td></tr></table></figure>
-
-<p>10.重新启动mysql服务，命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysqld restart</span><br></pre></td></tr></table></figure>
-
-<p>11.使用随机密码登录mysql数据库，命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<p>等待系统提示，输入随机密码，即可登录。</p>
-<p>12.进入mysql操作行，为root用户设置新密码（小编设为rootroot）：<br><code>alter user &#39;root&#39;@&#39;localhost&#39; identified by &#39;maxzhao&#39;;</code><br>13.设置允许远程连接数据库，命令如下：<br><code>connect mysql;</code><br><code>update user set user.Host=&#39;%&#39; where user.User=&#39;root&#39;;</code><br>14.刷新权限，命令如下：<br><code>flush privileges;</code><br><code>exit;</code></p>
-<h3 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">basedir=D:\mysql</span><br><span class="line">datadir=D:\mysql\data</span><br><span class="line">port=3336</span><br><span class="line">character-set-server=utf8mb4</span><br><span class="line"><span class="comment">#排序规则</span></span><br><span class="line">collation-server=utf8mb4_0900_ai_ci</span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  排序规则：ai 口音不敏感  ci 不区分大小写  ,默认支持表情符号</span></span><br><span class="line"><span class="comment">#utf8mb4_0900_ai_ci  属于 utf8mb4_unicode_ci 中的一种</span></span><br><span class="line"><span class="comment">#utf8mb4_general_ci  没有实现utf8mb4_unicode_ci 的排序规则。没有utf8mb4_unicode_ci 准备。但是比较和排序的时候更快</span></span><br><span class="line"><span class="comment"># 下面这个选项是可以选择的</span></span><br><span class="line"><span class="comment">#default_authentication_plugin=mysql_native_password</span></span><br><span class="line"></span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8mb4</span><br><span class="line"><span class="comment"># 不使用密码进入</span></span><br><span class="line"><span class="comment"># skip-grant-table</span></span><br><span class="line"></span><br><span class="line">[client]</span><br><span class="line">default-character-set=utf8mb4</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>本文地址： <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b55d71ae4926">解压安装MySQL5.7（Linux）</a></p>
-<p>推荐</p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br>[官方介绍]([<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/24766/">https://github.com/maxzhao-it/blog/post/24766/</a> </p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/53163/">https://github.com/maxzhao-it/blog/post/53163/</a> </p>
 
       
     </div>
@@ -1439,7 +1518,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/49206/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/9223/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
@@ -1457,7 +1536,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/49206/" class="post-title-link" itemprop="url">MySQL8.0备份和还原</a>
+          <a href="/blog/post/9223/" class="post-title-link" itemprop="url">PostgreSql安装(Centos7)</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1467,7 +1546,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-09-14 21:00:16" itemprop="dateModified" datetime="2022-09-14T21:00:16+08:00">2022-09-14</time>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1479,7 +1558,7 @@
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/DB/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+          <a href="/blog/categories/DB/PostgreSql/" itemprop="url" rel="index"><span itemprop="name">PostgreSql</span></a>
         </span>
     </span>
 
@@ -1493,110 +1572,85 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>大家的需求都很清楚了，那么我们直接来看如何备份和还原。</p>
-<p>下面的命令基于 <code>Manjaro Linux</code>，在 <code>Windows</code> 下添加命令的 <code>.exe</code>后缀。</p>
-<h3 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h3><p>查看备份命令参数 :  <code>mysqldump --help</code></p>
-<p>下面的备份的脚本中会带有 <code>drop </code> <code>create</code> <code>insert</code></p>
-<h4 id="单库备份"><a href="#单库备份" class="headerlink" title="单库备份"></a>单库备份</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -h127.0.0.1 -uroot -p  [OPTIONS] [数据库名称] &gt;/var/xxx地址.sql</span><br></pre></td></tr></table></figure>
+          <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>我用的 <code>Manjaro</code> ，安装特别简单<code>pacman -S postgresql</code>就好了。</p>
+<p><code>pgAdmin</code>安装也是一条命令<code>pacman -S pgadmin4</code>。</p>
+<p>也可以查看一下版本<code>pacman -Ss |grep pgadmin</code>。</p>
+<h2 id="下面是-Centos7-安装"><a href="#下面是-Centos7-安装" class="headerlink" title="下面是 Centos7 安装"></a>下面是 Centos7 安装</h2><h5 id="postgres有些人估计都没有听说过，没关系，可以百度自己了解一下，这里说一下Centos7-6-1810版本的安装（目前的最新版）"><a href="#postgres有些人估计都没有听说过，没关系，可以百度自己了解一下，这里说一下Centos7-6-1810版本的安装（目前的最新版）" class="headerlink" title="postgres有些人估计都没有听说过，没关系，可以百度自己了解一下，这里说一下Centos7.6_1810版本的安装（目前的最新版）"></a>postgres有些人估计都没有听说过，没关系，可以百度自己了解一下，这里说一下Centos7.6_1810版本的安装（目前的最新版）</h5><h4 id="查询有没有安装"><a href="#查询有没有安装" class="headerlink" title="查询有没有安装"></a>查询有没有安装</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep postgre</span><br></pre></td></tr></table></figure>
 
-<h4 id="单库中单-多表备份"><a href="#单库中单-多表备份" class="headerlink" title="单库中单\多表备份"></a>单库中单\多表备份</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -h127.0.0.1 -uroot -p  [OPTIONS] [数据库名称]  [tables] &gt;/var/xxx地址.sql</span><br></pre></td></tr></table></figure>
+<h4 id="查询postgre的yum源"><a href="#查询postgre的yum源" class="headerlink" title="查询postgre的yum源"></a>查询postgre的yum源</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list |grep postgre</span><br></pre></td></tr></table></figure>
 
-<h4 id="多库备份"><a href="#多库备份" class="headerlink" title="多库备份"></a>多库备份</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -h127.0.0.1 -uroot -p  [OPTIONS] --databases [OPTIONS] DB1 [DB2 DB3...] &gt;/var/xxx地址.sql</span><br></pre></td></tr></table></figure>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.postgresql.org/download/linux/redhat/">https://www.postgresql.org/download/linux/redhat/</a></p>
+<p>下载地址也有安装方式</p>
+<h2 id="一、yum安装"><a href="#一、yum安装" class="headerlink" title="一、yum安装"></a>一、yum安装</h2><p>点开下载网址，安装姿势有了。直接看（三、通用操作）</p>
+<p>yum安装已经在&#x2F;usr&#x2F;bin中添加了链接，可以执行postgre的命令。</p>
+<p>安装之后的路径是：&#x2F;var&#x2F;lib&#x2F;pgsql&#x2F;10&#x2F;data&#x2F;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install the repository RPM:</span></span><br><span class="line">sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install PostgreSQL:</span></span><br><span class="line">sudo yum install -y postgresql10-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># Optionally initialize the database and enable automatic start:</span></span><br><span class="line">sudo /usr/pgsql-10/bin/postgresql-10-setup initdb</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> postgresql-10</span><br><span class="line">sudo systemctl start postgresql-10</span><br></pre></td></tr></table></figure>
 
-<h4 id="全库备份"><a href="#全库备份" class="headerlink" title="全库备份"></a>全库备份</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -h127.0.0.1 -uroot -p  [OPTIONS] --all-databases [OPTIONS] &gt;/var/xxx地址.sql</span><br></pre></td></tr></table></figure>
+<h3 id="查看安装的配置路径"><a href="#查看安装的配置路径" class="headerlink" title="查看安装的配置路径"></a>查看安装的配置路径</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su postgres</span><br><span class="line">psql -U postgres -c <span class="string">&#x27;SHOW config_file&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h4><p>查看备份命令参数 :  <code>mysqldump --help</code></p>
-<p>下面列出常用参数</p>
-<table>
-<thead>
-<tr>
-<th>全称</th>
-<th>简写</th>
-<th>含义</th>
-<th>默认</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>–all-tablespaces</td>
-<td>-Y</td>
-<td>备份表空间</td>
-<td>FALSE</td>
-</tr>
-<tr>
-<td>–no-tablespaces</td>
-<td>-y</td>
-<td>不备份</td>
-<td>FALSE</td>
-</tr>
-<tr>
-<td>–add-database</td>
-<td>-A</td>
-<td>全库备份</td>
-<td>FALSE</td>
-</tr>
-<tr>
-<td>–add-drop-databas</td>
-<td></td>
-<td>在建库之前drop</td>
-<td>FALSE</td>
-</tr>
-<tr>
-<td>–add-drop-trigger</td>
-<td></td>
-<td>在建触发器之前drop</td>
-<td>FALSE</td>
-</tr>
-<tr>
-<td>–add-drop-table</td>
-<td></td>
-<td>在建表之前drop</td>
-<td>TRUE</td>
-</tr>
-<tr>
-<td>–no-create-info</td>
-<td>-t</td>
-<td>无create table语句</td>
-<td>FALSE</td>
-</tr>
-<tr>
-<td>–no-data</td>
-<td>-d</td>
-<td>无数据</td>
-<td>FALSE</td>
-</tr>
-<tr>
-<td>no-create-db</td>
-<td>-n</td>
-<td>无建库语句</td>
-<td>FALSE</td>
-</tr>
-</tbody></table>
-<p>正常的全库备份</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -h127.0.0.1 -umaxzhao -p -B db_name &gt;backup/mysql_db_name.sql</span><br></pre></td></tr></table></figure>
+<h2 id="二、解压安装"><a href="#二、解压安装" class="headerlink" title="二、解压安装"></a>二、解压安装</h2><h5 id="1-下载源代码并解压"><a href="#1-下载源代码并解压" class="headerlink" title="1 下载源代码并解压"></a>1 下载源代码并解压</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://ftp.postgresql.org/pub/source/v11.0/postgresql-11.0.tar.gz</span><br><span class="line"> tar -xvzf postgresql-11.0.tar.gz  #解压pg包，并到安装目录</span><br><span class="line">./configure</span><br><span class="line"> sudo make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 
-<h3 id="设置编码"><a href="#设置编码" class="headerlink" title="设置编码"></a>设置编码</h3><p>查看编码</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 找到character_set_database</span></span><br><span class="line"><span class="keyword">show</span></span><br><span class="line">variables <span class="keyword">like</span> <span class="string">&#x27;%char%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>如果编译过程中遇到问题，比如缺少GCC、readline、zlib等，安装方式都是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum list |grep xxx</span><br><span class="line">yum install -y xxxx</span><br><span class="line">yum install -y xxxx-dev*</span><br></pre></td></tr></table></figure>
 
-<p>设置编码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump --default-character-set=utf8mb4</span><br></pre></td></tr></table></figure>
+<h5 id="2-创建用户组和用户"><a href="#2-创建用户组和用户" class="headerlink" title="2 创建用户组和用户"></a>2 创建用户组和用户</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">groupadd postgres    #新增用户组</span><br><span class="line">useradd -g postgres postgres    #新增用户</span><br><span class="line"> passwd postgres    #为用户设置密码</span><br></pre></td></tr></table></figure>
 
-<h3 id="PowerShell导出报错"><a href="#PowerShell导出报错" class="headerlink" title="PowerShell导出报错"></a><code>PowerShell</code>导出报错</h3><p>可以直接指定文件，不适用 <code>shell</code> 的 <code> &gt;</code> 输出。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--result-file=1.sql</span><br></pre></td></tr></table></figure>
+<h5 id="3-创建数据目录"><a href="#3-创建数据目录" class="headerlink" title="3 创建数据目录"></a>3 创建数据目录</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> mkdir /usr/local/pgsql/data</span><br><span class="line">chown postgres /usr/local/pgsql/data    #设置data文件加属性</span><br><span class="line">chmod 700 /usr/local/pgsql/data    #设置data文件夹权限</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p><code>PowerShell</code> 重定向导出的结果是 <code>utf-16</code></p>
-</blockquote>
-<h3 id="数据还原"><a href="#数据还原" class="headerlink" title="数据还原"></a>数据还原</h3><h4 id="在命令行执行"><a href="#在命令行执行" class="headerlink" title="在命令行执行"></a>在命令行执行</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h127.0.0.1 -uroot -p   &lt; /var/备份文件.sql</span><br></pre></td></tr></table></figure>
+<h5 id="4-数据库操作"><a href="#4-数据库操作" class="headerlink" title="4 数据库操作"></a>4 数据库操作</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">su postgres</span><br><span class="line">/usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data    #初始化数据库</span><br><span class="line">cd /usr/local/pgsql/bin/  &amp; ./pg_ctl [start | stop | restart] -D /usr/local/pgsql/data/   #启动\停止\重启数据库</span><br><span class="line">/usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;  #设置日志输出位置</span><br><span class="line">/usr/local/pgsql/bin/createdb test    #创建测试数据库</span><br><span class="line">5. /usr/local/pgsql/bin/psql test    #启动测试数据库</span><br></pre></td></tr></table></figure>
 
-<h4 id="在-SQL-指令中执行"><a href="#在-SQL-指令中执行" class="headerlink" title="在 SQL 指令中执行"></a>在 SQL 指令中执行</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span>   /var/备份文件.sql</span><br></pre></td></tr></table></figure>
+<h2 id="三、通用操作"><a href="#三、通用操作" class="headerlink" title="三、通用操作"></a>三、通用操作</h2><h5 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h5><p>yum安装postgresql，默认会建一个名为”postgres”的系统账号，用于执行PostgreSQL；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - postgres</span><br></pre></td></tr></table></figure>
 
-<h3 id="错误解决"><a href="#错误解决" class="headerlink" title="错误解决"></a>错误解决</h3><h4 id="ERROR-at-line-Unknown-command-39-39-39"><a href="#ERROR-at-line-Unknown-command-39-39-39" class="headerlink" title="ERROR at line : Unknown command &#39;\&#39;&#39;."></a><code>ERROR at line : Unknown command &#39;\&#39;&#39;.</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h127.0.0.1 -uroot -p --default-character-set=utf8 &lt; /var/备份文件.sql</span><br></pre></td></tr></table></figure>
+<p>切换用户后，提示符变更为“-bash-4.2$”; #同时数据库中也会生成一个名为”postgres”的数据库用户，且密码已自动生成;</p>
+<p>PostgreSQL在数据库用户同名的系统账号下登录免密；进入数据库后修改密码；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> -bash-4.2$  psql -U postgres</span><br><span class="line">postgres=#  alter user postgres with password &#x27;maxzhao&#x27;</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>推荐</p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/523802f07f28">MySQL8.0创建用户及其配置</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b64fcc6f3c21">MySQL8.0新特性-新的索引方式</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/937ec3f0136b">MySQL8.0新特性-通用表表达式（CTE）</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/99fb337cdbc1">MySQL8.0新特性-窗口函数</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/582766140f17">MySQL8.0新特性-InnoDB增强</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50524b1b0050">MySQL8.0新特性-JSON增强</a><br>[官方介绍]([<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts">https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-functional-key-parts</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/49206/">https://github.com/maxzhao-it/blog/post/49206/</a> </p>
+<h5 id="配置文件中，添加访问（-usr-local-pgsql-data-postgresql-conf）"><a href="#配置文件中，添加访问（-usr-local-pgsql-data-postgresql-conf）" class="headerlink" title="配置文件中，添加访问（/usr/local/pgsql/data/postgresql.conf）"></a>配置文件中，添加访问（<code>/usr/local/pgsql/data/postgresql.conf</code>）</h5><p>修改listen_addresses &#x3D; ‘localhost’为listen_addresses &#x3D; ‘*’，允许所有远程访问；</p>
+<p>修改配置文件需要重启服务。</p>
+<p>手动修改的时候，可能配置文件会有点长，在命令行模式下输入&#x2F;listen_addresses 回车，就可以找到了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i &quot;s|#listen_addresses = &#x27;localhost&#x27;|listen_addresses = &#x27;*&#x27;|g&quot; /var/lib/pgsql/10/data/postgre</span><br></pre></td></tr></table></figure>
+
+<h5 id="修改data-x2F-pg-hba-conf"><a href="#修改data-x2F-pg-hba-conf" class="headerlink" title="修改data&#x2F;pg_hba.conf"></a>修改data&#x2F;pg_hba.conf</h5><p>trust的意思是用账户密码登录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># &quot;local&quot; is for Unix domain socket connections only</span><br><span class="line">local   all             all                                  trust</span><br><span class="line"># IPv4 local connections:</span><br><span class="line">host    all             all             0.0.0.0/0            md5</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、防火墙操作"><a href="#四、防火墙操作" class="headerlink" title="四、防火墙操作"></a>四、防火墙操作</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. 查看防火墙是否关闭：firewall-cmd --state</span><br><span class="line">2. 启动服务：systemctl start firewalld.service</span><br><span class="line">3. 关闭服务：systemctl stop firewalld.service</span><br><span class="line">4. 重启服务：systemctl restart firewalld.service</span><br><span class="line">5. 显示服务的状态：systemctl status firewalld.service</span><br><span class="line">6. 在开机时启用服务：systemctl enable firewalld.service</span><br><span class="line">7. 在开机时禁用服务：systemctl disable firewalld.service</span><br><span class="line">8. 查看服务是否开机启动：systemctl is-enabled firewalld.service;echo $?</span><br><span class="line">9. 查看已启动的服务列表：systemctl list-unit-files|grep enabled</span><br><span class="line">10. 添加开发端口：firewall-cmd --zone=public --add-port=5432/tcp --permanent</span><br><span class="line">11. 重新加载防火墙：firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ee4ee15d3658">https://www.jianshu.com/p/ee4ee15d3658</a></p>
+<h2 id="五、安装pgdmin4-web客户端"><a href="#五、安装pgdmin4-web客户端" class="headerlink" title="五、安装pgdmin4 web客户端"></a>五、安装pgdmin4 web客户端</h2><p>（我刚开始装的时候找个资料真的难）</p>
+<p>打开下载链接：<a target="_blank" rel="noopener" href="https://www.postgresql.org/ftp/%E6%88%96%E8%80%85https://www.pgadmin.org/download/pgadmin-4-rpm/">https://www.postgresql.org/ftp/或者https://www.pgadmin.org/download/pgadmin-4-rpm/</a></p>
+<p>建议直接选择rpm安装，简单省事。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list |grep pgadmin4</span><br></pre></td></tr></table></figure>
+
+<p>因为我用过web，也不知道安装哪一个，干脆装个web（然后就装了好大一堆东西，一大堆pgadmini4的python依赖）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y  pgadmin4-web.noarch</span><br></pre></td></tr></table></figure>
+
+<p>安装之后的路径在：&#x2F;usr&#x2F;lib&#x2F;python2.7&#x2F;site-packages&#x2F;pgadmin4-web&#x2F;</p>
+<p>打开pgadmin4</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/lib/python2.7/site-packages/pgadmin4-web/</span><br><span class="line">python pgAdmin4.py</span><br></pre></td></tr></table></figure>
+
+<p>初次配置pgadmin4:设置邮箱&#x2F;密码(登录用)<br>访问pgadmin4:<a target="_blank" rel="noopener" href="http://localhost:5050/">http://localhost:5050</a></p>
+<h5 id="启动很麻烦？写个脚本就好了"><a href="#启动很麻烦？写个脚本就好了" class="headerlink" title="启动很麻烦？写个脚本就好了"></a>启动很麻烦？写个脚本就好了</h5><p>（脚本能用！想关闭的话，ps -ef |grep pgadmin4 kill -9 +上面列出的第一个数字）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/lib/python2.7/site-packages/pgadmin4-web/</span><br><span class="line">vim pgadmin4.sh</span><br><span class="line">#添加如下内容</span><br><span class="line">#执行 i</span><br><span class="line">#!/bin/bash</span><br><span class="line">nohup  python /usr/lib/python2.7/site-packages/pgadmin4-web/pgAdmin4.py &amp;</span><br><span class="line">#执行esc  </span><br><span class="line">#执行：wq!</span><br><span class="line">chmod 777 pgadmin4.sh</span><br><span class="line">ln -s   /usr/lib/python2.7/site-packages/pgadmin4-web/pgadmin4.sh /usr/local/bin/pgadmin4</span><br><span class="line">#执行pgadmin4 就会启动web客户端</span><br></pre></td></tr></table></figure>
+
+<h2 id="命令行登录"><a href="#命令行登录" class="headerlink" title="命令行登录"></a>命令行登录</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ psql -U dbuser -d exampledb</span><br></pre></td></tr></table></figure>
+
+<p>登录后的权限操作参考<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010166404/article/details/53188882">https://blog.csdn.net/u010166404/article/details/53188882</a><br>其实很多初学者也不一定看的懂。。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-- 连接命令（最后加上&lt;filepath  就是还原命令，最后说）</span><br><span class="line">-- 用户U大写</span><br><span class="line">psql -h 127.0.0.1 -p 5432  -U user_name -d db_name</span><br><span class="line">-- 创建用户的示例</span><br><span class="line">CREATE USER userName WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT REPLICATION CONNECTION LIMIT -1 password &#x27;pwd&#x27;;</span><br><span class="line">-- 创建超级用户</span><br><span class="line">CREATE USER userName WITH SUPERMAN password &#x27;pwd&#x27;;</span><br><span class="line">-- 创建模式,并分配给userName用户</span><br><span class="line">CREATE SCHEMA schemaName authorization userName;</span><br><span class="line">-- 更改权限</span><br><span class="line">ALTER ROLE name SET enable_indexscan TO off;</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用的控制台命令"><a href="#常用的控制台命令" class="headerlink" title="常用的控制台命令"></a>常用的控制台命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">\password           设置密码</span><br><span class="line">\q                  退出</span><br><span class="line">\h                  查看SQL命令的解释，比如\h select</span><br><span class="line">\?                  查看psql命令列表</span><br><span class="line">\l                  列出所有数据库</span><br><span class="line">\c [database_name]  连接其他数据库</span><br><span class="line">\d                  列出当前数据库的所有表格</span><br><span class="line">\d [table_name]     列出某一张表格的结构</span><br><span class="line">\x                  对数据做展开操作</span><br><span class="line">\du                 列出所有用户</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用的SQL语句"><a href="#常用的SQL语句" class="headerlink" title="常用的SQL语句"></a>常用的SQL语句</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># 创建新表</span><br><span class="line">CREATE TABLE table_name(name VARCHAR(20), birth DATE);</span><br><span class="line"># 插入数据</span><br><span class="line">INSERT INTO table_name(name, birth) VALUES(&#x27;欧文&#x27;, &#x27;1994-08-23&#x27;);</span><br><span class="line"># 查询记录</span><br><span class="line">SELECT * FROM table_name;</span><br><span class="line"># 更新数据</span><br><span class="line">UPDATE table_name set name = &#x27;勒夫&#x27; WHERE name = &#x27;欧文&#x27;;</span><br><span class="line"># 删除记录</span><br><span class="line">DELETE FROM table_name WHERE name = &#x27;欧文&#x27; ;</span><br><span class="line"># 添加字段</span><br><span class="line">ALTER TABLE table_name ADD email VARCHAR(40);</span><br><span class="line"># 更改字段类型</span><br><span class="line">ALTER TABLE table_name ALTER COLUMN birth SET NOT NULL;</span><br><span class="line"># 设置字段默认值（注意字符串使用单引号）</span><br><span class="line">ALTER TABLE table_name ALTER COLUMN email SET DEFAULT &#x27;example@example.com&#x27;;</span><br><span class="line"># 去除字段默认值</span><br><span class="line">ALTER TABLE table_name ALTER email DROP DEFAULT;</span><br><span class="line"># 重命名字段</span><br><span class="line">ALTER TABLE table_name RENAME COLUMN birth TO birthday;</span><br><span class="line"># 删除字段</span><br><span class="line">ALTER TABLE table_name DROP COLUMN email;</span><br><span class="line"># 表重命名</span><br><span class="line">ALTER TABLE table_name RENAME TO backup_table;</span><br><span class="line"># 删除表</span><br><span class="line">DROP TABLE IF EXISTS backup_table;</span><br><span class="line"># 删除库</span><br><span class="line">\c postgres;</span><br><span class="line">DROP DATABASE IF EXISTS hello;</span><br></pre></td></tr></table></figure>
+
+<h2 id="备份和恢复"><a href="#备份和恢复" class="headerlink" title="备份和恢复"></a>备份和恢复</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pg_dump --format=t -d db_name -U user_name -h 127.0.0.1 -O -W  &gt; dump.sql</span><br><span class="line">$ psql -h 127.0.0.1 -U user_name -d db_name &lt; dump.sql</span><br></pre></td></tr></table></figure>
+
+<h2 id="分布式事物"><a href="#分布式事物" class="headerlink" title="分布式事物"></a>分布式事物</h2><p>XA是open group提出的分布式事务处理规范，JTA支持XA规范，JTA只规定了接口，有些应用容器提供实现，也有一些三方的开源实现可用，比如Atomikos。</p>
+<p>如果PostgreSQL参与分布式事务(XA)处理，则需要在配置文件postgres.conf中设置参数，此参数用于指定分布式事务中两步提交准备事务的最大数量。默认值为0，此时不支持分布式事务。</p>
+<p>max_prepared_transactions参数值不应该小于max_connections参数值，这样每一个session都可以至少有一个可用的准备事务。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">max_connections = 100</span><br><span class="line">max_prepared_transactions = 100</span><br></pre></td></tr></table></figure>
+
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/80b690597541">PostgreSql安装(Centos7)</a></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/9223/">https://github.com/maxzhao-it/blog/post/9223/</a> </p>
 
       
     </div>
@@ -1616,7 +1670,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/38/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/blog/page/40/">40</a><a class="extend next" rel="next" href="/blog/page/40/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/page/38/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/blog/page/40/">40</a><a class="page-number" href="/blog/page/41/">41</a><a class="extend next" rel="next" href="/blog/page/40/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 </div>
