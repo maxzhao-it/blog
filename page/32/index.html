@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">407</span>
+          <span class="site-state-item-count">409</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">229</span>
+        <span class="site-state-item-count">230</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,193 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/36399/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/36399/" class="post-title-link" itemprop="url">Lodash操作以及问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/JS/" itemprop="url" rel="index"><span itemprop="name">JS</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/JS/Lodash/" itemprop="url" rel="index"><span itemprop="name">Lodash</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="sum-函数丢失精度的问题"><a href="#sum-函数丢失精度的问题" class="headerlink" title="_.sum 函数丢失精度的问题"></a>_.sum 函数丢失精度的问题</h3><p>一般情况下，我们都会在前端保留两位小数，这时候计算平均或者汇总就经常用到<code>Lodash</code>。</p>
+<p>这个时候，对于多个小数求和或平均之后的值为 <code>3.655</code>，</p>
+<p>但是如果用<code> _.sum(values,&#39;val&#39;) ;</code>，这个函数的结果就不一定是<code>3.655</code>，在我做的某个项目中，结果始终为<code> 3.6549999***7</code>。</p>
+<p>第二种情况，<code>JS</code>丢失精度： </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2.55</span>.<span class="title function_">toFixed</span>(<span class="number">1</span>) = <span class="number">2.5</span>;</span><br><span class="line"><span class="number">2.551</span>.<span class="title function_">toFixed</span>(<span class="number">1</span>) = <span class="number">2.6</span>;</span><br><span class="line"><span class="number">2.56</span>.<span class="title function_">toFixed</span>(<span class="number">1</span>) = <span class="number">2.6</span>;</span><br><span class="line"><span class="number">2.554</span>.<span class="title function_">toFixed</span>(<span class="number">2</span>) = <span class="number">2.55</span>;</span><br><span class="line"><span class="number">2.555</span>.<span class="title function_">toFixed</span>(<span class="number">2</span>) = <span class="number">2.56</span>;</span><br><span class="line"><span class="number">2.55499999999999993</span>.<span class="title function_">toFixed</span>(<span class="number">2</span>) = <span class="number">2.55</span>; </span><br><span class="line"><span class="number">2.55499999999999994</span>.<span class="title function_">toFixed</span>(<span class="number">2</span>) = <span class="number">2.56</span>; </span><br><span class="line"><span class="number">2.556</span>.<span class="title function_">toFixed</span>(<span class="number">2</span>) = <span class="number">2.56</span>;</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，正常情况下，保留两位小时时，四舍五入是对的（大于<code>2.55499999999999999</code> 这个情况就是非正常了）。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/36399/">https://github.com/maxzhao-it/blog/post/36399/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/60429/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/60429/" class="post-title-link" itemprop="url">JDK环境变量无效问题(Linux)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p> \</p>
+<p>很多人在 &#x2F;etc&#x2F;profile中配置环境变量之后，发现并没有生效。</p>
+<h3 id="第一步：-vim-etc-profile"><a href="#第一步：-vim-etc-profile" class="headerlink" title="第一步： vim  /etc/profile"></a>第一步：<code> vim  /etc/profile</code></h3><h1 id="环境变量没写对"><a href="#环境变量没写对" class="headerlink" title="环境变量没写对"></a>环境变量没写对</h1><blockquote>
+<p>#set java environment</p>
+<p>#export JAVA_HOME&#x3D;”&#x2F;usr&#x2F;local&#x2F;java&#x2F;jdk1.8”</p>
+<p>export CLASSPATH&#x3D;”.:&#x2F;usr&#x2F;local&#x2F;java&#x2F;jdk1.8&#x2F;jre&#x2F;lib&#x2F;rt.jar:&#x2F;usr&#x2F;local&#x2F;java&#x2F;jdk1.8&#x2F;lib&#x2F;dt.jar:&#x2F;usr&#x2F;local&#x2F;java&#x2F;jdk1.8&#x2F;lib&#x2F;tools.jar”</p>
+<p>export PATH&#x3D;”&#x2F;usr&#x2F;local&#x2F;java&#x2F;jdk1.8&#x2F;bin:$PATH”</p>
+</blockquote>
+<p>所有的路径用直接路径，保证路径不会错，</p>
+<p>然后执行  source &#x2F;etc&#x2F;profile。</p>
+<p>java -version  </p>
+<p>`&#96;&#96;</p>
+<p>java version “1.8.0_181”</p>
+<p>Java(TM) SE Runtime Environment (build 1.8.0_181-b13)</p>
+<p>Java HotSpot(TM) 64-Bit Server VM (build 25.181-b13, mixed mode)</p>
+<p>`&#96;&#96;</p>
+<p>就会成功了。</p>
+<p>如果没有效果，那就是环境变量没写对，都使用绝对路径肯定没错。</p>
+<p>写到这里，正好喜马拉雅道出“大道至简”，来形容这个在好不过了</p>
+<blockquote>
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1604ce74450d">JDK环境变量无效问题(Linux)</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/60429/">https://github.com/maxzhao-it/blog/post/60429/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -400,123 +587,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/24661/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/24661/" class="post-title-link" itemprop="url">ZIP文件操作(Linux)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>1、安装zip、unzip应用。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install zip unzip</span><br></pre></td></tr></table></figure>
-
-<p>2、压缩和解压文件</p>
-<p>以下命令均在&#x2F;home目录下操作<br>cd &#x2F;home #进入&#x2F;home目录</p>
-<ul>
-<li>把&#x2F;home目录下面的mydata目录压缩为mydata.zip</li>
-</ul>
-<p><code>zip -r mydata.zip mydata #压缩mydata目录</code></p>
-<ul>
-<li>把&#x2F;home目录下面的mydata.zip解压到mydatabak目录里面</li>
-</ul>
-<p><code>unzip mydata.zip -d mydatabak</code></p>
-<ul>
-<li>把&#x2F;home目录下面的abc文件夹和mydata.txt压缩成为mydatatxt.zip</li>
-</ul>
-<p><code>zip -r mydatatxt.zip  mydata.txt</code></p>
-<ul>
-<li>把&#x2F;home目录下面的mydata.zip直接解压到&#x2F;home目录里面</li>
-</ul>
-<p><code>unzip mydata.zip</code></p>
-<ul>
-<li>把&#x2F;home目录下面的mydatatxt.zip、mydata2.zip、mydata3.zip同时解压到&#x2F;home目录里面</li>
-</ul>
-<p><code>unzip mydata\*.zip</code></p>
-<ul>
-<li>查看把&#x2F;home目录下面的mydata.zip里面的内容</li>
-</ul>
-<p><code>unzip -v mydata.zip</code></p>
-<ul>
-<li>验证&#x2F;home目录下面的mydata.zip是否完整</li>
-</ul>
-<p><code>unzip -t mydata.zip</code></p>
-<ul>
-<li>把&#x2F;home目录下面mydata.zip里面的所有文件解压到第一级目录</li>
-</ul>
-<p><code>unzip -j mydata.zip</code></p>
-<blockquote>
-<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/244eb5dab098">ZIP文件操作(Linux)</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/24661/">https://github.com/maxzhao-it/blog/post/24661/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/61754/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -668,6 +738,123 @@
 <p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/20fcd84ea08c">rdesktop安装和使用(Linux)</a></p>
 </blockquote>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/1080/">https://github.com/maxzhao-it/blog/post/1080/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/24661/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/24661/" class="post-title-link" itemprop="url">ZIP文件操作(Linux)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>1、安装zip、unzip应用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install zip unzip</span><br></pre></td></tr></table></figure>
+
+<p>2、压缩和解压文件</p>
+<p>以下命令均在&#x2F;home目录下操作<br>cd &#x2F;home #进入&#x2F;home目录</p>
+<ul>
+<li>把&#x2F;home目录下面的mydata目录压缩为mydata.zip</li>
+</ul>
+<p><code>zip -r mydata.zip mydata #压缩mydata目录</code></p>
+<ul>
+<li>把&#x2F;home目录下面的mydata.zip解压到mydatabak目录里面</li>
+</ul>
+<p><code>unzip mydata.zip -d mydatabak</code></p>
+<ul>
+<li>把&#x2F;home目录下面的abc文件夹和mydata.txt压缩成为mydatatxt.zip</li>
+</ul>
+<p><code>zip -r mydatatxt.zip  mydata.txt</code></p>
+<ul>
+<li>把&#x2F;home目录下面的mydata.zip直接解压到&#x2F;home目录里面</li>
+</ul>
+<p><code>unzip mydata.zip</code></p>
+<ul>
+<li>把&#x2F;home目录下面的mydatatxt.zip、mydata2.zip、mydata3.zip同时解压到&#x2F;home目录里面</li>
+</ul>
+<p><code>unzip mydata\*.zip</code></p>
+<ul>
+<li>查看把&#x2F;home目录下面的mydata.zip里面的内容</li>
+</ul>
+<p><code>unzip -v mydata.zip</code></p>
+<ul>
+<li>验证&#x2F;home目录下面的mydata.zip是否完整</li>
+</ul>
+<p><code>unzip -t mydata.zip</code></p>
+<ul>
+<li>把&#x2F;home目录下面mydata.zip里面的所有文件解压到第一级目录</li>
+</ul>
+<p><code>unzip -j mydata.zip</code></p>
+<blockquote>
+<p>本文地址 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/244eb5dab098">ZIP文件操作(Linux)</a></p>
+</blockquote>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/24661/">https://github.com/maxzhao-it/blog/post/24661/</a> </p>
 
       
     </div>
@@ -1008,675 +1195,6 @@ mkdir core1
 
 
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/4258/">https://github.com/maxzhao-it/blog/post/4258/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/15110/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/15110/" class="post-title-link" itemprop="url">Swagger2.X注解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/Swagger/" itemprop="url" rel="index"><span itemprop="name">Swagger</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="常用到的注解有："><a href="#常用到的注解有：" class="headerlink" title="常用到的注解有："></a>常用到的注解有：</h3><table>
-<thead>
-<tr>
-<th align="left">作用范围</th>
-<th align="left">API</th>
-<th align="left">使用位置</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">协议集描述</td>
-<td align="left">@Api</td>
-<td align="left">用于controller类上</td>
-</tr>
-<tr>
-<td align="left">协议描述</td>
-<td align="left">@ApiOperation</td>
-<td align="left">用在controller的方法上</td>
-</tr>
-<tr>
-<td align="left">非对象参数集</td>
-<td align="left">@ApiImplicitParams</td>
-<td align="left">用在controller的方法上</td>
-</tr>
-<tr>
-<td align="left">非对象参数描述</td>
-<td align="left">@ApiImplicitParam</td>
-<td align="left">用在@ApiImplicitParams的方法里边</td>
-</tr>
-<tr>
-<td align="left">对象参数描述</td>
-<td align="left">@ApiParam</td>
-<td align="left">用在@ApiImplicitParams的方法里边，定义接收的参数形式</td>
-</tr>
-<tr>
-<td align="left">描述返回对象的意义</td>
-<td align="left">@ApiModel</td>
-<td align="left">用在返回对象类上</td>
-</tr>
-<tr>
-<td align="left">对象属性</td>
-<td align="left">@ApiModelProperty</td>
-<td align="left">用在参数对象的字段上</td>
-</tr>
-<tr>
-<td align="left">Response集</td>
-<td align="left">@ApiResponses</td>
-<td align="left">用在controller的方法上</td>
-</tr>
-<tr>
-<td align="left">Response</td>
-<td align="left">@ApiResponse</td>
-<td align="left">用在 @ApiResponses里边</td>
-</tr>
-<tr>
-<td align="left">Response</td>
-<td align="left">@ResponseHeader</td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<h4 id="1-Api标记"><a href="#1-Api标记" class="headerlink" title="1. @Api标记"></a>1. @Api标记</h4><p>Api 用在类上，说明该类的作用。可以标记一个 Controller 类做为 swagger 文档资源，使用方式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api(value = &quot;/user&quot;, description = &quot;Operations about user&quot;)</span></span><br></pre></td></tr></table></figure>
-
-<p>与Controller注解并列使用。 属性配置：</p>
-<table>
-<thead>
-<tr>
-<th>属性名称</th>
-<th align="left">备注</th>
-<th>是否弃用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>value</td>
-<td align="left">url的路径值</td>
-<td></td>
-</tr>
-<tr>
-<td>tags</td>
-<td align="left">如果设置这个值、value的值会被覆盖</td>
-<td></td>
-</tr>
-<tr>
-<td>description</td>
-<td align="left">对api资源的描述</td>
-<td>@Deprecated</td>
-</tr>
-<tr>
-<td>basePath</td>
-<td align="left">基本路径可以不配置</td>
-<td>@Deprecated</td>
-</tr>
-<tr>
-<td>position</td>
-<td align="left">如果配置多个Api 想改变显示的顺序位置</td>
-<td>@Deprecated</td>
-</tr>
-<tr>
-<td>produces</td>
-<td align="left">For example, “application&#x2F;json, application&#x2F;xml”</td>
-<td></td>
-</tr>
-<tr>
-<td>consumes</td>
-<td align="left">For example, “application&#x2F;json, application&#x2F;xml”</td>
-<td></td>
-</tr>
-<tr>
-<td>protocols</td>
-<td align="left">Possible values: http, https, ws, wss.</td>
-<td></td>
-</tr>
-<tr>
-<td>authorizations</td>
-<td align="left">高级特性认证时配置</td>
-<td></td>
-</tr>
-</tbody></table>
-<p>在SpringMvc中的配置如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/app/table&quot;)</span></span><br><span class="line"><span class="meta">@Api(value = &quot;/app/table&quot;, protocols = &quot;http&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppTableController</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-ApiOperation标记"><a href="#2-ApiOperation标记" class="headerlink" title="2. @ApiOperation标记"></a>2. @ApiOperation标记</h4><p>ApiOperation：用在方法上，说明方法的作用，每一个url资源的定义,使用方式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation(</span></span><br><span class="line"><span class="meta">        value = &quot;Find purchase order by ID&quot;,</span></span><br><span class="line"><span class="meta">        notes = &quot;&quot;,</span></span><br><span class="line"><span class="meta">        response = A.class,</span></span><br><span class="line"><span class="meta">        tags = &#123;&quot;&quot;&#125;)</span></span><br></pre></td></tr></table></figure>
-
-<p>与Controller中的方法并列使用。<br>属性配置：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="left">备注</th>
-<th>是否弃用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">value</td>
-<td align="left">url的路径值</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">tags</td>
-<td align="left">如果设置这个值、value的值会被覆盖</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">description</td>
-<td align="left">对api资源的描述</td>
-<td>无</td>
-</tr>
-<tr>
-<td align="left">basePath</td>
-<td align="left">基本路径可以不配置</td>
-<td>无</td>
-</tr>
-<tr>
-<td align="left">position</td>
-<td align="left">如果配置多个Api 想改变显示的顺序位置</td>
-<td>@Deprecated</td>
-</tr>
-<tr>
-<td align="left">produces</td>
-<td align="left">For example, “application&#x2F;json, application&#x2F;xml”</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">consumes</td>
-<td align="left">For example, “application&#x2F;json, application&#x2F;xml”</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">protocols</td>
-<td align="left">Possible values: http, https, ws, wss.</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">authorizations</td>
-<td align="left">高级特性认证时配置</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">hidden</td>
-<td align="left">配置为true 将在文档中隐藏</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">response</td>
-<td align="left">返回的对象</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">responseContainer</td>
-<td align="left">这些对象是有效的 “List”, “Set” or “Map”.，其他无效</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">responseReference</td>
-<td align="left">指定对响应类型的引用。指定的引用可以是本地的，也可以是远程的*将按原样使用，并覆盖任何指定的response()类。</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">responseHeaders</td>
-<td align="left">响应旁边提供的可能标题列表。</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">httpMethod</td>
-<td align="left">“GET”, “HEAD”, “POST”, “PUT”, “DELETE”, “OPTIONS” and “PATCH”</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">code</td>
-<td align="left">http的状态码 默认 200</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">extensions</td>
-<td align="left">扩展属性</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">notes</td>
-<td align="left">注释说明</td>
-<td></td>
-</tr>
-<tr>
-<td align="left">response</td>
-<td align="left">方法的返回值的类型class</td>
-<td></td>
-</tr>
-</tbody></table>
-<p>在SpringMvc中的配置如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation(value = &quot;/createCode&quot;, notes = &quot;创建文件&quot;, response = ResultObj.class)</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/createCode&quot;)</span></span><br><span class="line"><span class="keyword">public</span> ResultObj <span class="title function_">createCode</span><span class="params">(</span></span><br><span class="line"><span class="params"><span class="meta">@RequestParam(value = &quot;tab_name&quot;, required = true)</span> String tab_name</span></span><br><span class="line"><span class="params">        ,<span class="meta">@RequestParam(value = &quot;type&quot;, required = true)</span> Integer type</span></span><br><span class="line"><span class="params">        ,<span class="meta">@RequestParam(value = &quot;includeSwagger&quot;, required = true)</span> Boolean includeSwagger</span></span><br><span class="line"><span class="params">        ,<span class="meta">@RequestParam(value = &quot;moduleName&quot;, required = true)</span> String moduleName</span></span><br><span class="line"><span class="params">        ,<span class="meta">@RequestParam(value = &quot;packageName&quot;, required = true)</span> String packageName)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ResultObj.getDefaultResponse(appTableService.listTable(tab_name,<span class="literal">null</span>));</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-ApiImplicitParams、-ApiImplicitParam、-ApiParam标记"><a href="#3-ApiImplicitParams、-ApiImplicitParam、-ApiParam标记" class="headerlink" title="3. @ApiImplicitParams、@ApiImplicitParam、@ApiParam标记"></a>3. @ApiImplicitParams、@ApiImplicitParam、@ApiParam标记</h4><h5 id="ApiImplicitParams"><a href="#ApiImplicitParams" class="headerlink" title="@ApiImplicitParams"></a>@ApiImplicitParams</h5><p>只有<code>value</code>一个属性，用来装多个<code>@ApiImplicitParam</code>。</p>
-<h5 id="ApiImplicitParam"><a href="#ApiImplicitParam" class="headerlink" title="@ApiImplicitParam"></a>@ApiImplicitParam</h5><p>用在<code>@ApiImplicitParams</code>注解中，指定一个请求参数的各个方面</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="left">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">paramType</td>
-<td align="left">参数放在哪个地方</td>
-</tr>
-<tr>
-<td align="left">name</td>
-<td align="left">参数名称</td>
-</tr>
-<tr>
-<td align="left">value</td>
-<td align="left">参数代表的含义</td>
-</tr>
-<tr>
-<td align="left">dataType</td>
-<td align="left">参数类型</td>
-</tr>
-<tr>
-<td align="left">dataTypeClass</td>
-<td align="left">参数类型</td>
-</tr>
-<tr>
-<td align="left">required</td>
-<td align="left">是否必要</td>
-</tr>
-<tr>
-<td align="left">defaultValue</td>
-<td align="left">参数的默认值</td>
-</tr>
-</tbody></table>
-<h6 id="paramType"><a href="#paramType" class="headerlink" title="paramType:"></a>paramType:</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">header--&gt;请求参数的获取：<span class="meta">@RequestHeader(代码中接收注解)</span>    </span><br><span class="line">query--&gt;请求参数的获取：<span class="meta">@RequestParam(代码中接收注解)</span>    </span><br><span class="line">path（用于restful接口）--&gt;请求参数的获取：<span class="meta">@PathVariable(代码中接收注解)</span></span><br><span class="line">body--&gt;请求参数的获取：<span class="meta">@RequestBody(代码中接收注解)</span>    </span><br><span class="line">form（不常用）)</span><br></pre></td></tr></table></figure>
-
-<h6 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation(value = &quot;/createCode&quot;, notes = &quot;创建文件&quot;, response = ResultObj.class)</span></span><br><span class="line"><span class="meta">@ApiImplicitParams(&#123;</span></span><br><span class="line"><span class="meta">        @ApiImplicitParam(name = &quot;表名&quot;, value = &quot;tab_name&quot;, paramType = &quot;query&quot;, dataType = &quot;String&quot;, required = true)</span></span><br><span class="line"><span class="meta">        , @ApiImplicitParam(name = &quot;生成代码类别参数&quot;, value = &quot;type&quot;, paramType = &quot;query&quot;, dataType = &quot;Integer&quot;, required = true)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/createCode&quot;)</span></span><br><span class="line"><span class="keyword">public</span> ResultObj <span class="title function_">createCode</span><span class="params">(</span></span><br><span class="line"><span class="params"><span class="meta">@RequestParam(value = &quot;tab_name&quot;, required = true)</span> String tabName</span></span><br><span class="line"><span class="params">        ,<span class="meta">@RequestParam(value = &quot;type&quot;, required = true, defaultValue = &quot;-1&quot;)</span> Integer type)</span>&#123;<span class="keyword">return</span> <span class="literal">null</span>;&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="ApiParam"><a href="#ApiParam" class="headerlink" title="@ApiParam"></a>@ApiParam</h5><p>用在接收参数中，指定一个请求参数的信息</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="left">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">name</td>
-<td align="left">要绑定到的请求参数的名称</td>
-</tr>
-<tr>
-<td align="left">value</td>
-<td align="left">参数的简单描述</td>
-</tr>
-<tr>
-<td align="left">required</td>
-<td align="left">是否必要</td>
-</tr>
-<tr>
-<td align="left">defaultValue</td>
-<td align="left">参数的默认值</td>
-</tr>
-<tr>
-<td align="left">具体参考<a target="_blank" rel="noopener" href="http://docs.swagger.io/swagger-core/v1.5.0/apidocs/io/swagger/annotations/ApiParam.html">文档v1.5.0</a></td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<h6 id="ApiParam请求属性-使用方式：与Controller中的方法并列使用。"><a href="#ApiParam请求属性-使用方式：与Controller中的方法并列使用。" class="headerlink" title="@ApiParam请求属性,使用方式：与Controller中的方法并列使用。"></a>@ApiParam请求属性,使用方式：与Controller中的方法并列使用。</h6><p>属性配置：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="left">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">name</td>
-<td align="left">属性名称</td>
-</tr>
-<tr>
-<td align="left">value</td>
-<td align="left">属性值</td>
-</tr>
-<tr>
-<td align="left">defaultValue</td>
-<td align="left">默认属性值</td>
-</tr>
-<tr>
-<td align="left">allowableValues</td>
-<td align="left">可以不配置</td>
-</tr>
-<tr>
-<td align="left">required</td>
-<td align="left">是否属性必填</td>
-</tr>
-<tr>
-<td align="left">access</td>
-<td align="left">不过多描述</td>
-</tr>
-<tr>
-<td align="left">allowMultiple</td>
-<td align="left">默认为false</td>
-</tr>
-<tr>
-<td align="left">hidden</td>
-<td align="left">隐藏该属性</td>
-</tr>
-<tr>
-<td align="left">example</td>
-<td align="left">举例子</td>
-</tr>
-</tbody></table>
-<p>在SpringMvc中的配置如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> ResponseEntity&lt;Order&gt; <span class="title function_">getOrderById</span><span class="params">(</span></span><br><span class="line"><span class="params"><span class="meta">@ApiParam(value = &quot;ID of pet that needs to be fetched&quot;, allowableValues = &quot;range[1,5]&quot;, required = true)</span></span></span><br><span class="line"><span class="params"><span class="meta">@PathVariable(&quot;orderId&quot;)</span> String orderId)</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="4-ApiModel、-ApiModelProperty"><a href="#4-ApiModel、-ApiModelProperty" class="headerlink" title="4. @ApiModel、@ApiModelProperty"></a>4. @ApiModel、@ApiModelProperty</h4><h5 id="ApiModel"><a href="#ApiModel" class="headerlink" title="@ApiModel"></a>@ApiModel</h5><p>描述一个Model的信息（这种一般用在post创建的时候，使用<code>@RequestBody</code>这样的场景，请求参数无法使用 <code>@ApiImplicitParam</code>注解进行描述的时候；</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="left">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">value</td>
-<td align="left">名称</td>
-</tr>
-<tr>
-<td align="left">description</td>
-<td align="left">描述</td>
-</tr>
-<tr>
-<td align="left">parent</td>
-<td align="left">父类 （class）</td>
-</tr>
-<tr>
-<td align="left">discriminator</td>
-<td align="left">官方描述：支持模型继承和多态性。这是用作鉴别器的字段名。基于这个领域，可以断言需要使用哪种子类型。</td>
-</tr>
-<tr>
-<td align="left">subTypes</td>
-<td align="left">子类型 {（class）}</td>
-</tr>
-<tr>
-<td align="left">reference</td>
-<td align="left">官方描述：指定对相应类型定义的引用，覆盖指定的任何其他元数据</td>
-</tr>
-</tbody></table>
-<h5 id="ApiModelProperty"><a href="#ApiModelProperty" class="headerlink" title="@ApiModelProperty"></a>@ApiModelProperty</h5><p>描述一个model的属性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Table(name = &quot;app_table&quot;, schema = &quot;&quot;, catalog = &quot;&quot;)</span></span><br><span class="line"><span class="meta">@ApiModel(value = &quot;物理表信息表&quot;, description = &quot;当前数据库表信息&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppTable</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;tab_name&quot;, unique = true)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;表名主键&quot;)</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="5-ApiResponses、-ApiResponse"><a href="#5-ApiResponses、-ApiResponse" class="headerlink" title="5. @ApiResponses、@ApiResponse"></a>5. @ApiResponses、@ApiResponse</h4><h5 id="ApiResponses：响应集配置，使用方式："><a href="#ApiResponses：响应集配置，使用方式：" class="headerlink" title="@ApiResponses：响应集配置，使用方式："></a>@ApiResponses：响应集配置，使用方式：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiResponses(&#123;@ApiResponse(code = 400, message = &quot;Invalid Order&quot;)&#125;)</span></span><br></pre></td></tr></table></figure>
-
-<p>与Controller中的方法并列使用。 属性配置：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="right">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">value</td>
-<td align="right">多个ApiResponse配置</td>
-</tr>
-</tbody></table>
-<p>在SpringMvc中的配置如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@RequestMapping(value = &quot;/order&quot;, method = POST)</span></span><br><span class="line"><span class="meta">@ApiOperation(value = &quot;Place an order for a pet&quot;, response = Order.class)</span></span><br><span class="line"><span class="meta">@ApiResponses(&#123;@ApiResponse(code = 400, message = &quot;Invalid Order&quot;)&#125;)</span></span><br><span class="line"><span class="keyword">public</span> ResponseEntity&lt;String&gt; <span class="title function_">placeOrder</span><span class="params">(</span></span><br><span class="line"><span class="params"><span class="meta">@ApiParam(value = &quot;order placed for purchasing the pet&quot;, required = true)</span> Order order)</span>&#123;</span><br><span class="line">        storeData.add(order);</span><br><span class="line">        <span class="keyword">return</span> ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="ApiResponse：响应配置，使用方式："><a href="#ApiResponse：响应配置，使用方式：" class="headerlink" title="@ApiResponse：响应配置，使用方式："></a>@ApiResponse：响应配置，使用方式：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiResponse(code = 400, message = &quot;Invalid user supplied&quot;)</span></span><br></pre></td></tr></table></figure>
-
-<p>与Controller中的方法并列使用。 属性配置：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="right">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">code</td>
-<td align="right">http的状态码</td>
-</tr>
-<tr>
-<td align="left">message</td>
-<td align="right">描述</td>
-</tr>
-<tr>
-<td align="left">response</td>
-<td align="right">默认响应类 Void</td>
-</tr>
-<tr>
-<td align="left">reference</td>
-<td align="right">参考ApiOperation中配置</td>
-</tr>
-<tr>
-<td align="left">responseHeaders</td>
-<td align="right">参考 ResponseHeader 属性配置说明</td>
-</tr>
-<tr>
-<td align="left">responseContainer</td>
-<td align="right">参考ApiOperation中配置</td>
-</tr>
-</tbody></table>
-<p>在SpringMvc中的配置如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@RequestMapping(value = &quot;/order&quot;, method = POST)</span></span><br><span class="line"><span class="meta">@ApiOperation(value = &quot;Place an order for a pet&quot;, response = Order.class)</span></span><br><span class="line"><span class="meta">@ApiResponses(&#123;@ApiResponse(code = 400, message = &quot;Invalid Order&quot;)&#125;)</span></span><br><span class="line"><span class="keyword">public</span> ResponseEntity&lt;String&gt; <span class="title function_">placeOrder</span><span class="params">(</span></span><br><span class="line"><span class="params"><span class="meta">@ApiParam(value = &quot;order placed for purchasing the pet&quot;, required = true)</span> Order order)</span>&#123;</span><br><span class="line">        storeData.add(order);</span><br><span class="line">        <span class="keyword">return</span> ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="6-ResponseHeader"><a href="#6-ResponseHeader" class="headerlink" title="6. ResponseHeader"></a>6. ResponseHeader</h4><blockquote>
-<p>响应头设置，使用方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ResponseHeader(name = &quot;head1&quot;, description = &quot;response head conf&quot;)</span></span><br></pre></td></tr></table></figure>
-
-<p>与Controller中的方法并列使用。 属性配置：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性名称</th>
-<th align="right">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">name</td>
-<td align="right">响应头名称</td>
-</tr>
-<tr>
-<td align="left">description</td>
-<td align="right">头描述</td>
-</tr>
-<tr>
-<td align="left">response</td>
-<td align="right">默认响应类 Void</td>
-</tr>
-<tr>
-<td align="left">responseContainer</td>
-<td align="right">参考ApiOperation中配置</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/515e48e98152">Swagger2.X注解</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/15110/">https://github.com/maxzhao-it/blog/post/15110/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/26429/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/26429/" class="post-title-link" itemprop="url">AUR 助手的选择</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>Yaourt 曾是最流行的 AUR 助手，但现已停止开发。在这篇文章中，我们会为 Arch 衍生发行版们列出 Yaourt 最佳的替代品。</p>
-<h2 id="Arch-User-Repository-（常被称作-AUR）"><a href="#Arch-User-Repository-（常被称作-AUR）" class="headerlink" title="Arch User Repository （常被称作 AUR）"></a>Arch User Repository （常被称作 AUR）</h2><p>是一个为 Arch 用户而生的社区驱动软件仓库。Debian&#x2F;Ubuntu 用户的对应类比是 PPA。</p>
-<p>AUR 包含了不直接被 Arch Linux 官方所背书的软件。如果有人想在 Arch 上发布软件或者包，它可以通过这个社区仓库提供。这让最终用户们可以使用到比默认仓库里更多的软件。</p>
-<p>所以你该如何使用 AUR 呢？简单来说，你需要另外的工具以从 AUR 中安装软件。Arch 的包管理器 pacman 不直接支持 AUR。那些支持 AUR 的“特殊工具”我们称之为 AUR 助手。</p>
-<h1 id="Yaourt-（Yet-AnOther-User-Repository-Tool）"><a href="#Yaourt-（Yet-AnOther-User-Repository-Tool）" class="headerlink" title="Yaourt （Yet AnOther User Repository Tool）"></a>Yaourt （Yet AnOther User Repository Tool）</h1><p>（曾经）是 pacman 的一个封装，便于用户在 Arch Linux 上安装 AUR 软件。它基本上采用和 pacman 一样的语法。Yaourt 对于 AUR 的搜索、安装，乃至冲突解决和包依赖关系维护都有着良好的支持。</p>
-<p>然而，Yaourt 的开发进度近来十分缓慢，甚至在 Arch Wiki 上已经被列为“停止或有问题”。许多 Arch 用户认为它不安全 进而开始寻找其它的 AUR 助手。</p>
-<p>例如 Trizen 和 Packer 这样的流行的选择，它们也被列为“停止或有问题”的了。</p>
-<h1 id="1、-aurman"><a href="#1、-aurman" class="headerlink" title="1、 aurman"></a>1、 aurman</h1><p>aurman 是最好的 AUR 助手之一，也能胜任 Yaourt 替代品的地位。它有非常类似于 pacman 的语法，可以支持所有的 pacman 操作。你可以搜索 AUR、解决包依赖，在构建 AUR 包前检查 PKGBUILD 的内容等等。</p>
-<p>aurman 的特性：</p>
-<p>aurman 支持所有 pacman 操作，并且引入了可靠的包依赖解决方案、冲突判定和分包split package支持<br>线程化的 sudo 循环会在后台运行，所以你每次安装只需要输入一次管理员密码<br>提供开发包支持，并且可以区分显性安装和隐性安装的包<br>支持搜索 AUR 包和仓库<br>在构建 AUR 包之前，你可以检视并编辑 PKGBUILD 的内容<br>可以用作单独的 包依赖解决工具<br>安装 aurman：</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/aurman.git">https://aur.archlinux.org/aurman.git</a><br>cd aurman<br>makepkg -si<br>使用 aurman：</p>
-<p>用名字搜索：</p>
-<p>aurman -Ss <package-name><br>安装：</p>
-<p>aurman -S &lt;package-name&gt;</p>
-<h1 id="2、-yay"><a href="#2、-yay" class="headerlink" title="2、 yay"></a>2、 yay</h1><p>yay 是下一个最好的 AUR 助手。它使用 Go 语言写成，宗旨是提供最少化用户输入的 pacman 界面、yaourt 式的搜索，而几乎没有任何依赖软件。</p>
-<p>yay 的特性：</p>
-<p>yay 提供 AUR 表格补全，并且从 ABS 或 AUR 下载 PKGBUILD<br>支持收窄搜索，并且不需要引用 PKGBUILD 源<br>yay 的二进制文件除了 pacman 以外别无依赖<br>提供先进的包依赖解决方案，以及在编译安装之后移除编译时的依赖<br>当在 &#x2F;etc&#x2F;pacman.conf 文件配置中启用了色彩时支持色彩输出<br>yay 可被配置成只支持 AUR 或者 repo 里的软件包<br>安装 yay：</p>
-<p>你可以从 git 克隆并编译安装。</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/yay.git">https://aur.archlinux.org/yay.git</a><br>cd yay<br>makepkg -si<br>使用 yay：</p>
-<p>搜索：</p>
-<p>yay -Ss <package-name><br>安装：</p>
-<p>yay -S <package-name></p>
-<h1 id="3、-pakku"><a href="#3、-pakku" class="headerlink" title="3、 pakku"></a>3、 pakku</h1><p>Pakku 是另一个还处于开发早期的 pacman 封装，虽然它还处于开放早期，但这不说明它逊于其它任何 AUR 助手。Pakku 能很好地支持从 AUR 搜索和安装，并且也可以在安装后移除不必要的编译依赖。</p>
-<p>pakku 的特性：</p>
-<p>从 AUR 搜索和安装软件<br>检视不同构建之间的文件和变化<br>从官方仓库编译，并事后移除编译依赖<br>获取 PKGBUILD 以及 pacman 整合<br>类 pacman 的用户界面和选项支持<br>支持pacman 配置文件以及无需 PKGBUILD 源<br>安装 pakku：</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/pakku.git">https://aur.archlinux.org/pakku.git</a><br>cd pakku<br>makepkg -si<br>使用 pakku：</p>
-<p>搜索：</p>
-<p>pakku -Ss spotify<br>安装：</p>
-<p>pakku -S spotify</p>
-<h1 id="4、-aurutils"><a href="#4、-aurutils" class="headerlink" title="4、 aurutils"></a>4、 aurutils</h1><p>aurutils 本质上是一堆使用 AUR 的自动化脚本的集合。它可以搜索 AUR、检查更新，并且解决包依赖。</p>
-<p>aurutils 的特性：</p>
-<p>aurutils 使用本地仓库以支持 pacman 文件，所有的包都支持 –asdeps<br>不同的任务可以有多个仓库<br>aursync -u 一键同步本地代码库<br>aursearch 搜索提供 pkgbase、长格式和 raw 支持<br>能忽略指定包<br>安装 aurutils：</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://aur.archlinux.org/aurutils.git">https://aur.archlinux.org/aurutils.git</a><br>cd aurutils<br>makepkg -si<br>使用 aurutils：</p>
-<p>搜索：</p>
-<p>aurutils -Ss <package-name><br>安装：</p>
-<p>aurutils -S <package-name><br>所有这些包，在有 Yaourt 或者其它 AUR 助手的情况下都可以直接安装。</p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/26429/">https://github.com/maxzhao-it/blog/post/26429/</a> </p>
 
       
     </div>

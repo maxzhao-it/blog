@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">407</span>
+          <span class="site-state-item-count">409</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">229</span>
+        <span class="site-state-item-count">230</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,211 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/fecbe378/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/fecbe378/" class="post-title-link" itemprop="url">PVE8配置核显集显</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/PVE/" itemprop="url" rel="index"><span itemprop="name">PVE</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="显卡声卡"><a href="#显卡声卡" class="headerlink" title="显卡声卡"></a>显卡声卡</h1><h2 id="IOMMU支持"><a href="#IOMMU支持" class="headerlink" title="IOMMU支持"></a>IOMMU支持</h2><p>vim &#x2F;etc&#x2F;default&#x2F;grub</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on&quot;</span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on iommu=pt video=vesafb:off video=efifb:off video=simplefb:off&quot;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="添加内核模块"><a href="#添加内核模块" class="headerlink" title="添加内核模块"></a>添加内核模块</h2><p>vim &#x2F;etc&#x2F;modules</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vfio</span><br><span class="line">vfio_iommu_type1</span><br><span class="line">vfio_pci</span><br><span class="line">vfio_virqfd</span><br></pre></td></tr></table></figure>
+
+<h2 id="禁用显卡"><a href="#禁用显卡" class="headerlink" title="禁用显卡"></a>禁用显卡</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/modprobe.d/pve-blacklist.conf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="驱动内名单"><a href="#驱动内名单" class="headerlink" title="驱动内名单"></a>驱动内名单</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 独显</span><br><span class="line">blacklist nouveau</span><br><span class="line">blacklist nvidia</span><br><span class="line">blacklist nvidiafb</span><br><span class="line"></span><br><span class="line"># 核显</span><br><span class="line">blacklist snd_hda_intel</span><br><span class="line">blacklist snd_hda_codec_hdmi</span><br><span class="line">blacklist i915</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>对应的虚拟机添加 硬件-添加-PCI设备-Raw Device</p>
+<p>选择对应的选卡，设置主GPU，显示设置为 <code>无</code></p>
+<h2 id="查询显卡和声卡"><a href="#查询显卡和声卡" class="headerlink" title="查询显卡和声卡"></a>查询显卡和声卡</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lspci -nn |grep VGA </span><br><span class="line">lspci -nn |grep Aud</span><br></pre></td></tr></table></figure>
+<p>最后的 8086:7ad0 是ID 10de:1c03,10de:10f1,8086:7ad0</p>
+<h3 id="加入直通"><a href="#加入直通" class="headerlink" title="加入直通"></a>加入直通</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/modprobe.d/vfio.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options vfio-pci ids=8086:7ad0,10de:10f1,10de:1c03</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="防止-VM-死机"><a href="#防止-VM-死机" class="headerlink" title="防止 VM 死机"></a>防止 VM 死机</h3><p>vim &#x2F;etc&#x2F;modprobe.d&#x2F;kvm.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options kvm ignore_msrs=1</span><br></pre></td></tr></table></figure>
+
+<h3 id="更新内核"><a href="#更新内核" class="headerlink" title="更新内核"></a>更新内核</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">update-grub</span><br><span class="line">update-initramfs -k all -u</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<p>重启后查看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod |grep vifo</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="配置核显输出"><a href="#配置核显输出" class="headerlink" title="配置核显输出"></a>配置核显输出</h2><p>web界面配置</p>
+<p>对应的虚拟机添加 硬件-添加-PCI设备-Raw Device</p>
+<h2 id="配置独显"><a href="#配置独显" class="headerlink" title="配置独显"></a>配置独显</h2><p>添加pcie 选择 独显</p>
+<p>Raw Device</p>
+<p>主GPU 不要选<br>所有功能<br>PCI-Express</p>
+<p>安装显卡驱动</p>
+<h1 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h1><p>&#x2F;etc&#x2F;modprobe.d&#x2F;pve-blacklist.conf</p>
+<p>里面只需要一个参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options vfio_iommu_type1 allow_unsafe_interrupts=1</span><br></pre></td></tr></table></figure>
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/fecbe378/">https://github.com/maxzhao-it/blog/post/fecbe378/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/86a90e71/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/86a90e71/" class="post-title-link" itemprop="url">PVE错误集合</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-25 13:55:25" itemprop="dateModified" datetime="2023-11-25T13:55:25+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/PVE/" itemprop="url" rel="index"><span itemprop="name">PVE</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="无法关闭虚拟机"><a href="#无法关闭虚拟机" class="headerlink" title="无法关闭虚拟机"></a>无法关闭虚拟机</h2><p>qm stop 101  # 编号</p>
+<p>TASK ERROR: can’t lock file ‘&#x2F;var&#x2F;lock&#x2F;qemu-server&#x2F;lock-101.conf’ - received interrupt</p>
+<p>rm &#x2F;var&#x2F;lock&#x2F;qemu-server&#x2F;lock-101.conf</p>
+<h2 id="开机进入-shell"><a href="#开机进入-shell" class="headerlink" title="开机进入 shell"></a>开机进入 shell</h2><p>执行 reset</p>
+<p>系统光盘放在引导的第一位</p>
+<h2 id="swtpm-setup-Not-overwriting-existing-state-file"><a href="#swtpm-setup-Not-overwriting-existing-state-file" class="headerlink" title="swtpm_setup: Not overwriting existing state file."></a>swtpm_setup: Not overwriting existing state file.</h2><p>kvm: -device ide-cd,bus&#x3D;ide.0,unit&#x3D;1,drive&#x3D;drive-ide1,id&#x3D;ide1,bootindex&#x3D;102: Can’t create IDE unit 1, bus supports only 1 units<br>stopping swtpm instance (pid 6199) due to QEMU startup error<br>TASK ERROR: start failed: QEMU exited with code 1</p>
+<p>使用机器类型q35时，只能使用ide0和ide2</p>
+<p>ide0   &#x3D;  ventoy-1.0.96-livecd.iso<br>ide2   &#x3D;  zh-cn_windows_11_business_editions_version_22h2_updated_feb_2023_x64_dvd_632649a2.iso</p>
+<h2 id="安装无法识别硬盘（scsi-无法识别）"><a href="#安装无法识别硬盘（scsi-无法识别）" class="headerlink" title="安装无法识别硬盘（scsi 无法识别）"></a>安装无法识别硬盘（scsi 无法识别）</h2><p><a target="_blank" rel="noopener" href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/">https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/</a></p>
+<p>下载驱动 virtio-win-0.1.229.iso</p>
+<p>挂载iso后，安装时加载驱动  vioscsi\w11\amd64</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/86a90e71/">https://github.com/maxzhao-it/blog/post/86a90e71/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -553,85 +758,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7e49a571/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/7e49a571/" class="post-title-link" itemprop="url">Python打包</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 15:35:15" itemprop="dateModified" datetime="2023-11-21T15:35:15+08:00">2023-11-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pip install pyinstaller -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">pyinstaller -F gooeydemo[OpenSeleniumClient.py](py%2FOpenSeleniumClient.py).py -w 打包</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">基于 pyinstaller</span></span><br><span class="line">pip install fbs -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line"></span><br><span class="line">fbs project</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7e49a571/">https://github.com/maxzhao-it/blog/post/7e49a571/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/4ad1a794/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -798,6 +924,85 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/7e49a571/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/7e49a571/" class="post-title-link" itemprop="url">Python打包</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-21 15:35:15" itemprop="dateModified" datetime="2023-11-21T15:35:15+08:00">2023-11-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pip install pyinstaller -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">pyinstaller -F gooeydemo[OpenSeleniumClient.py](py%2FOpenSeleniumClient.py).py -w 打包</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">基于 pyinstaller</span></span><br><span class="line">pip install fbs -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line"></span><br><span class="line">fbs project</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/7e49a571/">https://github.com/maxzhao-it/blog/post/7e49a571/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/8ddf92f3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -858,174 +1063,6 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line">image = cv2.imdecode(np.fromfile(<span class="string">&#x27;中文图片.png&#x27;</span>), cv2.IMREAD_UNCHANGED)</span><br><span class="line">cv2.imencode(<span class="string">&#x27;.png&#x27;</span>, image)[<span class="number">1</span>].tofile(<span class="string">&#x27;保存_中文图片.png&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/8ddf92f3/">https://github.com/maxzhao-it/blog/post/8ddf92f3/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/9bf163e/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/9bf163e/" class="post-title-link" itemprop="url">Python创建http服务</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 15:35:15" itemprop="dateModified" datetime="2023-11-21T15:35:15+08:00">2023-11-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="操作文件"><a href="#操作文件" class="headerlink" title="操作文件"></a>操作文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install flask -i https://mirrors.aliyun.com/pypi/simple/</span><br></pre></td></tr></table></figure>
-
-<p>执行</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask,request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/api/testPost&#x27;</span>, methods=[<span class="string">&#x27;Get&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">testPost</span>():</span><br><span class="line">    <span class="comment"># 获取请求中的全部内容</span></span><br><span class="line">    param = request.args</span><br><span class="line">    <span class="comment"># 内容必须转为str类型，否则会报错（因为打印方法里面出现了+符号）</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;打印所有的参数：&quot;</span> + <span class="built_in">str</span>(param))</span><br><span class="line">    <span class="comment"># 获取参数名为userName的请求参数数据值</span></span><br><span class="line">    userName = request.args.get(<span class="string">&#x27;username&#x27;</span>)</span><br><span class="line">    <span class="comment"># 获取参数名为userPassword的请求参数数据值</span></span><br><span class="line">    userPassword = request.args.get(<span class="string">&#x27;password&#x27;</span>)</span><br><span class="line">    <span class="comment"># 判断一下，如果账号姓名为lqq并且账号密码为123的时候显示登录成功，否则（参数缺失或参数错误）显示失败</span></span><br><span class="line">    <span class="keyword">if</span> (userName == <span class="string">&#x27;1&#x27;</span>) &amp; (userPassword == <span class="string">&#x27;1&#x27;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;登录成功&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;登录失败&quot;</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(port=<span class="number">8888</span>)</span><br></pre></td></tr></table></figure>
-<p>测试</p>
-<ul>
-<li>访问  <a target="_blank" rel="noopener" href="http://127.0.0.1:8888/api/m3u8?username=1&amp;password=1">http://127.0.0.1:8888/api/m3u8?username=1&amp;password=1</a></li>
-<li>访问  <a target="_blank" rel="noopener" href="http://127.0.0.1:8888/api/m3u8?username=1&amp;password=2">http://127.0.0.1:8888/api/m3u8?username=1&amp;password=2</a></li>
-</ul>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/9bf163e/">https://github.com/maxzhao-it/blog/post/9bf163e/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/dd7e812c/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/dd7e812c/" class="post-title-link" itemprop="url">Python创建虚拟环境</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-21 15:35:14" itemprop="dateModified" datetime="2023-11-21T15:35:14+08:00">2023-11-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">python -m venv venv</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入虚拟环境</span></span><br><span class="line">venv\Scripts\activate</span><br><span class="line"></span><br><span class="line">pip install requests</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">退出</span></span><br><span class="line">venv\Scripts\deactivate</span><br></pre></td></tr></table></figure>
-
-
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/dd7e812c/">https://github.com/maxzhao-it/blog/post/dd7e812c/</a> </p>
 
       
     </div>

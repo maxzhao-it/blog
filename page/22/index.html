@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">407</span>
+          <span class="site-state-item-count">409</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">229</span>
+        <span class="site-state-item-count">230</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,425 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/9074/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/9074/" class="post-title-link" itemprop="url">Logstash部署</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-21 15:59:05" itemprop="dateModified" datetime="2023-11-21T15:59:05+08:00">2023-11-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ELK/Logstash/" itemprop="url" rel="index"><span itemprop="name">Logstash</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>Logstash</code> 是一个自由和开放的服务器端数据处理管道吸入来自多种数据源的数据,转换,然后将其发送给你最喜欢的“储备”。</p>
+<p>工作原理就是一种  <code>输入-&gt;过滤-&gt;输出</code> 的模式。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>下载最新版本的<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/logstash"><code>Logstash</code>压缩包</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/</span><br><span class="line">wget https://artifacts.elastic.co/downloads/logstash/logstash-8.4.1-linux-x86_64.tar.gz</span><br><span class="line">tar -zxf logstash-8.4.1-linux-x86_64.tar.gz</span><br><span class="line"><span class="built_in">mv</span> logstash-8.4.1 logstash</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/logstash/bin/logstash -e <span class="string">&#x27;input &#123; stdin &#123; &#125; &#125; output &#123; stdout &#123;&#125; &#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出 <code>Successfully started</code> 表示启动成功。</p>
+<p>命令里的-e表示后面跟着的是一个配置信息字符串，字符串的功能就是让 Logstash<br>接受控制台里的输入，并输出到控制台，比如在控制台输入 hello world ：</p>
+<p>如果用最简化的方式执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/logstash -e <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hello word!</span><br><span class="line">&#123;</span><br><span class="line">          <span class="string">&quot;host&quot;</span> =&gt; <span class="string">&quot;MAXZHAO-PC&quot;</span>,</span><br><span class="line">       <span class="string">&quot;message&quot;</span> =&gt; <span class="string">&quot;hello word!\r&quot;</span>,</span><br><span class="line">      <span class="string">&quot;@version&quot;</span> =&gt; <span class="string">&quot;1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;@timestamp&quot;</span> =&gt; 2021-07-02T05:35:18.533Z</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="访问-端口默认为-9600"><a href="#访问-端口默认为-9600" class="headerlink" title="访问 端口默认为 9600"></a>访问 端口默认为 <code>9600</code></h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"><span class="attr">&quot;host&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MAXZHAO-PC&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;7.13.2&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;http_address&quot;</span><span class="punctuation">:</span> <span class="string">&quot;127.0.0.1:9600&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;60d59feb-80eb-466a-97e0-d46d3fa75587&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MAXZHAO-PC&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;ephemeral_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;758e9967-2f6f-49be-83b3-8e261e09446f&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;green&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;snapshot&quot;</span><span class="punctuation">:</span> <span class="keyword">false</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;pipeline&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"><span class="attr">&quot;workers&quot;</span><span class="punctuation">:</span> <span class="number">12</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;batch_size&quot;</span><span class="punctuation">:</span> <span class="number">125</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;batch_delay&quot;</span><span class="punctuation">:</span> <span class="number">50</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;build_date&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2021-06-10T19:51:49Z&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;build_sha&quot;</span><span class="punctuation">:</span> <span class="string">&quot;6d32f7df79a7d10d821b4cbff51c47f46d8c67b1&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;build_snapshot&quot;</span><span class="punctuation">:</span> <span class="keyword">false</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>实际运维中配置信息通常会放配置文件中来管理，这种情况下 <code>Logstash</code> 提供了 -f 参数来指定配置信息所在的配置文件。在 <code>Logstash</code> 的根目录下执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/logstash/bin/logstash -f ~/logstash/config/logstash.conf</span><br></pre></td></tr></table></figure>
+
+<p>参考 <code>config/logstash-sample.conf</code> 创建<code>config/logstash.conf</code> , 内容:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">  stdin &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line">  elasticsearch &#123;</span><br><span class="line">    hosts =&gt; [<span class="string">&quot;http://localhost:9200&quot;</span>, <span class="string">&quot;http://127.0.0.1:9200&quot;</span>]</span><br><span class="line">    index =&gt; <span class="string">&quot;%&#123;[@metadata][beat]&#125;-%&#123;[@metadata][version]&#125;-%&#123;+YYYY.MM.dd&#125;&quot;</span></span><br><span class="line">    <span class="comment">#user =&gt; &quot;elastic&quot;</span></span><br><span class="line">    <span class="comment">#password =&gt; &quot;changeme&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">  stdout &#123; &#125;</span><br><span class="line">  file &#123;</span><br><span class="line">	path =&gt; <span class="string">&quot;D:\develop\logstash-7.13.2\data-demo\%&#123;type&#125;.%&#123;+yyyy.MM.dd.HH&#125;.txt&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在启动的控制台输入 <code>hello</code>，则控制台会输出 <code>hello</code>，并且文件也会写入 <code>hello</code>。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><code>logstash</code> 在输入、过滤、输出都是由很多插件配合。</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html">官方的插件文档</a></p>
+<ul>
+<li><code>input plugins</code><ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/plugins-inputs-file.html"><code>file</code></a></li>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/plugins-inputs-jdbc.html"><code>jdbc</code></a></li>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/plugins-inputs-http.html"><code>http</code></a></li>
+</ul>
+</li>
+<li><code>fileter plugins</code></li>
+<li><code>output plugins</code><ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html"><code>elasticsearch</code></a></li>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-file.html"><code>file</code></a></li>
+</ul>
+</li>
+<li><code>codec plugins</code> 编码插件</li>
+</ul>
+<h3 id="插件配置"><a href="#插件配置" class="headerlink" title="插件配置"></a>插件配置</h3><h4 id="value-types"><a href="#value-types" class="headerlink" title="value types"></a>value types</h4><h5 id="Array"><a href="#Array" class="headerlink" title="Array"></a><code>Array</code></h5><p><code>: list = &gt; true</code> </p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">users =&gt; [ &#123;id =&gt; <span class="number">1</span>, name =&gt; bob&#125;, &#123;id =&gt; <span class="number">2</span>, name =&gt; jane&#125; ]</span><br></pre></td></tr></table></figure>
+
+<h5 id="List"><a href="#List" class="headerlink" title="List"></a><code>List</code></h5><p>不是类型本身，而是属性类型可以具有。这使得输入检查多个值成为可能。插件作者可以通过在声明参数时指定: <code>list = &gt; true</code> 来启用列表检查。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">path =&gt; [ &quot;/var/log/messages&quot;, &quot;/var/log/*.log&quot; ]</span><br><span class="line">uris =&gt; [ &quot;http://elastic.co&quot;, &quot;http://example.net&quot; ]</span><br></pre></td></tr></table></figure>
+
+<p>此示例将 path 配置为一个包含三个字符串中每个字符串的元素的列表。它还将 URIs 参数配置为 uri 列表，如果提供的任何 <code>uri</code> 无效，则失败。</p>
+<h5 id="Boolean"><a href="#Boolean" class="headerlink" title="Boolean"></a><code>Boolean</code></h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssl_enable =&gt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="Bytes"><a href="#Bytes" class="headerlink" title="Bytes"></a><code>Bytes</code></h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">my_bytes =&gt; <span class="string">&quot;1113&quot;</span>   <span class="comment"># 1113 bytes</span></span><br><span class="line">my_bytes =&gt; <span class="string">&quot;10MiB&quot;</span>  <span class="comment"># 10485760 bytes</span></span><br><span class="line">my_bytes =&gt; <span class="string">&quot;100kib&quot;</span> <span class="comment"># 102400 bytes</span></span><br><span class="line">my_bytes =&gt; <span class="string">&quot;180 mb&quot;</span> <span class="comment"># 180000000 bytes</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="Codec"><a href="#Codec" class="headerlink" title="Codec"></a><code>Codec</code></h5><p>编码解码器是用来表示数据的 <code>Logstash</code> 编码解码器的名称。编解码器可以用于输入和输出。</p>
+<p>输入解码器提供了一种在数据进入输入之前对其进行解码的方便方法。输出解码器提供了一种在数据离开输出之前对其进行编码的方便方法。使用输入或输出编码解码器可以避免在 <code>Logstash</code> 管道中使用单独的过滤器。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">codec =&gt; <span class="string">&quot;json&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Hash</code></p>
+<p>多个键值项之间用空格而不是逗号分隔。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">match =&gt; &#123;</span><br><span class="line">  <span class="string">&quot;field1&quot;</span> =&gt; <span class="string">&quot;value1&quot;</span></span><br><span class="line">  <span class="string">&quot;field2&quot;</span> =&gt; <span class="string">&quot;value2&quot;</span></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># or as a single line. No commas between entries:</span></span><br><span class="line">match =&gt; &#123; <span class="string">&quot;field1&quot;</span> =&gt; <span class="string">&quot;value1&quot;</span> <span class="string">&quot;field2&quot;</span> =&gt; <span class="string">&quot;value2&quot;</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Number</code></p>
+<p>数字必须是有效的数值(浮点数或整数)。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">port =&gt; <span class="number">33</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Password </code></p>
+<p>密码是一个字符串，其中包含一个未记录或打印的值。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_password =&gt; <span class="string">&quot;password&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>URI</code></p>
+<p>一个 URI 可以是任何东西，从一个完整的 URL，如 <a target="_blank" rel="noopener" href="http://elastic.co/%E5%9C%B0%E5%9D%80%EF%BC%8C%E5%88%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E6%A0%87%E8%AF%86%E7%AC%A6%EF%BC%8C%E5%A6%82">http://elastic.co/地址，到一个简单的标识符，如</a> <code>foobar</code>。如果 URI 包含一个密码，比如 <a target="_blank" rel="noopener" href="http://user:pass@example.net/">http://user:pass@example.net</a> ，那么 URI 的密码部分将不会被记录或打印。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_uri =&gt; <span class="string">&quot;http://foo:bar@example.net&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="Path"><a href="#Path" class="headerlink" title="Path"></a><code>Path</code></h5><p>路径是表示有效操作系统路径的字符串。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_path =&gt; <span class="string">&quot;/tmp/logstash&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="String"><a href="#String" class="headerlink" title="String"></a><code>String</code></h5><p>字符串必须是单个字符序列。注意，字符串值用引号括起来，可以是双引号，也可以是单引号。</p>
+<h5 id="Escape-Sequences"><a href="#Escape-Sequences" class="headerlink" title="Escape Sequences"></a><code>Escape Sequences</code></h5><p>转移符号</p>
+<table>
+<thead>
+<tr>
+<th>Text文字</th>
+<th>Result结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>\r</code></td>
+<td>carriage return (ASCII 13)回车符</td>
+</tr>
+<tr>
+<td><code>\n</code></td>
+<td>new line (ASCII 10)</td>
+</tr>
+<tr>
+<td><code>\t</code></td>
+<td>tab (ASCII 9)</td>
+</tr>
+<tr>
+<td><code>\\</code></td>
+<td>backslash (ASCII 92)反斜杠</td>
+</tr>
+<tr>
+<td><code>\&quot;</code></td>
+<td>double quote (ASCII 34)</td>
+</tr>
+<tr>
+<td><code>\&#39;</code></td>
+<td>single quote (ASCII 39)</td>
+</tr>
+</tbody></table>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name =&gt; <span class="string">&quot;Hello world&quot;</span></span><br><span class="line">name =&gt; <span class="string">&#x27;It\&#x27;s a beautiful day&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h3><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/8.2/working-with-plugins.html#listing-plugins">插件安装</a></p>
+<p>安装插件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin list</span><br><span class="line"><span class="comment"># 在线安装</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin install logstash-filter-grok</span><br><span class="line">vim /opt/logstash/Gemfile </span><br><span class="line"><span class="comment"># 更新</span></span><br><span class="line">/opt/logstash/bin/logstash-plugin update logstash-filter-grok</span><br><span class="line"><span class="built_in">mkdir</span> /opt/logstash/plugins</span><br><span class="line"><span class="built_in">cd</span>  /opt/logstash/plugins</span><br><span class="line">wget https://github.com/logstash-plugins/logstash-filter-grok/archive/refs/tags/v4.4.2.tar.gz</span><br><span class="line">tar -zxvf v4.4.2.tar.gz</span><br><span class="line">vim /opt/logstash/Gemfile</span><br><span class="line"><span class="comment"># 写入</span></span><br><span class="line"><span class="comment"># gem &quot;logstash-filter-grok&quot;, :path =&gt; &quot;path&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="input-file-插件"><a href="#input-file-插件" class="headerlink" title="input-file  插件"></a><code>input-file</code>  插件</h3><p>看下 input 的一个插件例子。上面讲的是从控制台输入，如果要从文件读取输入，则可以用 file 插件：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input &#123; file &#123; path =&gt; <span class="string">&quot;/tmp/abc.log&quot;</span> &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面是这个插件的最小化配置， path 后面跟随的是文件的全路径名，如果要匹配一个目录下的所有文件，可以用通配符*：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input &#123; file &#123; path =&gt; <span class="string">&quot;/tmp/data/*&quot;</span> &#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>要匹配多个不同目录下的文件，则用中括号括起来，并逗号分隔不同文件路径：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input &#123; file &#123; path =&gt; [<span class="string">&quot;/tmp/data/*&quot;</span>,<span class="string">&quot;/log/abc/hello.log&quot;</span>] &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意文件的路径名需要时绝对路径。</p>
+<h3 id="output-elasticsearch-插件"><a href="#output-elasticsearch-插件" class="headerlink" title="output-elasticsearch  插件"></a><code>output-elasticsearch</code>  插件</h3><p>如果要将数据输出到，则可以用 Elasticsearch 插件：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">output &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">                action =&gt; <span class="string">&quot;index&quot;</span></span><br><span class="line">                hosts  =&gt; <span class="string">&quot;localhost:9200&quot;</span></span><br><span class="line">                index  =&gt; <span class="string">&quot;log-example&quot;</span></span><br><span class="line">         &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面配置的含义是，将数据输出到 Elasticsearch 服务器，hosts 是提供服务的地址和端口号，action 是指索引到一个文档，index 是指要被写进的索引名，当然还有其他参数配置，具体参见<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html">该插件的官方文档说明</a></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">  stdin &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line">  stdout &#123; &#125;</span><br><span class="line">  file &#123;</span><br><span class="line">	path =&gt; <span class="string">&quot;D:\develop\logstash-7.13.2\data-demo\%&#123;type&#125;.%&#123;+yyyy.MM.dd.HH&#125;.txt&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">  elasticsearch &#123;</span><br><span class="line">    <span class="comment">#action =&gt; &quot;%&#123;[<span class="doctag">@metadata</span>][action]&#125;&quot;</span></span><br><span class="line">    <span class="comment">#document_id =&gt; &quot;%&#123;[<span class="doctag">@metadata</span>][_id]&#125;&quot;</span></span><br><span class="line">    hosts =&gt; [<span class="string">&quot;http://localhost:9200&quot;</span>]</span><br><span class="line">    index =&gt; <span class="string">&quot;logstash&quot;</span></span><br><span class="line">    <span class="comment">#protocol =&gt; &quot;http&quot;</span></span><br><span class="line">    <span class="comment">#hosts =&gt; [&quot;http://localhost:9200&quot;, &quot;http://127.0.0.1:9200&quot;]</span></span><br><span class="line">    <span class="comment">#index =&gt; &quot;%&#123;[<span class="doctag">@metadata</span>][beat]&#125;-%&#123;[<span class="doctag">@metadata</span>][version]&#125;-%&#123;+YYYY.MM.dd&#125;&quot;</span></span><br><span class="line">    <span class="comment">#user =&gt; &quot;elastic&quot;</span></span><br><span class="line">    <span class="comment">#password =&gt; &quot;changeme&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="filter-grok-插件"><a href="#filter-grok-插件" class="headerlink" title="filter-grok 插件"></a><code>filter-grok</code> 插件</h3><p>不论是 input 的 stdin 还是 file 插件，都是从不同来源读取数据，但它们读取的都是一行一行的文本数据，输出的时候会发现它们都是作为一行放到输出的 message 属性中：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5015984-6a95f0d17f8b1565.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+<p>文本输出</p>
+<p>很多情况下需要对这些文本做格式化的解析再输出，比如日志文件中数据格式是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[2017-04-03 23:30:11.020][INFO][logstash] Pipeline main started</span><br></pre></td></tr></table></figure>
+
+<p>上面的文本格式是：[时间][日志级别][模块名]日志信息描述<br> 输出 json 时也希望将时间放到自定义的 TimeStamp 属性中，将日志级别信息放到<br> LogLevel 属性中，将模块名放到 ModuleName 属性中，将日志信息描述放到<br> LogDesc 属性中。</p>
+<p>如果是这种需求就用到了 grok 插件，该插件是 Logstash 将普通文本解析成结构化数据的最好的方式。（这可不是我非要安利，是官网上说的：Grok is currently the best way in logstash to parse crappy unstructured log data into something structured and queryable.）</p>
+<ol>
+<li>grok 表达式<br> grok 表达式语法是这样的：</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;SYNTAX:SEMANTIC&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SYNTAX 是要匹配的文本的模式名。SEMANTIC 是匹配出的内容的标识符，该标识符即输出到 output 中的属性名。看一个简单的 grok 表达式例子：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;IP:source_ip&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它表示使用名为 IP 的正则表达式提取内容，并将匹配出的内容命名为 source_ip  。所以如果输入是 IP 地址的格式：11.22.33.123，则会将该内容放到 source_ip 中。</p>
+<ol>
+<li><p>grok 中预定义的模式<br> 上面的 IP 是 grok 里预定义的模式，其正则表达式的定义实际是：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5015984-77bcb79a28cc52c8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+<p>IP 模式定义</p>
+<p>grok 已经预定义了很多模式，比如匹配一串数字可以用 NUMBER、匹配 MAC 地址用 MAC、匹配时间用 TIMESTAMP_ISO8601、匹配 LOG 日志级别用 LOGLEVEL</p>
+<p>等等。详细定义参见</p>
+<p>github 中的说明</p>
+</li>
+<li><p>grok 中的自定义模式<br> 如果上面列的这些模式不能满足需求，grok 也允许自定义模式。<br> 先看下自定义模式的语法：</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pattern_name regexp</span><br></pre></td></tr></table></figure>
+
+<p>pattern_name 就是自定义的模式名，regexp 就是模式的正则表达式定义，之间用一个空格分隔开。比如自定义一个队列 ID 模式，它的格式是10或11个数字、大写字母组成的字符串，其定义语法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QUEUE_ID [0-9A-F]&#123;10,11&#125;</span><br></pre></td></tr></table></figure>
+
+<p>熟悉正则表达是的应该知道[0-9A-F]表示数字、大写字母组成的字符，后面的{10,11}表示有10或11个这样的字符。<br> 接着在 Logstash 根目录下建一个 patterns 目录，该目录下新建一个文件叫<br> myPattern 。文件内容就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QUEUE_ID [0-9A-F]&#123;10,11&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后在 filter 配置中加上 patterns 目录，并引用上面定义的这个 QUEUE_ID ：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">    grok &#123;</span><br><span class="line">      patterns_dir =&gt; [<span class="string">&quot;./patterns&quot;</span>]</span><br><span class="line">      match =&gt; &#123; <span class="string">&quot;message&quot;</span> =&gt; <span class="string">&quot;%&#123;TIMESTAMP_ISO8601:TimeStamp&#125; %&#123;QUEUE_ID:queue_id&#125;: %&#123;GREEDYDATA:syslog_message&#125;&quot;</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>patterns_dir 用于指定自定义模式的文件所在的目录，match 的内容就是 grok 表达式，TIMESTAMP_ISO8601 和 GREEDYDATA 预定义的模式，QUEUE_ID 是自定义的模式。它将匹配以下格式的内容：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2017</span>-<span class="number">04</span>-<span class="number">03</span> <span class="number">23</span>:<span class="number">30</span>:<span class="number">11.020</span> <span class="number">12345</span>abcde hello world</span><br></pre></td></tr></table></figure>
+
+<p>匹配后的结果是：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;@timestamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2017-04-12T11:57:40.186Z&quot;</span><span class="punctuation">,</span>  <span class="attr">&quot;queue_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;12345abcde&quot;</span><span class="punctuation">,</span>  <span class="attr">&quot;@version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span>  <span class="attr">&quot;syslog_message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hello world&quot;</span><span class="punctuation">,</span>  <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2017-04-03 23:30:11.020 12345abcde hello world&quot;</span><span class="punctuation">,</span>  <span class="attr">&quot;TimeStamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2017-04-03 23:30:11.020&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>日志文件的 filter 配置<br> 所以上面的日志文件中数据的 filter 区段配置：</li>
+</ol>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">        grok &#123;</span><br><span class="line">          match =&gt; &#123;</span><br><span class="line">                <span class="string">&quot;message&quot;</span> =&gt; <span class="string">&quot;\[%&#123;TIMESTAMP_ISO8601:TimeStamp&#125;\]\[%&#123;LOGLEVEL:LogLevel&#125;\]\[%&#123;WORD:ModuleName&#125;\] %&#123;GREEDYDATA:LogDesc&#125;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于中括号是特殊字符，所以正则表达式中它的前面要加上反斜杠\。<br> 加载文件配置后运行结果如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5015984-ce739bac70b651a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/9074/">https://github.com/maxzhao-it/blog/post/9074/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/21590/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/21590/" class="post-title-link" itemprop="url">Centos7安装RabbitMQ</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-09-21 14:22:48" itemprop="dateModified" datetime="2022-09-21T14:22:48+08:00">2022-09-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/CentOS/" itemprop="url" rel="index"><span itemprop="name">CentOS</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/CentOS/RabbitMQ/" itemprop="url" rel="index"><span itemprop="name">RabbitMQ</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>RabbitMQ是一个免费的开源企业消息代理软件。 它是用Erlang编写的，并实现了高级消息队列协议（AMQP）。 它提供所有主要编程语言的客户端库。 它支持多种消息传递协议，消息队列，传送确认，灵活的路由到队列，多种交换类型。 它还提供易于使用的HTTP-API，命令行工具和用于管理RabbitMQ的Web UI；</p>
+<p>在当前文档中，我们将在CentOS 7服务器上安装RabbitMQ。</p>
+<blockquote>
+<p>注意：<code>erlang-24.x</code>已经不支持 <code>CentOS7</code> 了</p>
+</blockquote>
+<h2 id="rpm-安装"><a href="#rpm-安装" class="headerlink" title="rpm 安装"></a><code>rpm</code> 安装</h2><p>安装 <code>RabbitMQ</code>需要安装<code>Erlang</code>。</p>
+<p><code>Erlang</code>：<a href="https://github.com/rabbitmq/erlang-rpm/releases">https://github.com/rabbitmq/erlang-rpm/releases</a><br><code>RabbitMQ</code>：<a href="https://github.com/rabbitmq/rabbitmq-server/releases">https://github.com/rabbitmq/rabbitmq-server/releases</a></p>
+<blockquote>
+<p><code>RabbitMQ</code>与<code>Erlang</code>版本对应关系 <a target="_blank" rel="noopener" href="https://www.rabbitmq.com/which-erlang.html">https://www.rabbitmq.com/which-erlang.html</a></p>
+</blockquote>
+<p>我这里下载了</p>
+<ul>
+<li><a href="https://github.com/rabbitmq/erlang-rpm/releases/download/v23.3.4.11/erlang-23.3.4.11-1.el7.x86_64.rpm"><code>erlang-23.3.4.11-1.el7.x86_64.rpm</code></a></li>
+<li><a href="https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.9.15/rabbitmq-server-3.9.15-1.el7.noarch.rpm"><code>rabbitmq-server-3.9.15-1.el7.noarch.rpm</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://mirror.centos.org/centos/7/updates/x86_64/Packages/openssl-libs-1.0.2k-25.el7_9.x86_64.rpm"><code>openssl-libs-1.0.2k-25.el7_9.x86_64.rpm</code></a> 缺少<code>libcrypto.so.10(OPENSSL_1.0.2)(64bit)</code>依赖时，可以到<a target="_blank" rel="noopener" href="https://pkgs.org/%E4%B8%8B%E8%BD%BD">https://pkgs.org/下载</a></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装依赖</span></span><br><span class="line">rpm -ivh openssl-libs-1.0.2k-25.el7_9.x86_64.rpm --force</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装环境</span></span><br><span class="line">rpm -ivh erlang-22.3.4.21-1.el7.x86_64.rpm</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">验证erlang 是否安装成功</span></span><br><span class="line">erl -version</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装 RabbitMQ</span></span><br><span class="line">rpm -ivh rabbitmq-server-3.9.15-1.el7.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置启动"><a href="#配置启动" class="headerlink" title="配置启动"></a>配置启动</h2><h3 id="安装web管理界面"><a href="#安装web管理界面" class="headerlink" title="安装web管理界面"></a>安装web管理界面</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"><span class="comment"># 查看所有的插件</span></span><br><span class="line">sudo rabbitmq-plugins list</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置开机自启服务</span></span><br><span class="line">systemctl <span class="built_in">enable</span> rabbitmq-server</span><br><span class="line"><span class="comment"># 启动RabbitMQ</span></span><br><span class="line">systemctl start rabbitmq-server</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">systemctl restart rabbitmq-server</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rabbitmq/rabbitmq.config</span><br></pre></td></tr></table></figure>
+
+<p>安装好之后在<code>/usr/share/doc/rabbitmq-server-3.6.15/</code>有参考模板<code>rabbitmq.config.example</code></p>
+<p>配置端口，备注：消息端口<code>5672</code>，则web访问端口为 <code>15672</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;rabbit,</span><br><span class="line">      [</span><br><span class="line">        &#123;loopback_users, []&#125;,</span><br><span class="line">        &#123;tcp_listeners, [5672]&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a href="https://github.com/rabbitmq/rabbitmq-server/blob/master/docs/rabbitmq.conf.example">参考模板</a></p>
+</blockquote>
+<h3 id="其它管理"><a href="#其它管理" class="headerlink" title="其它管理"></a>其它管理</h3><h4 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改guest的密码</span></span><br><span class="line">sudo rabbitmqctl list_users</span><br><span class="line">sudo rabbitmqctl change_password guest guest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建其他管理员账号比如test/test：</span></span><br><span class="line">sudo rabbitmqctl add_user maxzhao maxzhao</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">sudo rabbitmqctl set_user_tags maxzhao administrator</span><br><span class="line"><span class="comment"># /是 vhost的目录  Configure regexp   Write regexp  Read regexp</span></span><br><span class="line">sudo rabbitmqctl set_permissions -p / maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"><span class="comment"># Sets user topic permissions for an exchange，默认使用 AMQP default 的exchange</span></span><br><span class="line"><span class="comment"># sudo rabbitmqctl set_topic_permissions</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="添加vhost"><a href="#添加vhost" class="headerlink" title="添加vhost"></a>添加vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看帮助</span></span><br><span class="line">sudo rabbitmqctl  --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 查看创建 vhost 的帮助</span></span><br><span class="line">sudo rabbitmqctl add_vhost --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 创建</span></span><br><span class="line">sudo rabbitmqctl add_vhost maxzhao_vhost</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">sudo rabbitmqctl  list_vhosts</span><br><span class="line"><span class="comment"># 赋权  注意  /maxzhao_vhost 与 maxzhao_vhost  不一样</span></span><br><span class="line">sudo rabbitmqctl set_permissions -p /maxzhao_vhost maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="删除-vhost"><a href="#删除-vhost" class="headerlink" title="删除 vhost"></a>删除 vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl add_vhost maxzhaoTest</span><br><span class="line">sudo rabbitmqctl delete_vhost maxzhaoTest</span><br></pre></td></tr></table></figure>
+
+<h2 id="Yum-安装"><a href="#Yum-安装" class="headerlink" title="Yum 安装"></a><code>Yum</code> 安装</h2><h3 id="安装Erlang"><a href="#安装Erlang" class="headerlink" title="安装Erlang"></a>安装Erlang</h3><p>RabbitMQ是用Erlang语言编写的，在本教程中我们将安装最新版本的Erlang到服务器中。 Erlang在默认的YUM存储库中不可用，因此您将需要安装EPEL存储库。 运行以下命令相同。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release </span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
+<p>现在使用以下命令安装Erlang。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install erlang socat logrotate </span><br></pre></td></tr></table></figure>
+<p>您现在可以使用以下命令检查Erlang版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erl -version</span><br></pre></td></tr></table></figure>
+<p>您将得到以下输出。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Eshell V5.19.4</span><br></pre></td></tr></table></figure>
+<p>Erlang (ASYNC_THREADS,HIPE) (BEAM) emulator version 5.10.4<br>要切换到Erlang shell，可以键入以下命令。<br><code>erl</code><br>shell将更改，您将得到以下输出。<br>Erlang R16B03-1 (erts-5.10.4) [source] [64-bit] [async-threads:10] [hipe] [kernel-poll:false]<br>Eshell V5.10.4  (abort with ^G)<br>1&gt;<br>您可以通过按ctrl + C两次退出shell。 Erlang现在安装在系统上，现在可以继续安装RabbitMQ。</p>
+<h3 id="安装RabbitMQ"><a href="#安装RabbitMQ" class="headerlink" title="安装RabbitMQ"></a>安装RabbitMQ</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.9.0/rabbitmq-server-3.9.0-1.el7.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/rabbitmq/rabbitmq-server/releases/tag/v3.9.0"><em>这里</em></a>可以随时找到最新版本的RabbitMQ下载页面的链接。</p>
+<p>通过运行导入GPG密钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## primary RabbitMQ signing key</span></span><br><span class="line">rpm --import https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc</span><br><span class="line"><span class="comment">## modern Erlang repository</span></span><br><span class="line">rpm --import https://packagecloud.io/rabbitmq/erlang/gpgkey</span><br><span class="line"><span class="comment">## RabbitMQ server repository</span></span><br><span class="line">rpm --import https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey</span><br></pre></td></tr></table></figure>
+<p>安装MQ</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -Uvh rabbitmq-server-3.9.0-1.el7.noarch.rpm </span><br></pre></td></tr></table></figure>
+<h3 id="启动-1"><a href="#启动-1" class="headerlink" title="启动"></a>启动</h3><p>您可以通过运行以下命令启动RabbitMQ服务器进程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start rabbitmq-server</span><br></pre></td></tr></table></figure>
+<p>要在引导时自动启动RabbitMQ，请运行以下命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> rabbitmq-server</span><br></pre></td></tr></table></figure>
+<p>要检查RabbitMQ服务器的状态，请运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status rabbitmq-server</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置源-rabbitmq-repo"><a href="#配置源-rabbitmq-repo" class="headerlink" title="配置源 rabbitmq.repo"></a>配置源 <a href="#rabbitmqRepo"><code>rabbitmq.repo</code></a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install socat logrotate -y</span><br><span class="line">yum install erlang rabbitmq-server -y</span><br></pre></td></tr></table></figure>
+
+<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><p><code>rabbitmq.repo</code><span id="rabbitmqRepo"></span></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">##</span><br><span class="line">## Zero dependency Erlang</span><br><span class="line">##</span><br><span class="line"></span><br><span class="line">[rabbitmq_erlang]</span><br><span class="line">name=rabbitmq_erlang</span><br><span class="line">baseurl=https://packagecloud.io/rabbitmq/erlang/el/7/$basearch</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1</span><br><span class="line"># PackageCloud&#x27;s repository key and RabbitMQ package signing key</span><br><span class="line">gpgkey=https://packagecloud.io/rabbitmq/erlang/gpgkey</span><br><span class="line">       https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc</span><br><span class="line">sslverify=1</span><br><span class="line">sslcacert=/etc/pki/tls/certs/ca-bundle.crt</span><br><span class="line">metadata_expire=300</span><br><span class="line"></span><br><span class="line">[rabbitmq_erlang-source]</span><br><span class="line">name=rabbitmq_erlang-source</span><br><span class="line">baseurl=https://packagecloud.io/rabbitmq/erlang/el/7/SRPMS</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=https://packagecloud.io/rabbitmq/erlang/gpgkey</span><br><span class="line">sslverify=1</span><br><span class="line">sslcacert=/etc/pki/tls/certs/ca-bundle.crt</span><br><span class="line">metadata_expire=300</span><br><span class="line"></span><br><span class="line">##</span><br><span class="line">## RabbitMQ server</span><br><span class="line">##</span><br><span class="line"></span><br><span class="line">[rabbitmq_server]</span><br><span class="line">name=rabbitmq_server</span><br><span class="line">baseurl=https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1</span><br><span class="line"># PackageCloud&#x27;s repository key and RabbitMQ package signing key</span><br><span class="line">gpgkey=https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey</span><br><span class="line">       https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc</span><br><span class="line">sslverify=1</span><br><span class="line">sslcacert=/etc/pki/tls/certs/ca-bundle.crt</span><br><span class="line">metadata_expire=300</span><br><span class="line"></span><br><span class="line">[rabbitmq_server-source]</span><br><span class="line">name=rabbitmq_server-source</span><br><span class="line">baseurl=https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/SRPMS</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey</span><br><span class="line">sslverify=1</span><br><span class="line">sslcacert=/etc/pki/tls/certs/ca-bundle.crt</span><br><span class="line">metadata_expire=300</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/21590/">https://github.com/maxzhao-it/blog/post/21590/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1487,341 +1906,6 @@
 
 
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/43396/">https://github.com/maxzhao-it/blog/post/43396/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/50587/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/50587/" class="post-title-link" itemprop="url">Android各版本对应的SDK</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:39:49" itemprop="dateModified" datetime="2022-07-28T17:39:49+08:00">2022-07-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="Android各版本对应的SDK版本："><a href="#Android各版本对应的SDK版本：" class="headerlink" title="Android各版本对应的SDK版本："></a>Android各版本对应的SDK版本：</h3><table>
-<thead>
-<tr>
-<th>平台版本</th>
-<th>SDK版本</th>
-<th>版本名称</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Android 8.0</td>
-<td>26</td>
-<td>Oreo</td>
-</tr>
-<tr>
-<td>Android 7.1</td>
-<td>25</td>
-<td>Nougat</td>
-</tr>
-<tr>
-<td>Android 7.0</td>
-<td>24</td>
-<td>Nougat</td>
-</tr>
-<tr>
-<td>Android 6.0</td>
-<td>23</td>
-<td>Marshmallow</td>
-</tr>
-<tr>
-<td>Android 5.1</td>
-<td>22</td>
-<td>Lollipop</td>
-</tr>
-<tr>
-<td>Android 5.0</td>
-<td>21</td>
-<td>Lollipop</td>
-</tr>
-<tr>
-<td>Android 4.4</td>
-<td>19</td>
-<td>KITKAT</td>
-</tr>
-<tr>
-<td>Android 4.3</td>
-<td>18</td>
-<td>JELLY_BEAN_MR2</td>
-</tr>
-<tr>
-<td>Android 4.2, 4.2.2</td>
-<td>17</td>
-<td>JELLY_BEAN_MR1</td>
-</tr>
-<tr>
-<td>Android 4.1, 4.1.1</td>
-<td>16</td>
-<td>JELLY_BEAN</td>
-</tr>
-<tr>
-<td>Android 4.0.3, 4.0.4</td>
-<td>15</td>
-<td>ICE_CREAM_SANDWICH_MR1</td>
-</tr>
-<tr>
-<td>Android 4.0, 4.0.1, 4.0.2</td>
-<td>14</td>
-<td>ICE_CREAM_SANDWICH</td>
-</tr>
-<tr>
-<td>Android 3.2</td>
-<td>13</td>
-<td>HONEYCOMB_MR2</td>
-</tr>
-<tr>
-<td>Android 3.1.x</td>
-<td>12</td>
-<td>HONEYCOMB_MR1</td>
-</tr>
-<tr>
-<td>Android 3.0.x</td>
-<td>11</td>
-<td>HONEYCOMB</td>
-</tr>
-<tr>
-<td>Android 2.3.4</td>
-<td>10</td>
-<td>GINGERBREAD_MR1</td>
-</tr>
-<tr>
-<td>Android 2.3.3</td>
-<td>10</td>
-<td>GINGERBREAD_MR1</td>
-</tr>
-<tr>
-<td>Android 2.3.2</td>
-<td>9</td>
-<td>GINGERBREAD</td>
-</tr>
-<tr>
-<td>Android 2.3.1</td>
-<td>9</td>
-<td>GINGERBREAD</td>
-</tr>
-<tr>
-<td>Android 2.3</td>
-<td>9</td>
-<td>GINGERBREAD</td>
-</tr>
-<tr>
-<td>Android 2.2.x</td>
-<td>8</td>
-<td>FROYO</td>
-</tr>
-<tr>
-<td>Android 2.1.x</td>
-<td>7</td>
-<td>ECLAIR_MR1</td>
-</tr>
-<tr>
-<td>Android 2.0.1</td>
-<td>6</td>
-<td>ECLAIR_0_1</td>
-</tr>
-<tr>
-<td>Android 2.0</td>
-<td>5</td>
-<td>ECLAIR</td>
-</tr>
-<tr>
-<td>Android 1.6</td>
-<td>4</td>
-<td>DONUT</td>
-</tr>
-<tr>
-<td>Android 1.5</td>
-<td>3</td>
-<td>CUPCAKE</td>
-</tr>
-<tr>
-<td>Android 1.1</td>
-<td>2</td>
-<td>BASE_1_1</td>
-</tr>
-<tr>
-<td>Android 1.0</td>
-<td>1</td>
-<td>BASE</td>
-</tr>
-</tbody></table>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/50587/">https://github.com/maxzhao-it/blog/post/50587/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/57187/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/57187/" class="post-title-link" itemprop="url">Swagger2.X配置多种spec</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-28 17:37:16" itemprop="dateModified" datetime="2022-07-28T17:37:16+08:00">2022-07-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Java/Swagger/" itemprop="url" rel="index"><span itemprop="name">Swagger</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当前记录 <code>swagger2</code> 在 <code>spingboot</code> 中配置多个 <code>spec</code>。</p>
-<p>其中包括：</p>
-<ul>
-<li><code>yml</code> 配置全局的 <code>Docket</code></li>
-<li><code>yml</code> 配置局部的 <code>Docket</code>，不同的 <code>spec</code> 使用不同的描述</li>
-<li><code>Docket</code> 扫描基础包</li>
-<li><code>SpringBoot</code>自定义配置（<code>List</code>、<code>Map</code>）</li>
-</ul>
-<h2 id="新建一个-module"><a href="#新建一个-module" class="headerlink" title="新建一个 module"></a>新建一个 <code>module</code></h2><h3 id="主要依赖"><a href="#主要依赖" class="headerlink" title="主要依赖"></a>主要依赖</h3><p><code>&lt;swagger.version&gt;2.9.2&lt;/swagger.version&gt;</code></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;swagger.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;swagger.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="自定义配置类"><a href="#自定义配置类" class="headerlink" title="自定义配置类"></a>自定义配置类</h3><h4 id="ApiInfoProperties"><a href="#ApiInfoProperties" class="headerlink" title="ApiInfoProperties"></a><code>ApiInfoProperties</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ApiInfoProperties</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021-04-21 08:37</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration(&quot;apiInfoProperties&quot;)</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;gt.boot.swagger.api-info&quot;)</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ApiInfoProperties</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 标题</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 描述</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String description;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 版本</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String version;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 服务地址</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String termsOfServiceUrl;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 许可</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String license;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 许可地址</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String licenseUrl;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 联系人</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ContactProperties contact;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 供应商扩展</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;StringVendorExtension&gt; vendorExtensions;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * app into 扩展</span></span><br><span class="line"><span class="comment">     * groupName-AppInfo</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, ApiInfoProperties&gt; docketAppInfos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="ContactProperties"><a href="#ContactProperties" class="headerlink" title="ContactProperties"></a><code>ContactProperties</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * swagger 联系人信息</span><br><span class="line"> *</span><br><span class="line"> * @author maxzhao</span><br><span class="line"> * @date 2021-04-21 08:42</span><br><span class="line"> */</span><br><span class="line">@Data</span><br><span class="line">public class ContactProperties &#123;</span><br><span class="line">    private  String name;</span><br><span class="line">    private  String url;</span><br><span class="line">    private  String email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Docket动态配置"><a href="#Docket动态配置" class="headerlink" title="Docket动态配置"></a><code>Docket</code>动态配置</h3><h4 id="ApiInfoConfig"><a href="#ApiInfoConfig" class="headerlink" title="ApiInfoConfig"></a><code>ApiInfoConfig</code></h4><p>当前类中包含了全局配置与局部配置。</p>
-<p><code>getApiInfoByGroupName</code> 获取局部配置，局部配置不存在，则使用全局配置。</p>
-<p><code>InitializingBean</code>作用在于初始化 <code>bean</code> 时，会在之前构建 <code>ApiInfo</code> 信息。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.InitializingBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.ApiInfo;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.Contact;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ApiInfoConfig</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021-04-21 08:33</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ApiInfoConfig</span> <span class="keyword">implements</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line">    <span class="meta">@Resource(name = &quot;apiInfoProperties&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> ApiInfoProperties apiInfoProperties;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构建 ApiInfo 信息的构建工具</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ApiInfoBuilder</span> <span class="variable">apiInfoBuilder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构建 Docket 专属 ApiInfo 信息的构建工具</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, ApiInfoBuilder&gt; docketApiInfo = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">/*构建全局 ApiInfo*/</span></span><br><span class="line">        initGlobal(apiInfoBuilder, apiInfoProperties);</span><br><span class="line">        <span class="comment">/*构建局部 ApiInfo */</span></span><br><span class="line">        Map&lt;String, ApiInfoProperties&gt; groupAppInfos = apiInfoProperties.getDocketAppInfos();</span><br><span class="line">        <span class="keyword">if</span> (groupAppInfos == <span class="literal">null</span> || groupAppInfos.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*临时：Docket 专属 ApiInfo*/</span></span><br><span class="line">        ApiInfoBuilder apiInfoBuilderTemp;</span><br><span class="line">        <span class="comment">/*循环专属 ApiInfo */</span></span><br><span class="line">        <span class="keyword">for</span> (Map.Entry&lt;String, ApiInfoProperties&gt; docket : groupAppInfos.entrySet()) &#123;</span><br><span class="line">            apiInfoBuilderTemp = <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>();</span><br><span class="line">            <span class="comment">/*初始化*/</span></span><br><span class="line">            initGlobal(apiInfoBuilderTemp, docket.getValue());</span><br><span class="line">            <span class="comment">/*结果*/</span></span><br><span class="line">            docketApiInfo.put(docket.getKey(), apiInfoBuilderTemp);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取 ApiInfo</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> title 标题</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ApiInfo 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ApiInfo <span class="title function_">getApiInfo</span><span class="params">(String title)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> apiInfoBuilder.title(title).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据 GroupName 获取 ApiInfo</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;如果项目的配置文件中没有专属的配置，则会使用全局配置&lt;/p&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> groupName Docket 分组名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ApiInfo 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ApiInfo <span class="title function_">getApiInfoByGroupName</span><span class="params">(String groupName)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Optional.ofNullable(docketApiInfo.get(groupName))</span><br><span class="line">                .orElse(apiInfoBuilder.title(groupName))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取 ApiInfo</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> title       标题</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> description 描述</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ApiInfo 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ApiInfo <span class="title function_">getApiInfo</span><span class="params">(String title, String description)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> apiInfoBuilder.title(title)</span><br><span class="line">                .description(description).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构建 apiInfoBuilder 对象</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> apiInfoBuilder    apiInfo 对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> apiInfoProperties apiInfo 配置的属性</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">initGlobal</span><span class="params">(ApiInfoBuilder apiInfoBuilder, ApiInfoProperties apiInfoProperties)</span> &#123;</span><br><span class="line">        <span class="type">ContactProperties</span> <span class="variable">contact</span> <span class="operator">=</span> apiInfoProperties.getContact();</span><br><span class="line">        apiInfoBuilder.title(apiInfoProperties.getTitle())</span><br><span class="line">                .description(apiInfoProperties.getDescription());</span><br><span class="line">        <span class="comment">/*创建人*/</span></span><br><span class="line">        <span class="keyword">if</span> (contact != <span class="literal">null</span>) &#123;</span><br><span class="line">            apiInfoBuilder.contact(<span class="keyword">new</span> <span class="title class_">Contact</span>(contact.getName(),</span><br><span class="line">                    contact.getUrl(), contact.getEmail()));</span><br><span class="line">        &#125;</span><br><span class="line">        apiInfoBuilder.version(apiInfoProperties.getVersion())</span><br><span class="line">                .termsOfServiceUrl(apiInfoProperties.getTermsOfServiceUrl())</span><br><span class="line">                .license(apiInfoProperties.getLicense())</span><br><span class="line">                .licenseUrl(apiInfoProperties.getLicenseUrl());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Docket-注册"><a href="#Docket-注册" class="headerlink" title="Docket 注册"></a><code>Docket</code> 注册</h2><p>下面注册一个 <code>FileServer</code> 的文档</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean(&quot;file-server&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Docket <span class="title function_">fileServerApi</span><span class="params">()</span>&#123;</span><br><span class="line">        log.debug(<span class="string">&quot;===================    swagger2 docket create file-server =================&quot;</span>);</span><br><span class="line">        <span class="comment">// 指定api类型为swagger2</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">        .groupName(<span class="string">&quot;FileServer&quot;</span>)</span><br><span class="line">        <span class="comment">// 用于定义api文档汇总信息</span></span><br><span class="line">        .apiInfo(ApiInfoConfig.getApiInfoByGroupName(<span class="string">&quot;FileServer&quot;</span>))</span><br><span class="line">        .select()</span><br><span class="line">        <span class="comment">//指定提供接口所在的基包 any 全部</span></span><br><span class="line">        .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;gt.maxzhao.boot.file.server&quot;</span>))</span><br><span class="line">        .paths(PathSelectors.any())</span><br><span class="line">        .build();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/57187/">https://github.com/maxzhao-it/blog/post/57187/</a> </p>
 
       
     </div>

@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">407</span>
+          <span class="site-state-item-count">409</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">229</span>
+        <span class="site-state-item-count">230</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -207,6 +207,250 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/56235/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/56235/" class="post-title-link" itemprop="url">JAVA获取类的泛型信息</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-28 17:37:15" itemprop="dateModified" datetime="2022-07-28T17:37:15+08:00">2022-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>在我写 <code>SpringBoot JPA</code> 通用<code>controller</code> 的过程中，发现可以直接使用 <code>Entitymanager</code>进行实体类的操作，<code>EntityManager</code>需要实体信息，因为第一次不熟悉<code>EntityManager</code><br>的操作，所以要获取当前类的泛型信息，然后传入<code>EntityManager</code>完成通用的接口操作。</p>
+<h2 id="二、以Dao为例"><a href="#二、以Dao为例" class="headerlink" title="二、以Dao为例"></a>二、以<code>Dao</code>为例</h2><h3 id="实体接口"><a href="#实体接口" class="headerlink" title="实体接口"></a>实体接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="meta">@MappedSuperclass</span><span class="comment">//实体集成映射</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BaseEntity</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;ID&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;主键&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;DEL_STATUS&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;状态 1启用 0 停用&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer delStatus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实体"><a href="#实体" class="headerlink" title="实体"></a>实体</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 应用接口日志</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> author</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-7-23 15:38:57</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table(name = &quot;app_log_api&quot;, schema = &quot;&quot;, catalog = &quot;&quot;)</span></span><br><span class="line"><span class="meta">@ApiModel(value = &quot;应用接口日志&quot;, description = &quot;应用接口日志&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppLogApi</span> <span class="keyword">extends</span> <span class="title class_">BaseEntity</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;API&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;请求地址&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String api;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Basic</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;API_CLASS&quot;)</span></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;请求的类.方法&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String apiClass;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*****/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">AppLogApi</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dao接口"><a href="#Dao接口" class="headerlink" title="Dao接口"></a><code>Dao</code>接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * BaseService</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> maxzhao</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-08-15 11:46</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">BaseService</span>&lt;T <span class="keyword">extends</span> <span class="title class_">BaseEntity</span>, ID&gt; &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 逻辑删除</span></span><br><span class="line"><span class="comment">     **********</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    ResultObj&lt;String&gt; <span class="title function_">del</span><span class="params">(ID id)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dao实现"><a href="#Dao实现" class="headerlink" title="Dao实现"></a><code>Dao</code>实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Service(value = &quot;baseService&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BaseServiceImpl</span>&lt;T <span class="keyword">extends</span> <span class="title class_">BaseEntity</span>, ID&gt; <span class="keyword">implements</span> <span class="title class_">BaseService</span>&lt;T, ID&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;T&gt; clazz = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">Type</span> <span class="variable">type</span> <span class="operator">=</span> <span class="built_in">this</span>.getClass().getGenericInterfaces()[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">if</span> (type <span class="keyword">instanceof</span> ParameterizedType) &#123;</span><br><span class="line">            <span class="type">ParameterizedType</span> <span class="variable">pType</span> <span class="operator">=</span> (ParameterizedType) type;</span><br><span class="line">            <span class="type">Type</span> <span class="variable">claz</span> <span class="operator">=</span> pType.getActualTypeArguments()[<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">if</span> (claz <span class="keyword">instanceof</span> Class) &#123;</span><br><span class="line">                <span class="built_in">this</span>.clazz = (Class&lt;T&gt;) claz;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ResultObj&lt;String&gt; <span class="title function_">del</span><span class="params">(ID id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    Type type=getClass().getGenericSuperclass();</span><br><span class="line">    <span class="keyword">if</span>(type <span class="keyword">instanceof</span> ParameterizedType)&#123;</span><br><span class="line">    ParameterizedType pType=(ParameterizedType)type;</span><br><span class="line">    Type claz=pType.getActualTypeArguments()[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">if</span>(claz <span class="keyword">instanceof</span> Class)&#123;</span><br><span class="line">    <span class="built_in">this</span>.clazz=(Class&lt;T&gt;)claz;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="其它解读"><a href="#其它解读" class="headerlink" title="其它解读"></a>其它解读</h2><p>一、Type接口<br>Type是所有类型的父接口，他有4个子接口和一个实现类。</p>
+<p>Class比较常见，它表示的是原始类型。Class类的对象表示JVM中的一个类或接口。每个Java类在JVM里都表现为一个Class对象，可以通过“类名.class”、“对象.getClass()”、“Class.forName(“类名”)<br>”等方式获取Class对象。数组也被映射为Class对象，所有元素类型相同且维数相同的数组都共享同一个Class对象。<br>ParameterizedType表示的是参数化类型，例如List<String>、Map&lt;Integer,String&gt;、Service<User>这种带有泛型的类型。<br>ParameterizedType接口中常用的方法有3个，分别是：<br>(1) Type getRawType()——返回参数化类型中的原始类型，例如List<String>的原始类型为List。<br>(2) Type[] getActualTypeArguments()——获取参数化类型的类型变量或是实际类型列表，例如Map&lt;Integer,String&gt;<br>的实际泛型列表是Integer和String。需要注意的是，该列表的元素类型是Type，也就是说，可能存在多重嵌套的情况。<br>(3) Type getOwerType()——返回的是类型所属的类型，例如存在A<T>，其中定义了内部类InnerA<T>，则InnerA<T>所属的类型是A<T>，如果是顶层类型则返回null。这种关系常见与Map&lt;K,V&gt;<br>接口与Map.Entry&lt;K,V&gt;接口，Map&lt;K,V&gt;是Map.Entry&lt;K,V&gt;接口的所有者。<br>TypeVariable表示的是类型变量，它用来反映的是JVM编译该泛型前的信息，例如List<T>中的T就是类型变量，它在编译时需要被转换为一个具体的类型后才能正常使用。<br>该接口常用的方法有3个，分别是：<br>(1) Type[] getBounds()——获取类型变量的上边界，如果未明确声明上边界则默认为Object。例如Class<K extents Person>中K的上边界就是Person。<br>(2) D getGenericDeclaration()——获取声明该类型变量的原始类型，例如Test<K extents Person>中原始类型是Test。<br>(3) String getName()——获取在源码中定义的名字，上例中为K。<br>GenericArrayType表示的是数组类型且组成元素时ParameterizedType或TypeVariable，例如List<T>或T[]，该接口只有Type getGenericComponentType()<br>一个方法，它返回数组的组成元素类型。<br>WildcardType表示的通配符类型，例如? extends Number 和 ? super Integer。<br>Wildcard接口有两个方法，分别是：<br>(1) Type[] getUpperBounds()——返回类型变量的上边界。<br>(2) Type[] getLowerBounds()——返回类型变量的下边界。<br>二、ParameterizedType与TypeVariable的使用<br>1.未指定泛型参数的泛型类（例如：ArrayList<T>）<br>public class TypeTest {<br>public static void main(String[] args) {<br>System.out.println(“接口是否是泛型类：”+ (ArrayList.class.getGenericInterfaces()[0] instanceof ParameterizedType));<br>System.out.println(“泛型类的名称：”+ ArrayList.class.getGenericInterfaces()[0].getTypeName());<br>System.out.println(“泛型类的实现：”+ ArrayList.class.getGenericInterfaces()[0].getClass());<br>System.out.println(“是否是泛型参数:”+(((ParameterizedType)ArrayList.class.getGenericInterfaces()[0])<br>.getActualTypeArguments()[0] instanceof TypeVariable));<br>System.out.println(“泛型参数名称:”+((ParameterizedType)ArrayList.class.getGenericInterfaces()[0]).getActualTypeArguments()[0]<br>.getTypeName());<br>System.out.println(“泛型参数的实现：”+((ParameterizedType)ArrayList.class.getGenericInterfaces()[0]).getActualTypeArguments()[0]<br>.getClass());<br>}<br>}</p>
+<p>&#x2F;&#x2F;输出结果：<br>接口是否是泛型类：true<br>泛型类的名称：java.util.List<E><br>泛型类的实现：class sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl<br>是否是泛型参数:true<br>泛型参数名称:E<br>泛型参数的实现：class sun.reflect.generics.reflectiveObjects.TypeVariableImpl<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>在这里，我们使用的是ArrayList.class，如果使用new ArrayList<String>().getClass()，是否得到的泛型参数就是String呢？答案是否定的，因为this.getClass()<br>对象是被所有的不同具体类型的ArrayList实例 共享的（例如：new ArrayList<String>(), new ArrayList<Integer>() 等)，所以在字节码中类型会被擦除到上限。</p>
+<p>2.指定泛型参数的泛型类（例如：GenericSubClass<String>）<br>public class GenericClass<T> {<br>}</p>
+<p>public class GenericSubClass1<String> extends GenericClass<String> {<br>}</p>
+<p>public class GenericSubClass2 extends GenericClass<String> {<br>}</p>
+<p>public class TypeTest {<br>public static void main(String[] args) {<br>Class clazz &#x3D; GenericSubClass1.class;<br>&#x2F;&#x2F;Class clazz &#x3D; GenericSubClass2 .class;<br>&#x2F;&#x2F;Class clazz &#x3D; new GenericSubClass1().getClass();<br>&#x2F;&#x2F;Class clazz &#x3D; new GenericSubClass2().getClass();<br>System.out.println(“父类是否是泛型类：”+ (clazz.getGenericSuperclass() instanceof ParameterizedType));<br>System.out.println(“泛型类的名称：”+ clazz.getGenericSuperclass().getTypeName());<br>System.out.println(“泛型类的实现：”+ clazz.getGenericSuperclass().getClass());<br>System.out.println(“是否是泛型参数:”+(((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments()[0] instanceof<br>TypeVariable));<br>System.out.println(“泛型参数名称:”+((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments()[0]<br>.getTypeName());<br>System.out.println(“泛型参数的实现：”+((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments()[0].getClass());<br>}<br>}</p>
+<p>&#x2F;&#x2F;输出结果：<br>父类是否是泛型类：true<br>泛型类的名称：com.arch.test.reflect.GenericClass<String><br>泛型类的实现：class sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl<br>是否是泛型参数:true<br>泛型参数名称:String<br>泛型参数的实现：class sun.reflect.generics.reflectiveObjects.TypeVariableImpl</p>
+<p>不管是使用”类.class”，还是使用”对象.getClass()”，得到的父类的泛型参数始终是String。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/56235/">https://github.com/maxzhao-it/blog/post/56235/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/18026/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
+      <meta itemprop="name" content="赵联胜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="maxzhao">
+      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | maxzhao">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/post/18026/" class="post-title-link" itemprop="url">SpringBoot启动自定义控制台图标</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>对于使用过Spring Boot的开发者来说，程序启动的时候输出的由字符组成的Spring符号并不陌生。这个是Spring Boot为自己设计的Banner：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  .   ____          _            __ _ _  </span><br><span class="line"> /\\ / ___&#x27;_ __ _ _(_)_ __  __ _ \ \ \ \  </span><br><span class="line">( ( )\___ | &#x27;_ | &#x27;_| | &#x27;_ \/ _` | \ \ \ \  </span><br><span class="line"> \\/  ___)| |_)| | | | | || (_| |  ) ) ) )  </span><br><span class="line">  &#x27;  |____| .__|_| |_|_| |_\__, | / / / /  </span><br><span class="line"> =========|_|==============|___/=/_/_/_/  </span><br><span class="line"> :: Spring Boot ::        (v1.3.3.RELEASE)  </span><br></pre></td></tr></table></figure>
+
+<p>如果有人不喜欢这个输出，本文说一下怎么修改。</p>
+<h3 id="1-第一种方式：修改的时候，进行设置-在Application的main方法中："><a href="#1-第一种方式：修改的时候，进行设置-在Application的main方法中：" class="headerlink" title="1. 第一种方式：修改的时候，进行设置,在Application的main方法中："></a>1. 第一种方式：修改的时候，进行设置,在Application的main方法中：</h3><p>SpringApplication application &#x3D; <strong>new</strong> SpringApplication(App.<strong>class</strong>);<br> &#x2F;*<br> * Banner.Mode.OFF:关闭;<br> * Banner.Mode.CONSOLE:控制台输出，默认方式;<br> * Banner.Mode.LOG:日志输出方式;<br> *&#x2F; application.setBannerMode(Banner.Mode.<em><strong>OFF</strong></em>);<br> application.run(args);</p>
+<h3 id="2-第二种方式：修改banner-txt配置文件"><a href="#2-第二种方式：修改banner-txt配置文件" class="headerlink" title="2. 第二种方式：修改banner.txt配置文件"></a>2. 第二种方式：修改banner.txt配置文件</h3><p>在src&#x2F;main&#x2F;resouces下新建banner.txt，在文件中加入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#这个是MANIFEST.MF文件中的版本号</span><br><span class="line">$&#123;application.version&#125;              </span><br><span class="line"></span><br><span class="line">#这个是上面的的版本号前面加v后上括号</span><br><span class="line">$&#123;application.formatted-version&#125;</span><br><span class="line"></span><br><span class="line">#这个是springboot的版本号</span><br><span class="line">$&#123;spring-boot.version&#125;             </span><br><span class="line"></span><br><span class="line">#这个是springboot的版本号</span><br><span class="line">$&#123;spring-boot.formatted-version&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-第三种方式：重写接口Banner实现"><a href="#3-第三种方式：重写接口Banner实现" class="headerlink" title="3. 第三种方式：重写接口Banner实现"></a>3. 第三种方式：重写接口Banner实现</h3><p>SpringBoot提供了一个接口org.springframework.boot.Banner，他的实例可以被传给SpringApplication的setBanner(banner)方法。如果你闲得不行非要着重美化这个命令行输出的话，可以重写Banner接口的printBanner方法。</p>
+<h3 id="4-第四种方式：在application-properties进行配置"><a href="#4-第四种方式：在application-properties进行配置" class="headerlink" title="4. 第四种方式：在application.properties进行配置"></a>4. 第四种方式：在application.properties进行配置</h3><p>在application.proerpties进行banner的显示和关闭：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 是否显示banner，可选值[true|false]</span><br><span class="line">spring.main.show-banner=false</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>使用Spring Boot启动的jar包总是会显示一个Spring的图标：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.   ____          _            __ _ _</span><br><span class="line">/\\ / ___&#x27;_ __ _ _(_)_ __  __ _ \ \ \ \</span><br><span class="line">( ( )\___ | &#x27;_ | &#x27;_| | &#x27;_ \/ _` | \ \ \ \</span><br><span class="line">\\/  ___)| |_)| | | | | || (_| |  ) ) ) )</span><br><span class="line">&#x27;  |____| .__|_| |_|_| |_\__, | / / / /</span><br><span class="line">=========|_|==============|___/=/_/_/_/</span><br><span class="line">:: Spring Boot ::        (v1.3.3.RELEASE)</span><br></pre></td></tr></table></figure>
+
+<p>实际上Spring Boot在这个位置，放了一个彩蛋，我们是可以自定义这个图标的。<br> 我们可以在<code>resource</code>目录下面放入一个<code>banner.txt</code><br> 文件，Spring Boot启动项目的时候就会优先启动这个文件中的内容。<br> 这里给大家推荐两个个字符画生成的网站，我们可以利用生成的字符串放入这个<code>banner.txt</code><br> 文件：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://www.network-science.de/ascii/">http://www.network-science.de/ascii/</a><br> <a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://patorjk.com/software/taag/">http://patorjk.com/software/taag/</a></p>
+</blockquote>
+<p>比如我生成一个<code>star wars</code>的图标：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">     _______.___________.    ___      .______         </span><br><span class="line">    /       |           |   /   \     |   _  \        </span><br><span class="line">   |   (----`---|  |----`  /  ^  \    |  |_)  |       </span><br><span class="line">    \   \       |  |      /  /_\  \   |      /        </span><br><span class="line">.----)   |      |  |     /  _____  \  |  |\  \----.   </span><br><span class="line">|_______/       |__|    /__/     \__\ | _| `._____|   </span><br><span class="line"></span><br><span class="line">____    __    ____  ___      .______          _______.</span><br><span class="line">\   \  /  \  /   / /   \     |   _  \        /       |</span><br><span class="line"> \   \/    \/   / /  ^  \    |  |_)  |      |   (----`</span><br><span class="line">  \            / /  /_\  \   |      /        \   \    </span><br><span class="line">   \    /\    / /  _____  \  |  |\  \----.----)   |   </span><br><span class="line">    \__/  \__/ /__/     \__\ | _| `._____|_______/    </span><br></pre></td></tr></table></figure>
+
+<p>这样启动的时候</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2691760-a111193c601abf7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="img"></p>
+<p> 但是仅仅是这样看起来并不好看，还不如原来的图标好看呢。实际上Spring Boot为这个彩蛋提供了不少美化功能。</p>
+<p> Spring Boot提供了一个枚举类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AnsiColor</span><br></pre></td></tr></table></figure>
+
+<p>，这个类可以控制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">banner.txt</span><br></pre></td></tr></table></figure>
+
+<p>中的字符颜色，而且非常容易使用。</p>
+<p> 比如我可以将字符设置成颜色：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BRIGHT_YELLOW</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$&#123;AnsiColor.BRIGHT_YELLOW&#125;</span><br><span class="line">     _______.___________.    ___      .______         </span><br><span class="line">    /       |           |   /   \     |   _  \        </span><br><span class="line">   |   (----`---|  |----`  /  ^  \    |  |_)  |       </span><br><span class="line">    \   \       |  |      /  /_\  \   |      /        </span><br><span class="line">.----)   |      |  |     /  _____  \  |  |\  \----.   </span><br><span class="line">|_______/       |__|    /__/     \__\ | _| `._____|   </span><br><span class="line"></span><br><span class="line">____    __    ____  ___      .______          _______.</span><br><span class="line">\   \  /  \  /   / /   \     |   _  \        /       |</span><br><span class="line"> \   \/    \/   / /  ^  \    |  |_)  |      |   (----`</span><br><span class="line">  \            / /  /_\  \   |      /        \   \    </span><br><span class="line">   \    /\    / /  _____  \  |  |\  \----.----)   |   </span><br><span class="line">    \__/  \__/ /__/     \__\ | _| `._____|_______/    </span><br></pre></td></tr></table></figure>
+
+<p>再重新启动项目，启动界面就会变成这个样子：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2691760-82e7e7222731f38e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="img"></p>
+<p>类似 <code>$&#123;AnsiColor.BRIGHT_YELLOW&#125;</code> 这种表达式，其实可以放置多个，启动界面上的颜色，总是会根据<code>AnsiColor</code> 的设置改变界面的颜色，这样启动的界面就会显示多种不同的颜色了。</p>
+<p>除了这样美化的功能之外，启动界面很重要的功能就是要告诉我们这个项目的一些重要信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">`$&#123;application.version&#125;` 这个是`MANIFEST.MF`文件中的版本号</span><br><span class="line">`$&#123;application.formatted-version&#125;` 这个是上面的的版本号前面加v后上括号</span><br><span class="line">` $&#123;spring-boot.version&#125;` 这个是springboot的版本号</span><br><span class="line">`$&#123;spring-boot.formatted-version&#125;`同上</span><br></pre></td></tr></table></figure>
+
+<p>把以上信息通过<code>$&#123;&#125;</code> 放入<code>banner.txt</code>中，就会打印出项目对应的信息。<br> 这里放一个完整的demo:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$&#123;AnsiColor.BRIGHT_YELLOW&#125;</span><br><span class="line">     _______.___________.    ___      .______         ____    __    ____  ___      .______          _______.</span><br><span class="line">    /       |           |   /   \     |   _  \        \   \  /  \  /   / /   \     |   _  \        /       |</span><br><span class="line">   |   (----`---|  |----`  /  ^  \    |  |_)  |        \   \/    \/   / /  ^  \    |  |_)  |      |   (----`</span><br><span class="line">    \   \       |  |      /  /_\  \   |      /          \            / /  /_\  \   |      /        \   \</span><br><span class="line">.----)   |      |  |     /  _____  \  |  |\  \----.      \    /\    / /  _____  \  |  |\  \----.----)   |</span><br><span class="line">|_______/       |__|    /__/     \__\ | _| `._____|       \__/  \__/ /__/     \__\ | _| `._____|_______/</span><br><span class="line"></span><br><span class="line">$&#123;AnsiColor.BRIGHT_BLUE&#125;</span><br><span class="line">::: Project (version:$&#123;application.version&#125;) :::             ＼(^O^)／    Spring-Boot $&#123;spring-boot.version&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动就会是这一个样子:</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2691760-32c451ed29cdf37b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="img"></p>
+<p>如果颜色没有变，那么还需要设置：<code>spring.output.ansi.enabled=ALWAYS</code></p>
+<hr>
+<p>在2018年的最后一天，借用Spring Boot的<code>Banner</code>向各位程序猿同仁们问候一声：<code>Happy New Year</code>。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2691760-ccd00aa591ba3d4c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/872/format/webp" alt="img"></p>
+<hr>
+<p>接下来我们就来介绍一下这个轻松愉快的自定义<code>banner</code>功能。实现的方式非常简单，我们只需要在Spring Boot工程的<code>/src/main/resources</code> 目录下创建一个<code>banner.txt</code> 文件，然后将<code>ASCII字符</code>画复制进去，就能替换默认的<code>banner</code>了。<br> 比如上图中的输出，就采用了下面的<code>banner.txt</code> 内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$&#123;AnsiColor.BRIGHT_GREEN&#125;</span><br><span class="line">##     ##    ###    ########  ########  ##    ##    ##    ## ######## ##      ##    ##    ## ########    ###    ########</span><br><span class="line">##     ##   ## ##   ##     ## ##     ##  ##  ##     ###   ## ##       ##  ##  ##     ##  ##  ##         ## ##   ##     ##</span><br><span class="line">##     ##  ##   ##  ##     ## ##     ##   ####      ####  ## ##       ##  ##  ##      ####   ##        ##   ##  ##     ##</span><br><span class="line">######### ##     ## ########  ########     ##       ## ## ## ######   ##  ##  ##       ##    ######   ##     ## ########</span><br><span class="line">##     ## ######### ##        ##           ##       ##  #### ##       ##  ##  ##       ##    ##       ######### ##   ##</span><br><span class="line">##     ## ##     ## ##        ##           ##       ##   ### ##       ##  ##  ##       ##    ##       ##     ## ##    ##</span><br><span class="line">##     ## ##     ## ##        ##           ##       ##    ## ########  ###  ###        ##    ######## ##     ## ##     ##</span><br><span class="line">$&#123;AnsiColor.BRIGHT_RED&#125;</span><br><span class="line">Application Version: $&#123;application.version&#125;$&#123;application.formatted-version&#125;</span><br><span class="line">Spring Boot Version: $&#123;spring-boot.version&#125;$&#123;spring-boot.formatted-version&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的内容中可以看到，还使用了一些属性设置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">`$&#123;AnsiColor.BRIGHT_RED&#125;` ：设置控制台中输出内容的颜色</span><br><span class="line">`$&#123;application.version&#125;` ：用来获取`MANIFEST.MF` 文件中的版本号</span><br><span class="line">`$&#123;application.formatted-version&#125;` ：格式化后的`$&#123;application.version&#125;` 版本信息</span><br><span class="line">`$&#123;spring-boot.version&#125;` ：Spring Boot的版本号</span><br><span class="line">`$&#123;spring-boot.formatted-version&#125;` ：格式化后的`$&#123;spring-boot.version&#125;` 版本信息</span><br></pre></td></tr></table></figure>
+
+<h4 id="生成工具"><a href="#生成工具" class="headerlink" title="生成工具"></a>生成工具</h4><p>如果让我们手工的来编辑这些字符画，显然是一件非常困难的差事。所以，我们可以借助下面这些工具，轻松地根据文字或图片来生成用于<code>Banner</code>输出的字符画。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://patorjk.com/software/taag">http://patorjk.com/software/taag</a><br> <a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://www.network-science.de/ascii/">http://www.network-science.de/ascii/</a><br> <a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://www.degraeve.com/img2txt.php">http://www.degraeve.com/img2txt.php</a></p>
+</blockquote>
+<p>作者：蝉鸣的雨</p>
+<p>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/bfbcabc4af1d">https://www.jianshu.com/p/bfbcabc4af1d</a></p>
+<p>来源：简书</p>
+<p>简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。</p>
+<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/18026/">https://github.com/maxzhao-it/blog/post/18026/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1143,690 +1387,6 @@
 
 <p>在这里我们发现，并没有任何区别，实际上上面已经说道“按位复制”，那么<code>Dog</code>对象在<code>Cat</code>对象中只是引用，不存在<code>Dog</code>内存，所以就不存在复制<code>Dog</code>内存。</p>
 <p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/4368/">https://github.com/maxzhao-it/blog/post/4368/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/2922/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/2922/" class="post-title-link" itemprop="url">SpringBoot MQ参考资料</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-08-17 21:02:40" itemprop="dateModified" datetime="2023-08-17T21:02:40+08:00">2023-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="SpringBoot使用RabbitMQ"><a href="#SpringBoot使用RabbitMQ" class="headerlink" title="SpringBoot使用RabbitMQ"></a>SpringBoot使用RabbitMQ</h1><h3 id="RabbitMQ-是"><a href="#RabbitMQ-是" class="headerlink" title="RabbitMQ 是"></a>RabbitMQ 是</h3><ul>
-<li>消息队列</li>
-<li>实现AMQP（高级消息队列协议Advanced Message Queuing Protocol）的消息中间件的一种</li>
-</ul>
-<p>作用：主要是用来实现应用程序的异步和解耦，同时也能起到消息缓冲，消息分发的作用。</p>
-<p>流程：</p>
-<p>一般消息队列都是生产者将消息发送到队列，消费者监听队列进行消费。</p>
-<p>rabbitmq中一个虚拟主机（vhost默认 &#x2F;）持有一个或者多个交换机（Exchange）。 用户只能在虚拟主机的粒度进行权限控制，交换机根据一定的策略（RoutingKey）绑定(Binding)到队列(Queue)上， 这样生产者和队列就没有直接联系，而是将消息发送的交换机，交换机再把消息转发到对应绑定的队列上。</p>
-<p>交换机（Exchange）为<code>rabbitmq</code>独特的概念，用到的最常见的是4中类型：</p>
-<ol>
-<li>Direct: 先匹配, 再投送。即在绑定时设定一个routing_key, 消息的routing_key匹配时, 才会被交换器投送到绑定的队列中去. 交换机跟队列必须是精确的对应关系，这种最为简单。</li>
-<li>Topic: 转发消息主要是根据通配符。在这种交换机下，队列和交换机的绑定会定义一种路由模式，那么，通配符就要在这种路由模式和路由键之间匹配后交换机才能转发消息 这种可以认为是Direct 的灵活版</li>
-<li>Headers: 也是根据规则匹配, 相较于 direct 和 topic 固定地使用 routingkey , headers则是一个自定义匹配规则的类型， 在队列与交换器绑定时会设定一组键值对规则，消息中也包括一组键值对( headers属性)，当这些键值对有一对或全部匹配时，消息被投送到对应队列</li>
-<li>Fanout : 消息广播模式，不管路由键或者是路由模式，会把消息发给绑定给它的全部队列，如果配置了routingkey会被忽略</li>
-</ol>
-<h4 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h4><p>创建 2 个交换机<code>directExchange</code>、<code>fanoutExchange</code>，3个 队列 <code>queueA </code>、 <code>queueB </code>、 <code>queueC </code>。</p>
-<p>队列<code>directExchange</code>作为定点发送，包含队列 A B</p>
-<p>队列<code>fanoutExchange</code>作为广播发送，包含队列 A B C</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitConfig</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 声明 Direct 交换机 支持持久化.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the exchange</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean(&quot;directExchange&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Exchange <span class="title function_">directExchange</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ExchangeBuilder.directExchange(<span class="string">&quot;DIRECT_EXCHANGE&quot;</span>).durable(<span class="literal">true</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 声明 fanout 交换机.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the exchange</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean(&quot;fanoutExchange&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> FanoutExchange <span class="title function_">fanoutExchange</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (FanoutExchange) ExchangeBuilder.fanoutExchange(<span class="string">&quot;FANOUT_EXCHANGE&quot;</span>).durable(<span class="literal">true</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 声明一个队列 支持持久化.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the queue</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean(&quot;queueA&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">directQueue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> QueueBuilder.durable(<span class="string">&quot;QUEUE_A&quot;</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(&quot;queueB&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">directQueue2</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> QueueBuilder.durable(<span class="string">&quot;QUEUE_B&quot;</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(&quot;queueC&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">directQueue3</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> QueueBuilder.durable(<span class="string">&quot;QUEUE_C&quot;</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列A 到 direct 交换机.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> queue          the queue</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> directExchange the  exchange</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the binding</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingA</span><span class="params">(<span class="meta">@Qualifier(&quot;queueA&quot;)</span> Queue queue,</span></span><br><span class="line"><span class="params">                            <span class="meta">@Qualifier(&quot;directExchange&quot;)</span> Exchange directExchange)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue).to(directExchange).with(<span class="string">&quot;DIRECT_ROUTING_KEY_A&quot;</span>).noargs();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingB</span><span class="params">(<span class="meta">@Qualifier(&quot;queueB&quot;)</span> Queue queue,</span></span><br><span class="line"><span class="params">                            <span class="meta">@Qualifier(&quot;directExchange&quot;)</span> Exchange directExchange)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue).to(directExchange).with(<span class="string">&quot;DIRECT_ROUTING_KEY_B&quot;</span>).noargs();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列A 到 fanout 交换机.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> queue          the queue</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> fanoutExchange the  exchange</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the binding</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingA1</span><span class="params">(<span class="meta">@Qualifier(&quot;queueA&quot;)</span> Queue queue,</span></span><br><span class="line"><span class="params">                             <span class="meta">@Qualifier(&quot;fanoutExchange&quot;)</span> Exchange fanoutExchange)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue).to(fanoutExchange).with(<span class="string">&quot;FANOUT_ROUTING_KEY_A&quot;</span>).noargs();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingA2</span><span class="params">(<span class="meta">@Qualifier(&quot;queueB&quot;)</span> Queue queue,</span></span><br><span class="line"><span class="params">                             <span class="meta">@Qualifier(&quot;fanoutExchange&quot;)</span> Exchange fanoutExchange)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue).to(fanoutExchange).with(<span class="string">&quot;FANOUT_ROUTING_KEY_B&quot;</span>).noargs();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingA3</span><span class="params">(<span class="meta">@Qualifier(&quot;queueC&quot;)</span> Queue queue,</span></span><br><span class="line"><span class="params">                             <span class="meta">@Qualifier(&quot;fanoutExchange&quot;)</span> Exchange fanoutExchange)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue).to(fanoutExchange).with(<span class="string">&quot;FANOUT_ROUTING_KEY_C&quot;</span>).noargs();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="消息发送类"><a href="#消息发送类" class="headerlink" title="消息发送类"></a>消息发送类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SenderService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(<span class="built_in">this</span>.getClass());</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试广播模式.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> p the p</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the response entity</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">broadcast</span><span class="params">(String p)</span> &#123;</span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>(UUID.randomUUID().toString());</span><br><span class="line">        rabbitTemplate.convertAndSend(<span class="string">&quot;FANOUT_EXCHANGE&quot;</span>, <span class="string">&quot;&quot;</span>, p, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试 Direct 模式.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> p the p</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the response entity</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">directA</span><span class="params">(String p)</span> &#123;</span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>(UUID.randomUUID().toString());</span><br><span class="line">        rabbitTemplate.convertAndSend(<span class="string">&quot;DIRECT_EXCHANGE&quot;</span>, <span class="string">&quot;DIRECT_ROUTING_KEY_A&quot;</span>, p, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">directB</span><span class="params">(String p)</span> &#123;</span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>(UUID.randomUUID().toString());</span><br><span class="line">        rabbitTemplate.convertAndSend(<span class="string">&quot;DIRECT_EXCHANGE&quot;</span>, <span class="string">&quot;DIRECT_ROUTING_KEY_B&quot;</span>, p, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">directNull</span><span class="params">(String p)</span> &#123;</span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>(UUID.randomUUID().toString());</span><br><span class="line">        rabbitTemplate.convertAndSend(<span class="string">&quot;DIRECT_EXCHANGE&quot;</span>, <span class="string">&quot;&quot;</span>, p, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="消息接收类"><a href="#消息接收类" class="headerlink" title="消息接收类"></a>消息接收类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Receiver</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(Receiver.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * FANOUT广播队列监听一.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message the message</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> channel the channel</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException the io exception  这里异常需要处理</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &#123;&quot;QUEUE_A&quot;&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">on</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        channel.basicAck(message.getMessageProperties().getDeliveryTag(), <span class="literal">true</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;FANOUT_QUEUE_A &quot;</span> + <span class="keyword">new</span> <span class="title class_">String</span>(message.getBody()));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RabbitListener(queues = &#123;&quot;QUEUE_B&quot;&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">t</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        channel.basicAck(message.getMessageProperties().getDeliveryTag(), <span class="literal">true</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;FANOUT_QUEUE_B &quot;</span> + <span class="keyword">new</span> <span class="title class_">String</span>(message.getBody()));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RabbitListener(queues = &#123;&quot;QUEUE_C&quot;&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">t</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        channel.basicAck(message.getMessageProperties().getDeliveryTag(), <span class="literal">true</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;FANOUT_QUEUE_C &quot;</span> + <span class="keyword">new</span> <span class="title class_">String</span>(message.getBody()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * DIRECT模式.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message the message</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> channel the channel</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException the io exception  这里异常需要处理</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &#123;&quot;DIRECT_QUEUE&quot;&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">message</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        channel.basicAck(message.getMessageProperties().getDeliveryTag(), <span class="literal">true</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;DIRECT_QUEUE &quot;</span> + <span class="keyword">new</span> <span class="title class_">String</span>(message.getBody()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="测试类"><a href="#测试类" class="headerlink" title="测试类"></a>测试类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="meta">@SpringBootTest(classes = Application.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SenderServiceTest</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> SenderService senderService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testCache</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="comment">// 测试广播模式</span></span><br><span class="line">        senderService.broadcast(<span class="string">&quot;   Test    同学们集合啦！&quot;</span>);</span><br><span class="line">        <span class="comment">// 测试Direct模式</span></span><br><span class="line">        senderService.directA(<span class="string">&quot;   Test    定点消息 A &quot;</span>);</span><br><span class="line">        senderService.directB(<span class="string">&quot;   Test    定点消息 B &quot;</span>);</span><br><span class="line">        senderService.directNull(<span class="string">&quot;   Test    定点消息 null key &quot;</span>);</span><br><span class="line">        Thread.sleep(<span class="number">5000L</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DIRECT_QUEUE_A <span class="string">&quot;   Test    同学们集合啦！&quot;</span></span><br><span class="line">FANOUT_QUEUE_B <span class="string">&quot;   Test    同学们集合啦！&quot;</span></span><br><span class="line">FANOUT_QUEUE_C <span class="string">&quot;   Test    同学们集合啦！&quot;</span></span><br><span class="line">DIRECT_QUEUE_A<span class="string">&quot;   Test    定点消息 A &quot;</span></span><br><span class="line">DIRECT_QUEUE_B<span class="string">&quot;   Test    定点消息 B &quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>null key的并没有出现，所以在 <code>directExchange</code>中没有可以广播的队列（都绑定了routingkey）。</p>
-<h3 id="Maven-依赖"><a href="#Maven-依赖" class="headerlink" title="Maven 依赖"></a>Maven 依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">5672</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">maxzhao</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">maxzhao</span></span><br><span class="line">    <span class="comment">#支持发布确认</span></span><br><span class="line">    <span class="attr">publisher-confirms:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment">#支持发布返回</span></span><br><span class="line">    <span class="attr">publisher-returns:</span> <span class="literal">true</span>      </span><br><span class="line">    <span class="comment"># 默认 /</span></span><br><span class="line">    <span class="attr">virtual-host:</span> <span class="string">maxzhao_vhost</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">acknowledge-mode:</span> <span class="string">manual</span> <span class="comment">#采用手动应答</span></span><br><span class="line">        <span class="attr">concurrency:</span> <span class="number">1</span> <span class="comment">#指定最小的消费者数量</span></span><br><span class="line">        <span class="attr">max-concurrency:</span> <span class="number">1</span> <span class="comment">#指定最大的消费者数量</span></span><br><span class="line">        <span class="attr">retry:</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment">#是否支持重试</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他<a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/08/06/spring/sb-rabbitmq.html">参考</a></h3><h1 id="JMS介绍和使用场景"><a href="#JMS介绍和使用场景" class="headerlink" title="JMS介绍和使用场景"></a>JMS介绍和使用场景</h1><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>讲解什么是消息队列，JMS的基础知识和使用场景</p>
-<ol>
-<li>什么是JMS: Java消息服务（Java Message Service),Java平台中关于面向消息中间件的接口</li>
-<li>JMS是一种与厂商无关的 API，用来访问消息收发系统消息，它类似于JDBC(Java Database Connectivity)。这里，JDBC 是可以用来访问许多不同关系数据库的 API</li>
-<li>使用场景：<ol>
-<li>跨平台</li>
-<li>多语言</li>
-<li>多项目</li>
-<li>解耦</li>
-<li>分布式事务</li>
-<li>流量控制</li>
-<li>最终一致性</li>
-<li>RPC调用</li>
-<li>上下游对接，数据源变动-&gt;通知下属</li>
-</ol>
-</li>
-</ol>
-<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ol>
-<li>JMS提供者：Apache ActiveMQ、RabbitMQ、Kafka、Notify、MetaQ、RocketMQ</li>
-<li>JMS生产者(Message Producer)</li>
-<li>JMS消费者(Message Consumer)</li>
-<li>JMS消息</li>
-<li>JMS队列</li>
-<li>JMS主题</li>
-<li>JMS消息通常有两种类型：点对点（Point-to-Point)、发布&#x2F;订阅（Publish&#x2F;Subscribe</li>
-</ol>
-<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><ol>
-<li>Broker - 简单来说就是消息队列服务器的实体。</li>
-<li>Exchange - 消息路由器，转发消息到绑定的队列上，指定消息按什么规则，路由到哪个队列。</li>
-<li>Queue - 消息队列，用来存储消息，每个消息都会被投入到一个或多个队列。</li>
-<li>Binding - 绑定，它的作用就是把 Exchange 和 Queue 按照路由规则绑定起来。</li>
-<li>RoutingKey - 路由关键字，Exchange 根据这个关键字进行消息投递。</li>
-<li>Producter - 消息生产者，产生消息的程序。</li>
-<li>Consumer - 消息消费者，接收消息的程序。</li>
-<li>Channel - 消息通道，在客户端的每个连接里可建立多个Channel，每个channel代表一个会话。</li>
-</ol>
-<h3 id="编程模型"><a href="#编程模型" class="headerlink" title="编程模型"></a>编程模型</h3><ol>
-<li>ConnectionFactory ：连接工厂，JMS 用它创建连接</li>
-<li>Connection ：JMS 客户端到JMS Provider 的连接</li>
-<li>Session： 一个发送或接收消息的线程</li>
-<li>Destination ：消息的目的地;消息发送给谁.</li>
-<li>MessageConsumer &#x2F; MessageProducer： 消息接收者，消费者</li>
-</ol>
-<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><p>RabbitMQ是一个出色的消息代理中间件（Message Broker）：接受和转发消息。你可以将它看作是一个邮局， 你把自己的信件写上收件人地址，然后放到邮筒里面就不用管了，由邮局负责将这个信件送到目的地。<a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/06/mq/rabbitmq-tutorial01.html">来自</a></p>
-<h3 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h3><h4 id="我这里使用的是-ArchLInux"><a href="#我这里使用的是-ArchLInux" class="headerlink" title="我这里使用的是 ArchLInux"></a>我这里使用的是 <code>ArchLInux</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S rabbitmq</span><br><span class="line"><span class="comment"># 会自动安装 socat  erlang-nox rabbitmq</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="RPM-安装"><a href="#RPM-安装" class="headerlink" title="RPM 安装"></a>RPM 安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先安装erlang</span></span><br><span class="line">rpm -Uvh https://mirrors.ustc.edu.cn/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm</span><br><span class="line"><span class="comment"># 下面可以  epel-release 是软件库</span></span><br><span class="line">yum install epel-release</span><br><span class="line">yum install erlang</span><br><span class="line"><span class="comment">#安装RabbitMQ</span></span><br><span class="line">rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc</span><br><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.15/rabbitmq-server-3.6.15-1.el7.noarch.rpm</span><br><span class="line">ll</span><br><span class="line">yum install rabbitmq-server-3.6.15-1.el7.noarch.rpm</span><br><span class="line"><span class="comment"># 或者下面安装 mq</span></span><br><span class="line"><span class="comment"># wget ftp://195.220.108.108/linux/centos/7.4.1708/os/x86_64/Packages/socat-1.7.3.2-2.el7.x86_64.rpm</span></span><br><span class="line"><span class="comment"># yum localinstall -C -y --disablerepo=* *.rpm</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="安装web管理界面"><a href="#安装web管理界面" class="headerlink" title="安装web管理界面"></a>安装web管理界面</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"><span class="comment"># 查看所有的插件</span></span><br><span class="line">sudo rabbitmq-plugins list</span><br></pre></td></tr></table></figure>
-
-<h4 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置开机自启服务</span></span><br><span class="line">systemctl <span class="built_in">enable</span> rabbitmq-server</span><br><span class="line"><span class="comment"># 启动RabbitMQ</span></span><br><span class="line">systemctl start rabbitmq-server</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">systemctl restart rabbitmq-server</span><br></pre></td></tr></table></figure>
-
-<h4 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rabbitmq/rabbitmq.config</span><br></pre></td></tr></table></figure>
-
-<p>配置端口，备注：消息端口<code>5672</code>，则web访问端口为 <code>15672</code></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span>rabbit<span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span>loopback_users<span class="punctuation">,</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span>tcp_listeners<span class="punctuation">,</span> <span class="punctuation">[</span><span class="number">5672</span><span class="punctuation">]</span><span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改guest的密码</span></span><br><span class="line">sudo rabbitmqctl list_users</span><br><span class="line">sudo rabbitmqctl change_password guest guest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建其他管理员账号比如test/test：</span></span><br><span class="line">sudo rabbitmqctl add_user maxzhao maxzhao</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">sudo rabbitmqctl set_user_tags maxzhao administrator</span><br><span class="line"><span class="comment"># /是 vhost的目录  Configure regexp   Write regexp  Read regexp</span></span><br><span class="line">sudo rabbitmqctl set_permissions -p / maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"><span class="comment"># Sets user topic permissions for an exchange，默认使用 AMQP default 的exchange</span></span><br><span class="line"><span class="comment"># sudo rabbitmqctl set_topic_permissions</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="添加vhost"><a href="#添加vhost" class="headerlink" title="添加vhost"></a>添加vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看帮助</span></span><br><span class="line">sudo rabbitmqctl  --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 查看创建 vhost 的帮助</span></span><br><span class="line">sudo rabbitmqctl add_vhost --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 创建</span></span><br><span class="line">sudo rabbitmqctl add_vhost maxzhao_vhost</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">sudo rabbitmqctl  list_vhosts</span><br><span class="line"><span class="comment"># 赋权  注意  /maxzhao_vhost 与 maxzhao_vhost  不一样</span></span><br><span class="line">sudo rabbitmqctl set_permissions -p /maxzhao_vhost maxzhao <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="删除-vhost"><a href="#删除-vhost" class="headerlink" title="删除 vhost"></a>删除 vhost</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl add_vhost maxzhaoTest</span><br><span class="line">sudo rabbitmqctl delete_vhost maxzhaoTest</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="二、任务队列等引用"><a href="#二、任务队列等引用" class="headerlink" title="二、任务队列等引用"></a>二、任务队列等引用</h3><blockquote>
-</blockquote>
-<blockquote>
-<p>本文地址：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/378aef58b58e">SpringBoot使用RabbitMQ及RabbitMQ介绍</a></p>
-<p>推荐</p>
-</blockquote>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/getstarted.html">官方示例</a></p>
-<p>下面2017年写的，但是比较全面的新手教材。</p>
-<p><a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/08/mq/rabbitmq-tutorial02.html">RabbitMQ简易教程 - 任务队列</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/10/mq/rabbitmq-tutorial03.html">RabbitMQ简易教程 - 发布订阅</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/13/mq/rabbitmq-tutorial04.html">RabbitMQ简易教程 - 路由</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/15/mq/rabbitmq-tutorial05.html">RabbitMQ简易教程 - 主题</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/16/mq/rabbitmq-tutorial06.html">RabbitMQ简易教程 - RPC</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/17/mq/rabbitmq-tutorial07.html">RabbitMQ简易教程 - WebSocket</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.xncoding.com/2017/05/26/mq/rabbitmq-tutorial08.html">RabbitMQ简易教程 - 并发调度</a></p>
-</blockquote>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/2922/">https://github.com/maxzhao-it/blog/post/2922/</a> </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://github.com/maxzhao-it/blog/post/2921/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/uploads/images/avatar.jpg">
-      <meta itemprop="name" content="赵联胜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="maxzhao">
-      <meta itemprop="description" content="小码农赵联胜的博客,从遇到Java到爱上Java，工作之余学习Java生态圈中的各种技术。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | maxzhao">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/post/2921/" class="post-title-link" itemprop="url">SpringBoot MQ参考资料</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-07-04 14:50:22" itemprop="dateModified" datetime="2022-07-04T14:50:22+08:00">2022-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/SpringBoot/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="一、JMS介绍和使用场景及基础编程模型"><a href="#一、JMS介绍和使用场景及基础编程模型" class="headerlink" title="一、JMS介绍和使用场景及基础编程模型"></a>一、JMS介绍和使用场景及基础编程模型</h2><p>  简介：讲解什么是小写队列，JMS的基础知识和使用场景</p>
-<ol>
-<li><p>什么是JMS: Java消息服务（Java Message Service),Java平台中关于面向消息中间件的接口</p>
-</li>
-<li><p>JMS是一种与厂商无关的 API，用来访问消息收发系统消息，它类似于JDBC(Java Database Connectivity)。这里，JDBC 是可以用来访问许多不同关系数据库的 API</p>
-</li>
-<li><p>使用场景：</p>
-<ol>
-<li>跨平台</li>
-<li>多语言</li>
-<li>多项目</li>
-<li>解耦</li>
-<li>分布式事务</li>
-<li>流量控制</li>
-<li>最终一致性</li>
-<li>RPC调用</li>
-<li>上下游对接，数据源变动-&gt;通知下属</li>
-</ol>
-</li>
-<li><p>概念</p>
-</li>
-</ol>
-<ul>
-<li><p>JMS提供者：Apache ActiveMQ、RabbitMQ、Kafka、Notify、MetaQ、RocketMQ</p>
-</li>
-<li><p>JMS生产者(Message Producer)</p>
-</li>
-<li><p>JMS消费者(Message Consumer)</p>
-</li>
-<li><p>JMS消息</p>
-</li>
-<li><p>JMS队列</p>
-</li>
-<li><p>JMS主题</p>
-</li>
-<li><p>JMS消息通常有两种类型：点对点（Point-to-Point)、发布&#x2F;订阅（Publish&#x2F;Subscribe）</p>
-</li>
-</ul>
-<ol start="5">
-<li>编程模型</li>
-</ol>
-<p> MQ中需要用的一些类</p>
-<ul>
-<li><p>ConnectionFactory ：连接工厂，JMS 用它创建连接</p>
-</li>
-<li><p>Connection ：JMS 客户端到JMS Provider 的连接</p>
-</li>
-<li><p>Session： 一个发送或接收消息的线程</p>
-</li>
-<li><p>Destination ：消息的目的地;消息发送给谁.</p>
-</li>
-<li><p>MessageConsumer &#x2F; MessageProducer： 消息接收者，消费者</p>
-</li>
-</ul>
-<h2 id="二、ActiveMQ5-x消息队列基础介绍和安装"><a href="#二、ActiveMQ5-x消息队列基础介绍和安装" class="headerlink" title="二、ActiveMQ5.x消息队列基础介绍和安装"></a>二、ActiveMQ5.x消息队列基础介绍和安装</h2><p>  简介：介绍ActiveMQ5.x消息队列基础特性和本地快速安装</p>
-<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
-<li><p>1）支持来自Java，C，C ++，C＃，Ruby，Perl，Python，PHP的各种跨语言客户端和协议</p>
-</li>
-<li><p>2）支持许多高级功能，如消息组，虚拟目标，通配符和复合目标</p>
-</li>
-<li><ol start="3">
-<li>完全支持JMS 1.1和J2EE 1.4，支持瞬态，持久，事务和XA消息</li>
-</ol>
-</li>
-<li><ol start="4">
-<li>Spring支持，ActiveMQ可以轻松嵌入到Spring应用程序中，并使用Spring的XML配置机制进行配置</li>
-</ol>
-</li>
-<li><ol start="5">
-<li>支持在流行的J2EE服务器（如TomEE，Geronimo，JBoss，GlassFish和WebLogic）中进行测试</li>
-</ol>
-</li>
-<li><ol start="6">
-<li>使用JDBC和高性能日志支持非常快速的持久化</li>
-</ol>
-</li>
-</ul>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ul>
-<li><p>下载地址：<a target="_blank" rel="noopener" href="http://activemq.apache.org/activemq-5153-release.html">http://activemq.apache.org/activemq-5153-release.html</a></p>
-</li>
-<li><p>快速开始：<a target="_blank" rel="noopener" href="http://activemq.apache.org/getting-started.html">http://activemq.apache.org/getting-started.html</a></p>
-</li>
-<li><p>如果我们是32位的机器，就双击win32目录下的activemq.bat,如果是64位机器，则双击win64目录下的activemq.bat</p>
-</li>
-<li><p>bin目录里面启动 选择对应的系统版本和位数，activeMQ start 启动</p>
-</li>
-<li><p>启动后访问路径<a target="_blank" rel="noopener" href="http://127.0.0.1:8161/">http://127.0.0.1:8161/</a></p>
-</li>
-<li><p>用户名和密码默认都是admin</p>
-</li>
-<li><p>官方案例集合<a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples">https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples</a></p>
-</li>
-</ul>
-<h3 id="面板："><a href="#面板：" class="headerlink" title="面板："></a>面板：</h3><ul>
-<li><p>Name：队列名称。</p>
-</li>
-<li><p>Number Of Pending Messages：等待消费的消息个数。</p>
-</li>
-<li><p>Number Of Consumers：当前连接的消费者数目</p>
-</li>
-<li><p>Messages Enqueued：进入队列的消息总个数，包括出队列的和待消费的，这个数量只增不减。</p>
-</li>
-<li><p>Messages Dequeued：已经消费的消息数量。</p>
-</li>
-</ul>
-<h2 id="三、SpringBoot2整合ActiveMQ实战之点对点消息"><a href="#三、SpringBoot2整合ActiveMQ实战之点对点消息" class="headerlink" title="三、SpringBoot2整合ActiveMQ实战之点对点消息"></a>三、SpringBoot2整合ActiveMQ实战之点对点消息</h2><p>  简介:SpringBoot2.x整合ActiveMQ实战之点对点消息</p>
-<h3 id="1、官网地址"><a href="#1、官网地址" class="headerlink" title="1、官网地址"></a>1、<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.2.x-SNAPSHOT/reference/html/#using-boot-starter">官网地址</a></h3><h3 id="2、加入依赖"><a href="#2、加入依赖" class="headerlink" title="2、加入依赖"></a>2、加入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 整合消息队列ActiveMQ --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-activemq<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 如果配置线程池则加入 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>activemq-pool<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3、application-properties配置文件配置"><a href="#3、application-properties配置文件配置" class="headerlink" title="3、application.properties配置文件配置"></a>3、application.properties配置文件配置</h3> <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#整合jms测试，安装在别的机器，防火墙和端口号记得开放</span></span><br><span class="line"> <span class="attr">spring.activemq.broker-url</span>=<span class="string">tcp://127.0.0.1:61616</span></span><br><span class="line"><span class="comment"> #集群配置</span></span><br><span class="line"><span class="comment"> #spring.activemq.broker-url=failover:(tcp://localhost:61616,tcp://localhost:61617)</span></span><br><span class="line"> <span class="attr">spring.activemq.user</span>=<span class="string">admin</span></span><br><span class="line"> <span class="attr">spring.activemq.password</span>=<span class="string">admin</span></span><br><span class="line"><span class="comment"> #下列配置要增加依赖</span></span><br><span class="line"> <span class="attr">spring.activemq.pool.enabled</span>=<span class="string">true</span></span><br><span class="line"> <span class="attr">spring.activemq.pool.max-connections</span>=<span class="string">100</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4、springboot启动类-EnableJms，开启支持jms"><a href="#4、springboot启动类-EnableJms，开启支持jms" class="headerlink" title="4、springboot启动类 @EnableJms，开启支持jms"></a>4、springboot启动类 @EnableJms，开启支持jms</h3><h3 id="5、模拟请求"><a href="#5、模拟请求" class="headerlink" title="5、模拟请求"></a>5、模拟请求</h3><p> localhost:8080&#x2F;api&#x2F;v1&#x2F;order?msg&#x3D;12312321321312</p>
-<h3 id="6、消费者：实时监听对应的队列"><a href="#6、消费者：实时监听对应的队列" class="headerlink" title="6、消费者：实时监听对应的队列"></a>6、消费者：实时监听对应的队列</h3><p> @JmsListener(destination &#x3D; “order.queue”)</p>
-<h2 id="四、SpringBoot2整合ActiveMQ实战之发布订阅模式"><a href="#四、SpringBoot2整合ActiveMQ实战之发布订阅模式" class="headerlink" title="四、SpringBoot2整合ActiveMQ实战之发布订阅模式"></a>四、SpringBoot2整合ActiveMQ实战之发布订阅模式</h2><p>  简介：SpringBoot整合ActiveMQ实战之发布订阅模式(pub&#x2F;sub),及同时支持点对点和发布订阅模型</p>
-<h3 id="1、需要加入配置文件，支持发布订阅模型，默认只支持点对点"><a href="#1、需要加入配置文件，支持发布订阅模型，默认只支持点对点" class="headerlink" title="1、需要加入配置文件，支持发布订阅模型，默认只支持点对点"></a>1、需要加入配置文件，支持发布订阅模型，默认只支持点对点</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#default point to point</span></span><br><span class="line"><span class="attr">spring.jms.pub-sub-domain</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
-
-<p>  注意点：</p>
-<h4 id="1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听"><a href="#1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听" class="headerlink" title="1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听"></a>1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听</h4><p>  修改配置：spring.jms.pub-sub-domain&#x3D;true</p>
-<h4 id="2、-JmsListener如果不指定独立的containerFactory的话是只能消费queue消息"><a href="#2、-JmsListener如果不指定独立的containerFactory的话是只能消费queue消息" class="headerlink" title="2、@JmsListener如果不指定独立的containerFactory的话是只能消费queue消息"></a>2、@JmsListener如果不指定独立的containerFactory的话是只能消费queue消息</h4><p>  修改订阅者container：containerFactory&#x3D;”jmsListenerContainerTopic”</p>
-<p> &#x2F;&#x2F;需要给topic定义独立的JmsListenerContainer</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> JmsListenerContainerFactory&lt;?&gt; jmsListenerContainerTopic(ConnectionFactory activeMQConnectionFactory) &#123;</span><br><span class="line">	<span class="type">DefaultJmsListenerContainerFactory</span> <span class="variable">bean</span> <span class="operator">=</span> <span class="keyword">new</span>  <span class="title class_">DefaultJmsListenerContainerFactory</span>();</span><br><span class="line">	bean.setPubSubDomain(<span class="literal">true</span>);</span><br><span class="line">	bean.setConnectionFactory(activeMQConnectionFactory);</span><br><span class="line">	<span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>  在配置文件里面，注释掉 #spring.jms.pub-sub-domain&#x3D;true</p>
-<h2 id="五、RocketMQ4-x消息队列介绍"><a href="#五、RocketMQ4-x消息队列介绍" class="headerlink" title="五、RocketMQ4.x消息队列介绍"></a>五、RocketMQ4.x消息队列介绍</h2><p>  简介：阿里开源消息队列 RocketMQ4.x介绍和新概念讲解</p>
-<p> 1、Apache RocketMQ作为阿里开源的一款高性能、高吞吐量的分布式消息中间件</p>
-<p> 2、特点</p>
-<p> 1)在高压下1毫秒内响应延迟超过99.6％。</p>
-<p> 2)适合金融类业务，高可用性跟踪和审计功能。</p>
-<p> 3)支持发布订阅模型，和点对点</p>
-<p> 4）支持拉pull和推push两种消息模式</p>
-<p> 5)单一队列百万消息</p>
-<p> 6)支持单master节点，多master节点，多master多slave节点</p>
-<p> …</p>
-<p> 3、概念</p>
-<p> Producer:消息生产者</p>
-<p> Producer Group:消息生产者组，发送同类消息的一个消息生产组</p>
-<p> Consumer:消费者</p>
-<p> Consumer Group:消费同个消息的多个实例</p>
-<p> Tag:标签，子主题（二级分类）,用于区分同一个主题下的不同业务的消息</p>
-<p> Topic:主题</p>
-<p> Message：消息</p>
-<p> Broker：MQ程序，接收生产的消息，提供给消费者消费的程序</p>
-<p> Name Server：给生产和消费者提供路由信息，提供轻量级的服务发现和路由         </p>
-<p> 3、官网地址：<a target="_blank" rel="noopener" href="http://rocketmq.apache.org/">http://rocketmq.apache.org/</a></p>
-<p>  学习资源：</p>
-<p> 1）<a target="_blank" rel="noopener" href="http://jm.taobao.org/">http://jm.taobao.org/</a>&lt;st1:chsdate year&#x3D;”2017” month&#x3D;”1” day&#x3D;”12” islunardate&#x3D;”False” isrocdate&#x3D;”False” w:st&#x3D;”on”&gt;2017&#x2F;01&#x2F;12</st1:chsdate>&#x2F;rocketmq-quick-start-in-10-minutes&#x2F;</p>
-<p> 2）<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/453c6e7ff81c">https://www.jianshu.com/p/453c6e7ff81c</a></p>
-<h2 id="六、RocketMQ4-x本地快速部署"><a href="#六、RocketMQ4-x本地快速部署" class="headerlink" title="六、RocketMQ4.x本地快速部署"></a>六、RocketMQ4.x本地快速部署</h2><p>  简介:RocketMQ4.x本地快速部署</p>
-<p> 1、安装前提条件(推荐)</p>
-<p> 64bit OS, Linux&#x2F;Unix&#x2F;Mac</p>
-<p> 64bit JDK 1.8+;</p>
-<p> 2、快速开始 <a target="_blank" rel="noopener" href="http://rocketmq.apache.org/docs/quick-start/">http://rocketmq.apache.org/docs/quick-start/</a></p>
-<p>  下载安装包：<a target="_blank" rel="noopener" href="https://www.apache.org/dyn/closer.cgi?path=rocketmq/">https://www.apache.org/dyn/closer.cgi?path=rocketmq/</a>&lt;st1:chsdate year&#x3D;”1899” month&#x3D;”12” day&#x3D;”30” islunardate&#x3D;”False” isrocdate&#x3D;”False” w:st&#x3D;”on”&gt;4.2.0</st1:chsdate>&#x2F;rocketmq-all-4.2.0-bin-release.zip</p>
-<p>  路径：&#x2F;Users&#x2F;jack&#x2F;Desktop&#x2F;person&#x2F;springboot&#x2F;资料&#x2F;第13章&#x2F;第5课&#x2F;rocketmq-all-&lt;st1:chsdate year&#x3D;”1899” month&#x3D;”12” day&#x3D;”30” islunardate&#x3D;”False” isrocdate&#x3D;”False” w:st&#x3D;”on”&gt;4.2.0</st1:chsdate>-bin-release&#x2F;bin</p>
-<p> 3、解压压缩包</p>
-<p> 1）进入bin目录，启动namesrv</p>
-<p> nohup sh mqnamesrv &amp;</p>
-<ol start="2">
-<li>查看日志 tail -f nohup.out</li>
-</ol>
-<p>  结尾：The Name Server boot success. serializeType&#x3D;JSON 表示启动成功</p>
-<p> 3、启动broker  </p>
-<p> nohup sh mqbroker -n 127.0.0.1:9876 &amp;</p>
-<p> 4)、关闭nameserver broker执行的命令</p>
-<p> sh mqshutdown namesrv</p>
-<p> sh mqshutdown broker</p>
-<h2 id="七、RoekerMQ4-x可视化控制台讲解"><a href="#七、RoekerMQ4-x可视化控制台讲解" class="headerlink" title="七、RoekerMQ4.x可视化控制台讲解"></a>七、RoekerMQ4.x可视化控制台讲解</h2><p>  简介：RoekerMQ4.x可视化控制台讲解</p>
-<p> 1、下载 <a href="https://github.com/apache/rocketmq-externals">https://github.com/apache/rocketmq-externals</a></p>
-<p> 2、编译打包 mvn clean package -Dmaven.test.skip&#x3D;true</p>
-<p> 3、target目录 通过java -jar的方式运行</p>
-<p> 4、无法连接获取broker信息</p>
-<p> 1）修改配置文件,名称路由地址为 namesrvAddr，例如我本机为</p>
-<p> 2）src&#x2F;main&#x2F;resources&#x2F;application.properties</p>
-<p> rocketmq.config.namesrvAddr&#x3D;192.168.0.101:9876</p>
-<p> 5、默认端口 localhost:8080</p>
-<p> 6、注意：</p>
-<p>  在阿里云，腾讯云或者虚拟机，记得检查端口号和防火墙是否启动</p>
-<h2 id="八、Springboot2整合RocketMQ4-x实战上集"><a href="#八、Springboot2整合RocketMQ4-x实战上集" class="headerlink" title="八、Springboot2整合RocketMQ4.x实战上集"></a>八、Springboot2整合RocketMQ4.x实战上集</h2><p>  简介：Springboot2.x整合RocketMQ4.x实战，加入相关依赖，开发生产者代码</p>
-<p>  启动nameser和broker</p>
-<p> 1、加入相关依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.rocketmq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rocketmq-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;rocketmq.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.rocketmq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rocketmq-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;rocketmq.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p> 2、application.properties加入配置文件            </p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 消费者的组名</span></span><br><span class="line"><span class="attr">apache.rocketmq.consumer.PushConsumer</span>=<span class="string">orderConsumer</span></span><br><span class="line"><span class="comment"># 生产者的组名</span></span><br><span class="line"><span class="attr">apache.rocketmq.producer.producerGroup</span>=<span class="string">Producer</span></span><br><span class="line"><span class="comment"># NameServer地址</span></span><br><span class="line"><span class="attr">apache.rocketmq.namesrvAddr</span>=<span class="string">127.0.0.1:9876</span></span><br></pre></td></tr></table></figure>
-
-<p> 3、开发MsgProducer</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> - 生产者的组名</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="meta">@Value(&quot;$&#123;apache.rocketmq.producer.producerGroup&#125;&quot;)</span></span><br><span class="line"> <span class="keyword">private</span> String producerGroup;</span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">- NameServer 地址</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="meta">@Value(&quot;$&#123;apache.rocketmq.namesrvAddr&#125;&quot;)</span></span><br><span class="line"> <span class="keyword">private</span> String namesrvAddr;</span><br><span class="line"> <span class="keyword">private</span> DefaultMQProducer producer ;</span><br><span class="line"> <span class="keyword">public</span> DefaultMQProducer <span class="title function_">getProducer</span><span class="params">()</span>&#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="built_in">this</span>.producer;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@PostConstruct</span></span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">defaultMQProducer</span><span class="params">()</span> &#123;</span><br><span class="line"> <span class="comment">//生产者的组名</span></span><br><span class="line"> 	producer = <span class="keyword">new</span> <span class="title class_">DefaultMQProducer</span>(producerGroup);</span><br><span class="line"> <span class="comment">//指定NameServer地址，多个地址以 ; 隔开</span></span><br><span class="line"> <span class="comment">//如 producer.setNamesrvAddr(&quot;192.168.100.141:9876;192.168.100.142:9876;192.168.100.149:9876&quot;);</span></span><br><span class="line">     producer.setNamesrvAddr(namesrvAddr);</span><br><span class="line">     producer.setVipChannelEnabled(<span class="literal">false</span>);</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> - Producer对象在使用之前必须要调用start初始化，只能初始化一次</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> 	producer.start();</span><br><span class="line"> &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"> 	e.printStackTrace();</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">// producer.shutdown(); 一般在应用上下文，关闭的时候进行关闭，用上下文监听器</span></span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="九、Springboot2整合RocketMQ4-x实战下集"><a href="#九、Springboot2整合RocketMQ4-x实战下集" class="headerlink" title="九、Springboot2整合RocketMQ4.x实战下集"></a>九、Springboot2整合RocketMQ4.x实战下集</h2><p>  简介：Springboot2.x整合RocketMQ4.x实战，开发消费者代码，常见问题处理</p>
-<p> 1、创建消费者</p>
-<p>  问题：</p>
-<p> 1、Caused by: org.apache.rocketmq.remoting.exception.RemotingConnectException: connect to &lt;172.17.42.1:10911&gt; failed</p>
-<p> 2、com.alibaba.rocketmq.client.exception.MQClientException: Send [1] times, still failed, cost [1647]ms, Topic: TopicTest1, BrokersSent: [broker-a, null, null]</p>
-<p> 3、org.apache.rocketmq.client.exception.MQClientException: Send [3] times, still failed, cost [497]ms, Topic: TopicTest, BrokersSent: [chenyaowudeMacBook-Air.local, chenyaowudeMacBook-Air.local, chenyaowudeMacBook-Air.local]</p>
-<p>  解决：多网卡问题处理</p>
-<p> 1、设置producer: producer.setVipChannelEnabled(false);</p>
-<p> 2、编辑ROCKETMQ 配置文件：broker.conf（下列ip为自己的ip）</p>
-<p> namesrvAddr &#x3D; 192.168.0.101:9876</p>
-<p> brokerIP1 &#x3D; 192.168.0.101</p>
-<p> 4、DESC: service not available now, maybe disk full, CL:</p>
-<p>  解决：修改启动脚本runbroker.sh，在里面增加一句话即可：            </p>
-<p> JAVA_OPT&#x3D;”${JAVA_OPT} -Drocketmq.broker.diskSpaceWarningLevelRatio&#x3D;0.98”</p>
-<p>  （磁盘保护的百分比设置成98%，只有磁盘空间使用率达到98%时才拒绝接收producer消息）</p>
-<p>  常见问题处理：</p>
-<p> <a target="_blank" rel="noopener" href="https://blog.csdn.net/sqzhao/article/details/54834761">https://blog.csdn.net/sqzhao/article/details/54834761</a></p>
-<p> <a target="_blank" rel="noopener" href="https://blog.csdn.net/mayifan0/article/details/67633729">https://blog.csdn.net/mayifan0/article/details/67633729</a></p>
-<p> <a target="_blank" rel="noopener" href="https://blog.csdn.net/a906423355/article/details/78192828">https://blog.csdn.net/a906423355/article/details/78192828</a></p>
-<h2 id="十、SpringBoot多环境配置介绍和项目实战（核心知识）"><a href="#十、SpringBoot多环境配置介绍和项目实战（核心知识）" class="headerlink" title="十、SpringBoot多环境配置介绍和项目实战（核心知识）"></a>十、SpringBoot多环境配置介绍和项目实战（核心知识）</h2><p>  简介：SpringBoot介绍多环境配置和使用场景</p>
-<p> 1、不同环境使用不同配置</p>
-<p>  例如数据库配置，在开发的时候，我们一般用开发数据库，而在生产环境的时候，我们是用正式的数据</p>
-<p> 2、配置文件存放路径</p>
-<p> classpath根目录的“&#x2F;config”包下</p>
-<p> classpath的根目录下</p>
-<p> 3、spring boot允许通过命名约定按照一定的格式(application-{profile}.properties)来定义多个配置文件</p>
-<h2 id="十一、SprinBoot2-x响应式编程简介"><a href="#十一、SprinBoot2-x响应式编程简介" class="headerlink" title="十一、SprinBoot2.x响应式编程简介"></a>十一、SprinBoot2.x响应式编程简介</h2><p>  简介:讲解什么是reactive响应式编程和使用的好处</p>
-<p> 1、基础理解：</p>
-<p>  依赖于事件，事件驱动(Event-driven)</p>
-<p>  一系列事件称为“流”</p>
-<p>  异步</p>
-<p>  非阻塞</p>
-<p>  观察者模式</p>
-<p>  网上的一个例子：</p>
-<p> int b&#x3D; 2;</p>
-<p> int c&#x3D;3</p>
-<p> int a &#x3D; b+c &#x2F;&#x2F;命令式编程后续b和c变化，都不影响a</p>
-<p> b&#x3D;5;</p>
-<p> int b&#x3D; 2;</p>
-<p> int c&#x3D; 3</p>
-<p> int a &#x3D; b+c &#x2F;&#x2F;响应式编程中，a的变化，会和b、c的变化而变化（事件驱动）</p>
-<p> b&#x3D;5;</p>
-<p> 2、官网：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/">https://docs.spring.io/spring-boot/docs/</a>&lt;st1:chsdate year&#x3D;”1899” month&#x3D;”12” day&#x3D;”30” islunardate&#x3D;”False” isrocdate&#x3D;”False” w:st&#x3D;”on”&gt;2.1.0</st1:chsdate>.BUILD-SNAPSHOT&#x2F;reference&#x2F;htmlsingle&#x2F;#boot-features-webflux</p>
-<p> SpingBoot2底层是用spring5,开始支持响应式编程，Spring又是基于Reactor试下响应式。</p>
-<p>  学习资料</p>
-<p> 1、reactive-streams学习资料：<a target="_blank" rel="noopener" href="http://www.reactive-streams.org/">http://www.reactive-streams.org/</a></p>
-<p> 2、web-flux相关资料：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux">https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux</a></p>
-<h2 id="十二、SpringBoot2-x响应式编程webflux介绍"><a href="#十二、SpringBoot2-x响应式编程webflux介绍" class="headerlink" title="十二、SpringBoot2.x响应式编程webflux介绍"></a>十二、SpringBoot2.x响应式编程webflux介绍</h2><p>  简介：讲解SpringBoot2.x响应式编程介绍 Mono、Flux对象和优缺点</p>
-<p> 1、Spring WebFlux是Spring Framework 5.0中引入的新的反应式Web框架</p>
-<p>  与Spring MVC不同，它不需要Servlet API，完全异步和非阻塞，并 通过Reactor项目实现Reactive Streams规范。</p>
-<p> RxJava</p>
-<p> 2、Flux和Mono User List<User></p>
-<p> 1）简单业务而言：和其他普通对象差别不大，复杂请求业务，就可以提升性能</p>
-<p> 2）通俗理解：</p>
-<p> Mono 表示的是包含 0 或者 1 个元素的异步序列</p>
-<p> mono-&gt;单一对象 User redis-&gt;用户ID-》唯一的用户Mono<User></p>
-<p> Flux 表示的是包含 0 到 N 个元素的异步序列</p>
-<p> flux-&gt;数组列表对象 List<User> redis-&gt;男性用户-&gt;Flux<User></p>
-<p> Flux 和 Mono 之间可以进行转换</p>
-<p> 3、Spring WebFlux有两种风格：基于功能和基于注解的。基于注解非常接近Spring MVC模型，如以下示例所示：</p>
-<p>  第一种：</p>
-<p> @RestController</p>
-<p> @RequestMapping（“&#x2F; users”）</p>
-<p> public class MyRestController {</p>
-<p> @GetMapping（“&#x2F; {user}”）</p>
-<p> public Mono <User> getUser（ @PathVariable Long user）{</p>
-<p> &#x2F;&#x2F; …</p>
-<p> }</p>
-<p> @GetMapping（“&#x2F; {user} &#x2F; customers”）</p>
-<p> public Flux <Customer> getUserCustomers（ @PathVariable Long user）{</p>
-<p> &#x2F;&#x2F; …</p>
-<p> }</p>
-<p> @DeleteMapping（“&#x2F; {user}”）</p>
-<p> public Mono <User> deleteUser（ @PathVariable Long user）{</p>
-<p> &#x2F;&#x2F; …</p>
-<p> }</p>
-<p> }</p>
-<p>  第二种： 路由配置与请求的实际处理分开</p>
-<p> @Configuration</p>
-<p> public class RoutingConfiguration {</p>
-<p> @Bean</p>
-<p> public RouterFunction <ServerResponse> monoRouterFunction（UserHandler userHandler）{</p>
-<p> return route（GET（ “&#x2F; {user}”）.and（accept（APPLICATION_JSON）），userHandler :: getUser）</p>
-<p> .andRoute（GET（“&#x2F; {user} &#x2F; customers”）.and（accept（APPLICATION_JSON）），userHandler :: getUserCustomers）</p>
-<p> .andRoute（DELETE（“&#x2F; {user}”）.and（accept（APPLICATION_JSON）），userHandler :: deleteUser）;</p>
-<p> }</p>
-<p> }</p>
-<p> @Component</p>
-<p> public class UserHandler {</p>
-<p>  公共 Mono <ServerResponse> getUser（ServerRequest请求）{</p>
-<p> &#x2F;&#x2F; …</p>
-<p> }</p>
-<p> public Mono <ServerResponse> getUserCustomers（ServerRequest request）{</p>
-<p> &#x2F;&#x2F; …</p>
-<p> }</p>
-<p>  公共 Mono <ServerResponse> deleteUser（ServerRequest请求）{</p>
-<p> &#x2F;&#x2F; …</p>
-<p> }</p>
-<p> }</p>
-<p> 4、Spring WebFlux应用程序不严格依赖于Servlet API，因此它们不能作为war文件部署，也不能使用src&#x2F;main&#x2F;webapp目录</p>
-<p> 5、可以整合多个模板引擎</p>
-<p>  除了REST Web服务外，您还可以使用Spring WebFlux提供动态HTML内容。Spring WebFlux支持各种模板技术，包括Thymeleaf，FreeMarker</p>
-<h2 id="十三、SpringBoot2-x-webflux实战"><a href="#十三、SpringBoot2-x-webflux实战" class="headerlink" title="十三、SpringBoot2.x webflux实战"></a>十三、SpringBoot2.x webflux实战</h2><p>  简介:webflux响应式编程实战</p>
-<p> 1、WebFlux中，请求和响应不再是WebMVC中的ServletRequest和ServletResponse，而是ServerRequest和ServerResponse</p>
-<p> 2、加入依赖，如果同时存在spring-boot-starter-web，则会优先用spring-boot-starter-web</p>
- <dependency>
-
-<p> <groupId>org.springframework.boot</groupId></p>
-<p> <artifactId>spring-boot-starter-webflux</artifactId></p>
- </dependency>
-
-<p>  测试</p>
-<p> localhost:8080&#x2F;api&#x2F;v1&#x2F;user&#x2F;test</p>
-<p> 3、启动方式默认是Netty,8080端口</p>
-<p> 4、参考：<a target="_blank" rel="noopener" href="https://spring.io/blog/2016/04/19/understanding-reactive-types">https://spring.io/blog/2016/04/19/understanding-reactive-types</a>、</p>
-<h2 id="十四、服务端推送常用技术介绍"><a href="#十四、服务端推送常用技术介绍" class="headerlink" title="十四、服务端推送常用技术介绍"></a>十四、服务端推送常用技术介绍</h2><p>  简介：服务端常用推送技术介绍，如websocket，sse轮询等</p>
-<p> 1、客户端轮询:ajax定时拉取</p>
-<p> 2、服务端主动推送:WebSocket</p>
-<p>  全双工的，本质上是一个额外的tcp连接，建立和关闭时握手使用http协议，其他数据传输不使用http协议</p>
-<p>  更加复杂一些，适用于需要进行复杂双向数据通讯的场景</p>
-<p> 3、服务端主动推送:SSE (Server Send Event)</p>
-<p> html5新标准，用来从服务端实时推送数据到浏览器端，</p>
-<p>  直接建立在当前http连接上，本质上是保持一个http长连接，轻量协议</p>
-<p>  简单的服务器数据推送的场景，使用服务器推送事件   </p>
-<p>  学习资料：<a target="_blank" rel="noopener" href="http://www.w3school.com.cn/html5/html_5_serversentevents.asp">http://www.w3school.com.cn/html5/html_5_serversentevents.asp</a></p>
-<h2 id="十五、高级篇幅之云服务器介绍和部署生产环境实战"><a href="#十五、高级篇幅之云服务器介绍和部署生产环境实战" class="headerlink" title="十五、高级篇幅之云服务器介绍和部署生产环境实战"></a>十五、高级篇幅之云服务器介绍和部署生产环境实战</h2><p>1、阿里云服务器介绍和使用讲解</p>
-<p>  简介：阿里云服务器介绍和使用讲解</p>
-<p>2、阿里云Linux服务器部署JDK8实战</p>
-<p>  简介：在阿里云服务器上安装JDK8和配置环境变量</p>
-<p> lnux下使用wget下载jdk8:</p>
-<p>  进到目录&#x2F;usr&#x2F;local&#x2F;software</p>
-<p>  配置环境变量</p>
-<p> vim &#x2F;etc&#x2F;profile</p>
-<p>  加入</p>
-<p> export JAVA_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;software&#x2F;jdk8</p>
-<p> export PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin</p>
-<p> export CLASSPATH&#x3D;.:$JAVA_HOME&#x2F;lib&#x2F;dt.jar:$JAVA_HOME&#x2F;lib&#x2F;tools.jar</p>
-<p> export JAVA_HOME PATH CLASSPATH</p>
-<p>  使用 source &#x2F;etc&#x2F;profile 让配置立刻生效</p>
-<p>3、阿里云服务器SpringBoot2.x生产环境部署实战</p>
-<p>  简介：讲解SpringBoot生产环境部署和常见注意事项</p>
-<p> 1、去除相关生产环境没用的jar</p>
-<p>  比如热部署dev-tool</p>
-<p> 2、本地maven打包成jar包</p>
-<p> mvn clean package -Dmaven.test.skip&#x3D;true 跳过测试</p>
-<p> 3、服务器安装jdk，上传Jar包</p>
-<p>  上传工具：</p>
-<p> windows:</p>
-<p> winscp</p>
-<p> securtyCRT</p>
-<p> mac：</p>
-<p> filezilla</p>
-<p> ssh <a href="mailto:&#114;&#111;&#x6f;&#x74;&#64;&#49;&#x32;&#48;&#46;&#x37;&#57;&#x2e;&#49;&#54;&#48;&#46;&#49;&#52;&#x33;">&#114;&#111;&#x6f;&#x74;&#64;&#49;&#x32;&#48;&#46;&#x37;&#57;&#x2e;&#49;&#54;&#48;&#46;&#49;&#52;&#x33;</a></p>
-<p>  访问路径 <a target="_blank" rel="noopener" href="http://120.79.160.143:8080/api/v1/user/find">http://120.79.160.143:8080/api/v1/user/find</a></p>
-<p> java -jar xxxx.jar</p>
-<p>  守护进程、系统服务、shell脚本</p>
-<p>  打包指定配置文件</p>
-<p> 1、使用maven的profiles</p>
-<p> 2、使用springboot的profile&#x3D;active</p>
-<p>  访问不了</p>
-<p> 1、阿里云防火墙是否开启，可以选择关闭，关闭是不安全的，可以选择开放端口</p>
-<p> 2、阿里云的安全访问组，开启对应的端口，如果应用是以80端口启动，则默认可以访问</p>
-<p> 4、成熟的互联网公司应该有的架构</p>
-<p>  本地提交生产代码-&gt;gitlab仓库-&gt;Jenkins自动化构建-&gt;运维或者开发人员发布</p>
-<h2 id="十六、SpringBoot2-x监控Actuator实战上集"><a href="#十六、SpringBoot2-x监控Actuator实战上集" class="headerlink" title="十六、SpringBoot2.x监控Actuator实战上集"></a>十六、SpringBoot2.x监控Actuator实战上集</h2><p>  简介：讲解SpringBoot使用actuator监控配置和使用</p>
-<p>  可用性：100%，99.9%</p>
-<p> 1、介绍什么是actuator</p>
-<p>  官方介绍：</p>
-<p> Spring Boot包含许多附加功能，可帮助您在将应用程序投入生产时监视和管理应用程序。 可以选择使用HTTP端点或JMX来管理和监控您的应用程序，自动应用于审计，健康和指标收集;</p>
-<p>  一句话：springboot提供用于监控和管理生产环境的模块</p>
-<p>  官方文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/">https://docs.spring.io/spring-boot/docs/</a>&lt;st1:chsdate year&#x3D;”1899” month&#x3D;”12” day&#x3D;”30” islunardate&#x3D;”False” isrocdate&#x3D;”False” w:st&#x3D;”on”&gt;2.1.0</st1:chsdate>.BUILD-SNAPSHOT&#x2F;reference&#x2F;htmlsingle&#x2F;#production-ready</p>
-<p> 2、加入依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p> 3、加入上述依赖后，访问几个url</p>
-<p> <code>/actuator/health</code><br> <code>/actuator/info</code><br> <code>/actuator</code></p>
-<h2 id="十七、SpringBoot2监控Actuator下集及生产环境建议"><a href="#十七、SpringBoot2监控Actuator下集及生产环境建议" class="headerlink" title="十七、SpringBoot2监控Actuator下集及生产环境建议"></a>十七、SpringBoot2监控Actuator下集及生产环境建议</h2><p>  简介：SpringBoot2.x监控Actuator实战下集及生产环境建议，SpringBoot新旧版本区别</p>
-<p>  注意点: 网上的资料大多数没有讲到访问的前缀</p>
-<p>  端点基础路径由 &#x2F; 调整到 &#x2F;actuator</p>
-<p>  如：&#x2F;info调整为&#x2F;actuator&#x2F;info</p>
-<p> &#x2F;actuator&#x2F;xxx</p>
-<p> 1、只能访问几个url</p>
-<p> 1）需要在配置文件中加入下列配置</p>
-<p> management.endpoints.web.exposure.include&#x3D;*</p>
-<p> 2）官网说明：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-security-actuator">https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-security-actuator</a></p>
-<p>  原因：</p>
-<p>  出于安全考虑，除&#x2F; health和&#x2F; info之外的所有执行器默认都是禁用的。 management.endpoints.web.exposure.include属性可用于启用执行器</p>
-<p> 2、建议</p>
-<p>  在设置management.endpoints.web.exposure.include之前，请确保暴露的执行器不包含敏感信息和&#x2F;</p>
-<p>  或通过将其放置在防火墙进行控制，不对外进行使用</p>
-<p>  禁用的端点将从应用程序上下文中完全删除。如果您只想更改端点所暴露的技术，请改用 include和exclude属性 。</p>
-<p>  例子：</p>
-<p>  开启全部：management.endpoints.web.exposure.include&#x3D;*</p>
-<p>  开启某个：management.endpoints.web.exposure.include&#x3D;metrics</p>
-<p>  关闭某个：management.endpoints.web.exposure.exclude&#x3D;metrics</p>
-<p>  或者用springadmin进行管理</p>
-<p>  相关资料：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/ityouknow/p/8440455.html">https://www.cnblogs.com/ityouknow/p/8440455.html</a></p>
-<p>  或者用自己编写脚本监控</p>
-<p> CPU、内存、磁盘、nginx的http响应状态码200,404,5xx</p>
-<p> 3、介绍常用的几个</p>
-<p> &#x2F;health 查看应用健康指标</p>
-<p> &#x2F;actuator&#x2F;metrics 查看应用基本指标列表</p>
-<p> &#x2F;actuator&#x2F;metrics&#x2F;{name} 通过上述列表，查看具体 查看具体指标</p>
-<p> &#x2F;actuator&#x2F;env 显示来自Spring的 ConfigurableEnvironment的属性</o:smarttagtype></p>
-<p>本文地址： <a href="https://github.com/maxzhao-it/blog/post/2921/">https://github.com/maxzhao-it/blog/post/2921/</a> </p>
 
       
     </div>
