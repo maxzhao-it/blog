@@ -150,18 +150,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/blog/archives/">
-          <span class="site-state-item-count">409</span>
+          <span class="site-state-item-count">443</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/blog/categories/">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">190</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/blog/tags/">
-        <span class="site-state-item-count">230</span>
+        <span class="site-state-item-count">240</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-09-09 08:53:47" itemprop="dateModified" datetime="2022-09-09T08:53:47+08:00">2022-09-09</time>
+      <time title="Modified: 2024-05-10 15:31:12" itemprop="dateModified" datetime="2024-05-10T15:31:12+08:00">2024-05-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -269,8 +269,6 @@
     
     <div class="post-body" itemprop="articleBody">
         <h2 id="多节点负载的配置"><a href="#多节点负载的配置" class="headerlink" title="多节点负载的配置"></a>多节点负载的配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">upstream client &#123;</span><br><span class="line">	server 192.168.2.1:20031 weight=1;</span><br><span class="line">	server 192.168.2.1:20011 weight=1;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name 0.0.0.0;</span><br><span class="line">	location / &#123;</span><br><span class="line">		proxy_pass http://client;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
 
 <h2 id="upstream-的分配方式"><a href="#upstream-的分配方式" class="headerlink" title="upstream 的分配方式"></a><code>upstream</code> 的分配方式</h2><ol>
 <li><p>轮询</p>
@@ -304,8 +302,6 @@
 
 <h2 id="校验客户端IP指向固定的集群地址"><a href="#校验客户端IP指向固定的集群地址" class="headerlink" title="校验客户端IP指向固定的集群地址"></a>校验客户端<code>IP</code>指向固定的集群地址</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	# 可以配置多个IP</span><br><span class="line">	if($remote_addr ~&quot;192.168.2.8|9&quot;) &#123;</span><br><span class="line">		proxy_pass http://client2;</span><br><span class="line">	&#125;</span><br><span class="line">	proxy_pass http://client;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
 <h3 id="proxy-pass-路径"><a href="#proxy-pass-路径" class="headerlink" title="proxy_pass 路径"></a><code>proxy_pass</code> 路径</h3><p>URL地址：127.0.0.1&#x2F;demo&#x2F;index.html</p>
 <p>实际访问i地址：client&#x2F;demo&#x2F;index.html</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /demo &#123;</span><br><span class="line">    proxy_pass http://client;</span><br><span class="line">&#125;</span><br><span class="line"># 等同于</span><br><span class="line">location / &#123;</span><br><span class="line">    proxy_pass http://client/demo/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -314,14 +310,8 @@
 <p>实际访问i地址：&#x2F;home&#x2F;front&#x2F;index.html</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    root /home/front/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
 <p>安装之前</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils</span><br></pre></td></tr></table></figure>
-
-
-
-
 
 <h2 id="前后端分离的集群-session处理"><a href="#前后端分离的集群-session处理" class="headerlink" title="前后端分离的集群 session处理"></a>前后端分离的集群 session处理</h2><p>后端是一个集群部署，后端路径与前端路径不同，则需要复制 session。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen          10001;</span><br><span class="line">        server_name 0.0.0.0;</span><br><span class="line">        location /auth &#123;</span><br><span class="line">            proxy_pass http://authServer;</span><br><span class="line">            proxy_cookie_path  /auth /;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        location / &#123;</span><br><span class="line">            root /home/maxzhao/auth/frontend/;</span><br><span class="line">            index index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -349,8 +339,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/post/e89f3b77/" rel="prev" title="AES加解密（JAVA）">
-                  <i class="fa fa-chevron-left"></i> AES加解密（JAVA）
+                <a href="/blog/post/efc116f5/" rel="prev" title="RSA加解密（JAVA）">
+                  <i class="fa fa-chevron-left"></i> RSA加解密（JAVA）
                 </a>
             </div>
             <div class="post-nav-item">
@@ -377,7 +367,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
